@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letter Flashcards</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  user-select: none;
+}
+header {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.back-btn {
+  background: rgba(255,255,255,0.22);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  display: inline-block;
+}
+.title { color: white; font-size: 1.3rem; font-weight: bold; }
+.mute-btn {
+  background: rgba(255,255,255,0.22);
+  border: none;
+  color: white;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.mute-btn.muted { opacity: 0.45; }
+
+/* Flip card */
+.card-scene {
+  width: 300px; height: 360px;
+  perspective: 900px;
+  cursor: pointer;
+  margin: 8px 0 18px;
+}
+.card {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.55s ease;
+  border-radius: 28px;
+}
+.card.flipped { transform: rotateY(180deg); }
+.card-face {
+  position: absolute;
+  width: 100%; height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+.card-front { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+.card-back  { background: linear-gradient(135deg, #4ECDC4, #44CF6C); transform: rotateY(180deg); }
+.case-label {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.letter-big {
+  font-family: 'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+  font-size: 11rem;
+  color: white;
+  line-height: 1;
+  text-shadow: 3px 5px 0 rgba(0,0,0,0.18);
+}
+.tap-hint {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.65);
+  margin-top: 16px;
+}
+
+/* Nav */
+.nav-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 10px;
+}
+.nav-btn {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  color: white;
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.1s;
+}
+.nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.4); transform: scale(1.07); }
+.nav-btn:disabled { opacity: 0.3; cursor: default; }
+.counter { color: white; font-size: 1.15rem; min-width: 64px; text-align: center; }
+
+/* Alphabet dots */
+.dots-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: 340px;
+  margin-top: 10px;
+}
+.dot {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.dot.active { background: white; color: #764ba2; font-weight: bold; }
+.dot:hover  { background: rgba(255,255,255,0.4); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-btn">← Back</a>
+  <div class="title">Letter Flashcards</div>
+  <button class="mute-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+</header>
+
+<div class="card-scene" onclick="flipCard()">
+  <div class="card" id="card">
+    <div class="card-face card-front">
+      <div class="case-label">Uppercase</div>
+      <div class="letter-big" id="upper-ltr">A</div>
+      <div class="tap-hint">Tap to see lowercase ↓</div>
+    </div>
+    <div class="card-face card-back">
+      <div class="case-label">Lowercase</div>
+      <div class="letter-big" id="lower-ltr">a</div>
+      <div class="tap-hint">Tap to flip back ↑</div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-row">
+  <button class="nav-btn" id="prev-btn" onclick="go(-1)" disabled>◀</button>
+  <div class="counter" id="counter">1 / 26</div>
+  <button class="nav-btn" id="next-btn" onclick="go(1)">▶</button>
+</div>
+
+<div class="dots-row" id="dots-row"></div>
+
+<script>
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+let cur = 0, flipped = false, muted = false;
+let voices = [], userInteracted = false, pendingSpeech = null;
+
+/* Speech */
+function loadVoices() { voices = speechSynthesis.getVoices(); }
+speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+function getBestVoice() {
+  const en = voices.filter(v => v.lang.startsWith('en'));
+  return en.find(v => /natural/i.test(v.name))
+      || en.find(v => /online|neural|premium|enhanced/i.test(v.name))
+      || ['Aria','Jenny','Guy','Samantha','Karen','Moira','Google US English'].reduce((f,n) => f || en.find(v => v.name.includes(n)), null)
+      || en.find(v => v.lang === 'en-US') || en[0];
+}
+function speak(txt, delay = 130) {
+  if (!window.speechSynthesis || muted) return;
+  if (!userInteracted) { pendingSpeech = txt; return; }
+  speechSynthesis.cancel();
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(txt);
+    u.rate = 0.85; u.pitch = 1.0; u.volume = 1.0;
+    const v = getBestVoice(); if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  }, delay);
+}
+function onInteract() {
+  if (userInteracted) return;
+  userInteracted = true;
+  if (pendingSpeech && !muted) { const t = pendingSpeech; pendingSpeech = null; speak(t); }
+}
+function toggleMute() {
+  muted = !muted;
+  const b = document.getElementById('mute-btn');
+  b.textContent = muted ? '🔇' : '🔊';
+  b.classList.toggle('muted', muted);
+  if (muted) { speechSynthesis.cancel(); return; }
+  onInteract();
+  if (pendingSpeech) { const t = pendingSpeech; pendingSpeech = null; speak(t); }
+}
+
+/* Card */
+function showLetter() {
+  const L = LETTERS[cur];
+  document.getElementById('upper-ltr').textContent = L;
+  document.getElementById('lower-ltr').textContent = L.toLowerCase();
+  document.getElementById('counter').textContent = (cur + 1) + ' / 26';
+  document.getElementById('prev-btn').disabled = cur === 0;
+  document.getElementById('next-btn').disabled = cur === 25;
+  document.getElementById('card').classList.remove('flipped');
+  flipped = false;
+  updateDots();
+  speak('Capital ' + L + '... lowercase ' + L.toLowerCase());
+}
+function flipCard() {
+  onInteract();
+  flipped = !flipped;
+  document.getElementById('card').classList.toggle('flipped', flipped);
+  const L = LETTERS[cur];
+  speak(flipped ? 'Lowercase ' + L.toLowerCase() : 'Capital ' + L);
+}
+function go(dir) {
+  onInteract();
+  cur = Math.max(0, Math.min(25, cur + dir));
+  showLetter();
+}
+
+/* Dots */
+function buildDots() {
+  const row = document.getElementById('dots-row');
+  LETTERS.forEach((L, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.textContent = L;
+    d.onclick = (e) => { e.stopPropagation(); onInteract(); cur = i; showLetter(); };
+    row.appendChild(d);
+  });
+}
+function updateDots() {
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+}
+
+buildDots();
+showLetter();
+</script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Initial Sounds</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  user-select: none;
+}
+header {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.back-btn {
+  background: rgba(255,255,255,0.22);
+  border: none; color: white;
+  padding: 8px 16px; border-radius: 20px;
+  font-size: 1rem; cursor: pointer;
+  font-family: inherit; text-decoration: none; display: inline-block;
+}
+.title { color: white; font-size: 1.3rem; font-weight: bold; }
+.mute-btn {
+  background: rgba(255,255,255,0.22);
+  border: none; color: white;
+  width: 42px; height: 42px; border-radius: 50%;
+  font-size: 1.2rem; cursor: pointer;
+}
+.mute-btn.muted { opacity: 0.45; }
+
+/* Score */
+.score-bar {
+  display: flex; gap: 20px; margin-bottom: 14px;
+  color: white; font-size: 1rem;
+}
+.score-item { display: flex; align-items: center; gap: 6px; }
+.score-num { font-size: 1.3rem; font-weight: bold; }
+
+/* Picture card */
+.picture-card {
+  background: white;
+  border-radius: 28px;
+  width: 240px; height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  margin-bottom: 10px;
+  transition: transform 0.15s;
+}
+.picture-card.bounce { animation: bounce 0.4s ease; }
+@keyframes bounce { 0%,100%{transform:scale(1)} 40%{transform:scale(1.08)} }
+.picture-card.shake  { animation: shake 0.4s ease; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 60%{transform:translateX(8px)} }
+
+.emoji-big { font-size: 9rem; line-height: 1; }
+.tap-hint {
+  color: rgba(255,255,255,0.75);
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+  min-height: 1.1em;
+}
+
+/* Prompt */
+.prompt {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 18px;
+  text-align: center;
+  min-height: 1.5em;
+}
+
+/* Letter choices */
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  width: 100%;
+  max-width: 340px;
+}
+.choice-btn {
+  font-family: 'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+  font-size: 4rem;
+  color: #333;
+  background: white;
+  border: 4px solid transparent;
+  border-radius: 20px;
+  padding: 10px 0;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  transition: transform 0.12s, border-color 0.15s, background 0.15s;
+  line-height: 1.1;
+}
+.choice-btn:hover:not(:disabled) { transform: scale(1.06); border-color: #f5576c; }
+.choice-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+.choice-btn.wrong   { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+.choice-btn:disabled { cursor: default; }
+
+/* Next btn */
+.next-btn {
+  margin-top: 22px;
+  background: white;
+  color: #f5576c;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  display: none;
+  transition: transform 0.12s;
+}
+.next-btn:hover { transform: scale(1.05); }
+
+/* Progress */
+.progress-row {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 18px;
+  max-width: 340px;
+}
+.pip {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: background 0.3s;
+}
+.pip.done { background: white; }
+.pip.current { background: rgba(255,255,255,0.75); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-btn">← Back</a>
+  <div class="title">Initial Sounds</div>
+  <button class="mute-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+</header>
+
+<div class="score-bar">
+  <div class="score-item">✅ <span class="score-num" id="right-count">0</span></div>
+  <div class="score-item">❌ <span class="score-num" id="wrong-count">0</span></div>
+</div>
+
+<div class="tap-hint" id="tap-hint">🔊 Tap a letter to hear the word!</div>
+
+<div class="picture-card" id="picture-card">
+  <div class="emoji-big" id="emoji-display">🍎</div>
+</div>
+
+<div class="prompt" id="prompt">What letter does this start with?</div>
+
+<div class="choices" id="choices"></div>
+
+<button class="next-btn" id="next-btn" onclick="loadRound()">Next ➡️</button>
+
+<div class="progress-row" id="progress-row"></div>
+
+<script>
+/* ── WORD BANK ── one per letter, vowels = short vowel sounds ── */
+const BANK = {
+  a:{w:'apple',   e:'🍎'},
+  b:{w:'bear',    e:'🐻'},
+  c:{w:'cat',     e:'🐱'},
+  d:{w:'dog',     e:'🐶'},
+  e:{w:'elephant',e:'🐘'},
+  f:{w:'fish',    e:'🐟'},
+  g:{w:'grapes',  e:'🍇'},
+  h:{w:'hat',     e:'🎩'},
+  i:{w:'insects', e:'🐛🦗🪲'},
+  j:{w:'juice',   e:'🧃'},
+  k:{w:'kite',    e:'🪁'},
+  l:{w:'lion',    e:'🦁'},
+  m:{w:'moon',    e:'🌙'},
+  n:{w:'nest',    e:'🪺'},
+  o:{w:'octopus', e:'🐙'},
+  p:{w:'pig',     e:'🐷'},
+  q:{w:'queen',   e:'👸'},
+  r:{w:'rabbit',  e:'🐰'},
+  s:{w:'sun',     e:'☀️'},
+  t:{w:'tiger',   e:'🐯'},
+  u:{w:'umbrella',e:'☂️'},
+  v:{w:'van',     e:'🚐'},
+  w:{w:'whale',   e:'🐋'},
+  x:{w:'x-ray',   e:'🩻'},
+  y:{w:'yo-yo',   e:'🪀'},
+  z:{w:'zebra',   e:'🦓'},
+};
+const ALL_LETTERS = Object.keys(BANK);
+
+/* State */
+let queue = [], done = 0, rightCount = 0, wrongCount = 0;
+let currentLetter = '', answered = false;
+let voices = [], userInteracted = false, pendingSpeech = null;
+let muted = false;
+
+/* Speech */
+function loadVoices() { voices = speechSynthesis.getVoices(); }
+speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+function getBestVoice() {
+  const en = voices.filter(v => v.lang.startsWith('en'));
+  return en.find(v => /natural/i.test(v.name))
+      || en.find(v => /online|neural|premium|enhanced/i.test(v.name))
+      || ['Aria','Jenny','Guy','Samantha','Karen','Moira','Google US English'].reduce((f,n) => f || en.find(v => v.name.includes(n)), null)
+      || en.find(v => v.lang === 'en-US') || en[0];
+}
+function speak(txt, delay = 130) {
+  if (!window.speechSynthesis || muted) return;
+  if (!userInteracted) { pendingSpeech = txt; return; }
+  speechSynthesis.cancel();
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(txt);
+    u.rate = 0.82; u.pitch = 1.0; u.volume = 1.0;
+    const v = getBestVoice(); if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  }, delay);
+}
+function onInteract() {
+  if (userInteracted) return;
+  userInteracted = true;
+  document.getElementById('tap-hint').style.display = 'none';
+  if (pendingSpeech && !muted) { const t = pendingSpeech; pendingSpeech = null; speak(t); }
+}
+function toggleMute() {
+  muted = !muted;
+  const b = document.getElementById('mute-btn');
+  b.textContent = muted ? '🔇' : '🔊';
+  b.classList.toggle('muted', muted);
+  if (muted) { speechSynthesis.cancel(); return; }
+  onInteract();
+  if (pendingSpeech) { const t = pendingSpeech; pendingSpeech = null; speak(t); }
+}
+
+/* Shuffle */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/* Progress pips */
+function buildPips() {
+  const row = document.getElementById('progress-row');
+  row.innerHTML = '';
+  for (let i = 0; i < 26; i++) {
+    const p = document.createElement('div');
+    p.className = 'pip' + (i === 0 ? ' current' : '');
+    p.id = 'pip-' + i;
+    row.appendChild(p);
+  }
+}
+function updatePips() {
+  for (let i = 0; i < 26; i++) {
+    const p = document.getElementById('pip-' + i);
+    if (!p) continue;
+    p.className = 'pip' + (i < done ? ' done' : i === done ? ' current' : '');
+  }
+}
+
+/* Round */
+function loadRound() {
+  onInteract();
+  if (!queue.length) queue = shuffle([...ALL_LETTERS]);
+  currentLetter = queue.pop();
+  answered = false;
+
+  const entry = BANK[currentLetter];
+  document.getElementById('emoji-display').textContent = entry.e;
+  document.getElementById('prompt').textContent = 'What letter does this start with?';
+  document.getElementById('next-btn').style.display = 'none';
+
+  const card = document.getElementById('picture-card');
+  card.classList.remove('bounce','shake');
+  void card.offsetWidth;
+  card.classList.add('bounce');
+
+  // Build 4 choices: correct + 3 random wrong
+  const wrong = shuffle(ALL_LETTERS.filter(l => l !== currentLetter)).slice(0, 3);
+  const options = shuffle([currentLetter, ...wrong]);
+
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  options.forEach(letter => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = letter;
+    btn.onclick = () => { onInteract(); handleAnswer(btn, letter); };
+    choicesEl.appendChild(btn);
+  });
+
+  updatePips();
+  speak(entry.w);
+}
+
+function handleAnswer(btn, letter) {
+  if (answered) return;
+  answered = true;
+
+  const entry = BANK[currentLetter];
+  const allBtns = document.querySelectorAll('.choice-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  const card = document.getElementById('picture-card');
+  card.classList.remove('bounce','shake');
+  void card.offsetWidth;
+
+  if (letter === currentLetter) {
+    btn.classList.add('correct');
+    card.classList.add('bounce');
+    rightCount++;
+    document.getElementById('right-count').textContent = rightCount;
+    document.getElementById('prompt').textContent = '🎉 Yes! ' + entry.w.charAt(0).toUpperCase() + entry.w.slice(1) + ' starts with ' + currentLetter + '!';
+    speak('Yes! ' + entry.w + ' starts with ' + currentLetter + '!');
+  } else {
+    btn.classList.add('wrong');
+    card.classList.add('shake');
+    // Highlight correct
+    allBtns.forEach(b => { if (b.textContent === currentLetter) b.classList.add('correct'); });
+    wrongCount++;
+    document.getElementById('wrong-count').textContent = wrongCount;
+    document.getElementById('prompt').textContent = entry.w.charAt(0).toUpperCase() + entry.w.slice(1) + ' starts with ' + currentLetter + '!';
+    speak(entry.w + ' starts with ' + currentLetter + '.');
+  }
+
+  done++;
+  if (done >= 26) done = 0;
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+buildPips();
+loadRound();
+</script>
+</body>
+</html>
