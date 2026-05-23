@@ -66,7 +66,7 @@ header {
 .picture-card.shake  { animation: shake 0.4s ease; }
 @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 60%{transform:translateX(8px)} }
 
-.emoji-big { font-size: 9rem; line-height: 1; }
+.emoji-big { font-size: 9rem; line-height: 1.15; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; max-width: 210px; text-align: center; }
 .tap-hint {
   color: rgba(255,255,255,0.75);
   font-size: 0.8rem;
@@ -287,7 +287,11 @@ function loadRound() {
   answered = false;
 
   const entry = BANK[currentLetter];
-  document.getElementById('emoji-display').textContent = entry.e;
+  const emojiEl = document.getElementById('emoji-display');
+  emojiEl.textContent = entry.e;
+  // Scale down font size when multiple emojis are shown
+  const cnt = [...entry.e].filter(c => c.trim() !== '').length;
+  emojiEl.style.fontSize = cnt >= 3 ? '4.5rem' : cnt === 2 ? '6rem' : '9rem';
   document.getElementById('prompt').textContent = 'What letter does this start with?';
   document.getElementById('next-btn').style.display = 'none';
 

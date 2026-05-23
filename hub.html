@@ -194,11 +194,39 @@
     }
     .card.phonics:hover { box-shadow: 0 16px 40px rgba(107,203,119,0.22); }
 
+    /* ── APP ICON STYLE CARD ICONS ── */
     .card-icon {
-      font-size: 4rem;
+      width: 90px;
+      height: 90px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
       line-height: 1;
-      margin-bottom: 0.2rem;
-      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.12));
+      margin-bottom: 0.3rem;
+      flex-shrink: 0;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+
+    /* category background gradients for emoji icons */
+    .card.letters .card-icon { background: linear-gradient(145deg, #3A8EF6, #6B48FF); }
+    .card.sight   .card-icon { background: linear-gradient(145deg, #FF6B6B, #FF8E53); }
+    .card.wf      .card-icon { background: linear-gradient(145deg, #9B59B6, #6C3483); }
+    .card.lv      .card-icon { background: linear-gradient(145deg, #16A085, #1ABC9C); }
+    .card.ir      .card-icon { background: linear-gradient(145deg, #E67E22, #D35400); }
+    .card.db      .card-icon { background: linear-gradient(145deg, #C0392B, #E74C3C); }
+    .card.rc      .card-icon { background: linear-gradient(145deg, #2471A3, #3498DB); }
+    .card.sp      .card-icon { background: linear-gradient(145deg, #7C3AED, #4F46E5); }
+    .card.books   .card-icon { background: linear-gradient(145deg, #7C3AED, #EC4899); }
+
+    /* Image-based icons fill the entire rounded square */
+    .card-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .card h3 {
@@ -305,7 +333,14 @@
       width: 100%;
     }
 
-    .card.wide .card-icon { font-size: 5rem; flex-shrink: 0; margin-bottom: 0; }
+    .card.wide .card-icon {
+      width: 108px;
+      height: 108px;
+      border-radius: 24px;
+      font-size: 3.2rem;
+      flex-shrink: 0;
+      margin-bottom: 0;
+    }
 
     .wide-body { display: flex; flex-direction: column; gap: 0.4rem; }
     .card.wide h3 { font-size: 1.35rem; }
@@ -319,6 +354,161 @@
       font-size: 0.75rem;
       padding: 3px 11px;
       border-radius: 999px;
+    }
+
+    /* ── ACCESS BAR ── */
+    #access-bar {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      padding: 0 1.5rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      min-height: 48px;
+      flex-wrap: wrap;
+    }
+    #access-bar.school-hours {
+      background: linear-gradient(135deg, #27AE60, #6BCB77);
+      color: #fff;
+    }
+    #access-bar.code-granted {
+      background: linear-gradient(135deg, #27AE60, #2ECC71);
+      color: #fff;
+    }
+    #access-bar.needs-code {
+      background: linear-gradient(135deg, #F39C12, #FFD93D);
+      color: #333;
+    }
+    .access-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: currentColor;
+      opacity: 0.85;
+      animation: adot 1.4s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes adot { 0%,100%{opacity:.85;transform:scale(1)} 50%{opacity:.3;transform:scale(1.3)} }
+    .access-countdown { opacity: 0.85; font-size: 0.82rem; }
+    #hub-code-form {
+      display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; justify-content: center;
+    }
+    #hub-code-input {
+      padding: 6px 14px;
+      border: 2px solid rgba(0,0,0,0.15);
+      border-radius: 999px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      outline: none;
+      background: rgba(255,255,255,0.9);
+      color: #333;
+      width: 160px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    #hub-code-input:focus { border-color: #6B48FF; box-shadow: 0 0 0 3px rgba(107,72,255,.18); }
+    #hub-code-input.shake { animation: cshake .4s ease; border-color: #e74c3c; }
+    @keyframes cshake { 0%,100%{transform:translateX(0)} 25%,75%{transform:translateX(-6px)} 50%{transform:translateX(6px)} }
+    #hub-code-btn {
+      padding: 6px 18px;
+      background: #6B48FF;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity .18s;
+    }
+    #hub-code-btn:hover { opacity: .85; }
+    .access-bar-link {
+      color: inherit;
+      opacity: 0.75;
+      font-size: 0.8rem;
+      text-decoration: underline;
+      flex-shrink: 0;
+    }
+    .access-bar-link:hover { opacity: 1; }
+
+    /* ── GATE OVERLAY (outside school hours, no code) ── */
+    #gate-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30,20,60,0.55);
+      backdrop-filter: blur(3px);
+      z-index: 998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .gate-box {
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.25);
+      padding: 2.5rem 2rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .gate-box .gate-icon { font-size: 3.5rem; display: block; margin-bottom: 0.6rem; }
+    .gate-box h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.7rem;
+      color: #2C3E50;
+      margin-bottom: 0.3rem;
+    }
+    .gate-box p { font-size: 0.92rem; font-weight: 700; color: #777; margin-bottom: 1.5rem; }
+    .gate-code-row { display: flex; gap: 0.6rem; margin-bottom: 0.7rem; }
+    #gate-input {
+      flex: 1;
+      padding: 14px 18px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      text-align: center;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 3px solid #ddd;
+      border-radius: 14px;
+      outline: none;
+      color: #6B48FF;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    #gate-input:focus { border-color: #6B48FF; box-shadow: 0 0 0 3px rgba(107,72,255,.15); }
+    #gate-input.shake { animation: cshake .4s ease; border-color: #e74c3c; }
+    #gate-submit {
+      padding: 14px 20px;
+      background: linear-gradient(135deg,#6B48FF,#3A8EF6);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(107,72,255,.3);
+      transition: opacity .18s, transform .18s;
+    }
+    #gate-submit:hover { opacity:.88; transform:translateY(-1px); }
+    .gate-error {
+      color: #c0392b;
+      font-weight: 800;
+      font-size: 0.88rem;
+      margin-bottom: 0.8rem;
+      display: none;
+    }
+    .gate-error.show { display: block; }
+    .gate-hours {
+      background: #FFF8F0;
+      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #888;
+      margin-top: 1rem;
     }
 
     /* ── FOOTER ── */
@@ -339,6 +529,11 @@
   </style>
 </head>
 <body>
+
+<!-- ACCESS BAR -->
+<div id="access-bar"></div>
+
+<!-- GATE OVERLAY (injected by JS when needed) -->
 
 <!-- HERO -->
 <div class="hero">
@@ -395,7 +590,7 @@
   <div class="games-grid">
 
     <a href="go-fish.html" class="card letters wide">
-      <div class="card-icon">🐠</div>
+      <div class="card-icon">🐟</div>
       <div class="wide-body">
         <span class="hot-badge">⭐ Fan Favorite</span>
         <h3>Letter Go Fish</h3>
@@ -405,63 +600,70 @@
     </a>
 
     <a href="memory.html" class="card letters">
-      <div class="card-icon">🃏</div>
+      <div class="card-icon">🧠</div>
       <h3>Letter Memory Match</h3>
       <p>Flip cards to find matching uppercase and lowercase letter pairs!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="bingo.html" class="card letters">
-      <div class="card-icon">🎯</div>
+      <div class="card-icon"><img src="icons/icon-bingo-letters.png" alt="Bingo"></div>
       <h3>Letter Bingo</h3>
       <p>Hear a letter called and mark it on your bingo card — get 5 in a row to win!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="sound-match.html" class="card letters">
-      <div class="card-icon">🖼️</div>
+      <div class="card-icon"><img src="icons/icon-sound-match.png" alt="Letter Sound Match"></div>
       <h3>Letter Sound Match</h3>
       <p>See a letter and pick the picture that starts with that letter sound!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="i-spy.html" class="card letters">
-      <div class="card-icon">🔍</div>
+      <div class="card-icon"><img src="icons/icon-i-spy.png" alt="I Spy Letters"></div>
       <h3>I Spy Letters</h3>
       <p>See a letter card and find the picture that starts with that letter — scan the grid and tap the right one!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="letter-flashcards.html" class="card letters">
-      <div class="card-icon">🃏</div>
+      <div class="card-icon"><img src="icons/icon-flashcard.png" alt="Letter Flashcards"></div>
       <h3>Letter Flashcards</h3>
       <p>Flip through all 26 letters — see the uppercase on one side, lowercase on the other!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="initial-sounds.html" class="card letters">
-      <div class="card-icon">🖼️</div>
+      <div class="card-icon"><img src="icons/icon-i-spy.png" alt="Initial Sounds"></div>
       <h3>Initial Sounds</h3>
       <p>See a picture and pick the lowercase letter it starts with — apples, elephants, and more!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
+    <a href="letter-writing-cards.html" class="card letters">
+      <div class="card-icon">📝</div>
+      <h3>Letter Writing Cards</h3>
+      <p>Download and print all 26 letter practice cards — color, circle, trace, and write each letter!</p>
+      <span class="play-btn">Download!</span>
+    </a>
+
     <a href="trace.html" class="card letters">
-      <div class="card-icon">✏️</div>
+      <div class="card-icon">✍️</div>
       <h3>Trace the Letters</h3>
       <p>Practice writing all uppercase and lowercase letters with guided strokes!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=letters" class="card letters">
-      <div class="card-icon">🔤</div>
+      <div class="card-icon"><img src="icons/icon-bingo-letters.png" alt="Letter Picture Bingo"></div>
       <h3>Letter Picture Bingo</h3>
       <p>See a picture and find the starting letter on your bingo board — great for A to Z practice!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="pinball.html?cat=letters" class="card letters">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-pinball.png" alt="Letter Pinball"></div>
       <h3>Letter Pinball</h3>
       <p>See a picture, then flip the ball into the bumper showing the right starting letter! Arcade fun meets A–Z learning!</p>
       <span class="play-btn">Play Now!</span>
@@ -474,7 +676,7 @@
   <div class="games-grid">
 
     <a href="sw-go-fish.html" class="card sight wide">
-      <div class="card-icon">🐠</div>
+      <div class="card-icon">🎣</div>
       <div class="wide-body">
         <span class="hot-badge">⭐ Fan Favorite</span>
         <h3>Sight Word Go Fish</h3>
@@ -484,7 +686,7 @@
     </a>
 
     <a href="sw-bingo.html" class="card sight">
-      <div class="card-icon">🎯</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Sight Word Bingo"></div>
       <h3>Sight Word Bingo</h3>
       <p>Listen for sight words and mark them on your bingo card — get 5 in a row to win!</p>
       <span class="play-btn">Play Now!</span>
@@ -515,18 +717,18 @@
   </div>
 
   <!-- ══ WORD FAMILY GAMES ══ -->
-  <div class="section-label wf">🏗️ Word Family Games</div>
+  <div class="section-label wf">🧩 Word Family Games</div>
   <div class="games-grid">
 
     <a href="phonics-bingo.html?cat=wordbuilding" class="card wf">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Word Family Bingo"></div>
       <h3>Word Family Bingo</h3>
       <p>See a picture and find the CVC word on your bingo board — cat, hat, bed, pig, and more!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="pinball.html?cat=wordbuilding" class="card wf">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-pinball.png" alt="CVC Word Pinball"></div>
       <h3>CVC Word Pinball</h3>
       <p>Bounce the ball into the right CVC word bumper — cat, hop, bug, and more! A fun arcade spin on short vowels!</p>
       <span class="play-btn">Play Now!</span>
@@ -539,7 +741,7 @@
   <div class="games-grid">
 
     <a href="spell-it.html" class="card sp wide">
-      <div class="card-icon">✏️</div>
+      <div class="card-icon">🔡</div>
       <div class="wide-body">
         <span class="hot-badge">⭐ Popular</span>
         <h3>Spell It!</h3>
@@ -556,7 +758,7 @@
     </a>
 
     <a href="word-family.html" class="card sp">
-      <div class="card-icon">🏗️</div>
+      <div class="card-icon">🧱</div>
       <h3>Word Family Builder</h3>
       <p>Pick the starting letter to complete CVC word families! Short A, E, I, O, and U vowels.</p>
       <span class="play-btn">Play Now!</span>
@@ -566,39 +768,39 @@
   </div>
 
   <!-- ══ LONG VOWEL GAMES ══ -->
-  <div class="section-label lv">🔤 Long Vowel Games</div>
+  <div class="section-label lv">🗣️ Long Vowel Games</div>
   <div class="games-grid">
 
     <a href="long-vowels.html" class="card lv">
-      <div class="card-icon">🔤</div>
+      <div class="card-icon">🗣️</div>
       <h3>Long Vowel Sounds</h3>
       <p>Learn how to spell long vowel sounds — a, ai, ay / ee, ea / i, igh / o, oa, ow / u, ew.</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=longvowels" class="card lv">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Long Vowel Bingo"></div>
       <h3>Long Vowel Bingo</h3>
       <p>See a picture and find the long vowel word on your bingo board — cake, feet, kite, boat!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=silente" class="card lv">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Silent E Bingo"></div>
       <h3>Silent E Bingo</h3>
       <p>Practice vowel-consonant-e words — cake, kite, bone, cube. The e is silent but changes the vowel!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=vowelteams" class="card lv">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Vowel Teams Bingo"></div>
       <h3>Vowel Teams Bingo</h3>
       <p>Two vowels team up! Practice ai, ay, ee, ea, oa, ow, ew words — rain, feet, boat, snow!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="pinball.html?cat=longvowels" class="card lv">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-pinball.png" alt="Long Vowel Pinball"></div>
       <h3>Long Vowel Pinball</h3>
       <p>Aim the ball at long vowel word bumpers — cake, feet, kite, boat, cube! Arcade action meets phonics!</p>
       <span class="play-btn">Play Now!</span>
@@ -607,25 +809,25 @@
   </div>
 
   <!-- ══ IRREGULAR SOUND GAMES ══ -->
-  <div class="section-label ir">🎲 Irregular Letter Sound Games</div>
+  <div class="section-label ir">🌊 Irregular Letter Sound Games</div>
   <div class="games-grid">
 
     <a href="irregular-sounds.html" class="card ir">
-      <div class="card-icon">🎲</div>
+      <div class="card-icon">🌊</div>
       <h3>Irregular Sound Combos</h3>
       <p>Practice tricky vowel teams — ou/ow, oi/oy, oo, au/aw, and silent letter combinations.</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=irregular" class="card ir">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Irregular Sound Bingo"></div>
       <h3>Irregular Sound Bingo</h3>
       <p>See a picture and find the tricky vowel word on your bingo board — house, coin, moon!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="pinball.html?cat=irregular" class="card ir">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-pinball.png" alt="Irregular Sound Pinball"></div>
       <h3>Irregular Sound Pinball</h3>
       <p>Flip the ball into tricky vowel word bumpers — house, moon, coin, clown! Arcade practice for tough sounds!</p>
       <span class="play-btn">Play Now!</span>
@@ -634,46 +836,46 @@
   </div>
 
   <!-- ══ DIGRAPH & BLEND GAMES ══ -->
-  <div class="section-label db">🔗 Digraph &amp; Blend Games</div>
+  <div class="section-label db">🌸 Digraph &amp; Blend Games</div>
   <div class="games-grid">
 
     <a href="digraphs.html" class="card db">
-      <div class="card-icon">🔗</div>
+      <div class="card-icon">🌸</div>
       <h3>Digraphs &amp; Blends</h3>
       <p>Learn letter blends and digraphs — sh, ch, th, wh, ph, and all the consonant blends!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=digraphs" class="card db">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Digraphs Bingo"></div>
       <h3>Digraphs Bingo</h3>
       <p>Find sh, ch, th, wh, and ph words on your bingo board — ship, chin, whale, phone!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=beginblends" class="card db">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Beginning Blends Bingo"></div>
       <h3>Beginning Blends Bingo</h3>
       <p>Find words that start with consonant blends — flag, crab, train, spring, squid!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=endblends" class="card db">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Ending Blends Bingo"></div>
       <h3>Ending Blends Bingo</h3>
       <p>Find words that end with consonant blends — hand, lamp, nest, cold, belt, milk!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=bothblends" class="card db">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="Beginning and Ending Blends Bingo"></div>
       <h3>Beginning &amp; Ending Blends Bingo</h3>
       <p>Challenge round! Words with blends on BOTH ends — stamp, frost, drink, blend, trunk!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="pinball.html?cat=digraphs" class="card db">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-pinball.png" alt="Digraph and Blend Pinball"></div>
       <h3>Digraph &amp; Blend Pinball</h3>
       <p>Bounce the ball into sh, ch, th, and blend word bumpers — ship, chin, frog, train! Phonics + pinball!</p>
       <span class="play-btn">Play Now!</span>
@@ -682,25 +884,25 @@
   </div>
 
   <!-- ══ CONTROLLED R GAMES ══ -->
-  <div class="section-label rc">🌀 Controlled R Games</div>
+  <div class="section-label rc">⭐ Controlled R Games</div>
   <div class="games-grid">
 
     <a href="r-controlled.html" class="card rc">
-      <div class="card-icon">🌀</div>
+      <div class="card-icon">🌟</div>
       <h3>R-Controlled Vowels</h3>
       <p>Practice the bossy R! ar, er, ir, or, and ur vowel patterns that change the vowel sound.</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="phonics-bingo.html?cat=rcontrolled" class="card rc">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-bingo-sight.png" alt="R-Controlled Bingo"></div>
       <h3>R-Controlled Bingo</h3>
       <p>See a picture and find the bossy-R word on your bingo board — car, bird, corn, burn!</p>
       <span class="play-btn">Play Now!</span>
     </a>
 
     <a href="pinball.html?cat=rcontrolled" class="card rc">
-      <div class="card-icon">🎰</div>
+      <div class="card-icon"><img src="icons/icon-pinball.png" alt="R-Controlled Pinball"></div>
       <h3>R-Controlled Pinball</h3>
       <p>Aim the ball at bossy-R word bumpers — car, bird, corn, fur! Flip your way through ar, er, ir, or, ur!</p>
       <span class="play-btn">Play Now!</span>
@@ -714,5 +916,136 @@
   Reading games for early learners 📚 — Play, learn, and grow!
 </footer>
 
+<script>
+  // ── CONFIG (must match login.html & students.html) ──
+  const HUB_CLASS_CODE   = 'FIRSTSTEP';
+  const HUB_SCHOOL_START = 7;   // 7:00 AM
+  const HUB_SCHOOL_END   = 16;  // 4:00 PM
+
+  function hubIsSchoolHours() {
+    const h = new Date().getHours();
+    return h >= HUB_SCHOOL_START && h < HUB_SCHOOL_END;
+  }
+
+  function hubIsCodeValid() {
+    return sessionStorage.getItem('fsr_code_valid') === '1';
+  }
+
+  // ── ACCESS BAR ──
+  function renderAccessBar() {
+    const bar = document.getElementById('access-bar');
+    if (hubIsSchoolHours()) {
+      bar.className = 'school-hours';
+      const end = new Date();
+      end.setHours(HUB_SCHOOL_END, 0, 0, 0);
+      bar.innerHTML = `
+        <span class="access-dot"></span>
+        <span>🟢 <strong>School Hours</strong> — All games are free!</span>
+        <span class="access-countdown" id="hub-countdown"></span>
+        <a href="login.html" class="access-bar-link">Teacher Login</a>`;
+      updateCountdown();
+    } else if (hubIsCodeValid()) {
+      bar.className = 'code-granted';
+      bar.innerHTML = `
+        <span class="access-dot"></span>
+        <span>✅ <strong>Class Code Accepted</strong> — Enjoy the games!</span>
+        <a href="login.html" class="access-bar-link">Teacher Login</a>`;
+    } else {
+      bar.className = 'needs-code';
+      bar.innerHTML = `
+        <span>🔒 <strong>Enter your class code to play:</strong></span>
+        <div id="hub-code-form">
+          <input id="hub-code-input" type="text" maxlength="12" placeholder="CLASS CODE"
+            autocomplete="off" autocorrect="off" spellcheck="false"
+            oninput="this.value=this.value.toUpperCase()"
+            onkeydown="if(event.key==='Enter')hubSubmitCode()">
+          <button id="hub-code-btn" onclick="hubSubmitCode()">→ Play!</button>
+        </div>
+        <a href="login.html" class="access-bar-link">Teacher Login</a>`;
+      showGateOverlay();
+    }
+  }
+
+  // ── COUNTDOWN TIMER ──
+  function updateCountdown() {
+    const el = document.getElementById('hub-countdown');
+    if (!el) return;
+    const now = new Date();
+    const end = new Date(); end.setHours(HUB_SCHOOL_END, 0, 0, 0);
+    const diff = end - now;
+    if (diff <= 0) { location.reload(); return; }
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    el.textContent = h > 0 ? `(${h}h ${m}m left)` : `(${m} min left)`;
+  }
+  setInterval(updateCountdown, 30000);
+
+  // ── SUBMIT CODE FROM BAR ──
+  function hubSubmitCode() {
+    const input = document.getElementById('hub-code-input');
+    if (!input) return;
+    const val = input.value.trim().toUpperCase();
+    if (val === HUB_CLASS_CODE) {
+      sessionStorage.setItem('fsr_code_valid', '1');
+      const overlay = document.getElementById('gate-overlay');
+      if (overlay) overlay.remove();
+      renderAccessBar();
+    } else {
+      input.classList.add('shake');
+      setTimeout(() => input.classList.remove('shake'), 500);
+    }
+  }
+
+  // ── SUBMIT CODE FROM GATE ──
+  function gateSubmit() {
+    const input = document.getElementById('gate-input');
+    const err   = document.getElementById('gate-error');
+    const val   = input.value.trim().toUpperCase();
+    if (val === HUB_CLASS_CODE) {
+      sessionStorage.setItem('fsr_code_valid', '1');
+      document.getElementById('gate-overlay').remove();
+      renderAccessBar();
+    } else {
+      err.classList.add('show');
+      input.classList.add('shake');
+      setTimeout(() => { input.classList.remove('shake'); err.classList.remove('show'); }, 1500);
+    }
+  }
+
+  // ── GATE OVERLAY ──
+  function showGateOverlay() {
+    if (document.getElementById('gate-overlay')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'gate-overlay';
+    const now = new Date();
+    const isBeforeSchool = now.getHours() < HUB_SCHOOL_START;
+    const timeMsg = isBeforeSchool
+      ? `School hours start at <strong>7:00 AM</strong>`
+      : `School hours are <strong>7:00 AM – 4:00 PM</strong>`;
+    overlay.innerHTML = `
+      <div class="gate-box">
+        <span class="gate-icon">🔒</span>
+        <h2>Class Code Required</h2>
+        <p>It's outside school hours right now.<br>Enter your class code to play!</p>
+        <div class="gate-code-row">
+          <input id="gate-input" type="text" maxlength="12" placeholder="CLASS CODE"
+            autocomplete="off" autocorrect="off" spellcheck="false"
+            oninput="this.value=this.value.toUpperCase()"
+            onkeydown="if(event.key==='Enter')gateSubmit()"
+            autofocus>
+          <button id="gate-submit" onclick="gateSubmit()">→</button>
+        </div>
+        <div class="gate-error" id="gate-error">❌ Oops! Ask your teacher for the right code.</div>
+        <a href="students.html" style="display:block;margin-bottom:0.5rem;font-family:'Fredoka One',cursive;font-size:1rem;color:#6B48FF;">
+          Need help? Go to the student page →
+        </a>
+        <div class="gate-hours">💡 ${timeMsg} — free access for everyone!</div>
+      </div>`;
+    document.body.appendChild(overlay);
+    document.getElementById('gate-input').focus();
+  }
+
+  renderAccessBar();
+</script>
 </body>
 </html>

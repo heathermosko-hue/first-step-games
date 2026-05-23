@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letter Writing Practice Cards</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+  background: linear-gradient(135deg, #4776e6 0%, #8e54e9 100%);
+  min-height: 100vh;
+  padding: 16px;
+}
+header {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.back-btn {
+  background: rgba(255,255,255,0.22);
+  border: none; color: white;
+  padding: 8px 16px; border-radius: 20px;
+  font-size: 1rem; cursor: pointer;
+  font-family: inherit; text-decoration: none; display: inline-block;
+}
+.title { color: white; font-size: 1.3rem; font-weight: bold; text-align: center; flex: 1; }
+
+.intro {
+  text-align: center;
+  color: rgba(255,255,255,0.9);
+  font-size: 1rem;
+  max-width: 700px;
+  margin: 0 auto 24px;
+  line-height: 1.5;
+}
+
+/* Download all button */
+.dl-all-wrap {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.dl-all-btn {
+  background: white;
+  color: #4776e6;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  transition: transform 0.12s;
+}
+.dl-all-btn:hover { transform: scale(1.04); }
+
+/* Cards grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.card-wrap {
+  background: white;
+  border-radius: 18px;
+  padding: 10px 10px 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.12s;
+}
+.card-wrap:hover { transform: translateY(-3px); }
+.card-wrap img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #fafafa;
+  display: block;
+}
+.letter-label {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #4776e6;
+}
+.dl-btn {
+  background: linear-gradient(135deg, #4776e6, #8e54e9);
+  color: white;
+  border: none;
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 3px 10px rgba(71,118,230,0.35);
+  transition: transform 0.12s, opacity 0.12s;
+}
+.dl-btn:hover { transform: scale(1.06); opacity: 0.92; }
+
+footer {
+  text-align: center;
+  color: rgba(255,255,255,0.65);
+  font-size: 0.8rem;
+  margin-top: 28px;
+  padding-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-btn">← Back</a>
+  <div class="title">✏️ Writing Practice Cards</div>
+  <div style="width:80px"></div>
+</header>
+
+<p class="intro">
+  Download and print any letter card for handwriting practice at home!
+  Each card shows how to color, circle, trace, and write the letter.
+</p>
+
+<div class="dl-all-wrap">
+  <button class="dl-all-btn" onclick="downloadAll()">⬇️ Download All 26 Cards</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>Tap a card to preview &nbsp;|&nbsp; Click Download to save the PNG</footer>
+
+<script>
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+const grid = document.getElementById('grid');
+LETTERS.forEach(L => {
+  const file = `letter-cards/letter_${L}.png`;
+  const wrap = document.createElement('div');
+  wrap.className = 'card-wrap';
+  wrap.innerHTML = `
+    <img src="${file}" alt="Letter ${L} writing card" loading="lazy"
+         onclick="window.open('${file}','_blank')">
+    <div class="letter-label">${L} / ${L.toLowerCase()}</div>
+    <a class="dl-btn" href="${file}" download="letter_${L}_writing_card.png">⬇️ Download</a>
+  `;
+  grid.appendChild(wrap);
+});
+
+function downloadAll() {
+  const btn = document.querySelector('.dl-all-btn');
+  btn.textContent = '⏳ Downloading…';
+  btn.disabled = true;
+  let i = 0;
+  function next() {
+    if (i >= LETTERS.length) {
+      btn.textContent = '✅ All Done!';
+      setTimeout(() => { btn.textContent = '⬇️ Download All 26 Cards'; btn.disabled = false; }, 2500);
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = `letter-cards/letter_${LETTERS[i]}.png`;
+    a.download = `letter_${LETTERS[i]}_writing_card.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    i++;
+    setTimeout(next, 350);  // stagger downloads so browser doesn't block
+  }
+  next();
+}
+</script>
+</body>
+</html>
