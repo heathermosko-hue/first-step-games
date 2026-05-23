@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Games for Kids | Learn-to-Read Activities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --blue:   #3A8EF6;
+      --indigo: #6B48FF;
+      --coral:  #FF6B6B;
+      --yellow: #FFD93D;
+      --green:  #6BCB77;
+      --purple: #9B59B6;
+      --bg:     #FFF8F0;
+      --text:   #2C3E50;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(150deg, #FF6B6B 0%, #FFD93D 50%, #6BCB77 100%);
+      padding: 3.5rem 1rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '🌟 📚 🎯 🎮 🔤 🌟 📚 🎯 🎮 🔤 🌟 📚 🎯 🎮 🔤';
+      position: absolute;
+      top: 8px; left: 0; right: 0;
+      font-size: 1rem;
+      opacity: 0.18;
+      white-space: nowrap;
+      overflow: hidden;
+      letter-spacing: 6px;
+    }
+
+    .hero::after {
+      content: '⭐ 🎪 🏆 📖 🎨 ⭐ 🎪 🏆 📖 🎨 ⭐ 🎪 🏆 📖 🎨';
+      position: absolute;
+      bottom: 8px; left: 0; right: 0;
+      font-size: 1rem;
+      opacity: 0.18;
+      white-space: nowrap;
+      overflow: hidden;
+      letter-spacing: 6px;
+    }
+
+    .hero-inner { position: relative; z-index: 1; }
+
+    .hero-tagline {
+      display: inline-block;
+      background: rgba(255,255,255,0.35);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 800;
+      padding: 5px 20px;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .hero h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.4rem, 8vw, 4.2rem);
+      color: white;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      line-height: 1.1;
+    }
+
+    .hero h1 span {
+      display: block;
+      font-size: 0.62em;
+      opacity: 0.92;
+    }
+
+    .hero-sub {
+      color: rgba(255,255,255,0.95);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 0.75rem;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.12);
+    }
+
+    .hero-count {
+      display: inline-block;
+      margin-top: 1.25rem;
+      background: white;
+      color: var(--coral);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      padding: 8px 28px;
+      border-radius: 999px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.35rem;
+      margin: 2.5rem 0 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 3px;
+      border-radius: 3px;
+    }
+
+    .section-label.letters { color: #3A8EF6; }
+    .section-label.letters::after { background: linear-gradient(90deg, #3A8EF6 0%, transparent 100%); }
+
+    .section-label.sight { color: #FF6B6B; }
+    .section-label.sight::after { background: linear-gradient(90deg, #FF6B6B 0%, transparent 100%); }
+
+    .section-label.phonics { color: #6BCB77; }
+    .section-label.phonics::after { background: linear-gradient(90deg, #6BCB77 0%, transparent 100%); }
+
+    /* ── GRID ── */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.4rem;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 1.8rem 1.3rem 1.5rem;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.45rem;
+      transition: transform 0.22s, box-shadow 0.22s;
+      border: 3px solid transparent;
+    }
+
+    .card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.13);
+    }
+
+    /* category accent colors */
+    .card.letters {
+      background: linear-gradient(white,white) padding-box,
+                  linear-gradient(135deg,#3A8EF6,#6B48FF) border-box;
+    }
+    .card.letters:hover { box-shadow: 0 16px 40px rgba(58,142,246,0.22); }
+
+    .card.sight {
+      background: linear-gradient(white,white) padding-box,
+                  linear-gradient(135deg,#FF6B6B,#FFD93D) border-box;
+    }
+    .card.sight:hover { box-shadow: 0 16px 40px rgba(255,107,107,0.22); }
+
+    .card.phonics {
+      background: linear-gradient(white,white) padding-box,
+                  linear-gradient(135deg,#6BCB77,#3A8EF6) border-box;
+    }
+    .card.phonics:hover { box-shadow: 0 16px 40px rgba(107,203,119,0.22); }
+
+    .card-icon {
+      font-size: 4rem;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.12));
+    }
+
+    .card h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      line-height: 1.25;
+    }
+
+    .card p {
+      font-size: 0.83rem;
+      color: #777;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .play-btn {
+      margin-top: 0.9rem;
+      display: inline-block;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      color: white;
+      padding: 9px 28px;
+      border-radius: 999px;
+      letter-spacing: 0.4px;
+      transition: opacity 0.18s;
+    }
+    .card:hover .play-btn { opacity: 0.85; }
+
+    .card.letters .play-btn { background: linear-gradient(135deg,#3A8EF6,#6B48FF); box-shadow: 0 4px 14px rgba(58,142,246,.32); }
+    .card.sight   .play-btn { background: linear-gradient(135deg,#FF6B6B,#FFD93D); box-shadow: 0 4px 14px rgba(255,107,107,.32); }
+    .card.phonics .play-btn { background: linear-gradient(135deg,#6BCB77,#3A8EF6); box-shadow: 0 4px 14px rgba(107,203,119,.32); }
+
+    /* ── WORD FAMILY ── */
+    .section-label.wf { color: #9B59B6; }
+    .section-label.wf::after { background: linear-gradient(90deg,#9B59B6 0%,transparent 100%); }
+    .card.wf { background: linear-gradient(white,white) padding-box, linear-gradient(135deg,#9B59B6,#6C3483) border-box; }
+    .card.wf:hover { box-shadow: 0 16px 40px rgba(155,89,182,0.22); }
+    .card.wf .play-btn { background: linear-gradient(135deg,#9B59B6,#6C3483); box-shadow: 0 4px 14px rgba(155,89,182,.32); }
+
+    /* ── LONG VOWELS ── */
+    .section-label.lv { color: #16A085; }
+    .section-label.lv::after { background: linear-gradient(90deg,#16A085 0%,transparent 100%); }
+    .card.lv { background: linear-gradient(white,white) padding-box, linear-gradient(135deg,#16A085,#1ABC9C) border-box; }
+    .card.lv:hover { box-shadow: 0 16px 40px rgba(22,160,133,0.22); }
+    .card.lv .play-btn { background: linear-gradient(135deg,#16A085,#1ABC9C); box-shadow: 0 4px 14px rgba(22,160,133,.32); }
+
+    /* ── IRREGULAR SOUNDS ── */
+    .section-label.ir { color: #E67E22; }
+    .section-label.ir::after { background: linear-gradient(90deg,#E67E22 0%,transparent 100%); }
+    .card.ir { background: linear-gradient(white,white) padding-box, linear-gradient(135deg,#E67E22,#D35400) border-box; }
+    .card.ir:hover { box-shadow: 0 16px 40px rgba(230,126,34,0.22); }
+    .card.ir .play-btn { background: linear-gradient(135deg,#E67E22,#D35400); box-shadow: 0 4px 14px rgba(230,126,34,.32); }
+
+    /* ── DIGRAPHS & BLENDS ── */
+    .section-label.db { color: #C0392B; }
+    .section-label.db::after { background: linear-gradient(90deg,#C0392B 0%,transparent 100%); }
+    .card.db { background: linear-gradient(white,white) padding-box, linear-gradient(135deg,#C0392B,#E74C3C) border-box; }
+    .card.db:hover { box-shadow: 0 16px 40px rgba(192,57,43,0.22); }
+    .card.db .play-btn { background: linear-gradient(135deg,#C0392B,#E74C3C); box-shadow: 0 4px 14px rgba(192,57,43,.32); }
+
+    /* ── R-CONTROLLED ── */
+    .section-label.rc { color: #2471A3; }
+    .section-label.rc::after { background: linear-gradient(90deg,#2471A3 0%,transparent 100%); }
+    .card.rc { background: linear-gradient(white,white) padding-box, linear-gradient(135deg,#2471A3,#3498DB) border-box; }
+    .card.rc:hover { box-shadow: 0 16px 40px rgba(36,113,163,0.22); }
+    .card.rc .play-btn { background: linear-gradient(135deg,#2471A3,#3498DB); box-shadow: 0 4px 14px rgba(36,113,163,.32); }
+
+    /* ── SPELLING ── */
+    .section-label.sp { color: #7C3AED; }
+    .section-label.sp::after { background: linear-gradient(90deg,#7C3AED 0%,transparent 100%); }
+    .card.sp { background: linear-gradient(white,white) padding-box, linear-gradient(135deg,#7C3AED,#4F46E5) border-box; }
+    .card.sp:hover { box-shadow: 0 16px 40px rgba(124,58,237,0.22); }
+    .card.sp .play-btn { background: linear-gradient(135deg,#7C3AED,#4F46E5); box-shadow: 0 4px 14px rgba(124,58,237,.32); }
+
+    /* ── READING BOOKS ── */
+    .section-label.books { color: #7C3AED; }
+    .section-label.books::after { background: linear-gradient(90deg,#7C3AED 0%,transparent 100%); }
+    .card.books {
+      background: linear-gradient(white,white) padding-box,
+                  linear-gradient(135deg,#7C3AED,#EC4899) border-box;
+    }
+    .card.books:hover { box-shadow: 0 16px 40px rgba(124,58,237,0.25); }
+    .card.books .play-btn { background: linear-gradient(135deg,#7C3AED,#EC4899); box-shadow: 0 4px 14px rgba(124,58,237,.32); }
+    .new-badge {
+      display: inline-block;
+      align-self: flex-start;
+      background: linear-gradient(135deg,#7C3AED,#EC4899);
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.75rem;
+      padding: 3px 11px;
+      border-radius: 999px;
+    }
+
+    /* ── FEATURED WIDE CARD ── */
+    .card.wide {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      text-align: left;
+      gap: 1.6rem;
+      padding: 2rem 2.2rem;
+      max-width: 620px;
+      justify-self: center;
+      width: 100%;
+    }
+
+    .card.wide .card-icon { font-size: 5rem; flex-shrink: 0; margin-bottom: 0; }
+
+    .wide-body { display: flex; flex-direction: column; gap: 0.4rem; }
+    .card.wide h3 { font-size: 1.35rem; }
+
+    .hot-badge {
+      display: inline-block;
+      align-self: flex-start;
+      background: linear-gradient(135deg,#FF6B6B,#FF8E53);
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.75rem;
+      padding: 3px 11px;
+      border-radius: 999px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+      font-weight: 600;
+      border-top: 2px solid #FFE8D0;
+    }
+
+    @media (max-width: 540px) {
+      .card.wide { flex-direction: column; text-align: center; }
+      .card.wide .wide-body { align-items: center; }
+      .hot-badge { align-self: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tagline">🎉 Fun for Kids!</div>
+    <h1>
+      Reading Games
+      <span>for Early Readers</span>
+    </h1>
+    <p class="hero-sub">Letters · Sight Words · Phonics — All in one place!</p>
+    <div class="hero-count">36 games to play right now 🚀</div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ══ READING BOOKS ══ -->
+  <div class="section-label books">📚 Reading Books</div>
+  <div class="games-grid">
+
+    <a href="book1.html" class="card books wide">
+      <div class="card-icon">📖</div>
+      <div class="wide-body">
+        <h3>Book 1: Short Vowel A</h3>
+        <p>A 26-page turnable book teaching short vowel A words — cat, bat, hat, can, man, cap, map, and more! Click any word to hear it read aloud in a natural voice.</p>
+        <span class="play-btn">Read Now!</span>
+      </div>
+    </a>
+
+    <a href="book2.html" class="card books wide">
+      <div class="card-icon">📗</div>
+      <div class="wide-body">
+        <span class="new-badge">✨ New!</span>
+        <h3>Book 2: Long Vowels</h3>
+        <p>68 illustrated pages covering long vowel sounds A, E, I, O, U with stories about Kate, Glee, Dice, Moat, and Luke. Click any word to hear it read aloud!</p>
+        <span class="play-btn">Read Now!</span>
+      </div>
+    </a>
+
+    <a href="book3.html" class="card books wide">
+      <div class="card-icon">📘</div>
+      <div class="wide-body">
+        <span class="new-badge">✨ New!</span>
+        <h3>Book 3: Consonants &amp; Exceptions</h3>
+        <p>84 illustrated pages teaching irregular vowels, consonant blends, and controlled-R words. Stories featuring all your favorite characters!</p>
+        <span class="play-btn">Read Now!</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ══ LETTER GAMES ══ -->
+  <div class="section-label letters">🔤 Letter Games</div>
+  <div class="games-grid">
+
+    <a href="go-fish.html" class="card letters wide">
+      <div class="card-icon">🐠</div>
+      <div class="wide-body">
+        <span class="hot-badge">⭐ Fan Favorite</span>
+        <h3>Letter Go Fish</h3>
+        <p>Match uppercase and lowercase letters to collect pairs! Play against the computer and be first to match all 26 letters.</p>
+        <span class="play-btn">Play Now!</span>
+      </div>
+    </a>
+
+    <a href="memory.html" class="card letters">
+      <div class="card-icon">🃏</div>
+      <h3>Letter Memory Match</h3>
+      <p>Flip cards to find matching uppercase and lowercase letter pairs!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="bingo.html" class="card letters">
+      <div class="card-icon">🎯</div>
+      <h3>Letter Bingo</h3>
+      <p>Hear a letter called and mark it on your bingo card — get 5 in a row to win!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="sound-match.html" class="card letters">
+      <div class="card-icon">🖼️</div>
+      <h3>Letter Sound Match</h3>
+      <p>See a letter and pick the picture that starts with that letter sound!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="i-spy.html" class="card letters">
+      <div class="card-icon">🔍</div>
+      <h3>I Spy Letters</h3>
+      <p>See a letter card and find the picture that starts with that letter — scan the grid and tap the right one!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="trace.html" class="card letters">
+      <div class="card-icon">✏️</div>
+      <h3>Trace the Letters</h3>
+      <p>Practice writing all uppercase and lowercase letters with guided strokes!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=letters" class="card letters">
+      <div class="card-icon">🔤</div>
+      <h3>Letter Picture Bingo</h3>
+      <p>See a picture and find the starting letter on your bingo board — great for A to Z practice!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="pinball.html?cat=letters" class="card letters">
+      <div class="card-icon">🎰</div>
+      <h3>Letter Pinball</h3>
+      <p>See a picture, then flip the ball into the bumper showing the right starting letter! Arcade fun meets A–Z learning!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+  </div>
+
+  <!-- ══ SIGHT WORD GAMES ══ -->
+  <div class="section-label sight">📖 Sight Word Games</div>
+  <div class="games-grid">
+
+    <a href="sw-go-fish.html" class="card sight wide">
+      <div class="card-icon">🐠</div>
+      <div class="wide-body">
+        <span class="hot-badge">⭐ Fan Favorite</span>
+        <h3>Sight Word Go Fish</h3>
+        <p>Collect matching pairs of sight words! Ask the computer for the word you need, or go fish and draw from the deck.</p>
+        <span class="play-btn">Play Now!</span>
+      </div>
+    </a>
+
+    <a href="sw-bingo.html" class="card sight">
+      <div class="card-icon">🎯</div>
+      <h3>Sight Word Bingo</h3>
+      <p>Listen for sight words and mark them on your bingo card — get 5 in a row to win!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="word-race.html" class="card sight">
+      <div class="card-icon">🏎️</div>
+      <h3>Sight Word Race</h3>
+      <p>Hear a word and click the right car to race it to the finish line! Four levels: Pre-K to Grade 2.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="basketball.html" class="card sight">
+      <div class="card-icon">🏀</div>
+      <h3>Word Hoops</h3>
+      <p>Hear a sight word and shoot it into the right basket! Score as many baskets as you can in 60 seconds!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="snakes-ladders.html" class="card sight">
+      <div class="card-icon">🐍</div>
+      <h3>Snakes &amp; Ladders</h3>
+      <p>Roll the dice, move your token, and answer sight word challenges! Climb ladders and avoid the snakes!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+
+  </div>
+
+  <!-- ══ WORD FAMILY GAMES ══ -->
+  <div class="section-label wf">🏗️ Word Family Games</div>
+  <div class="games-grid">
+
+    <a href="phonics-bingo.html?cat=wordbuilding" class="card wf">
+      <div class="card-icon">🎰</div>
+      <h3>Word Family Bingo</h3>
+      <p>See a picture and find the CVC word on your bingo board — cat, hat, bed, pig, and more!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="pinball.html?cat=wordbuilding" class="card wf">
+      <div class="card-icon">🎰</div>
+      <h3>CVC Word Pinball</h3>
+      <p>Bounce the ball into the right CVC word bumper — cat, hop, bug, and more! A fun arcade spin on short vowels!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+  </div>
+
+  <!-- ══ SPELLING GAMES ══ -->
+  <div class="section-label sp">✏️ Spelling Games</div>
+  <div class="games-grid">
+
+    <a href="spell-it.html" class="card sp wide">
+      <div class="card-icon">✏️</div>
+      <div class="wide-body">
+        <span class="hot-badge">⭐ Popular</span>
+        <h3>Spell It!</h3>
+        <p>Hear a word and click the letters to spell it! Choose from Book 1, Book 2, Book 3, All Sight Words, CVC words, or Long Vowels.</p>
+        <span class="play-btn">Play Now!</span>
+      </div>
+    </a>
+
+    <a href="spell-it.html" class="card sp">
+      <div class="card-icon">🐱</div>
+      <h3>Spell CVC Words</h3>
+      <p>Click the letter tiles to spell short vowel words — cat, dog, sun, pig, and more! Great for sounding out.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="word-family.html" class="card sp">
+      <div class="card-icon">🏗️</div>
+      <h3>Word Family Builder</h3>
+      <p>Pick the starting letter to complete CVC word families! Short A, E, I, O, and U vowels.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+
+  </div>
+
+  <!-- ══ LONG VOWEL GAMES ══ -->
+  <div class="section-label lv">🔤 Long Vowel Games</div>
+  <div class="games-grid">
+
+    <a href="long-vowels.html" class="card lv">
+      <div class="card-icon">🔤</div>
+      <h3>Long Vowel Sounds</h3>
+      <p>Learn how to spell long vowel sounds — a, ai, ay / ee, ea / i, igh / o, oa, ow / u, ew.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=longvowels" class="card lv">
+      <div class="card-icon">🎰</div>
+      <h3>Long Vowel Bingo</h3>
+      <p>See a picture and find the long vowel word on your bingo board — cake, feet, kite, boat!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=silente" class="card lv">
+      <div class="card-icon">🎰</div>
+      <h3>Silent E Bingo</h3>
+      <p>Practice vowel-consonant-e words — cake, kite, bone, cube. The e is silent but changes the vowel!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=vowelteams" class="card lv">
+      <div class="card-icon">🎰</div>
+      <h3>Vowel Teams Bingo</h3>
+      <p>Two vowels team up! Practice ai, ay, ee, ea, oa, ow, ew words — rain, feet, boat, snow!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="pinball.html?cat=longvowels" class="card lv">
+      <div class="card-icon">🎰</div>
+      <h3>Long Vowel Pinball</h3>
+      <p>Aim the ball at long vowel word bumpers — cake, feet, kite, boat, cube! Arcade action meets phonics!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+  </div>
+
+  <!-- ══ IRREGULAR SOUND GAMES ══ -->
+  <div class="section-label ir">🎲 Irregular Letter Sound Games</div>
+  <div class="games-grid">
+
+    <a href="irregular-sounds.html" class="card ir">
+      <div class="card-icon">🎲</div>
+      <h3>Irregular Sound Combos</h3>
+      <p>Practice tricky vowel teams — ou/ow, oi/oy, oo, au/aw, and silent letter combinations.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=irregular" class="card ir">
+      <div class="card-icon">🎰</div>
+      <h3>Irregular Sound Bingo</h3>
+      <p>See a picture and find the tricky vowel word on your bingo board — house, coin, moon!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="pinball.html?cat=irregular" class="card ir">
+      <div class="card-icon">🎰</div>
+      <h3>Irregular Sound Pinball</h3>
+      <p>Flip the ball into tricky vowel word bumpers — house, moon, coin, clown! Arcade practice for tough sounds!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+  </div>
+
+  <!-- ══ DIGRAPH & BLEND GAMES ══ -->
+  <div class="section-label db">🔗 Digraph &amp; Blend Games</div>
+  <div class="games-grid">
+
+    <a href="digraphs.html" class="card db">
+      <div class="card-icon">🔗</div>
+      <h3>Digraphs &amp; Blends</h3>
+      <p>Learn letter blends and digraphs — sh, ch, th, wh, ph, and all the consonant blends!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=digraphs" class="card db">
+      <div class="card-icon">🎰</div>
+      <h3>Digraphs Bingo</h3>
+      <p>Find sh, ch, th, wh, and ph words on your bingo board — ship, chin, whale, phone!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=beginblends" class="card db">
+      <div class="card-icon">🎰</div>
+      <h3>Beginning Blends Bingo</h3>
+      <p>Find words that start with consonant blends — flag, crab, train, spring, squid!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=endblends" class="card db">
+      <div class="card-icon">🎰</div>
+      <h3>Ending Blends Bingo</h3>
+      <p>Find words that end with consonant blends — hand, lamp, nest, cold, belt, milk!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=bothblends" class="card db">
+      <div class="card-icon">🎰</div>
+      <h3>Beginning &amp; Ending Blends Bingo</h3>
+      <p>Challenge round! Words with blends on BOTH ends — stamp, frost, drink, blend, trunk!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="pinball.html?cat=digraphs" class="card db">
+      <div class="card-icon">🎰</div>
+      <h3>Digraph &amp; Blend Pinball</h3>
+      <p>Bounce the ball into sh, ch, th, and blend word bumpers — ship, chin, frog, train! Phonics + pinball!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+  </div>
+
+  <!-- ══ CONTROLLED R GAMES ══ -->
+  <div class="section-label rc">🌀 Controlled R Games</div>
+  <div class="games-grid">
+
+    <a href="r-controlled.html" class="card rc">
+      <div class="card-icon">🌀</div>
+      <h3>R-Controlled Vowels</h3>
+      <p>Practice the bossy R! ar, er, ir, or, and ur vowel patterns that change the vowel sound.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="phonics-bingo.html?cat=rcontrolled" class="card rc">
+      <div class="card-icon">🎰</div>
+      <h3>R-Controlled Bingo</h3>
+      <p>See a picture and find the bossy-R word on your bingo board — car, bird, corn, burn!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="pinball.html?cat=rcontrolled" class="card rc">
+      <div class="card-icon">🎰</div>
+      <h3>R-Controlled Pinball</h3>
+      <p>Aim the ball at bossy-R word bumpers — car, bird, corn, fur! Flip your way through ar, er, ir, or, ur!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+  </div>
+
+</main>
+
+<footer>
+  Reading games for early learners 📚 — Play, learn, and grow!
+</footer>
+
+</body>
+</html>

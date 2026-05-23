@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book 3: Consonants &amp; Exceptions</title>
+<script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a1a2e;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Comic Sans MS","Comic Sans",cursive;overflow:hidden}
+h1{color:#60d0f0;font-size:1.3rem;text-align:center;margin-bottom:10px;text-shadow:0 2px 8px #000}
+.book-stage{position:relative;width:520px;height:580px;perspective:1200px}
+#page-wrapper{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#loading{color:#a0d5f5;font-size:1.2rem;text-align:center;padding:20px}
+#canvas-container{position:relative;display:none;border-radius:8px;box-shadow:0 8px 32px #0009;overflow:hidden}
+#page-canvas{display:block;max-width:490px;max-height:560px;background:#fff}
+.textLayer{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;line-height:1;pointer-events:none}
+.textLayer span{position:absolute;color:transparent;cursor:pointer;pointer-events:auto;border-radius:3px;transition:background .15s}
+.textLayer span:hover{background:rgba(100,220,255,.35)!important}
+.textLayer span.speaking{background:rgba(0,180,255,.5)!important}
+@keyframes exitLeft{from{transform:rotateY(0);opacity:1}to{transform:rotateY(-70deg);opacity:0}}
+@keyframes enterRight{from{transform:rotateY(70deg);opacity:0}to{transform:rotateY(0);opacity:1}}
+@keyframes exitRight{from{transform:rotateY(0);opacity:1}to{transform:rotateY(70deg);opacity:0}}
+@keyframes enterLeft{from{transform:rotateY(-70deg);opacity:0}to{transform:rotateY(0);opacity:1}}
+.anim-exit-left{animation:exitLeft .4s ease-in forwards}
+.anim-exit-right{animation:exitRight .4s ease-in forwards}
+.anim-enter-right{animation:enterRight .42s ease-out forwards}
+.anim-enter-left{animation:enterLeft .42s ease-out forwards}
+.controls{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;justify-content:center}
+button{font-family:"Comic Sans MS",cursive;font-size:.85rem;padding:6px 13px;border:none;border-radius:24px;cursor:pointer;font-weight:bold;transition:transform .1s}
+button:active{transform:scale(.95)}
+button:disabled{opacity:.4;cursor:default}
+#btn-back{background:#1a6b9a;color:#fff}
+#btn-next{background:#60d0f0;color:#0a1a2e}
+#btn-read{background:#ff9d3a;color:#fff}
+#btn-flash{background:#e040fb;color:#fff;display:none}
+#btn-words{background:#26c6da;color:#003;display:none}
+#page-counter{color:#a0d5f5;font-size:.9rem;min-width:80px;text-align:center}
+#speaker-ring{width:28px;height:28px;border-radius:50%;border:3px solid #a0d5f5;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;flex-shrink:0}
+#speaker-ring.on{border-color:#ff9d3a;box-shadow:0 0 10px #ff9d3a}
+a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;opacity:.7}
+#flash-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center}
+#flash-card{background:#0a2a3e;border:3px solid #60d0f0;border-radius:20px;padding:32px 44px;display:flex;flex-direction:column;align-items:center;gap:16px;min-width:280px;max-width:90vw}
+#flash-title{font-family:"Comic Sans MS",cursive;color:#a0d5f5;font-size:1rem;font-weight:bold}
+#flash-word{font-family:"Comic Sans MS",cursive;font-size:3.2rem;font-weight:bold;color:#60d0f0;text-align:center;min-width:180px}
+#flash-counter{color:#a0d5f5;font-size:.85rem}
+#flash-btns{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+#flash-prev,#flash-next{font-family:"Comic Sans MS",cursive;background:#1a6b9a;color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;font-weight:bold}
+#flash-prev:disabled,#flash-next:disabled{opacity:.3;cursor:default}
+#flash-close{font-family:"Comic Sans MS",cursive;background:#c62828;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+#flash-speak{font-family:"Comic Sans MS",cursive;background:#ff9d3a;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+</style>
+</head>
+<body>
+<h1>Book 3: Consonants &amp; Exceptions</h1>
+<div class="book-stage">
+  <div id="page-wrapper">
+    <div id="loading">Loading book&#8230; &#128218;</div>
+    <div id="canvas-container">
+      <canvas id="page-canvas"></canvas>
+      <div id="text-layer" class="textLayer"></div>
+    </div>
+  </div>
+</div>
+<div class="controls">
+  <button id="btn-back">&#9664; Back</button>
+  <div id="speaker-ring" title="Read page">&#128266;</div>
+  <span id="page-counter">1 / 84</span>
+  <button id="btn-read">Read Page</button>
+  <button id="btn-flash">&#128218; Sight Words</button>
+  <button id="btn-words">&#128214; Word Families</button>
+  <button id="btn-next">Next &#9654;</button>
+</div>
+<a href="hub.html" class="home-link">&#8592; Back to Hub</a>
+<div id="flash-modal">
+  <div id="flash-card">
+    <div id="flash-title">Sight Words</div>
+    <div id="flash-word">the</div>
+    <div id="flash-counter">1 / 6</div>
+    <div id="flash-btns">
+      <button id="flash-prev">&#9664;</button>
+      <button id="flash-speak">&#128266; Say It</button>
+      <button id="flash-close">&#10005; Close</button>
+      <button id="flash-next">&#9654;</button>
+    </div>
+  </div>
+</div>
+<script>
+const TOTAL=84,ANIM_MS=420;
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+const HEADER_PAGES=new Set([2,5,10,14,19,22,27,33,36,40,43,46,50,54,58,62,65,70,75,80]);
+const SIGHT_WORDS={
+  2:["to","in","the","at","for","it","is"],
+  5:["has","a","on","the","in","get","for"],
+  10:["see","the","of","has","a","it","is","for","to"],
+  14:["with","a","at","said","the"],
+  19:["said","with","a","is","the","and"],
+  22:["said","sorry","do","you","see","the","i","a"],
+  27:["said","it","is","my","i","will"],
+  33:["said","the"],
+  36:["who","for","he","the","from","in","on","his"],
+  40:["is","the","for","in"],
+  43:["it","is","not","see","the","and","then","in"],
+  46:["the","to","is","see","it"],
+  50:["for","his","the","is","in","on","a","to"],
+  54:["on","her","see","a","with","and"],
+  58:["in","the","a","and","that","at"],
+  62:["and","the","a","in","with"],
+  65:["is","the","a","and","his","get","for"],
+  70:["give","his","a","the","said","and","on"],
+  75:["see","the","on","her","and"],
+  80:["see","a","has","for","the","and","to","goes"]
+};
+const WORD_FAMILIES={
+  2:["bay","day","hay","jay","lay","may","pay","ray","say","way"],
+  5:["bank","hank","rank","sank","tank","plank"],
+  10:["king","ring","sing","wing","ding","bring","sting","thing"],
+  14:["kite","bite","mite","site","night","light","fight","might","right","sight","tight"],
+  19:["cow","now","bow","how","out","pout","stout","about","shout","loud"],
+  22:["bunny","funny","sunny","daddy","teddy","mommy","lady","baby","sorry"],
+  27:["fry","dry","fly","shy","cry","try","buy","guy","bye"],
+  33:["boo","moo","too","zoo","goo"],
+  36:["new","dew","drew","crew","knew","blew","grew"],
+  40:["food","mood","brood","good","hood","wood"],
+  43:["moon","noon","soon","toon","spoon","boon"],
+  46:["pool","cool","fool","tool","school"],
+  50:["book","cook","hook","look","nook","took"],
+  54:["crown","grown","frown","brown","clown","flower","glue","blue"],
+  58:["snake","snail","skunk","spring","slides","smiles"],
+  62:["twigs","square","star","thorn","shark"],
+  65:["sick","shut","hands","quilt","golf","help","milk"],
+  70:["chip","bath","desk","mess","bird","gives"],
+  75:["queen","when","knee","thumb","then","runs"],
+  80:["bird","girl","corn","seed","fur","car","far"]
+};
+const PAGE_TEXT={
+  1:"Book 3: Consonants and Grammatical Exceptions. Chapter 1: Irregular A — The Bay, The Bank. Chapter 2: Irregular E — The King. Chapter 3: Irregular I — The Kite at Night. Chapter 4: Irregular O — The Stout Cow. Chapter 5: Irregular Y — The Bunny, The Fry. Chapter 6: Irregular Oo — Boo, New Shoes. Chapter 7: Ood Oon Ool and Ook — Mood for Food, The Moon, The Pool, The Cookbook. Chapter 8: Consonant Blends — Pats Crown, Mat and the Snake, Kates Twigs, Luke is Sick, Moat and the Chip, Glee and the Queen. Chapter 9: Controlled R — A Bird.",
+  2:"Chapter 1: Irregular A. The Bay. Words: bay, day, hay, jay, lay, may, pay, ray, say, way. Sight Words: to, in, the, at, for, it, is.",
+  3:"Kate pays to lay in the rays at the bay for the day.",
+  4:"At the bay, Kate may say, Yay! It is fun at the bay!",
+  5:"The Bank. Words: bank, hank, rank, sank, tank, plank. Sight Words: has, a, on, the, in, get, for.",
+  6:"Hank has a bank on a plank.",
+  7:"Hank hit the tank.",
+  8:"The bank sank in the tank.",
+  9:"Kate gets the bank for Hank.",
+  10:"Chapter 2: Irregular E. The King. Words: king, ring, sing, wing, ding, bring, sting, thing. Sight Words: see, the, of, has, a, it, is, for, to.",
+  11:"Dice sees Ming, the King of Wings.",
+  12:"The King has a ring.",
+  13:"Ding. It is time for Ming, the King of Wings, to sing.",
+  14:"Chapter 3: Irregular I. The Kite at Night. Words: kite, bite, mite, site, night, light, fight, might, right, sight, tight. Sight Words: with, a, at, said, the.",
+  15:"Guy sights Dice with a kite at night.",
+  16:"Guy said, Why fight?",
+  17:"Guy tries the kite.",
+  18:"The mice hug tight with might.",
+  19:"Chapter 4: Irregular O. The Stout Cow. Words: cow, now, bow, how, out, pout, stout, about, shout, loud. Sight Words: said, with, a, is, the, and.",
+  20:"Moat said with a pout, How is the stout cow now?",
+  21:"The man said, The cow is now out and about.",
+  22:"Chapter 5: Irregular Y. The Bunny. Words: bunny, funny, sunny, daddy, teddy, mommy, lady, baby, sorry. Sight Words: said, sorry, do, you, see, the, i, a.",
+  23:"Teddy said, Sorry Daddy. Do you see the funny bunny?",
+  24:"Daddy said, I see the funny bunny.",
+  25:"Timmy said, I see a funny lady bunny.",
+  26:"Mommy said, I see a funny baby bunny.",
+  27:"The Fry. Words: fry, dry, fly, shy, cry, try, buy, guy, bye. Sight Words: said, it, is, my, i, will.",
+  28:"Dice buys the fry.",
+  29:"Dice said, It is my fry!",
+  30:"Shy Guy said, Why?",
+  31:"Guy said, Bye. Dice makes Guy cry.",
+  32:"Dice said, I will share the fry.",
+  33:"Chapter 6: Irregular Oo. Boo! Words: boo, moo, too, zoo, goo. Sight Words: said, the.",
+  34:"Moat said, Boo!",
+  35:"The man said boo too.",
+  36:"New Shoes. Words: new, dew, drew, crew, knew, blew, grew. Sight Words: who, for, he, the, from, in, on, his.",
+  37:"In Crew, Luke got dew on his new shoes.",
+  38:"Who got new shoes for Luke?",
+  39:"Luke knew he got the shoes from Drew.",
+  40:"Chapter 7: Mood for Food. Words: food, mood, brood, good, hood, wood. Sight Words: is, the, for, in.",
+  41:"Moat is in the mood for food.",
+  42:"Moat eats food.",
+  43:"The Moon. Words: moon, noon, soon, toon, spoon, boon. Sight Words: it, is, not, see, the, and, then, in.",
+  44:"Moat sees the toons and then is in bed soon.",
+  45:"It is not noon. Moat sees the moon.",
+  46:"The Pool. Words: pool, cool, fool, tool, school. Sight Words: the, to, is, see, it.",
+  47:"Is the pool cool?",
+  48:"Moat uses the tool to see if the pool is cool.",
+  49:"It is cool.",
+  50:"The Cookbook. Words: book, cook, hook, look, nook, took. Sight Words: for, his, the, is, in, on, a, to.",
+  51:"Moat looks for his cookbook.",
+  52:"The book is in the nook on a hook.",
+  53:"Moat took the book to cook.",
+  54:"Chapter 8: Consonant Blends. Pats Crown. Words: crown, grown, frown, brown, clown, flower, glue, blue. Sight Words: on, her, see, a, with, and.",
+  55:"Pat puts glue on her crown.",
+  56:"Pat sees a blue flower with a green stem.",
+  57:"Pat sees a clown with a frog.",
+  58:"Mat and the Snake. Words: snake, snail, skunk, spring, slides, smiles. Sight Words: in, the, a, and, that, at.",
+  59:"In the Spring, Mat sees a snail, a snake, and a skunk.",
+  60:"The snake slides, and that scares Mat.",
+  61:"The snake smiles at Mat.",
+  62:"Kates Twigs. Words: twigs, square, star, thorn, shark. Sight Words: and, the, a, in, with.",
+  63:"Kate and the shark see a thorn in the twigs.",
+  64:"Kate and the shark make a square and a star with the twigs.",
+  65:"Luke is Sick. Words: sick, shut, hands, quilt, golf, help, milk. Sight Words: is, the, a, and, his, get, for.",
+  66:"Luke is sick.",
+  67:"Lukes dad shuts off the lamp.",
+  68:"Lukes dad hands Luke a quilt and milk.",
+  69:"Luke gets his dad a golf ball for all his help.",
+  70:"Moat and the Chip. Words: chip, bath, desk, mess, bird, gives. Sight Words: give, his, a, the, said, and, on.",
+  71:"Moat gives his bird a chip.",
+  72:"The bird makes a mess.",
+  73:"Moats mom said, Give the bird a bath!",
+  74:"Moat gives his bird a bath and puts his bird on the desk.",
+  75:"Glee and the Queen. Words: queen, when, knee, thumb, then, runs. Sight Words: see, the, on, her, and.",
+  76:"When Glee sees the queen,",
+  77:"Glee sits on her knee.",
+  78:"Then, Glee sits on the Queens thumb.",
+  79:"The Queen sees Glee and runs.",
+  80:"Chapter 9: Controlled R. A Bird. Words: bird, girl, corn, seed, fur, car, far. Sight Words: see, a, has, for, the, and, to, goes.",
+  81:"Pat sees a girl bird.",
+  82:"Pat has corn or seed for the bird.",
+  83:"Pat and the bird see the cats fur and hear the cat purr.",
+  84:"Pat runs to the car and goes far."
+};
+let pdfDoc=null,currentPage=1,animating=false;
+const canvas=document.getElementById('page-canvas');
+const canvasContainer=document.getElementById('canvas-container');
+const ctx=canvas.getContext('2d');
+const textLayerDiv=document.getElementById('text-layer');
+const loading=document.getElementById('loading');
+const counter=document.getElementById('page-counter');
+const ring=document.getElementById('speaker-ring');
+const flashBtn=document.getElementById('btn-flash');
+const wordsBtn=document.getElementById('btn-words');
+let voices=[];
+function loadVoices(){voices=speechSynthesis.getVoices();if(!voices.length)speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};}
+loadVoices();
+function getBestVoice(){const P=['Microsoft Aria Online (Natural)','Microsoft Jenny Online (Natural)','Microsoft Emma Online (Natural)','Microsoft Guy Online (Natural)','Microsoft Ana Online (Natural)','Google US English','Samantha','Karen','Moira','Fiona','Google UK English Female','Microsoft Aria','Microsoft Zira','Microsoft Jenny','Microsoft Natasha','Alex'];for(const n of P){const v=voices.find(v=>v.name.toLowerCase().includes(n.toLowerCase()));if(v)return v;}const neural=voices.find(v=>/online|natural|neural/i.test(v.name)&&v.lang.startsWith('en'));if(neural)return neural;return voices.find(v=>v.lang==='en-US')||voices.find(v=>v.lang.startsWith('en'))||voices[0];}
+function speak(text,spanEl){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.trim());const v=getBestVoice();if(v)u.voice=v;u.lang='en-US';u.rate=0.9;u.pitch=1.0;u.volume=1;u.onstart=()=>{ring.classList.add('on');if(spanEl)spanEl.classList.add('speaking');};u.onend=()=>{ring.classList.remove('on');if(spanEl)spanEl.classList.remove('speaking');};speechSynthesis.speak(u);}
+ring.addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
+document.getElementById('btn-read').addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
+let flashWords=[],flashIdx=0;
+function openFlash(words,title){flashWords=words;flashIdx=0;document.getElementById('flash-title').textContent=title;showCard();document.getElementById('flash-modal').style.display='flex';}
+function showCard(){const w=flashWords[flashIdx]||'';document.getElementById('flash-word').textContent=w.toLowerCase();document.getElementById('flash-counter').textContent=(flashIdx+1)+' / '+flashWords.length;document.getElementById('flash-prev').disabled=flashIdx===0;document.getElementById('flash-next').disabled=flashIdx>=flashWords.length-1;speak(w);}
+flashBtn.addEventListener('click',()=>openFlash(SIGHT_WORDS[currentPage]||[],'Sight Words'));
+wordsBtn.addEventListener('click',()=>openFlash(WORD_FAMILIES[currentPage]||[],'Word Families'));
+document.getElementById('flash-speak').addEventListener('click',()=>speak(flashWords[flashIdx]||''));
+document.getElementById('flash-prev').addEventListener('click',()=>{if(flashIdx>0){flashIdx--;showCard();}});
+document.getElementById('flash-next').addEventListener('click',()=>{if(flashIdx<flashWords.length-1){flashIdx++;showCard();}});
+document.getElementById('flash-close').addEventListener('click',()=>{speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';});
+document.getElementById('flash-modal').addEventListener('click',e=>{if(e.target===document.getElementById('flash-modal')){speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';}});
+async function renderPage(num,dir){
+  if(animating)return;animating=true;
+  if(canvasContainer.style.display!=='none'){canvasContainer.classList.add(dir==='fwd'?'anim-exit-left':'anim-exit-right');await new Promise(r=>setTimeout(r,400));canvasContainer.classList.remove('anim-exit-left','anim-exit-right');}
+  canvasContainer.style.display='none';textLayerDiv.innerHTML='';loading.style.display='block';
+  const page=await pdfDoc.getPage(num);
+  const vp=page.getViewport({scale:1});
+  const maxW=Math.min(490,document.getElementById('page-wrapper').clientWidth-20);
+  const sc=maxW/vp.width;const sv=page.getViewport({scale:sc});
+  canvas.width=sv.width;canvas.height=sv.height;
+  await page.render({canvasContext:ctx,viewport:sv}).promise;
+  const tc=await page.getTextContent();
+  const rt=pdfjsLib.renderTextLayer({textContent:tc,container:textLayerDiv,viewport:sv,textDivs:[]});
+  await rt.promise;
+  textLayerDiv.querySelectorAll('span').forEach(span=>{
+    const raw=span.textContent.trim();
+    if(!raw||/^\d+$/.test(raw)||/^[.,!?;:'"()\-]+$/.test(raw))return;
+    span.addEventListener('click',e=>{e.stopPropagation();speak(raw,span);});
+  });
+  loading.style.display='none';canvasContainer.style.display='block';
+  canvasContainer.classList.add(dir==='fwd'?'anim-enter-right':'anim-enter-left');
+  await new Promise(r=>setTimeout(r,ANIM_MS));canvasContainer.classList.remove('anim-enter-right','anim-enter-left');
+  currentPage=num;counter.textContent=num+' / '+TOTAL;
+  document.getElementById('btn-back').disabled=num<=1;document.getElementById('btn-next').disabled=num>=TOTAL;
+  const isHdr=HEADER_PAGES.has(num);
+  flashBtn.style.display=(isHdr&&SIGHT_WORDS[num])?'inline-block':'none';
+  wordsBtn.style.display=(isHdr&&WORD_FAMILIES[num])?'inline-block':'none';
+  animating=false;
+}
+document.getElementById('btn-next').addEventListener('click',()=>{if(currentPage<TOTAL)renderPage(currentPage+1,'fwd');});
+document.getElementById('btn-back').addEventListener('click',()=>{if(currentPage>1)renderPage(currentPage-1,'back');});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')document.getElementById('btn-next').click();if(e.key==='ArrowLeft')document.getElementById('btn-back').click();if(e.key==='Escape'){speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';}});
+pdfjsLib.getDocument('book3.pdf').promise.then(doc=>{pdfDoc=doc;renderPage(1,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
+</script>
+</body>
+</html>

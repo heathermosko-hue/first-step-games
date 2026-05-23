@@ -1,0 +1,538 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digraphs | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#F0FFFD; --text:#2C3E50; --teal:#16A085; --mint:#1ABC9C; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    header { background:linear-gradient(135deg,#16A085 0%,#1ABC9C 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
+    .back-link:hover { background:rgba(255,255,255,.35); }
+    header h1 { font-family:'Fredoka One',cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
+    .header-btns { display:flex; gap:.45rem; align-items:center; }
+    .btn-header { background:rgba(255,255,255,.2); border:none; color:white; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
+    .btn-header:hover { background:rgba(255,255,255,.35); }
+    .btn-header.muted { background:rgba(255,80,80,.45); }
+
+    .settings-bar { background:white; border-bottom:2px solid #B2F0E8; padding:.6rem 1.5rem; display:flex; align-items:center; gap:.75rem 1.25rem; flex-wrap:wrap; justify-content:center; }
+    .settings-label { font-size:.75rem; font-weight:800; color:#bbb; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+    .cat-btns { display:flex; gap:.3rem; flex-wrap:wrap; justify-content:center; }
+    .btn-cat { background:#B2F0E8; color:#16A085; border:2px solid transparent; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .btn-cat:hover { background:#7FDFD4; }
+    .btn-cat.active { background:#16A085; color:white; border-color:#16A085; }
+
+    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:1.5rem 1rem 2rem; gap:1rem; }
+
+    .score-row { display:flex; gap:1.5rem; font-family:'Fredoka One',cursive; font-size:1rem; color:#bbb; }
+    .score-row span { color:#16A085; font-size:1.2rem; }
+
+    .progress-bar { width:100%; max-width:480px; height:8px; background:#B2F0E8; border-radius:999px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,#16A085,#1ABC9C); border-radius:999px; transition:width .4s; }
+
+    .game-card {
+      background:white; border-radius:24px; padding:1.75rem 2rem;
+      box-shadow:0 4px 24px rgba(22,160,133,.12); border:3px solid #B2F0E8;
+      display:flex; flex-direction:column; align-items:center; gap:.9rem;
+      width:100%; max-width:460px;
+    }
+
+    .emoji-display { font-size:clamp(4rem,16vw,7rem); line-height:1; filter:drop-shadow(0 3px 6px rgba(0,0,0,.1)); }
+
+    .word-show {
+      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      font-size:clamp(2.4rem,10vw,4.5rem); line-height:1;
+      display:flex; align-items:baseline;
+    }
+    .word-part { color:#16A085; }
+    .word-blank-box {
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:2em; height:1.15em;
+      background:#B2F0E8; border-radius:8px; border-bottom:4px solid #16A085;
+      color:#7FDFD4; font-size:.7em; transition:all .3s; padding:0 .15em;
+      vertical-align:baseline;
+    }
+    .word-blank-box.filled { background:#E8F8EE; border-color:#27AE60; color:#27AE60; }
+
+    .pattern-hint {
+      background:#B2F0E8; color:#16A085; font-family:'Fredoka One',cursive;
+      font-size:.85rem; padding:3px 14px; border-radius:999px; text-align:center;
+    }
+
+    .feedback {
+      font-family:'Fredoka One',cursive; font-size:1.3rem; min-height:1.7rem; text-align:center;
+    }
+    .feedback.ok { color:#27AE60; }
+    .feedback.err { color:#E74C3C; }
+
+    .choices { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; width:100%; max-width:380px; }
+    .btn-choice {
+      background:white; border:3px solid #B2F0E8; color:#16A085;
+      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      font-size:clamp(1.2rem,5vw,2rem); padding:.65rem .5rem; border-radius:16px;
+      cursor:pointer; transition:all .15s; font-weight:700;
+      box-shadow:0 3px 10px rgba(22,160,133,.1);
+    }
+    .btn-choice:hover:not(:disabled) { background:#B2F0E8; transform:translateY(-2px); box-shadow:0 6px 18px rgba(22,160,133,.2); }
+    .btn-choice.correct { background:#27AE60; border-color:#27AE60; color:white; }
+    .btn-choice.wrong { background:#E74C3C; border-color:#E74C3C; color:white; animation:shake .4s; }
+    .btn-choice:disabled { cursor:default; }
+
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)}
+    }
+
+    footer { text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #B2F0E8; margin-top:auto; }
+    footer a { color:#16A085; text-decoration:none; }
+    footer a:hover { text-decoration:underline; }
+  </style>
+<link href="fonts.css" rel="stylesheet"></head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">&#8592; Games</a>
+  <h1>Digraphs</h1>
+  <div class="header-btns">
+    <button class="btn-header" id="btnMute">&#128266;</button>
+    <button class="btn-header" id="btnVoice">&#128104; Voice</button>
+  </div>
+</header>
+
+<div class="settings-bar">
+  <span class="settings-label">Type:</span>
+  <div class="cat-btns">
+    <button class="btn-cat active" data-cat="Digraphs">Digraphs</button>
+    <button class="btn-cat" data-cat="L Blends">L Blends</button>
+    <button class="btn-cat" data-cat="R Blends">R Blends</button>
+    <button class="btn-cat" data-cat="S Blends">S Blends</button>
+    <button class="btn-cat" data-cat="T Blends">T Blends</button>
+    <button class="btn-cat" data-cat="Blends+">Blends +</button>
+  </div>
+</div>
+
+<main>
+  <div class="score-row">
+    <div>Score: <span id="scoreVal">0</span></div>
+    <div>Word <span id="qNum">1</span> of <span id="qTotal">?</span></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="game-card">
+    <div class="emoji-display" id="emojiDisplay">&#128674;</div>
+    <div class="word-show" id="wordShow"></div>
+    <div class="pattern-hint" id="patternHint">Which digraph?</div>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+  <div class="choices" id="choices"></div>
+</main>
+
+<footer>
+  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
+</footer>
+
+<script>
+/* ── SPEECH ── */
+let _muted = false, _speaking = false, _pending = null, _queue = [], _voice = null;
+function _launch(msg) {
+  if (_muted) return;
+  window.speechSynthesis.cancel();
+  _queue = msg.split(' | '); _speaking = false; _advance();
+}
+function _advance() {
+  if (!_queue.length) { _speaking=false; if(_pending){const t=_pending;_pending=null;_launch(t);} return; }
+  _speaking = true;
+  const utt = new SpeechSynthesisUtterance(_queue.shift());
+  if (_voice) utt.voice = _voice;
+  utt.rate = 0.92; utt.pitch = 1.0;
+  utt.onend = () => { _speaking=false; setTimeout(_advance,350); };
+  window.speechSynthesis.speak(utt);
+}
+function speak(msg) { if(_muted)return; if(_speaking){_pending=msg;}else{_launch(msg);} }
+function loadVoices() {
+  const all = window.speechSynthesis.getVoices();
+  if (!all.length) return;
+  _voice = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
+          || all.find(v => /aria|jenny|guy\b|ana\b|davis/i.test(v.name))
+          || all.find(v => /google.*english/i.test(v.name))
+          || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
+          || all.find(v => v.lang && /^en/i.test(v.lang))
+          || all[0];
+}
+window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
+document.getElementById('btnMute').addEventListener('click', () => {
+  _muted = !_muted;
+  document.getElementById('btnMute').textContent = _muted ? '🔇' : '🔊';
+  document.getElementById('btnMute').classList.toggle('muted', _muted);
+  if (_muted) window.speechSynthesis.cancel();
+});
+document.getElementById('btnVoice').addEventListener('click', () => {
+  const voices = window.speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.startsWith('en'));
+  if (!voices.length) return;
+  const idx = voices.indexOf(_voice);
+  _voice = voices[(idx+1) % voices.length];
+  speak(`Hello! My name is ${_voice.name.split(' ')[0]}!`);
+});
+
+/* ── GAME DATA ── */
+const BLEND_DATA = {
+  'Digraphs': {
+    hint: 'Pick the digraph (2 letters, 1 sound)',
+    allPatterns: ['sh','ch','th','wh','ph'],
+    wrongPool: ['bl','cr','st','tr','pl'],
+    words: [
+      {word:'ship',start:'',end:'ip',pattern:'sh',emoji:'🚢'},
+      {word:'shop',start:'',end:'op',pattern:'sh',emoji:'🏪'},
+      {word:'shell',start:'',end:'ell',pattern:'sh',emoji:'🐚'},
+      {word:'shoe',start:'',end:'oe',pattern:'sh',emoji:'👟'},
+      {word:'brush',start:'bru',end:'',pattern:'sh',emoji:'🪥'},
+      {word:'flash',start:'fla',end:'',pattern:'sh',emoji:'⚡'},
+      {word:'chat',start:'',end:'at',pattern:'ch',emoji:'💬'},
+      {word:'chin',start:'',end:'in',pattern:'ch',emoji:'a chin',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><ellipse cx="40" cy="34" rx="26" ry="30" fill="#FDBCB4"/><rect x="29" y="60" width="22" height="16" rx="5" fill="#FDBCB4"/><ellipse cx="28" cy="22" rx="5" ry="4" fill="white"/><circle cx="28" cy="22" r="3" fill="#3D2B1F"/><ellipse cx="52" cy="22" rx="5" ry="4" fill="white"/><circle cx="52" cy="22" r="3" fill="#3D2B1F"/><path d="M36,32 Q40,36 44,32" fill="none" stroke="#C8907A" stroke-width="1.5"/><path d="M30,48 Q40,56 50,48" fill="none" stroke="#C0706A" stroke-width="2"/><ellipse cx="40" cy="62" rx="11" ry="6" fill="#F0A090" opacity="0.4"/><line x1="60" y1="74" x2="50" y2="65" stroke="#E74C3C" stroke-width="2" stroke-linecap="round"/><circle cx="60" cy="74" r="3" fill="#E74C3C"/></svg>'},
+      {word:'chip',start:'',end:'ip',pattern:'ch',emoji:'potato chips',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><path d="M22,18 L58,18 L53,72 L27,72 Z" fill="#F0C000"/><path d="M22,18 Q40,28 58,18" fill="#FFD700"/><path d="M27,72 Q40,66 53,72" fill="#C8A000"/><path d="M24,36 Q40,44 56,36 L55,46 Q40,54 25,46 Z" fill="#D4A800" opacity="0.45"/><ellipse cx="28" cy="13" rx="11" ry="6" fill="#F5DEB3" stroke="#C8904A" stroke-width="1.2" transform="rotate(-18 28 13)"/><path d="M19,11 Q28,6 37,12" fill="none" stroke="#A06030" stroke-width="1.2" opacity="0.6"/><ellipse cx="52" cy="11" rx="11" ry="6" fill="#F0D090" stroke="#C8904A" stroke-width="1.2" transform="rotate(15 52 11)"/><path d="M43,9 Q52,4 61,10" fill="none" stroke="#A06030" stroke-width="1.2" opacity="0.6"/><ellipse cx="40" cy="9" rx="9" ry="5" fill="#F5DEB3" stroke="#C8904A" stroke-width="1" transform="rotate(3 40 9)"/><rect x="27" y="38" width="26" height="20" rx="4" fill="#FFE840" opacity="0.85"/><text x="40" y="48" text-anchor="middle" font-size="6.5" font-family="Arial" font-weight="bold" fill="#7A3800">CHIPS</text><text x="40" y="56" text-anchor="middle" font-size="5" font-family="Arial" fill="#7A3800">Potato</text></svg>'},
+      {word:'bench',start:'ben',end:'',pattern:'ch',emoji:'a bench',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><rect x="10" y="20" width="60" height="8" rx="2" fill="#C8854A" stroke="#A06830" stroke-width="1"/><line x1="22" y1="28" x2="16" y2="56" stroke="#8B5E2A" stroke-width="4" stroke-linecap="round"/><line x1="36" y1="28" x2="30" y2="56" stroke="#8B5E2A" stroke-width="4" stroke-linecap="round"/><line x1="44" y1="28" x2="50" y2="56" stroke="#8B5E2A" stroke-width="4" stroke-linecap="round"/><line x1="58" y1="28" x2="64" y2="56" stroke="#8B5E2A" stroke-width="4" stroke-linecap="round"/><rect x="4" y="42" width="32" height="7" rx="2" fill="#D4935A" stroke="#A06830" stroke-width="1"/><rect x="44" y="42" width="32" height="7" rx="2" fill="#D4935A" stroke="#A06830" stroke-width="1"/><line x1="2" y1="68" x2="78" y2="68" stroke="#6BB030" stroke-width="4" stroke-linecap="round"/></svg>'},
+      {word:'lunch',start:'lun',end:'',pattern:'ch',emoji:'🥪'},
+      {word:'teach',start:'tea',end:'',pattern:'ch',emoji:'📚'},
+      {word:'that',start:'',end:'at',pattern:'th',emoji:'👉'},
+      {word:'this',start:'',end:'is',pattern:'th',emoji:'☝️'},
+      {word:'bath',start:'ba',end:'',pattern:'th',emoji:'🛁'},
+      {word:'teeth',start:'tee',end:'',pattern:'th',emoji:'🦷'},
+      {word:'math',start:'ma',end:'',pattern:'th',emoji:'➕'},
+      {word:'wheel',start:'',end:'eel',pattern:'wh',emoji:'🎡'},
+      {word:'whale',start:'',end:'ale',pattern:'wh',emoji:'🐋'},
+      {word:'wheat',start:'',end:'eat',pattern:'wh',emoji:'🌾'},
+      {word:'whisper',start:'',end:'isper',pattern:'wh',emoji:'🤫'},
+      {word:'phone',start:'',end:'one',pattern:'ph',emoji:'📱'},
+      {word:'photo',start:'',end:'oto',pattern:'ph',emoji:'📷'},
+      {word:'graph',start:'gra',end:'',pattern:'ph',emoji:'📈'},
+    ]
+  },
+  'L Blends': {
+    hint: 'Pick the L blend (bl, cl, fl, gl, pl, sl)',
+    allPatterns: ['bl','cl','fl','gl','pl','sl'],
+    wrongPool: ['br','cr','fr','gr','pr','tr','sh','ch'],
+    words: [
+      {word:'black',start:'',end:'ack',pattern:'bl',emoji:'⬛'},
+      {word:'blue',start:'',end:'ue',pattern:'bl',emoji:'💙'},
+      {word:'blow',start:'',end:'ow',pattern:'bl',emoji:'💨'},
+      {word:'clap',start:'',end:'ap',pattern:'cl',emoji:'👏'},
+      {word:'clock',start:'',end:'ock',pattern:'cl',emoji:'🕐'},
+      {word:'cloud',start:'',end:'oud',pattern:'cl',emoji:'☁️'},
+      {word:'clown',start:'',end:'own',pattern:'cl',emoji:'🤡'},
+      {word:'flag',start:'',end:'ag',pattern:'fl',emoji:'🚩'},
+      {word:'flat',start:'',end:'at',pattern:'fl',emoji:'🏠'},
+      {word:'fly',start:'',end:'y',pattern:'fl',emoji:'🦋'},
+      {word:'flower',start:'',end:'ower',pattern:'fl',emoji:'🌸'},
+      {word:'glass',start:'',end:'ass',pattern:'gl',emoji:'🥛'},
+      {word:'glue',start:'',end:'ue',pattern:'gl',emoji:'🫙'},
+      {word:'glow',start:'',end:'ow',pattern:'gl',emoji:'✨'},
+      {word:'plan',start:'',end:'an',pattern:'pl',emoji:'📋'},
+      {word:'play',start:'',end:'ay',pattern:'pl',emoji:'🎠'},
+      {word:'plate',start:'',end:'ate',pattern:'pl',emoji:'🍽️'},
+      {word:'plum',start:'',end:'um',pattern:'pl',emoji:'🫐'},
+      {word:'sled',start:'',end:'ed',pattern:'sl',emoji:'🛷'},
+      {word:'slide',start:'',end:'ide',pattern:'sl',emoji:'🛝'},
+      {word:'sleep',start:'',end:'eep',pattern:'sl',emoji:'😴'},
+      {word:'slow',start:'',end:'ow',pattern:'sl',emoji:'🐢'},
+    ]
+  },
+  'R Blends': {
+    hint: 'Pick the R blend (br, cr, dr, fr, gr, pr, tr)',
+    allPatterns: ['br','cr','dr','fr','gr','pr','tr'],
+    wrongPool: ['bl','cl','fl','sl','pl','sh','th'],
+    words: [
+      {word:'bread',start:'',end:'ead',pattern:'br',emoji:'🍞'},
+      {word:'brick',start:'',end:'ick',pattern:'br',emoji:'🧱'},
+      {word:'brown',start:'',end:'own',pattern:'br',emoji:'🟤'},
+      {word:'bridge',start:'',end:'idge',pattern:'br',emoji:'🌉'},
+      {word:'crab',start:'',end:'ab',pattern:'cr',emoji:'🦀'},
+      {word:'crack',start:'',end:'ack',pattern:'cr',emoji:'💥'},
+      {word:'crow',start:'',end:'ow',pattern:'cr',emoji:'🐦‍⬛'},
+      {word:'crown',start:'',end:'own',pattern:'cr',emoji:'👑'},
+      {word:'drag',start:'',end:'ag',pattern:'dr',emoji:'🐉'},
+      {word:'draw',start:'',end:'aw',pattern:'dr',emoji:'✏️'},
+      {word:'dress',start:'',end:'ess',pattern:'dr',emoji:'👗'},
+      {word:'drum',start:'',end:'um',pattern:'dr',emoji:'🥁'},
+      {word:'frog',start:'',end:'og',pattern:'fr',emoji:'🐸'},
+      {word:'free',start:'',end:'ee',pattern:'fr',emoji:'🕊️'},
+      {word:'fresh',start:'',end:'esh',pattern:'fr',emoji:'🌿'},
+      {word:'fruit',start:'',end:'uit',pattern:'fr',emoji:'🍓'},
+      {word:'grape',start:'',end:'ape',pattern:'gr',emoji:'🍇'},
+      {word:'grass',start:'',end:'ass',pattern:'gr',emoji:'🌿'},
+      {word:'green',start:'',end:'een',pattern:'gr',emoji:'💚'},
+      {word:'grin',start:'',end:'in',pattern:'gr',emoji:'😁'},
+      {word:'prince',start:'',end:'ince',pattern:'pr',emoji:'🤴'},
+      {word:'prize',start:'',end:'ize',pattern:'pr',emoji:'🏆'},
+      {word:'print',start:'',end:'int',pattern:'pr',emoji:'🖨️'},
+      {word:'train',start:'',end:'ain',pattern:'tr',emoji:'🚂'},
+      {word:'tree',start:'',end:'ee',pattern:'tr',emoji:'🌳'},
+      {word:'truck',start:'',end:'uck',pattern:'tr',emoji:'🚛'},
+      {word:'trip',start:'',end:'ip',pattern:'tr',emoji:'✈️'},
+    ]
+  },
+  'S Blends': {
+    hint: 'Pick the S blend (sc, sk, sm, sn, sp, st, sw)',
+    allPatterns: ['sk','sm','sn','sp','st','sw'],
+    wrongPool: ['sh','bl','cr','tr','fl','ch','th'],
+    words: [
+      {word:'skate',start:'',end:'ate',pattern:'sk',emoji:'⛸️'},
+      {word:'ski',start:'',end:'i',pattern:'sk',emoji:'⛷️'},
+      {word:'skip',start:'',end:'ip',pattern:'sk',emoji:'🏃'},
+      {word:'sky',start:'',end:'y',pattern:'sk',emoji:'🌤️'},
+      {word:'small',start:'',end:'all',pattern:'sm',emoji:'🐜'},
+      {word:'smart',start:'',end:'art',pattern:'sm',emoji:'🧠'},
+      {word:'smell',start:'',end:'ell',pattern:'sm',emoji:'👃'},
+      {word:'smile',start:'',end:'ile',pattern:'sm',emoji:'😊'},
+      {word:'smoke',start:'',end:'oke',pattern:'sm',emoji:'💨'},
+      {word:'snack',start:'',end:'ack',pattern:'sn',emoji:'🍎'},
+      {word:'snake',start:'',end:'ake',pattern:'sn',emoji:'🐍'},
+      {word:'snow',start:'',end:'ow',pattern:'sn',emoji:'❄️'},
+      {word:'snap',start:'',end:'ap',pattern:'sn',emoji:'👌'},
+      {word:'space',start:'',end:'ace',pattern:'sp',emoji:'🚀'},
+      {word:'spin',start:'',end:'in',pattern:'sp',emoji:'🌀'},
+      {word:'spoon',start:'',end:'oon',pattern:'sp',emoji:'🥄'},
+      {word:'spot',start:'',end:'ot',pattern:'sp',emoji:'🐾'},
+      {word:'spray',start:'',end:'ay',pattern:'sp',emoji:'💦'},
+      {word:'star',start:'',end:'ar',pattern:'st',emoji:'⭐'},
+      {word:'step',start:'',end:'ep',pattern:'st',emoji:'👣'},
+      {word:'stone',start:'',end:'one',pattern:'st',emoji:'🪨'},
+      {word:'stop',start:'',end:'op',pattern:'st',emoji:'🛑'},
+      {word:'swim',start:'',end:'im',pattern:'sw',emoji:'🏊'},
+      {word:'swing',start:'',end:'ing',pattern:'sw',emoji:'🏗️'},
+      {word:'sweet',start:'',end:'eet',pattern:'sw',emoji:'🍬'},
+      {word:'swamp',start:'',end:'amp',pattern:'sw',emoji:'🌿'},
+    ]
+  },
+  'T Blends': {
+    hint: 'Pick the ending blend (-nd, -nt, -nk, -st, -sk, -lt)',
+    allPatterns: ['nd','nt','nk','st','sk','lt'],
+    wrongPool: ['sh','ch','th','bl','cr','tr'],
+    words: [
+      {word:'hand',start:'ha',end:'',pattern:'nd',emoji:'✋'},
+      {word:'land',start:'la',end:'',pattern:'nd',emoji:'🌍'},
+      {word:'sand',start:'sa',end:'',pattern:'nd',emoji:'🏖️'},
+      {word:'wind',start:'wi',end:'',pattern:'nd',emoji:'🌬️'},
+      {word:'band',start:'ba',end:'',pattern:'nd',emoji:'🎸'},
+      {word:'ant',start:'a',end:'',pattern:'nt',emoji:'🐜'},
+      {word:'plant',start:'pla',end:'',pattern:'nt',emoji:'🌱'},
+      {word:'tent',start:'te',end:'',pattern:'nt',emoji:'⛺'},
+      {word:'front',start:'fro',end:'',pattern:'nt',emoji:'🚪'},
+      {word:'print',start:'pri',end:'',pattern:'nt',emoji:'🖨️'},
+      {word:'bank',start:'ba',end:'',pattern:'nk',emoji:'🏦'},
+      {word:'drink',start:'dri',end:'',pattern:'nk',emoji:'🥤'},
+      {word:'skunk',start:'sku',end:'',pattern:'nk',emoji:'🦨'},
+      {word:'tank',start:'ta',end:'',pattern:'nk',emoji:'🐠'},
+      {word:'think',start:'thi',end:'',pattern:'nk',emoji:'🤔'},
+      {word:'best',start:'be',end:'',pattern:'st',emoji:'🏅'},
+      {word:'fast',start:'fa',end:'',pattern:'st',emoji:'🏎️'},
+      {word:'last',start:'la',end:'',pattern:'st',emoji:'🔚'},
+      {word:'nest',start:'ne',end:'',pattern:'st',emoji:'🪺'},
+      {word:'test',start:'te',end:'',pattern:'st',emoji:'📝'},
+      {word:'desk',start:'de',end:'',pattern:'sk',emoji:'🖥️'},
+      {word:'dusk',start:'du',end:'',pattern:'sk',emoji:'🌅'},
+      {word:'task',start:'ta',end:'',pattern:'sk',emoji:'📋'},
+      {word:'tusk',start:'tu',end:'',pattern:'sk',emoji:'🦏'},
+      {word:'melt',start:'me',end:'',pattern:'lt',emoji:'🧈'},
+      {word:'salt',start:'sa',end:'',pattern:'lt',emoji:'🧂'},
+      {word:'belt',start:'be',end:'',pattern:'lt',emoji:'👖'},
+      {word:'bolt',start:'bo',end:'',pattern:'lt',emoji:'⚡'},
+    ]
+  },
+  'Blends+': {
+    hint: 'Pick the blend! (ending & 3-letter blends)',
+    allPatterns: ['mp','lk','lp','lf','ft','mb','ld','scr','spr','str','squ'],
+    wrongPool: ['nd','nk','st','bl','cr','sh'],
+    words: [
+      {word:'lamp',start:'la',end:'',pattern:'mp',emoji:'💡'},
+      {word:'camp',start:'ca',end:'',pattern:'mp',emoji:'⛺'},
+      {word:'jump',start:'ju',end:'',pattern:'mp',emoji:'🦘'},
+      {word:'dump',start:'du',end:'',pattern:'mp',emoji:'🚛'},
+      {word:'stamp',start:'sta',end:'',pattern:'mp',emoji:'📮'},
+      {word:'chimp',start:'chi',end:'',pattern:'mp',emoji:'🐒'},
+      {word:'stump',start:'stu',end:'',pattern:'mp',emoji:'🪵'},
+      {word:'milk',start:'mi',end:'',pattern:'lk',emoji:'🥛'},
+      {word:'silk',start:'si',end:'',pattern:'lk',emoji:'🪡'},
+      {word:'hulk',start:'hu',end:'',pattern:'lk',emoji:'💚'},
+      {word:'bulk',start:'bu',end:'',pattern:'lk',emoji:'📦'},
+      {word:'help',start:'he',end:'',pattern:'lp',emoji:'🙋'},
+      {word:'gulp',start:'gu',end:'',pattern:'lp',emoji:'😅'},
+      {word:'yelp',start:'ye',end:'',pattern:'lp',emoji:'🐕'},
+      {word:'scalp',start:'sca',end:'',pattern:'lp',emoji:'💆'},
+      {word:'elf',start:'e',end:'',pattern:'lf',emoji:'🧝'},
+      {word:'shelf',start:'she',end:'',pattern:'lf',emoji:'📚'},
+      {word:'golf',start:'go',end:'',pattern:'lf',emoji:'⛳'},
+      {word:'wolf',start:'wo',end:'',pattern:'lf',emoji:'🐺'},
+      {word:'gift',start:'gi',end:'',pattern:'ft',emoji:'🎁'},
+      {word:'left',start:'le',end:'',pattern:'ft',emoji:'⬅️'},
+      {word:'soft',start:'so',end:'',pattern:'ft',emoji:'🛏️'},
+      {word:'lift',start:'li',end:'',pattern:'ft',emoji:'🏋️'},
+      {word:'craft',start:'cra',end:'',pattern:'ft',emoji:'✂️'},
+      {word:'loft',start:'lo',end:'',pattern:'ft',emoji:'🏠'},
+      {word:'lamb',start:'la',end:'',pattern:'mb',emoji:'🐑'},
+      {word:'thumb',start:'thu',end:'',pattern:'mb',emoji:'👍'},
+      {word:'comb',start:'co',end:'',pattern:'mb',emoji:'💈'},
+      {word:'climb',start:'cli',end:'',pattern:'mb',emoji:'🧗'},
+      {word:'bomb',start:'bo',end:'',pattern:'mb',emoji:'💣'},
+      {word:'cold',start:'co',end:'',pattern:'ld',emoji:'🧊'},
+      {word:'gold',start:'go',end:'',pattern:'ld',emoji:'🏆'},
+      {word:'told',start:'to',end:'',pattern:'ld',emoji:'📖'},
+      {word:'held',start:'he',end:'',pattern:'ld',emoji:'🤝'},
+      {word:'bold',start:'bo',end:'',pattern:'ld',emoji:'💪'},
+      {word:'screw',start:'',end:'ew',pattern:'scr',emoji:'🔩'},
+      {word:'scrub',start:'',end:'ub',pattern:'scr',emoji:'🧹'},
+      {word:'screen',start:'',end:'een',pattern:'scr',emoji:'📺'},
+      {word:'scratch',start:'',end:'atch',pattern:'scr',emoji:'🐱'},
+      {word:'spring',start:'',end:'ing',pattern:'spr',emoji:'🌸'},
+      {word:'spray',start:'',end:'ay',pattern:'spr',emoji:'💦'},
+      {word:'sprout',start:'',end:'out',pattern:'spr',emoji:'🌱'},
+      {word:'spread',start:'',end:'ead',pattern:'spr',emoji:'🧈'},
+      {word:'string',start:'',end:'ing',pattern:'str',emoji:'🎸'},
+      {word:'straw',start:'',end:'aw',pattern:'str',emoji:'🌾'},
+      {word:'street',start:'',end:'eet',pattern:'str',emoji:'🛣️'},
+      {word:'strong',start:'',end:'ong',pattern:'str',emoji:'💪'},
+      {word:'stream',start:'',end:'eam',pattern:'str',emoji:'🏞️'},
+      {word:'squid',start:'',end:'id',pattern:'squ',emoji:'🦑'},
+      {word:'squash',start:'',end:'ash',pattern:'squ',emoji:'🥬'},
+      {word:'square',start:'',end:'are',pattern:'squ',emoji:'⬛'},
+      {word:'squeak',start:'',end:'eak',pattern:'squ',emoji:'🐭'},
+    ]
+  }
+};
+
+/* ── GAME STATE ── */
+let currentCat = 'Digraphs';
+let questions = [], qIdx = 0, score = 0, locked = false;
+
+function shuffle(arr) {
+  for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+
+function getChoices(correct, allPatterns, wrongPool) {
+  const others = allPatterns.filter(p => p !== correct);
+  shuffle(others);
+  const extra = shuffle([...wrongPool]);
+  const choices = [correct];
+  others.forEach(p => { if (choices.length < 4) choices.push(p); });
+  extra.forEach(p => { if (choices.length < 4 && !choices.includes(p)) choices.push(p); });
+  return shuffle(choices);
+}
+
+function startGame(cat) {
+  currentCat = cat;
+  questions = shuffle([...BLEND_DATA[cat].words]);
+  qIdx = 0; score = 0;
+  document.getElementById('scoreVal').textContent = '0';
+  document.getElementById('qTotal').textContent = questions.length;
+  document.querySelectorAll('.btn-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  showQuestion();
+}
+
+function buildWordDisplay(q, revealed) {
+  const el = document.getElementById('wordShow');
+  el.innerHTML = '';
+  if (q.start) {
+    const s = document.createElement('span'); s.className = 'word-part'; s.textContent = q.start; el.appendChild(s);
+  }
+  const blank = document.createElement('span');
+  blank.className = 'word-blank-box' + (revealed ? ' filled' : '');
+  blank.textContent = revealed ? q.pattern : '?';
+  el.appendChild(blank);
+  if (q.end) {
+    const e = document.createElement('span'); e.className = 'word-part'; e.textContent = q.end; el.appendChild(e);
+  }
+}
+
+function showQuestion() {
+  locked = false;
+  const q = questions[qIdx];
+  const data = BLEND_DATA[currentCat];
+  const ed = document.getElementById('emojiDisplay');
+  if (q.img) { ed.innerHTML = q.img; } else { ed.textContent = q.emoji; }
+  buildWordDisplay(q, false);
+  document.getElementById('patternHint').textContent = data.hint;
+  document.getElementById('qNum').textContent = qIdx + 1;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('progressFill').style.width = (qIdx / questions.length * 100) + '%';
+
+  const choices = getChoices(q.pattern, data.allPatterns, data.wrongPool);
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  choices.forEach(pat => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-choice';
+    btn.textContent = pat;
+    btn.addEventListener('click', () => checkAnswer(pat, btn));
+    choicesEl.appendChild(btn);
+  });
+  speak(`What letters go in the blank to make the word ${q.word}?`);
+}
+
+function checkAnswer(pat, btn) {
+  if (locked) return;
+  const q = questions[qIdx];
+  if (pat === q.pattern) {
+    locked = true;
+    btn.classList.add('correct');
+    document.querySelectorAll('.btn-choice').forEach(b => b.disabled = true);
+    buildWordDisplay(q, true);
+    document.getElementById('feedback').textContent = q.word.toUpperCase() + '! Great job! 🎉';
+    document.getElementById('feedback').className = 'feedback ok';
+    score++;
+    document.getElementById('scoreVal').textContent = score;
+    const blendPos = q.start === '' ? 'starts with' : 'ends with';
+    speak(`${q.word}! | Great job! | ${q.word} ${blendPos} the ${q.pattern} blend!`);
+    setTimeout(advance, 1700);
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('feedback').textContent = 'Try again!';
+    document.getElementById('feedback').className = 'feedback err';
+    speak('Try again!');
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      btn.disabled = true;
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('feedback').className = 'feedback';
+    }, 900);
+  }
+}
+
+function advance() {
+  qIdx++;
+  if (qIdx >= questions.length) { showGameOver(); } else { showQuestion(); }
+}
+
+function showGameOver() {
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('emojiDisplay').textContent = '🎉';
+  document.getElementById('wordShow').innerHTML = '';
+  document.getElementById('patternHint').textContent = 'Game Over!';
+  document.getElementById('feedback').textContent = `You got ${score} of ${questions.length}! Amazing!`;
+  document.getElementById('feedback').className = 'feedback ok';
+  const btn = document.createElement('button');
+  btn.className = 'btn-choice';
+  btn.style.cssText = 'grid-column:1/-1;font-family:"Fredoka One",cursive;font-size:1.1rem;';
+  btn.textContent = 'Play Again! 🔄';
+  btn.addEventListener('click', () => startGame(currentCat));
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  choicesEl.appendChild(btn);
+  speak(`Amazing! You got ${score} out of ${questions.length} words correct!`);
+}
+
+document.querySelectorAll('.btn-cat').forEach(btn => {
+  btn.addEventListener('click', () => startGame(btn.dataset.cat));
+});
+startGame('Digraphs');
+</script>
+</body>
+</html>
+
+

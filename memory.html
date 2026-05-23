@@ -1,0 +1,398 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letter Memory Match | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#F5F0FF; --text:#2C3E50; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* ── HEADER ── */
+    header { background:linear-gradient(135deg,#8E44AD 0%,#6B48FF 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
+    .back-link:hover { background:rgba(255,255,255,.35); }
+    header h1 { font-family:'Fredoka One',cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
+    .header-btns { display:flex; gap:.45rem; align-items:center; }
+    .btn-header { background:rgba(255,255,255,.2); border:none; color:white; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; text-decoration:none; display:inline-block; white-space:nowrap; }
+    .btn-header:hover { background:rgba(255,255,255,.35); }
+    .btn-header.muted { background:rgba(255,80,80,.45); }
+
+    /* ── SETTINGS ── */
+    .settings-bar { background:white; border-bottom:2px solid #EDE0FF; padding:.6rem 1.5rem; display:flex; align-items:center; gap:.75rem 1.25rem; flex-wrap:wrap; justify-content:center; }
+    .settings-group { display:flex; align-items:center; gap:.45rem; flex-wrap:wrap; }
+    .settings-label { font-size:.75rem; font-weight:800; color:#bbb; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+    .mode-btns { display:flex; gap:.3rem; flex-wrap:wrap; }
+    .btn-mode { background:#EDE0FF; color:#8E44AD; border:2px solid transparent; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .btn-mode:hover { background:#DDD0FF; }
+    .btn-mode.active { background:linear-gradient(135deg,#8E44AD,#6B48FF); color:white; }
+
+    /* ── STATS ── */
+    .stats-bar { background:white; padding:.5rem 1.5rem; display:flex; justify-content:center; gap:2.5rem; border-bottom:2px solid #EDE0FF; }
+    .stat-block { text-align:center; }
+    .stat-label { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:#aaa; }
+    .stat-value { font-family:'Fredoka One',cursive; font-size:1.6rem; color:#8E44AD; line-height:1.1; }
+
+    /* ── MAIN ── */
+    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:1.25rem 1rem 2rem; gap:1rem; }
+
+    /* ── GRID ── */
+    .card-grid { display:grid; gap:8px; }
+
+    /* ── CARD FLIP ── */
+    .card-container { perspective:600px; cursor:pointer; user-select:none; }
+    .card-container.locked-card { pointer-events:none; }
+
+    .card-inner {
+      position:relative;
+      width:100%;
+      padding-bottom:125%;
+      transform-style:preserve-3d;
+      -webkit-transform-style:preserve-3d;
+      transition:transform .45s cubic-bezier(.175,.885,.32,1.275);
+    }
+    .card-inner.face-up { transform:rotateY(180deg); }
+
+    .card-face {
+      position:absolute;
+      inset:0;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      backface-visibility:hidden;
+      -webkit-backface-visibility:hidden;
+    }
+
+    .card-back {
+      background:linear-gradient(135deg,#8E44AD,#6B48FF);
+      box-shadow:0 4px 12px rgba(107,72,255,.28);
+    }
+    .card-back::after {
+      content:'?';
+      font-family:'Fredoka One',cursive;
+      font-size:clamp(1.5rem,5.5vw,2.2rem);
+      color:rgba(255,255,255,.45);
+    }
+    .card-front { transform:rotateY(180deg); flex-direction:column; gap:2px; }
+    .card-front.upper  { background:linear-gradient(135deg,#3A8EF6,#6B48FF); box-shadow:0 4px 12px rgba(58,142,246,.3); }
+    .card-front.lower  { background:linear-gradient(135deg,#FF6B6B,#FF8E53); box-shadow:0 4px 12px rgba(255,107,107,.3); }
+    .card-front.matched { background:linear-gradient(135deg,#6BCB77,#27AE60) !important; box-shadow:0 0 0 3px #27AE60,0 4px 14px rgba(39,174,96,.4) !important; }
+
+    .card-letter {
+      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      font-size:clamp(1.5rem,5vw,2.1rem);
+      color:white;
+      font-weight:bold;
+      line-height:1;
+    }
+    .card-type-label {
+      font-size:.55rem;
+      font-weight:800;
+      color:rgba(255,255,255,.7);
+      text-transform:uppercase;
+      letter-spacing:.8px;
+    }
+
+    /* ── WIN OVERLAY ── */
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:100; }
+    .overlay.hidden { display:none; }
+    .overlay-box { background:white; border-radius:24px; padding:2.5rem 3rem; text-align:center; max-width:340px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,.25); }
+    .overlay-box .big-emoji { font-size:4.5rem; }
+    .overlay-box h2 { font-family:'Fredoka One',cursive; font-size:2.8rem; background:linear-gradient(135deg,#8E44AD,#6B48FF); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:.4rem 0; }
+    .overlay-box p { font-size:1rem; font-weight:700; color:#666; margin-bottom:1.5rem; }
+    .btn-play-again { background:linear-gradient(135deg,#8E44AD,#6B48FF); color:white; font-family:'Fredoka One',cursive; font-size:1.2rem; padding:12px 34px; border:none; border-radius:999px; cursor:pointer; box-shadow:0 4px 14px rgba(107,72,255,.3); transition:transform .15s; }
+    .btn-play-again:hover { transform:scale(1.04); }
+
+    /* ── CONFETTI ── */
+    .confetti-piece { position:fixed; width:9px; height:9px; top:-10px; border-radius:2px; pointer-events:none; z-index:200; animation:cffall linear forwards; }
+    @keyframes cffall { to { transform:translateY(105vh) rotate(720deg); opacity:0; } }
+
+    footer { text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #EDE0FF; margin-top:auto; }
+    footer a { color:#8E44AD; text-decoration:none; }
+    footer a:hover { text-decoration:underline; }
+
+    @media(max-width:360px) { .card-grid { gap:6px; } }
+  </style>
+<link href="fonts.css" rel="stylesheet"></head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">&#8592; Games</a>
+  <h1>Letter Memory Match!</h1>
+  <div class="header-btns">
+    <button class="btn-header" id="btnMute">&#128266;</button>
+    <button class="btn-header" id="btnVoice">&#128104; Voice</button>
+    <button class="btn-header" id="btnNew">New Game</button>
+  </div>
+</header>
+
+<div class="settings-bar">
+  <div class="settings-group">
+    <span class="settings-label">Difficulty</span>
+    <div class="mode-btns">
+      <button class="btn-mode" id="btnEasy">&#128514; Easy (8 pairs)</button>
+      <button class="btn-mode active" id="btnMedium">&#128522; Medium (16 pairs)</button>
+      <button class="btn-mode" id="btnHard">&#127775; All 26 Letters</button>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-block">
+    <div class="stat-label">Pairs Found</div>
+    <div class="stat-value" id="statPairs">0 / 16</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-label">Flips</div>
+    <div class="stat-value" id="statFlips">0</div>
+  </div>
+</div>
+
+<main>
+  <div class="card-grid" id="cardGrid"></div>
+</main>
+
+<div id="winOverlay" class="overlay hidden">
+  <div class="overlay-box">
+    <div class="big-emoji">&#127942;</div>
+    <h2>You Did It!</h2>
+    <p id="winMsg">All pairs matched!</p>
+    <button class="btn-play-again" id="btnPlayAgain">Play Again!</button>
+  </div>
+</div>
+
+<footer>
+  <p>Part of <a href="https://firststepreading.netlify.app">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
+</footer>
+
+<script>
+/* ── SPEECH STATE ── */
+let _muted = false, _speaking = false, _pending = null, _queue = [], _voice = null;
+
+/* ── CARD DATA ── */
+const CARD_DATA = {
+  A:{w:'Apple'}, B:{w:'Bee'}, C:{w:'Cat'}, D:{w:'Dog'}, E:{w:'Egg'},
+  F:{w:'Frog'}, G:{w:'Grapes'}, H:{w:'House'}, I:{w:'Ice Cream'}, J:{w:'Jar'},
+  K:{w:'Kite'}, L:{w:'Lion'}, M:{w:'Moon'}, N:{w:'Nut'}, O:{w:'Octopus'},
+  P:{w:'Pizza'}, Q:{w:'Queen'}, R:{w:'Rainbow'}, S:{w:'Star'}, T:{w:'Tree'},
+  U:{w:'Umbrella'}, V:{w:'Violin'}, W:{w:'Whale'}, X:{w:'Xylophone'},
+  Y:{w:'Yo-yo'}, Z:{w:'Zebra'}
+};
+const ALL_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const PAIR_COUNTS = { easy: 8, medium: 16, hard: 26 };
+let difficulty = 'medium';
+
+/* ── GAME STATE ── */
+let cards = [], flipped = [], matched = new Set(), locked = false, flipCount = 0;
+
+/* ── SPEECH ── */
+function _launch(msg) {
+  if (_muted) return;
+  window.speechSynthesis.cancel();
+  _queue = msg.split(' | '); _speaking = false; _advance();
+}
+function _advance() {
+  if (!_queue.length) { _speaking = false; if (_pending) { const t=_pending; _pending=null; _launch(t); } return; }
+  _speaking = true;
+  const utt = new SpeechSynthesisUtterance(_queue.shift());
+  if (_voice) utt.voice = _voice;
+  utt.rate = 0.92; utt.pitch = 1.0;
+  utt.onend = () => { _speaking = false; setTimeout(_advance, 350); };
+  window.speechSynthesis.speak(utt);
+}
+function speak(msg) { if (_muted) return; if (_speaking) { _pending = msg; } else { _launch(msg); } }
+function loadVoices() {
+  const all = window.speechSynthesis.getVoices();
+  if (!all.length) return;
+  _voice = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
+          || all.find(v => /aria|jenny|guy\b|ana\b|davis/i.test(v.name))
+          || all.find(v => /google.*english/i.test(v.name))
+          || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
+          || all.find(v => v.lang && /^en/i.test(v.lang))
+          || all[0];
+}
+window.speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+/* ── HELPERS ── */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ── INIT ── */
+function initGame() {
+  const n = PAIR_COUNTS[difficulty];
+  const letters = shuffle(ALL_LETTERS).slice(0, n);
+  cards = [];
+  let id = 0;
+  for (const letter of letters) {
+    cards.push({ id: id++, letter, isUpper: true });
+    cards.push({ id: id++, letter, isUpper: false });
+  }
+  cards = shuffle(cards);
+  flipped = []; matched = new Set(); locked = false; flipCount = 0;
+  document.getElementById('winOverlay').classList.add('hidden');
+  updateStats();
+  renderGrid();
+  speak('Let\'s play Letter Memory Match! | Find the matching pairs!');
+}
+
+/* ── RENDER ── */
+function renderGrid() {
+  const n     = PAIR_COUNTS[difficulty];
+  const cols  = (n <= 8) ? 4 : 4;
+  const wMap  = { easy:'min(300px,90vw)', medium:'min(340px,94vw)', hard:'min(340px,94vw)' };
+  const grid  = document.getElementById('cardGrid');
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.style.width = wMap[difficulty];
+  grid.innerHTML = '';
+
+  for (const card of cards) {
+    const isFaceUp  = flipped.includes(card.id) || matched.has(card.letter);
+    const isMatched = matched.has(card.letter);
+
+    const container = document.createElement('div');
+    container.className = 'card-container' + (isMatched ? ' locked-card' : '');
+    container.dataset.id = card.id;
+
+    const inner = document.createElement('div');
+    inner.className = 'card-inner' + (isFaceUp ? ' face-up' : '');
+
+    const back = document.createElement('div');
+    back.className = 'card-face card-back';
+
+    const front = document.createElement('div');
+    const faceClass = isMatched ? 'card-face card-front matched'
+      : `card-face card-front ${card.isUpper ? 'upper' : 'lower'}`;
+    front.className = faceClass;
+
+    const letterEl = document.createElement('div');
+    letterEl.className = 'card-letter';
+    letterEl.textContent = card.isUpper ? card.letter : card.letter.toLowerCase();
+    front.appendChild(letterEl);
+
+    const typeEl = document.createElement('div');
+    typeEl.className = 'card-type-label';
+    typeEl.textContent = card.isUpper ? 'UPPER' : 'lower';
+    front.appendChild(typeEl);
+
+    inner.appendChild(back);
+    inner.appendChild(front);
+    container.appendChild(inner);
+
+    if (!isMatched) container.addEventListener('click', () => handleCardClick(card.id));
+    grid.appendChild(container);
+  }
+}
+
+/* ── CLICK HANDLER ── */
+function handleCardClick(cardId) {
+  if (locked) return;
+  if (flipped.includes(cardId)) return;
+  const card = cards.find(c => c.id === cardId);
+  if (!card || matched.has(card.letter)) return;
+
+  flipped = [...flipped, cardId];
+  flipCount++;
+  updateStats();
+
+  const container = document.querySelector(`.card-container[data-id="${cardId}"]`);
+  if (container) container.querySelector('.card-inner').classList.add('face-up');
+
+  if (flipped.length < 2) return;
+
+  locked = true;
+  const [id1, id2] = flipped;
+  const c1 = cards.find(c => c.id === id1);
+  const c2 = cards.find(c => c.id === id2);
+
+  if (c1.letter === c2.letter) {
+    matched.add(c1.letter);
+    const word = CARD_DATA[c1.letter].w;
+    speak(`${c1.letter} and ${c1.letter.toLowerCase()} match! | ${c1.letter} is for ${word}!`);
+    setTimeout(() => {
+      flipped = []; locked = false;
+      renderGrid(); updateStats();
+      if (matched.size === PAIR_COUNTS[difficulty]) handleWin();
+    }, 900);
+  } else {
+    speak('Try again!');
+    setTimeout(() => {
+      for (const id of [id1, id2]) {
+        const el = document.querySelector(`.card-container[data-id="${id}"] .card-inner`);
+        if (el) el.classList.remove('face-up');
+      }
+      flipped = []; locked = false;
+    }, 1100);
+  }
+}
+
+/* ── STATS ── */
+function updateStats() {
+  document.getElementById('statPairs').textContent = `${matched.size} / ${PAIR_COUNTS[difficulty]}`;
+  document.getElementById('statFlips').textContent = flipCount;
+}
+
+/* ── WIN ── */
+function handleWin() {
+  speak(`Amazing! You found all the pairs! | You used ${flipCount} flips!`);
+  launchConfetti();
+  document.getElementById('winMsg').textContent = `All ${PAIR_COUNTS[difficulty]} pairs found in ${flipCount} flips!`;
+  setTimeout(() => document.getElementById('winOverlay').classList.remove('hidden'), 1000);
+}
+
+/* ── CONFETTI ── */
+function launchConfetti() {
+  const colors = ['#8E44AD','#6B48FF','#FFD93D','#FF6B6B','#6BCB77','#3A8EF6'];
+  for (let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.width = (6 + Math.random() * 8) + 'px';
+      p.style.height = (6 + Math.random() * 8) + 'px';
+      p.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 4500);
+    }, i * 35);
+  }
+}
+
+/* ── EVENTS ── */
+document.getElementById('btnMute').addEventListener('click', () => {
+  _muted = !_muted;
+  const btn = document.getElementById('btnMute');
+  btn.textContent = _muted ? '🔇' : '🔊';
+  btn.classList.toggle('muted', _muted);
+  if (_muted) window.speechSynthesis.cancel();
+});
+document.getElementById('btnNew').addEventListener('click', initGame);
+document.getElementById('btnPlayAgain').addEventListener('click', initGame);
+
+[['btnEasy','easy'],['btnMedium','medium'],['btnHard','hard']].forEach(([id, diff]) => {
+  document.getElementById(id).addEventListener('click', () => {
+    difficulty = diff;
+    document.querySelectorAll('.btn-mode').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    initGame();
+  });
+});
+
+/* ── START ── */
+initGame();
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,473 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trace the Letters | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#F0FFF8; --text:#2C3E50; --green:#27AE60; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* ── HEADER ── */
+    header { background:linear-gradient(135deg,#27AE60 0%,#2ECC71 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
+    .back-link:hover { background:rgba(255,255,255,.35); }
+    header h1 { font-family:'Fredoka One',cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
+    .header-btns { display:flex; gap:.45rem; align-items:center; }
+    .btn-header { background:rgba(255,255,255,.2); border:none; color:white; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
+    .btn-header:hover { background:rgba(255,255,255,.35); }
+    .btn-header.muted { background:rgba(255,80,80,.45); }
+
+    /* ── MAIN ── */
+    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:1.25rem 1rem 2rem; gap:1.1rem; }
+
+    /* ── LETTER INFO ── */
+    .letter-info-bar {
+      background:white;
+      border-radius:16px;
+      padding:.7rem 2rem;
+      text-align:center;
+      box-shadow:0 3px 14px rgba(39,174,96,.1);
+      border:2px solid #B2F0D4;
+    }
+    .letter-info-bar .big-letters {
+      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      font-size:clamp(2rem,7vw,3rem);
+      color:#27AE60;
+      font-weight:bold;
+      line-height:1;
+    }
+    .letter-info-bar .word-line {
+      font-family:'Fredoka One',cursive;
+      font-size:clamp(.95rem,3vw,1.25rem);
+      color:#888;
+      margin-top:.2rem;
+    }
+
+    /* ── TRACE ROW ── */
+    .trace-row { display:flex; gap:14px; justify-content:center; align-items:flex-start; }
+
+    .trace-box { display:flex; flex-direction:column; align-items:center; gap:7px; }
+
+    .trace-label { font-size:.72rem; font-weight:800; color:#aaa; text-transform:uppercase; letter-spacing:1px; }
+
+    .trace-area {
+      position:relative;
+      width:min(190px,43vw);
+      aspect-ratio:1;
+      border-radius:18px;
+      overflow:hidden;
+      background:white;
+      border:3px solid #B2F0D4;
+      box-shadow:0 4px 18px rgba(39,174,96,.1);
+    }
+    .trace-guide {
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      color:rgba(39,174,96,.13);
+      pointer-events:none;
+      user-select:none;
+      font-size:clamp(88px,24vw,144px);
+      line-height:1;
+      font-weight:bold;
+    }
+    .trace-svg {
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+    }
+
+    .trace-canvas {
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      cursor:crosshair;
+      touch-action:none;
+      border-radius:15px;
+    }
+
+    .btn-clear {
+      background:#F0FFF8;
+      color:#27AE60;
+      border:2px solid #B2F0D4;
+      font-family:'Nunito',sans-serif;
+      font-weight:700;
+      font-size:.82rem;
+      padding:5px 18px;
+      border-radius:999px;
+      cursor:pointer;
+      transition:all .2s;
+      white-space:nowrap;
+    }
+    .btn-clear:hover { background:#B2F0D4; }
+
+    /* ── NAVIGATION ── */
+    .nav-row { display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; justify-content:center; }
+
+    .btn-nav {
+      background:linear-gradient(135deg,#27AE60,#2ECC71);
+      color:white;
+      font-family:'Fredoka One',cursive;
+      font-size:1.1rem;
+      padding:11px 28px;
+      border:none;
+      border-radius:999px;
+      cursor:pointer;
+      box-shadow:0 4px 14px rgba(39,174,96,.32);
+      transition:transform .15s;
+    }
+    .btn-nav:hover { transform:translateY(-2px); }
+    .btn-nav:active { transform:scale(.96); }
+
+    .letter-progress {
+      font-family:'Fredoka One',cursive;
+      font-size:1rem;
+      color:#aaa;
+      min-width:110px;
+      text-align:center;
+    }
+
+    /* ── TIP ── */
+    .tip-text {
+      font-size:.82rem;
+      font-weight:600;
+      color:#aaa;
+      text-align:center;
+    }
+
+    /* ── FOOTER ── */
+    footer { text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #B2F0D4; margin-top:auto; }
+    footer a { color:#27AE60; text-decoration:none; }
+    footer a:hover { text-decoration:underline; }
+
+    @media(max-width:400px) {
+      .trace-row { gap:10px; }
+      .btn-nav { font-size:1rem; padding:9px 22px; }
+    }
+  </style>
+<link href="fonts.css" rel="stylesheet"></head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">&#8592; Games</a>
+  <h1>Trace the Letters!</h1>
+  <div class="header-btns">
+    <button class="btn-header" id="btnMute">&#128266;</button>
+    <button class="btn-header" id="btnVoice">&#128104; Voice</button>
+  </div>
+</header>
+
+<main>
+
+  <div class="letter-info-bar">
+    <div class="big-letters" id="bigLetters">A / a</div>
+    <div class="word-line" id="wordLine">&#127822; A is for Apple</div>
+  </div>
+
+  <div class="trace-row">
+
+    <div class="trace-box">
+      <div class="trace-label">Uppercase</div>
+      <div class="trace-area">
+        <div class="trace-guide" id="upperGuide">A</div>
+        <svg class="trace-svg" id="upperSvg" viewBox="-5 -5 110 110"></svg>
+        <canvas class="trace-canvas" id="upperCanvas"></canvas>
+      </div>
+      <button class="btn-clear" id="btnClearUpper">Clear &#10005;</button>
+    </div>
+
+    <div class="trace-box">
+      <div class="trace-label">Lowercase</div>
+      <div class="trace-area">
+        <div class="trace-guide" id="lowerGuide">a</div>
+        <svg class="trace-svg" id="lowerSvg" viewBox="-5 -5 110 110"></svg>
+        <canvas class="trace-canvas" id="lowerCanvas"></canvas>
+      </div>
+      <button class="btn-clear" id="btnClearLower">Clear &#10005;</button>
+    </div>
+
+  </div>
+
+  <div class="nav-row">
+    <button class="btn-nav" id="btnPrev">&#8592; Prev</button>
+    <div class="letter-progress" id="letterProgress">Letter 1 of 26</div>
+    <button class="btn-nav" id="btnNext">Next &#8594;</button>
+  </div>
+
+  <div class="tip-text">Draw over the ghost letter with your finger or mouse!</div>
+
+</main>
+
+<footer>
+  <p>Part of <a href="https://firststepreading.netlify.app">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
+</footer>
+
+<script>
+/* ── SPEECH STATE ── */
+let _muted = false, _speaking = false, _pending = null, _queue = [], _voice = null;
+
+/* ── LETTER DATA ── */
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const WORDS   = {
+  A:'Apple', B:'Bee', C:'Cat', D:'Dog', E:'Egg', F:'Frog', G:'Grapes',
+  H:'House', I:'Ice Cream', J:'Jar', K:'Kite', L:'Lion', M:'Moon',
+  N:'Nut', O:'Octopus', P:'Pizza', Q:'Queen', R:'Rainbow', S:'Star',
+  T:'Tree', U:'Umbrella', V:'Violin', W:'Whale', X:'Xylophone',
+  Y:'Yo-yo', Z:'Zebra'
+};
+const EMOJIS = {
+  A:'🍎', B:'🐝', C:'🐱', D:'🐶', E:'🥚', F:'🐸', G:'🍇',
+  H:'🏠', I:'🍦', J:'🫙', K:'🪁', L:'🦁', M:'🌙',
+  N:'🥜', O:'🐙', P:'🍕', Q:'👑', R:'🌈', S:'⭐',
+  T:'🌳', U:'☂️', V:'🎻', W:'🐋', X:'🎸', Y:'🪀', Z:'🦓'
+};
+
+let currentIdx = 0;
+let upperDraw = null, lowerDraw = null;
+
+/* ── SPEECH ── */
+function _launch(msg) {
+  if (_muted) return;
+  window.speechSynthesis.cancel();
+  _queue = msg.split(' | '); _speaking = false; _advance();
+}
+function _advance() {
+  if (!_queue.length) {
+    _speaking = false;
+    if (_pending) { const t = _pending; _pending = null; _launch(t); }
+    return;
+  }
+  _speaking = true;
+  const utt = new SpeechSynthesisUtterance(_queue.shift());
+  if (_voice) utt.voice = _voice;
+  utt.rate = 0.92; utt.pitch = 1.0;
+  utt.onend = () => { _speaking = false; setTimeout(_advance, 350); };
+  window.speechSynthesis.speak(utt);
+}
+function speak(msg) {
+  if (_muted) return;
+  if (_speaking) { _pending = msg; } else { _launch(msg); }
+}
+function loadVoices() {
+  const all = window.speechSynthesis.getVoices();
+  if (!all.length) return;
+  _voice = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
+          || all.find(v => /aria|jenny|guy\b|ana\b|davis/i.test(v.name))
+          || all.find(v => /google.*english/i.test(v.name))
+          || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
+          || all.find(v => v.lang && /^en/i.test(v.lang))
+          || all[0];
+}
+window.speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+/* ── STROKE GUIDE DATA ── */
+const STROKE_DATA = {
+  // UPPERCASE
+  'A': ['M 50,10 L 22,88','M 50,10 L 78,88','M 30,54 L 70,54'],
+  'B': ['M 22,10 L 22,90','M 22,10 Q 66,10 66,32 Q 66,50 22,50','M 22,50 Q 72,50 72,70 Q 72,90 22,90'],
+  'C': ['M 74,22 Q 72,8 52,8 Q 16,8 16,50 Q 16,92 52,92 Q 72,92 74,78'],
+  'D': ['M 22,10 L 22,90','M 22,10 Q 78,10 78,50 Q 78,90 22,90'],
+  'E': ['M 22,10 L 22,90','M 22,10 L 75,10','M 22,50 L 65,50','M 22,90 L 75,90'],
+  'F': ['M 22,10 L 22,90','M 22,10 L 75,10','M 22,50 L 65,50'],
+  'G': ['M 74,22 Q 72,8 52,8 Q 16,8 16,50 Q 16,92 52,92 Q 72,92 74,78','M 74,50 L 52,50'],
+  'H': ['M 22,10 L 22,90','M 78,10 L 78,90','M 22,50 L 78,50'],
+  'I': ['M 50,10 L 50,90','M 25,10 L 75,10','M 25,90 L 75,90'],
+  'J': ['M 22,10 L 72,10','M 62,10 L 62,72 Q 62,90 42,90 Q 22,90 22,74'],
+  'K': ['M 22,10 L 22,90','M 78,10 L 22,50','M 22,50 L 78,90'],
+  'L': ['M 22,10 L 22,90','M 22,90 L 75,90'],
+  'M': ['M 18,10 L 18,90','M 18,10 L 50,52','M 50,52 L 82,10','M 82,10 L 82,90'],
+  'N': ['M 20,10 L 20,90','M 20,10 L 80,90','M 80,10 L 80,90'],
+  'O': ['M 50,10 Q 16,10 16,50 Q 16,90 50,90 Q 84,90 84,50 Q 84,10 50,10'],
+  'P': ['M 22,10 L 22,90','M 22,10 Q 72,10 72,32 Q 72,50 22,50'],
+  'Q': ['M 50,10 Q 16,10 16,50 Q 16,90 50,90 Q 84,90 84,50 Q 84,10 50,10','M 62,68 L 82,88'],
+  'R': ['M 22,10 L 22,90','M 22,10 Q 72,10 72,32 Q 72,50 22,50','M 42,50 L 78,90'],
+  'S': ['M 72,22 Q 72,8 52,8 Q 20,8 20,38 Q 20,55 50,55 Q 80,55 80,72 Q 80,92 50,92 Q 28,92 22,76'],
+  'T': ['M 15,10 L 85,10','M 50,10 L 50,90'],
+  'U': ['M 20,10 L 20,65 Q 20,90 50,90 Q 80,90 80,65 L 80,10'],
+  'V': ['M 18,10 L 50,90','M 50,90 L 82,10'],
+  'W': ['M 14,10 L 30,90','M 30,90 L 50,42','M 50,42 L 70,90','M 70,90 L 86,10'],
+  'X': ['M 18,10 L 82,90','M 82,10 L 18,90'],
+  'Y': ['M 20,10 L 50,50','M 80,10 L 50,50','M 50,50 L 50,90'],
+  'Z': ['M 18,10 L 82,10','M 82,10 L 18,90','M 18,90 L 82,90'],
+  // LOWERCASE
+  'a': ['M 68,44 Q 68,28 50,28 Q 28,28 28,52 Q 28,75 50,75 Q 68,75 68,55','M 68,28 L 68,75'],
+  'b': ['M 22,10 L 22,90','M 22,45 Q 22,28 42,28 Q 68,28 68,52 Q 68,75 42,75 Q 22,75 22,60'],
+  'c': ['M 68,38 Q 68,22 50,22 Q 22,22 22,52 Q 22,78 50,78 Q 68,78 68,65'],
+  'd': ['M 68,44 Q 68,28 50,28 Q 28,28 28,52 Q 28,75 50,75 Q 68,75 68,55','M 78,10 L 78,78'],
+  'e': ['M 22,52 L 68,52','M 68,52 Q 68,25 50,25 Q 22,25 22,52 Q 22,78 50,78 Q 68,78 68,65'],
+  'f': ['M 70,22 Q 70,10 55,10 Q 40,10 40,25 L 40,90','M 24,42 L 64,42'],
+  'g': ['M 68,44 Q 68,28 50,28 Q 28,28 28,52 Q 28,75 50,75 Q 68,75 68,55','M 68,28 L 68,85 Q 68,95 50,95 Q 30,95 28,82'],
+  'h': ['M 22,10 L 22,90','M 22,46 Q 22,28 42,28 Q 68,28 68,48 L 68,90'],
+  'i': ['M 50,35 L 50,78','DOT:50,18'],
+  'j': ['M 60,35 L 60,82 Q 60,95 42,95 Q 26,95 26,82','DOT:60,18'],
+  'k': ['M 22,10 L 22,90','M 66,28 L 22,52','M 34,44 L 68,78'],
+  'l': ['M 50,10 L 50,85 Q 50,92 58,92'],
+  'm': ['M 18,35 L 18,78','M 18,45 Q 18,28 36,28 Q 52,28 52,45 L 52,78','M 52,45 Q 52,28 68,28 Q 82,28 82,45 L 82,78'],
+  'n': ['M 22,35 L 22,78','M 22,46 Q 22,28 44,28 Q 68,28 68,46 L 68,78'],
+  'o': ['M 50,22 Q 22,22 22,52 Q 22,78 50,78 Q 78,78 78,52 Q 78,22 50,22'],
+  'p': ['M 22,35 L 22,95','M 22,35 Q 22,22 42,22 Q 68,22 68,52 Q 68,78 42,78 Q 22,78 22,62'],
+  'q': ['M 68,44 Q 68,22 50,22 Q 28,22 28,52 Q 28,78 50,78 Q 68,78 68,55','M 68,22 L 68,88','M 68,88 L 82,98'],
+  'r': ['M 22,35 L 22,78','M 22,48 Q 22,28 44,28 Q 58,28 62,36'],
+  's': ['M 65,36 Q 65,22 50,22 Q 24,22 24,42 Q 24,55 50,55 Q 72,55 72,68 Q 72,82 50,82 Q 28,82 24,68'],
+  't': ['M 50,12 L 50,80 Q 50,88 58,88','M 28,40 L 70,40'],
+  'u': ['M 22,28 L 22,62 Q 22,78 50,78 Q 78,78 78,62 L 78,28 L 78,78'],
+  'v': ['M 22,28 L 50,78','M 50,78 L 78,28'],
+  'w': ['M 16,28 L 30,78','M 30,78 L 50,48','M 50,48 L 68,78','M 68,78 L 84,28'],
+  'x': ['M 22,28 L 78,78','M 78,28 L 22,78'],
+  'y': ['M 20,28 L 50,58','M 78,28 L 24,92'],
+  'z': ['M 20,28 L 78,28','M 78,28 L 22,78','M 22,78 L 78,78'],
+};
+
+function _getStart(pd) {
+  const m = pd.match(/M\s*([\d.]+)[,\s]([\d.]+)/);
+  return m ? [+m[1], +m[2]] : [50, 50];
+}
+
+const _SCOLS = ['#FF8C00','#3A8EF6','#E74C3C','#27AE60','#9B59B6'];
+
+function renderGuides(letter, svgEl, pfx) {
+  const strokes = STROKE_DATA[letter];
+  if (!strokes || !strokes.length) { svgEl.innerHTML = ''; return; }
+  const mid = 'tip' + pfx;
+  let h = `<defs><marker id="${mid}" viewBox="0 0 8 6" refX="7" refY="3" markerWidth="3.5" markerHeight="3.5" orient="auto"><path d="M 0 0 L 8 3 L 0 6 Z" fill="#27AE60" opacity="0.5"/></marker></defs>`;
+  strokes.forEach((pd, i) => {
+    const col = _SCOLS[i % _SCOLS.length];
+    if (pd.startsWith('DOT:')) {
+      const [dx, dy] = pd.slice(4).split(',').map(Number);
+      h += `<circle cx="${dx}" cy="${dy}" r="4.5" fill="${col}"/>`;
+      h += `<text x="${dx}" y="${dy}" text-anchor="middle" dominant-baseline="central" font-size="5.5" fill="white" font-weight="bold">${i+1}</text>`;
+    } else {
+      h += `<path d="${pd}" fill="none" stroke="#27AE60" stroke-width="2" stroke-opacity="0.32" stroke-dasharray="4,3.5" stroke-linecap="round" marker-end="url(#${mid})"/>`;
+      const [sx, sy] = _getStart(pd);
+      if (i === 0) h += `<text x="${sx}" y="${sy}" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#FFD93D" stroke="white" stroke-width="0.8" paint-order="stroke">&#9733;</text>`;
+      const nx = sx + (i === 0 ? 9 : 0), ny = sy - 8;
+      h += `<circle cx="${nx}" cy="${ny}" r="5" fill="${col}"/>`;
+      h += `<text x="${nx}" y="${ny}" text-anchor="middle" dominant-baseline="central" font-size="5.5" fill="white" font-weight="bold">${i+1}</text>`;
+    }
+  });
+  svgEl.innerHTML = h;
+}
+
+/* ── CANVAS SETUP ── */
+function makeDrawable(canvas, strokeColor) {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width  = Math.max(rect.width,  160);
+  canvas.height = Math.max(rect.height, 160);
+
+  const ctx = canvas.getContext('2d');
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth   = 10;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+
+  let drawing = false;
+
+  function pos(e) {
+    const r   = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return {
+      x: (src.clientX - r.left) * (canvas.width  / r.width),
+      y: (src.clientY - r.top)  * (canvas.height / r.height)
+    };
+  }
+
+  function down(e) {
+    e.preventDefault();
+    drawing = true;
+    const {x, y} = pos(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+  function move(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const {x, y} = pos(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+  function up() { drawing = false; ctx.beginPath(); }
+
+  canvas.addEventListener('mousedown',  down);
+  canvas.addEventListener('mousemove',  move);
+  canvas.addEventListener('mouseup',    up);
+  canvas.addEventListener('mouseleave', up);
+  canvas.addEventListener('touchstart', down, { passive: false });
+  canvas.addEventListener('touchmove',  move, { passive: false });
+  canvas.addEventListener('touchend',   up);
+
+  return {
+    ctx,
+    clear: () => { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.beginPath(); }
+  };
+}
+
+/* ── SHOW LETTER ── */
+function showLetter(idx) {
+  const L = LETTERS[idx];
+  document.getElementById('upperGuide').textContent     = L;
+  document.getElementById('lowerGuide').textContent     = L.toLowerCase();
+  document.getElementById('bigLetters').textContent     = `${L} / ${L.toLowerCase()}`;
+  document.getElementById('wordLine').textContent       = `${EMOJIS[L]} ${L} is for ${WORDS[L]}`;
+  document.getElementById('letterProgress').textContent = `Letter ${idx + 1} of 26`;
+  if (upperDraw) upperDraw.clear();
+  if (lowerDraw) lowerDraw.clear();
+  renderGuides(L,               document.getElementById('upperSvg'), 'u');
+  renderGuides(L.toLowerCase(), document.getElementById('lowerSvg'), 'l');
+  speak(`Capital ${L}! | Lowercase ${L.toLowerCase()}! | ${L} is for ${WORDS[L]}!`);
+}
+
+/* ── EVENTS ── */
+document.getElementById('btnMute').addEventListener('click', () => {
+  _muted = !_muted;
+  const btn = document.getElementById('btnMute');
+  btn.textContent = _muted ? '🔇' : '🔊';
+  btn.classList.toggle('muted', _muted);
+  if (_muted) window.speechSynthesis.cancel();
+});
+
+document.getElementById('btnPrev').addEventListener('click', () => {
+  currentIdx = (currentIdx - 1 + 26) % 26;
+  showLetter(currentIdx);
+});
+document.getElementById('btnNext').addEventListener('click', () => {
+  currentIdx = (currentIdx + 1) % 26;
+  showLetter(currentIdx);
+});
+document.getElementById('btnClearUpper').addEventListener('click', () => { if (upperDraw) upperDraw.clear(); });
+document.getElementById('btnClearLower').addEventListener('click', () => { if (lowerDraw) lowerDraw.clear(); });
+
+/* ── KEYBOARD NAVIGATION ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    currentIdx = (currentIdx + 1) % 26; showLetter(currentIdx);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    currentIdx = (currentIdx - 1 + 26) % 26; showLetter(currentIdx);
+  }
+});
+
+/* ── INIT ── */
+window.addEventListener('load', () => {
+  upperDraw = makeDrawable(document.getElementById('upperCanvas'), '#2ECC71');
+  lowerDraw = makeDrawable(document.getElementById('lowerCanvas'), '#E67E22');
+  showLetter(0);
+});
+</script>
+
+</body>
+</html>
+
+

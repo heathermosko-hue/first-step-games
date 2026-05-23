@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spell It! | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFF8F0;
+      --text: #2C3E50;
+      --purple: #6B48FF;
+      --purple2: #9B59B6;
+      --purple-light: #EDE0FF;
+      --purple-border: #C9B8FF;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #6B48FF, #9B59B6);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .back-link {
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: .9rem;
+      background: rgba(255,255,255,.22);
+      padding: 6px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+      transition: background .2s;
+    }
+    .back-link:hover { background: rgba(255,255,255,.38); }
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      color: white;
+      font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+      flex: 1;
+      text-align: center;
+    }
+    .btn-mute {
+      background: rgba(255,255,255,.22);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background .2s;
+      line-height: 1;
+    }
+    .btn-mute:hover { background: rgba(255,255,255,.38); }
+    .btn-mute.muted { background: rgba(255,80,80,.45); }
+
+    /* ── MODE BAR ── */
+    .mode-bar {
+      background: white;
+      border-bottom: 2px solid #EDE0FF;
+      padding: .6rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .55rem;
+      flex-wrap: wrap;
+    }
+    .btn-mode {
+      background: white;
+      border: 2px solid #ddd;
+      color: #888;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      padding: 6px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .btn-mode:hover { border-color: var(--purple); color: var(--purple); }
+    .btn-mode.active {
+      background: linear-gradient(135deg, #6B48FF, #9B59B6);
+      border-color: transparent;
+      color: white;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 2rem;
+    }
+
+    .game-wrap {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1rem 2rem;
+    }
+
+    /* ── START SCREEN ── */
+    #startScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      width: 100%;
+    }
+    #startScreen .start-emoji {
+      font-size: 5rem;
+      line-height: 1;
+    }
+    #startScreen p {
+      font-size: 1.1rem;
+      color: #777;
+      font-weight: 600;
+      max-width: 280px;
+    }
+    .btn-new-game {
+      background: linear-gradient(135deg, #6B48FF, #9B59B6);
+      border: none;
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      padding: 12px 36px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .2s;
+      box-shadow: 0 4px 16px rgba(107,72,255,.35);
+    }
+    .btn-new-game:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 6px 22px rgba(107,72,255,.45); }
+    .btn-new-game:disabled { opacity: .45; cursor: not-allowed; }
+
+    /* ── GAME AREA ── */
+    #gameArea {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      width: 100%;
+    }
+
+    /* ── PROGRESS ROW ── */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .word-progress {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      color: #FF8C00;
+    }
+    .stars-display {
+      display: flex;
+      gap: 3px;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .star {
+      transition: transform .2s, opacity .2s;
+    }
+    .star.dim {
+      opacity: .25;
+    }
+    .star.pop {
+      animation: starPop .35s ease-out;
+    }
+
+    /* ── EMOJI BOX ── */
+    .emoji-box {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(107,72,255,.12);
+      border: 3px solid #EDE0FF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .8rem;
+      width: 100%;
+    }
+    .emoji-display {
+      font-size: clamp(4rem, 18vw, 7rem);
+      line-height: 1;
+      text-align: center;
+    }
+    .btn-hear {
+      background: linear-gradient(135deg, #6B48FF, #9B59B6);
+      border: none;
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      padding: 7px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 3px 10px rgba(107,72,255,.3);
+    }
+    .btn-hear:hover { transform: scale(1.06); box-shadow: 0 5px 14px rgba(107,72,255,.4); }
+
+    /* ── BLANK TILES ── */
+    .blanks {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: .4rem;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .blank-tile {
+      width: clamp(36px, 9vw, 52px);
+      height: clamp(36px, 9vw, 52px);
+      border-radius: 10px;
+      border: 2px solid #C9B8FF;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+      font-weight: 700;
+      color: #6B48FF;
+      transition: background .15s;
+      position: relative;
+    }
+    .blank-tile.empty::after {
+      content: '·';
+      color: #D0C0F0;
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+    .blank-tile.filled::after { display: none; }
+
+    /* ── LETTER BUTTONS ── */
+    .letter-btns {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .4rem;
+      width: 100%;
+    }
+    .btn-letter {
+      width: clamp(40px, 10vw, 54px);
+      height: clamp(40px, 10vw, 54px);
+      border-radius: 10px;
+      background: #EDE0FF;
+      border: 2px solid #C9B8FF;
+      font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+      font-weight: 700;
+      color: #2C3E50;
+      cursor: pointer;
+      transition: background .1s, transform .1s, opacity .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .btn-letter:hover:not(:disabled) {
+      background: #D4C0FF;
+      transform: scale(1.07);
+    }
+    .btn-letter:active:not(:disabled) { transform: scale(.95); }
+    .btn-letter:disabled,
+    .btn-letter.used {
+      opacity: .35;
+      pointer-events: none;
+    }
+
+    /* ── DEL BUTTON ── */
+    .btn-delete {
+      background: #FF6B6B;
+      border: none;
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 9px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .2s;
+      box-shadow: 0 3px 10px rgba(255,107,107,.3);
+    }
+    .btn-delete:hover { transform: scale(1.05); box-shadow: 0 5px 14px rgba(255,107,107,.4); }
+    .btn-delete:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes popIn {
+      from { transform: scale(.5); opacity: 0; }
+      to   { transform: scale(1);  opacity: 1; }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%,75%  { transform: translateX(-6px); }
+      50%      { transform: translateX(6px); }
+    }
+    @keyframes correctPulse {
+      0%   { background: #C9B8FF; }
+      50%  { background: #6BCB77; }
+      100% { background: #C9B8FF; }
+    }
+    @keyframes starPop {
+      0%,100% { transform: scale(1); }
+      50%     { transform: scale(1.4); }
+    }
+    @keyframes tileIn {
+      from { transform: scale(.6) rotateY(90deg); opacity: 0; }
+      to   { transform: scale(1)  rotateY(0deg);  opacity: 1; }
+    }
+
+    .blank-tile.correct {
+      animation: correctPulse .8s ease-in-out;
+      border-color: #6BCB77;
+    }
+    .blank-tile.shake {
+      animation: shake .4s ease-in-out;
+      border-color: #FF6B6B;
+    }
+
+    /* ── WIN OVERLAY ── */
+    .win-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+    .win-overlay.show { display: flex; }
+    .win-card {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      animation: popIn .4s cubic-bezier(.175,.885,.32,1.275);
+      max-width: 360px;
+      width: 100%;
+      box-shadow: 0 12px 48px rgba(0,0,0,.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .8rem;
+    }
+    .win-card .win-emoji { font-size: 3.5rem; line-height: 1; }
+    .win-card h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.6rem, 7vw, 2.2rem);
+      background: linear-gradient(135deg, #6B48FF, #9B59B6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+    .win-card p {
+      font-size: 1.05rem;
+      color: #666;
+      font-weight: 600;
+    }
+    .win-stars {
+      font-size: 2rem;
+      letter-spacing: 4px;
+      line-height: 1;
+    }
+    .win-star-count {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      color: #FF8C00;
+    }
+    .btn-play-again {
+      background: linear-gradient(135deg, #6B48FF, #9B59B6);
+      border: none;
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.25rem;
+      padding: 13px 40px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 18px rgba(107,72,255,.35);
+      margin-top: .4rem;
+    }
+    .btn-play-again:hover { transform: scale(1.06); box-shadow: 0 7px 24px rgba(107,72,255,.45); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: white;
+      border-top: 2px solid #EDE0FF;
+      text-align: center;
+      padding: 1rem 1.5rem;
+      font-size: .82rem;
+      color: #999;
+    }
+    footer a { color: var(--purple); text-decoration: none; font-weight: 700; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">← Games</a>
+  <h1>✏️ Spell It!</h1>
+  <button class="btn-mute" id="btnMute">🔊</button>
+</header>
+
+<div class="mode-bar">
+  <button class="btn-mode" data-mode="Book 1">📗 Book 1</button>
+  <button class="btn-mode" data-mode="Book 2">📘 Book 2</button>
+  <button class="btn-mode" data-mode="Book 3">📕 Book 3</button>
+  <button class="btn-mode" data-mode="All Sight Words">📚 All Sight Words</button>
+  <button class="btn-mode" data-mode="CVC Words">CVC Words 🐱</button>
+  <button class="btn-mode" data-mode="Long Vowels">Long Vowels 🌈</button>
+</div>
+
+<main>
+  <div class="game-wrap">
+
+    <!-- Start Screen -->
+    <div id="startScreen">
+      <div class="start-emoji">✏️</div>
+      <p>Pick a word set above to start spelling!</p>
+      <button class="btn-new-game" id="btnNewGame" disabled>New Game</button>
+    </div>
+
+    <!-- Game Area -->
+    <div id="gameArea">
+
+      <!-- Progress row -->
+      <div class="progress-row">
+        <div class="word-progress" id="wordProgress">Word 1 of 10</div>
+        <div class="stars-display" id="starsDisplay">
+          <span class="star" id="star0">★</span>
+          <span class="star" id="star1">★</span>
+          <span class="star" id="star2">★</span>
+        </div>
+      </div>
+
+      <!-- Emoji box -->
+      <div class="emoji-box">
+        <div class="emoji-display" id="emojiDisplay">🐱</div>
+        <button class="btn-hear" id="btnHear">🔊 Hear It</button>
+      </div>
+
+      <!-- Blank tiles -->
+      <div class="blanks" id="blankTiles"></div>
+
+      <!-- Letter buttons -->
+      <div class="letter-btns" id="letterBtns"></div>
+
+      <!-- DEL button -->
+      <button class="btn-delete" id="btnDelete" disabled>⌫ Delete</button>
+
+    </div><!-- /#gameArea -->
+
+  </div><!-- /.game-wrap -->
+</main>
+
+<!-- Win Overlay -->
+<div class="win-overlay" id="winOverlay">
+  <div class="win-card">
+    <div class="win-emoji">🎉</div>
+    <h2>Amazing Speller!</h2>
+    <p>You spelled all 10 words!</p>
+    <div class="win-stars" id="winStars">★★★★★</div>
+    <div class="win-star-count" id="winStarCount">30 stars!</div>
+    <button class="btn-play-again" id="btnPlayAgain">Play Again!</button>
+  </div>
+</div>
+
+<footer>
+  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids 📚</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   SPEECH API
+═══════════════════════════════════════ */
+let _muted=false,_speaking=false,_pending=null,_queue=[],_voice=null;
+function _launch(msg){if(_muted)return;window.speechSynthesis.cancel();_queue=msg.split(' | ');_speaking=false;_advance();}
+function _advance(){if(!_queue.length){_speaking=false;if(_pending){const t=_pending;_pending=null;_launch(t);}return;}_speaking=true;const utt=new SpeechSynthesisUtterance(_queue.shift());if(_voice)utt.voice=_voice;utt.rate=0.92;utt.pitch=1.0;utt.onend=()=>{_speaking=false;setTimeout(_advance,300);};window.speechSynthesis.speak(utt);}
+function speak(msg){if(_muted)return;if(_speaking){_pending=msg;}else{_launch(msg);}}
+function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length)return;_voice=all.find(v=>v.name.includes('Natural')&&/^en/i.test(v.lang))||all.find(v=>/aria|jenny|guy\b|ana\b|davis/i.test(v.name))||all.find(v=>/google.*english/i.test(v.name))||all.find(v=>/\bdavid\b|\bzira\b/i.test(v.name))||all.find(v=>v.lang&&/^en/i.test(v.lang))||all[0];}
+window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
+
+/* ═══════════════════════════════════════
+   WORD DATA
+═══════════════════════════════════════ */
+const WORD_DATA = {
+  'CVC Words': [
+    {word:'cat',emoji:'🐱'},{word:'dog',emoji:'🐶'},{word:'sun',emoji:'☀️'},
+    {word:'hat',emoji:'🎩'},{word:'big',emoji:'🐘'},{word:'run',emoji:'🏃'},
+    {word:'hop',emoji:'🐸'},{word:'bed',emoji:'🛏️'},{word:'cup',emoji:'🥤'},
+    {word:'pig',emoji:'🐷'},{word:'map',emoji:'🗺️'},{word:'bus',emoji:'🚌'},
+    {word:'top',emoji:'🪀'},{word:'bug',emoji:'🐛'},{word:'red',emoji:'🔴'},
+    {word:'pop',emoji:'🎈'},{word:'web',emoji:'🕸️'},{word:'jet',emoji:'✈️'},
+    {word:'fox',emoji:'🦊'},{word:'log',emoji:'🪵'},
+  ],
+  'Book 1': [
+    {word:'a',emoji:'🅰️'},{word:'am',emoji:'🙋'},{word:'an',emoji:'🔢'},
+    {word:'and',emoji:'🤝'},{word:'are',emoji:'⭐'},{word:'as',emoji:'🔄'},
+    {word:'at',emoji:'📍'},{word:'ball',emoji:'⚽'},{word:'can',emoji:'✅'},
+    {word:'did',emoji:'✔️'},{word:'do',emoji:'💪'},{word:'for',emoji:'🎁'},
+    {word:'give',emoji:'🤲'},{word:'go',emoji:'🏃'},{word:'got',emoji:'🙌'},
+    {word:'has',emoji:'📦'},{word:'have',emoji:'✋'},{word:'he',emoji:'👦'},
+    {word:'her',emoji:'👧'},{word:'his',emoji:'🙋‍♂️'},{word:'I',emoji:'👆'},
+    {word:'in',emoji:'📥'},{word:'is',emoji:'💭'},{word:'it',emoji:'👉'},
+    {word:'me',emoji:'🫵'},{word:'no',emoji:'❌'},{word:'not',emoji:'🚫'},
+    {word:'of',emoji:'📚'},{word:'on',emoji:'🔛'},{word:'said',emoji:'💬'},
+    {word:'says',emoji:'📢'},{word:'see',emoji:'👁️'},{word:'she',emoji:'👩'},
+    {word:'sorry',emoji:'😢'},{word:'that',emoji:'👈'},{word:'the',emoji:'📖'},
+    {word:'to',emoji:'➡️'},{word:'up',emoji:'⬆️'},{word:'will',emoji:'💫'},
+    {word:'with',emoji:'🤜'},
+  ],
+  'Book 2': [
+    {word:'but',emoji:'🤔'},{word:'does',emoji:'🔄'},{word:'from',emoji:'🗺️'},
+    {word:'get',emoji:'✋'},{word:'go',emoji:'🏃'},{word:'goes',emoji:'🚶'},
+    {word:'like',emoji:'❤️'},{word:'my',emoji:'🙋‍♀️'},{word:'what',emoji:'❓'},
+    {word:'who',emoji:'👤'},
+  ],
+  'Book 3': [
+    {word:'bank',emoji:'🏦'},{word:'give',emoji:'🎁'},{word:'how',emoji:'❓'},
+    {word:'my',emoji:'🙋'},{word:'new',emoji:'✨'},{word:'night',emoji:'🌙'},
+    {word:'out',emoji:'🚪'},{word:'say',emoji:'💬'},{word:'she',emoji:'👩'},
+    {word:'shoe',emoji:'👟'},{word:'too',emoji:'2️⃣'},{word:'then',emoji:'➡️'},
+    {word:'ring',emoji:'💍'},{word:'took',emoji:'✋'},{word:'when',emoji:'⏰'},
+    {word:'who',emoji:'👤'},{word:'why',emoji:'🤷'},{word:'you',emoji:'👆'},
+    {word:'bird',emoji:'🐦'},{word:'car',emoji:'🚗'},{word:'corn',emoji:'🌽'},
+    {word:'girl',emoji:'👧'},{word:'far',emoji:'🏔️'},{word:'for',emoji:'🎁'},
+    {word:'fur',emoji:'🐾'},{word:'or',emoji:'↔️'},{word:'purr',emoji:'🐱'},
+  ],
+  'Long Vowels': [
+    {word:'cake',emoji:'🎂'},{word:'kite',emoji:'🪁'},{word:'bone',emoji:'🦴'},
+    {word:'cube',emoji:'🧊'},{word:'rain',emoji:'🌧️'},{word:'feet',emoji:'🦶',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><ellipse cx="22" cy="54" rx="13" ry="19" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="22" cy="67" rx="11" ry="6" fill="#F0A898"/><ellipse cx="13" cy="37" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="18" cy="35" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="23" cy="34" rx="3" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="28" cy="35" rx="2.5" ry="2.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="32" cy="38" rx="2" ry="2" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="58" cy="54" rx="13" ry="19" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="58" cy="67" rx="11" ry="6" fill="#F0A898"/><ellipse cx="67" cy="37" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="62" cy="35" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="57" cy="34" rx="3" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="52" cy="35" rx="2.5" ry="2.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="48" cy="38" rx="2" ry="2" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/></svg>'},
+    {word:'boat',emoji:'⛵'},{word:'snow',emoji:'❄️'},{word:'bee',emoji:'🐝'},
+    {word:'tree',emoji:'🌳'},{word:'bike',emoji:'🚲'},{word:'rose',emoji:'🌹'},
+    {word:'leaf',emoji:'🍃'},{word:'moon',emoji:'🌙'},{word:'day',emoji:'☀️'},
+    {word:'vine',emoji:'🌿'},{word:'toad',emoji:'🐸'},{word:'tune',emoji:'🎵'},
+    {word:'blue',emoji:'💙'},{word:'grape',emoji:'🍇'},
+  ],
+};
+
+// Build 'All Sight Words' from Books 1–3 (deduplicated, preserving order)
+(function() {
+  const seen = new Set();
+  WORD_DATA['All Sight Words'] = [];
+  ['Book 1', 'Book 2', 'Book 3'].forEach(b => {
+    WORD_DATA[b].forEach(entry => {
+      if (!seen.has(entry.word)) {
+        seen.add(entry.word);
+        WORD_DATA['All Sight Words'].push(entry);
+      }
+    });
+  });
+})();
+
+// Modes where we show a speaker icon instead of a picture emoji
+const SIGHT_WORD_MODES = new Set(['Book 1', 'Book 2', 'Book 3', 'All Sight Words']);
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+let mode = null;
+let wordList = [];
+let wordIdx = 0;
+let currentWord = '';
+let placed = [];
+let letterPool = [];
+let stars = 3;
+let totalStars = 0;
+let busy = false;
+
+/* ═══════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function randomExtraLetters(word, count) {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  const wordChars = new Set(word.split(''));
+  const pool = alphabet.split('').filter(c => !wordChars.has(c));
+  return shuffle(pool).slice(0, count);
+}
+
+/* ═══════════════════════════════════════
+   RENDER BLANK TILES
+═══════════════════════════════════════ */
+function renderBlanks() {
+  const container = document.getElementById('blankTiles');
+  container.innerHTML = '';
+  for (let i = 0; i < currentWord.length; i++) {
+    const tile = document.createElement('div');
+    tile.className = 'blank-tile empty';
+    tile.dataset.idx = i;
+    container.appendChild(tile);
+  }
+}
+
+/* ═══════════════════════════════════════
+   RENDER LETTER BUTTONS
+═══════════════════════════════════════ */
+function renderLetterButtons() {
+  const container = document.getElementById('letterBtns');
+  container.innerHTML = '';
+  letterPool.forEach((item, pidx) => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-letter' + (item.used ? ' used' : '');
+    btn.textContent = item.char;
+    btn.dataset.pidx = pidx;
+    if (item.used) btn.disabled = true;
+    container.appendChild(btn);
+  });
+}
+
+/* ═══════════════════════════════════════
+   UPDATE STARS DISPLAY
+═══════════════════════════════════════ */
+function updateStarsDisplay() {
+  for (let i = 0; i < 3; i++) {
+    const el = document.getElementById('star' + i);
+    if (i < stars) {
+      el.classList.remove('dim');
+    } else {
+      el.classList.add('dim');
+    }
+  }
+}
+
+/* ═══════════════════════════════════════
+   UPDATE DEL BUTTON STATE
+═══════════════════════════════════════ */
+function updateDelBtn() {
+  document.getElementById('btnDelete').disabled = placed.length === 0 || busy;
+}
+
+/* ═══════════════════════════════════════
+   LOAD WORD
+═══════════════════════════════════════ */
+function loadWord(idx) {
+  const entry = wordList[idx];
+  currentWord = entry.word;
+  stars = 3;
+  placed = [];
+  busy = false;
+
+  // Progress
+  document.getElementById('wordProgress').textContent = 'Word ' + (idx + 1) + ' of 10';
+  updateStarsDisplay();
+
+  // Emoji — show speaker icon for sight word modes (no pictures needed)
+  const emojiEl = document.getElementById('emojiDisplay');
+  if (SIGHT_WORD_MODES.has(mode)) {
+    emojiEl.textContent = '🔊';
+  } else {
+    if (entry.img) { emojiEl.innerHTML = entry.img; } else { emojiEl.textContent = entry.emoji; }
+  }
+
+  // Build letter pool: word letters + 3-4 random extras
+  const wordLetters = currentWord.split('').map(c => ({char: c, used: false}));
+  const extraCount = currentWord.length <= 3 ? 3 : 4;
+  const extras = randomExtraLetters(currentWord, extraCount).map(c => ({char: c, used: false}));
+  letterPool = shuffle([...wordLetters, ...extras]);
+
+  renderBlanks();
+  renderLetterButtons();
+  updateDelBtn();
+
+  speak(currentWord);
+}
+
+/* ═══════════════════════════════════════
+   START GAME
+═══════════════════════════════════════ */
+function startGame() {
+  if (!mode) return;
+
+  wordList = shuffle([...WORD_DATA[mode]]).slice(0, 10);
+  wordIdx = 0;
+  totalStars = 0;
+  busy = false;
+
+  document.getElementById('startScreen').style.display = 'none';
+  const ga = document.getElementById('gameArea');
+  ga.style.display = 'flex';
+
+  document.getElementById('winOverlay').classList.remove('show');
+
+  loadWord(0);
+}
+
+/* ═══════════════════════════════════════
+   PLACE LETTER
+═══════════════════════════════════════ */
+function placeLetter(pidx) {
+  if (busy) return;
+  if (letterPool[pidx].used) return;
+  if (placed.length >= currentWord.length) return;
+
+  // Mark used
+  letterPool[pidx].used = true;
+  placed.push(pidx);
+
+  // Update blank tile
+  const tiles = document.querySelectorAll('.blank-tile');
+  const tileIdx = placed.length - 1;
+  const tile = tiles[tileIdx];
+  tile.textContent = letterPool[pidx].char;
+  tile.classList.remove('empty');
+  tile.classList.add('filled');
+
+  // Dim letter button
+  const btn = document.querySelector('.btn-letter[data-pidx="' + pidx + '"]');
+  if (btn) {
+    btn.classList.add('used');
+    btn.disabled = true;
+  }
+
+  updateDelBtn();
+
+  if (placed.length === currentWord.length) {
+    checkSpelling();
+  }
+}
+
+/* ═══════════════════════════════════════
+   CHECK SPELLING
+═══════════════════════════════════════ */
+function checkSpelling() {
+  busy = true;
+  updateDelBtn();
+
+  const spelled = placed.map(i => letterPool[i].char).join('');
+  const tiles = document.querySelectorAll('.blank-tile');
+
+  if (spelled === currentWord) {
+    // Correct!
+    totalStars += stars;
+    tiles.forEach(t => t.classList.add('correct'));
+    speak(currentWord + '! | Great spelling!');
+
+    setTimeout(() => {
+      tiles.forEach(t => t.classList.remove('correct'));
+      wordIdx++;
+      if (wordIdx >= 10) {
+        showWin();
+      } else {
+        loadWord(wordIdx);
+      }
+    }, 1200);
+
+  } else {
+    // Wrong
+    if (stars > 0) {
+      stars--;
+      // Animate the star being lost
+      const starEl = document.getElementById('star' + stars);
+      if (starEl) starEl.classList.add('pop');
+      setTimeout(() => {
+        if (starEl) starEl.classList.remove('pop');
+      }, 350);
+      updateStarsDisplay();
+    }
+
+    tiles.forEach(t => t.classList.add('shake'));
+    speak('Oops! | Try again!');
+
+    setTimeout(() => {
+      tiles.forEach(t => t.classList.remove('shake'));
+
+      // Restore used letters
+      placed.forEach(i => { letterPool[i].used = false; });
+      placed = [];
+
+      // Re-render blanks and buttons
+      renderBlanks();
+      renderLetterButtons();
+
+      busy = false;
+      updateDelBtn();
+    }, 500);
+  }
+}
+
+/* ═══════════════════════════════════════
+   DELETE LETTER
+═══════════════════════════════════════ */
+function deleteLetter() {
+  if (busy || placed.length === 0) return;
+
+  const lastIdx = placed.pop();
+  letterPool[lastIdx].used = false;
+
+  // Restore letter button
+  const btn = document.querySelector('.btn-letter[data-pidx="' + lastIdx + '"]');
+  if (btn) {
+    btn.classList.remove('used');
+    btn.disabled = false;
+  }
+
+  // Clear last blank tile
+  const tiles = document.querySelectorAll('.blank-tile');
+  const tile = tiles[placed.length];
+  tile.textContent = '';
+  tile.classList.remove('filled');
+  tile.classList.add('empty');
+
+  updateDelBtn();
+}
+
+/* ═══════════════════════════════════════
+   SHOW WIN
+═══════════════════════════════════════ */
+function showWin() {
+  speak('Amazing! | You spelled all ten words!');
+
+  // Build stars display (up to 30 max)
+  const maxStars = 30;
+  const pct = Math.round((totalStars / maxStars) * 100);
+  const filledCount = Math.min(totalStars, 10); // show up to 10 stars visually
+
+  let starsStr = '';
+  for (let i = 0; i < filledCount; i++) starsStr += '★';
+  for (let i = filledCount; i < 10; i++) starsStr += '☆';
+
+  document.getElementById('winStars').textContent = starsStr;
+  document.getElementById('winStarCount').textContent = totalStars + ' out of 30 stars!';
+
+  document.getElementById('winOverlay').classList.add('show');
+}
+
+/* ═══════════════════════════════════════
+   EVENT WIRING
+═══════════════════════════════════════ */
+
+// Mode buttons
+document.querySelectorAll('.btn-mode').forEach(btn => {
+  btn.addEventListener('click', () => {
+    mode = btn.dataset.mode;
+    document.querySelectorAll('.btn-mode').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('btnNewGame').disabled = false;
+    startGame();
+  });
+});
+
+// New Game button (start screen)
+document.getElementById('btnNewGame').addEventListener('click', () => {
+  if (mode) startGame();
+});
+
+// Play Again button (win overlay)
+document.getElementById('btnPlayAgain').addEventListener('click', () => {
+  startGame();
+});
+
+// Hear It button
+document.getElementById('btnHear').addEventListener('click', () => {
+  if (currentWord) speak(currentWord);
+});
+
+// DEL button
+document.getElementById('btnDelete').addEventListener('click', () => {
+  deleteLetter();
+});
+
+// Letter buttons — event delegation on container
+document.getElementById('letterBtns').addEventListener('click', e => {
+  const btn = e.target.closest('.btn-letter');
+  if (!btn) return;
+  const pidx = parseInt(btn.dataset.pidx, 10);
+  placeLetter(pidx);
+});
+
+// Mute button
+document.getElementById('btnMute').addEventListener('click', () => {
+  _muted = !_muted;
+  const b = document.getElementById('btnMute');
+  b.textContent = _muted ? '🔇' : '🔊';
+  b.classList.toggle('muted', _muted);
+  if (_muted) window.speechSynthesis.cancel();
+});
+
+</script>
+</body>
+</html>

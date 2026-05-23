@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Hoops | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="fonts.css" rel="stylesheet">
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange:   #E67E22;
+      --orange2:  #F39C12;
+      --green:    #6BCB77;
+      --yellow:   #FFD93D;
+      --red:      #FF6B6B;
+      --bg:       #FFF8F0;
+      --text:     #2C3E50;
+      --court-sky:#87CEEB;
+      --court-floor: #C8860A;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #E67E22, #F39C12);
+      padding: .75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .5rem;
+      box-shadow: 0 3px 10px rgba(0,0,0,.18);
+    }
+
+    .back-link {
+      color: #fff;
+      text-decoration: none;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      background: rgba(255,255,255,.22);
+      padding: .35rem .8rem;
+      border-radius: 20px;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .back-link:hover { background: rgba(255,255,255,.38); }
+
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      color: #fff;
+      font-size: clamp(1.4rem, 5vw, 2rem);
+      text-shadow: 0 2px 6px rgba(0,0,0,.25);
+      flex: 1;
+      text-align: center;
+    }
+
+    #muteBtn {
+      background: rgba(255,255,255,.22);
+      border: none;
+      border-radius: 20px;
+      padding: .35rem .7rem;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: background .2s;
+      line-height: 1;
+    }
+    #muteBtn:hover { background: rgba(255,255,255,.38); }
+
+    /* ── Level bar ── */
+    .level-bar {
+      background: #fff;
+      border-bottom: 2px solid #f0e0cc;
+      padding: .6rem 1rem;
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .lvl-btn {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: .9rem;
+      border: 2.5px solid #ccc;
+      color: #888;
+      background: #fff;
+      border-radius: 20px;
+      padding: .4rem 1rem;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .lvl-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .lvl-btn.active {
+      background: linear-gradient(135deg, #E67E22, #F39C12);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(230,126,34,.4);
+    }
+
+    /* ── Main content area ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .game-wrap {
+      max-width: 500px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* ── Start screen ── */
+    #startScreen {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.1);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    #startScreen .big-ball { font-size: 5rem; line-height: 1; }
+
+    #startScreen h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: var(--orange);
+    }
+
+    #startScreen p {
+      font-size: 1.1rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .new-game-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, #E67E22, #F39C12);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: .6rem 2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(230,126,34,.35);
+      transition: all .2s;
+      margin-top: .3rem;
+    }
+    .new-game-btn:disabled {
+      background: #ccc;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: .7;
+    }
+    .new-game-btn:not(:disabled):hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(230,126,34,.5);
+    }
+
+    /* ── Game area ── */
+    #gameArea {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    /* Score + timer */
+    .score-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border-radius: 14px;
+      padding: .5rem 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    .score-label {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      color: #888;
+    }
+
+    .score-num {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: var(--orange);
+      line-height: 1;
+    }
+
+    .timer-wrap {
+      flex: 1;
+      margin: 0 1rem;
+    }
+
+    .timer-label {
+      font-size: .75rem;
+      font-weight: 700;
+      color: #aaa;
+      text-align: right;
+      margin-bottom: 3px;
+    }
+
+    .timer-track {
+      width: 100%;
+      height: 10px;
+      background: #eee;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    #timerBar {
+      height: 100%;
+      width: 100%;
+      background: var(--green);
+      border-radius: 5px;
+      transition: width .9s linear, background .5s;
+    }
+
+    /* ── Court ── */
+    .court {
+      background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 55%, #C8860A 55%, #A0660A 100%);
+      border-radius: 16px;
+      padding: 1.2rem 1rem 1rem;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(0,0,0,.18);
+      position: relative;
+    }
+
+    /* Court line detail on floor */
+    .court::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 45px;
+      border: 3px solid rgba(255,255,255,.25);
+      border-bottom: none;
+      border-radius: 50% 50% 0 0;
+      pointer-events: none;
+    }
+
+    /* Word prompt card */
+    .word-prompt {
+      background: #fff;
+      border-radius: 16px;
+      padding: .6rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+      min-width: 160px;
+    }
+
+    .prompt-label {
+      font-size: .8rem;
+      color: #999;
+      font-weight: 600;
+      margin-bottom: .15rem;
+    }
+
+    .prompt-word {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 8vw, 3.2rem);
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    /* Basketball emoji */
+    #ball {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      text-shadow: 0 4px 12px rgba(0,0,0,.25);
+      margin: .3rem 0;
+      display: block;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* Hoops row */
+    .hoops-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .5rem;
+      width: 100%;
+    }
+
+    .hoop {
+      background: rgba(255,255,255,.15);
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 14px;
+      padding: .7rem .3rem;
+      cursor: pointer;
+      text-align: center;
+      transition: transform .15s, background .2s, border-color .2s;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .3rem;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hoop:hover { transform: scale(1.05); background: rgba(255,255,255,.25); }
+    .hoop:active { transform: scale(.97); }
+
+    /* CSS hoop art */
+    .hoop-art {
+      width: 50px;
+      height: 28px;
+      position: relative;
+      margin: 0 auto .15rem;
+      flex-shrink: 0;
+    }
+
+    .hoop-art::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 44px;
+      height: 22px;
+      border: 5px solid #FF8C00;
+      border-bottom: none;
+      border-radius: 22px 22px 0 0;
+      background: transparent;
+    }
+
+    .hoop-art::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 14px;
+      border-left: 3px solid #FF8C00;
+      border-right: 3px solid #FF8C00;
+      border-bottom: 3px solid #FF8C00;
+      background: transparent;
+    }
+
+    /* Net lines inside hoop art */
+    .hoop-net {
+      position: absolute;
+      bottom: 1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 22px;
+      height: 12px;
+      background: repeating-linear-gradient(
+        to right,
+        rgba(255,140,0,.6) 0px,
+        rgba(255,140,0,.6) 2px,
+        transparent 2px,
+        transparent 6px
+      );
+      pointer-events: none;
+    }
+
+    .hoop-word {
+      font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+      font-size: clamp(1rem, 4.5vw, 1.4rem);
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,.4);
+      line-height: 1;
+    }
+
+    /* Hoop states */
+    .hoop.correct {
+      background: rgba(107,203,119,.5);
+      border-color: #6BCB77;
+      animation: correct-pulse .4s ease forwards;
+    }
+
+    .hoop.wrong {
+      background: rgba(255,100,100,.3);
+      border-color: rgba(255,80,80,.6);
+      animation: shake .35s ease;
+    }
+
+    /* Say it again button */
+    .say-again-wrap {
+      text-align: center;
+    }
+
+    .say-again-btn {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: .95rem;
+      background: linear-gradient(135deg, #E67E22, #F39C12);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: .45rem 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(230,126,34,.3);
+      transition: all .2s;
+    }
+    .say-again-btn:hover { transform: scale(1.05); box-shadow: 0 5px 14px rgba(230,126,34,.45); }
+    .say-again-btn:active { transform: scale(.96); }
+
+    /* ── Game Over overlay ── */
+    #gameOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.65);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    #gameOverlay.show { display: flex; }
+
+    .overlay-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      max-width: 340px;
+      width: 100%;
+      box-shadow: 0 10px 40px rgba(0,0,0,.3);
+      animation: popIn .35s cubic-bezier(.175,.885,.32,1.275) both;
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+      align-items: center;
+    }
+
+    .overlay-card h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: var(--orange);
+    }
+
+    .overlay-card p {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .overlay-score {
+      font-family: 'Fredoka One', cursive;
+      font-size: 4rem;
+      color: var(--orange);
+      line-height: 1;
+    }
+
+    .overlay-card .play-again-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #E67E22, #F39C12);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: .7rem 2.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(230,126,34,.4);
+      transition: all .2s;
+      margin-top: .3rem;
+    }
+    .overlay-card .play-again-btn:hover { transform: scale(1.05); box-shadow: 0 6px 18px rgba(230,126,34,.55); }
+
+    /* ── Footer ── */
+    footer {
+      background: #fff;
+      border-top: 2px solid #f0e0cc;
+      padding: .8rem 1rem;
+      text-align: center;
+      font-size: .82rem;
+      color: #888;
+      font-weight: 600;
+    }
+
+    footer a { color: var(--orange); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Animations ── */
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-6px); }
+      40%,80%  { transform: translateX(6px); }
+    }
+
+    @keyframes correct-pulse {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes swoosh {
+      0%   { transform: translateY(0) scale(1); }
+      50%  { transform: translateY(-30px) scale(1.2); }
+      100% { transform: translateY(0) scale(1); }
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      40%     { transform: translateY(12px); }
+    }
+
+    @keyframes popIn {
+      from { transform: scale(.7); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .ball.swoosh { animation: swoosh .5s ease; }
+    .ball.bounce { animation: bounce .4s ease; }
+
+    /* Stars celebration on correct */
+    .star-burst {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.4rem;
+      pointer-events: none;
+      animation: popIn .4s ease forwards;
+      opacity: 0;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <a href="hub.html" class="back-link">← Games</a>
+  <h1>🏀 Word Hoops</h1>
+  <button id="muteBtn" title="Mute / Unmute">🔊</button>
+</header>
+
+<!-- ── LEVEL BAR ── -->
+<div class="level-bar">
+  <button class="lvl-btn" data-level="book1">📗 Book 1</button>
+  <button class="lvl-btn" data-level="book2">📘 Book 2</button>
+  <button class="lvl-btn" data-level="book3">📕 Book 3</button>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+  <div class="game-wrap">
+
+    <!-- Start screen -->
+    <div id="startScreen">
+      <div class="big-ball">🏀</div>
+      <h2>Word Hoops!</h2>
+      <p>Pick a level to start!</p>
+      <button class="new-game-btn" id="newGameBtn" disabled>New Game</button>
+    </div>
+
+    <!-- Game area -->
+    <div id="gameArea">
+
+      <!-- Score + timer -->
+      <div class="score-row">
+        <div>
+          <div class="score-label">Score</div>
+          <div class="score-num">🏀 <span id="scoreNum">0</span></div>
+        </div>
+        <div class="timer-wrap">
+          <div class="timer-label" id="timerLabel">60s</div>
+          <div class="timer-track">
+            <div id="timerBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Court -->
+      <div class="court">
+
+        <!-- Word prompt card -->
+        <div class="word-prompt">
+          <div class="prompt-label">Which basket has this word?</div>
+          <div class="prompt-word" id="promptWord">—</div>
+        </div>
+
+        <!-- Basketball -->
+        <span id="ball" class="ball">🏀</span>
+
+        <!-- Three hoops -->
+        <div class="hoops-row" id="hoopsRow">
+          <button class="hoop" data-idx="0" aria-label="Hoop 1">
+            <div class="hoop-art"><div class="hoop-net"></div></div>
+            <span class="hoop-word" id="hoop0">?</span>
+          </button>
+          <button class="hoop" data-idx="1" aria-label="Hoop 2">
+            <div class="hoop-art"><div class="hoop-net"></div></div>
+            <span class="hoop-word" id="hoop1">?</span>
+          </button>
+          <button class="hoop" data-idx="2" aria-label="Hoop 3">
+            <div class="hoop-art"><div class="hoop-net"></div></div>
+            <span class="hoop-word" id="hoop2">?</span>
+          </button>
+        </div>
+
+      </div><!-- /court -->
+
+      <!-- Say it again -->
+      <div class="say-again-wrap">
+        <button class="say-again-btn" id="sayAgainBtn">🔊 Say It Again</button>
+      </div>
+
+    </div><!-- /gameArea -->
+
+  </div><!-- /game-wrap -->
+</main>
+
+<!-- ── GAME OVER OVERLAY ── -->
+<div id="gameOverlay">
+  <div class="overlay-card">
+    <h2>⏱️ Game Over!</h2>
+    <p>You scored <strong id="finalScore">0</strong> baskets! 🏀</p>
+    <div class="overlay-score" id="finalScoreBig">0</div>
+    <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids 📚</p>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   SPEECH API
+══════════════════════════════════════════ */
+let _muted=false,_speaking=false,_pending=null,_queue=[],_voice=null;
+function _launch(msg){if(_muted)return;window.speechSynthesis.cancel();_queue=msg.split(' | ');_speaking=false;_advance();}
+function _advance(){if(!_queue.length){_speaking=false;if(_pending){const t=_pending;_pending=null;_launch(t);}return;}_speaking=true;const utt=new SpeechSynthesisUtterance(_queue.shift());if(_voice)utt.voice=_voice;utt.rate=0.92;utt.pitch=1.0;utt.onend=()=>{_speaking=false;setTimeout(_advance,300);};window.speechSynthesis.speak(utt);}
+function speak(msg){if(_muted)return;if(_speaking){_pending=msg;}else{_launch(msg);}}
+function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length)return;_voice=all.find(v=>v.name.includes('Natural')&&/^en/i.test(v.lang))||all.find(v=>/aria|jenny|guy\b|ana\b|davis/i.test(v.name))||all.find(v=>/google.*english/i.test(v.name))||all.find(v=>/\bdavid\b|\bzira\b/i.test(v.name))||all.find(v=>v.lang&&/^en/i.test(v.lang))||all[0];}
+window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
+
+/* ══════════════════════════════════════════
+   WORD DATA
+══════════════════════════════════════════ */
+const WORDS = {
+  book1: ['a','am','an','and','are','as','at','ball','can','did','do','for','give','go','got','has','have','he','her','his','I','in','is','it','me','no','not','of','on','said','says','see','she','sorry','that','the','to','up','will','with'],
+  book2: ['but','does','from','get','go','goes','like','my','what','who'],
+  book3: ['bank','give','how','my','new','night','out','say','she','shoe','too','then','ring','took','when','who','why','you','bird','car','corn','girl','far','for','fur','or','purr'],
+};
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let level=null, score=0, timeLeft=60, timerInterval=null, correctHoop=-1, busy=false, currentWord='';
+
+/* ══════════════════════════════════════════
+   UTILITY
+══════════════════════════════════════════ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ══════════════════════════════════════════
+   DOM REFS
+══════════════════════════════════════════ */
+const startScreen  = document.getElementById('startScreen');
+const gameArea     = document.getElementById('gameArea');
+const scoreNum     = document.getElementById('scoreNum');
+const timerBar     = document.getElementById('timerBar');
+const timerLabel   = document.getElementById('timerLabel');
+const promptWord   = document.getElementById('promptWord');
+const ball         = document.getElementById('ball');
+const hoopsRow     = document.getElementById('hoopsRow');
+const gameOverlay  = document.getElementById('gameOverlay');
+const finalScore   = document.getElementById('finalScore');
+const finalScoreBig= document.getElementById('finalScoreBig');
+const newGameBtn   = document.getElementById('newGameBtn');
+const muteBtn      = document.getElementById('muteBtn');
+
+/* ══════════════════════════════════════════
+   GAME FLOW
+══════════════════════════════════════════ */
+function startGame() {
+  score = 0;
+  timeLeft = 60;
+  busy = false;
+  updateScore();
+  updateTimer();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(tick, 1000);
+
+  startScreen.style.display = 'none';
+  gameArea.style.display = 'flex';
+  gameOverlay.classList.remove('show');
+
+  nextQuestion();
+  speak('Let\'s play Word Hoops!');
+}
+
+function tick() {
+  timeLeft--;
+  updateTimer();
+  if (timeLeft <= 0) endGame();
+}
+
+function updateTimer() {
+  const pct = Math.max(0, (timeLeft / 60) * 100);
+  timerBar.style.width = pct + '%';
+  timerLabel.textContent = timeLeft + 's';
+
+  if (pct > 50) {
+    timerBar.style.background = '#6BCB77';
+  } else if (pct > 25) {
+    timerBar.style.background = '#FFD93D';
+  } else {
+    timerBar.style.background = '#FF6B6B';
+  }
+}
+
+function updateScore() {
+  scoreNum.textContent = score;
+}
+
+function nextQuestion() {
+  if (busy) return;
+
+  const pool = WORDS[level];
+  // Pick random target word
+  const targetIdx = Math.floor(Math.random() * pool.length);
+  const target = pool[targetIdx];
+
+  // Pick 2 unique distractors
+  const others = pool.filter(w => w !== target);
+  const shuffledOthers = shuffle(others);
+  const w2 = shuffledOthers[0];
+  const w3 = shuffledOthers[1];
+
+  // Build choices array and shuffle
+  const choices = shuffle([target, w2, w3]);
+  correctHoop = choices.indexOf(target);
+  currentWord = target;
+
+  // Update prompt
+  promptWord.textContent = target;
+
+  // Update hoop labels
+  for (let i = 0; i < 3; i++) {
+    document.getElementById('hoop' + i).textContent = choices[i];
+  }
+
+  // Clear any leftover state classes from all hoops
+  document.querySelectorAll('.hoop').forEach(h => {
+    h.classList.remove('correct', 'wrong');
+  });
+
+  // Speak the target word
+  speak(target);
+}
+
+/* ─── Shoot the ball into the hoop (arc trajectory) ─── */
+function shootBall(targetHoopEl, onDone) {
+  const ballEl = document.getElementById('ball');
+  const ballRect = ballEl.getBoundingClientRect();
+  const hoopArt = targetHoopEl.querySelector('.hoop-art') || targetHoopEl;
+  const hoopRect = hoopArt.getBoundingClientRect();
+
+  // Delta from ball center to hoop center (viewport coords)
+  const tx = (hoopRect.left + hoopRect.width  / 2) - (ballRect.left + ballRect.width  / 2);
+  const ty = (hoopRect.top  + hoopRect.height / 2) - (ballRect.top  + ballRect.height / 2);
+
+  // Arc: raise the ball above the straight-line midpoint
+  const liftY = -(Math.abs(tx) * 0.55 + 50);
+
+  // Create a fixed-position clone that flies freely over everything
+  const fly = document.createElement('span');
+  fly.textContent = '🏀';
+  fly.style.cssText =
+    'position:fixed;pointer-events:none;z-index:9999;line-height:1;transition:none;' +
+    'transform:translate(-50%,-50%);' +
+    `left:${ballRect.left + ballRect.width  / 2}px;` +
+    `top:${ballRect.top  + ballRect.height / 2}px;` +
+    `font-size:${parseFloat(getComputedStyle(ballEl).fontSize)}px;`;
+  document.body.appendChild(fly);
+  ballEl.style.visibility = 'hidden';   // hide the static ball during flight
+
+  const anim = fly.animate([
+    { transform: 'translate(-50%,-50%) scale(1)',                                                    offset: 0    },
+    { transform: `translate(calc(-50% + ${tx*0.45}px), calc(-50% + ${ty*0.45 + liftY}px)) scale(1.3)`, offset: 0.40 },
+    { transform: `translate(calc(-50% + ${tx}px),      calc(-50% + ${ty}px))       scale(0.4)`,     offset: 1    },
+  ], { duration: 560, easing: 'ease-in', fill: 'forwards' });
+
+  anim.onfinish = () => {
+    fly.remove();
+    ballEl.style.visibility = 'visible';
+    onDone();
+  };
+}
+
+function handleHoopClick(idx) {
+  if (busy) return;
+  busy = true;
+
+  const hoops = document.querySelectorAll('.hoop');
+
+  if (idx === correctHoop) {
+    score++;
+    updateScore();
+    speak(currentWord + '! | Nice shot!');
+
+    // Fly the ball into the correct hoop
+    shootBall(hoops[idx], () => {
+      hoops[idx].classList.add('correct');
+      setTimeout(() => {
+        hoops[idx].classList.remove('correct');
+        busy = false;
+        nextQuestion();
+      }, 380);
+    });
+
+  } else {
+    hoops[idx].classList.add('wrong');
+    ball.classList.remove('swoosh', 'bounce');
+    void ball.offsetWidth;
+    ball.classList.add('bounce');
+
+    speak('Not that one! | Try again!');
+
+    setTimeout(() => {
+      hoops[idx].classList.remove('wrong');
+      ball.classList.remove('bounce');
+      busy = false;
+    }, 500);
+  }
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  busy = true;
+
+  finalScore.textContent = score;
+  finalScoreBig.textContent = score;
+  gameOverlay.classList.add('show');
+
+  speak('Game over! | You scored ' + score + ' baskets!');
+}
+
+/* ══════════════════════════════════════════
+   EVENT WIRING
+══════════════════════════════════════════ */
+
+// Level buttons
+document.querySelectorAll('.lvl-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    level = btn.dataset.level;
+
+    // Update active state
+    document.querySelectorAll('.lvl-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Enable New Game button
+    newGameBtn.disabled = false;
+
+    // Start the game
+    startGame();
+  });
+});
+
+// New Game button (start screen)
+newGameBtn.addEventListener('click', () => {
+  if (level) startGame();
+});
+
+// Play Again button (overlay)
+document.getElementById('playAgainBtn').addEventListener('click', () => {
+  gameOverlay.classList.remove('show');
+  startGame();
+});
+
+// Hoop clicks — event delegation
+hoopsRow.addEventListener('click', e => {
+  const hoop = e.target.closest('.hoop');
+  if (!hoop) return;
+  const idx = parseInt(hoop.dataset.idx, 10);
+  handleHoopClick(idx);
+});
+
+// Say It Again
+document.getElementById('sayAgainBtn').addEventListener('click', () => {
+  if (currentWord) speak(currentWord);
+});
+
+// Mute
+muteBtn.addEventListener('click', () => {
+  _muted = !_muted;
+  if (_muted) {
+    window.speechSynthesis.cancel();
+    muteBtn.textContent = '🔇';
+  } else {
+    muteBtn.textContent = '🔊';
+  }
+});
+
+// Keyboard accessibility — space/enter on hoops
+hoopsRow.addEventListener('keydown', e => {
+  if (e.key === ' ' || e.key === 'Enter') {
+    const hoop = e.target.closest('.hoop');
+    if (!hoop) return;
+    e.preventDefault();
+    const idx = parseInt(hoop.dataset.idx, 10);
+    handleHoopClick(idx);
+  }
+});
+
+</script>
+</body>
+</html>

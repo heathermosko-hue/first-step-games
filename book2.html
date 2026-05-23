@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book 2: Long Vowels</title>
+<script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a0a2e;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Comic Sans MS","Comic Sans",cursive;overflow:hidden}
+h1{color:#f0d060;font-size:1.3rem;text-align:center;margin-bottom:10px;text-shadow:0 2px 8px #000}
+.book-stage{position:relative;width:520px;height:580px;perspective:1200px}
+#page-wrapper{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#loading{color:#c9a0f5;font-size:1.2rem;text-align:center;padding:20px}
+#canvas-container{position:relative;display:none;border-radius:8px;box-shadow:0 8px 32px #0009;overflow:hidden}
+#page-canvas{display:block;max-width:490px;max-height:560px;background:#fff}
+.textLayer{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;line-height:1;pointer-events:none}
+.textLayer span{position:absolute;color:transparent;cursor:pointer;pointer-events:auto;border-radius:3px;transition:background .15s}
+.textLayer span:hover{background:rgba(255,220,80,.35)!important}
+.textLayer span.speaking{background:rgba(255,170,0,.5)!important}
+@keyframes exitLeft{from{transform:rotateY(0);opacity:1}to{transform:rotateY(-70deg);opacity:0}}
+@keyframes enterRight{from{transform:rotateY(70deg);opacity:0}to{transform:rotateY(0);opacity:1}}
+@keyframes exitRight{from{transform:rotateY(0);opacity:1}to{transform:rotateY(70deg);opacity:0}}
+@keyframes enterLeft{from{transform:rotateY(-70deg);opacity:0}to{transform:rotateY(0);opacity:1}}
+.anim-exit-left{animation:exitLeft .4s ease-in forwards}
+.anim-exit-right{animation:exitRight .4s ease-in forwards}
+.anim-enter-right{animation:enterRight .42s ease-out forwards}
+.anim-enter-left{animation:enterLeft .42s ease-out forwards}
+.controls{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;justify-content:center}
+button{font-family:"Comic Sans MS",cursive;font-size:.85rem;padding:6px 13px;border:none;border-radius:24px;cursor:pointer;font-weight:bold;transition:transform .1s}
+button:active{transform:scale(.95)}
+button:disabled{opacity:.4;cursor:default}
+#btn-back{background:#6b3fa0;color:#fff}
+#btn-next{background:#f0d060;color:#1a0a2e}
+#btn-read{background:#ff6b9d;color:#fff}
+#btn-flash{background:#e040fb;color:#fff;display:none}
+#btn-words{background:#26c6da;color:#003;display:none}
+#page-counter{color:#c9a0f5;font-size:.9rem;min-width:80px;text-align:center}
+#speaker-ring{width:28px;height:28px;border-radius:50%;border:3px solid #c9a0f5;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;flex-shrink:0}
+#speaker-ring.on{border-color:#ff6b9d;box-shadow:0 0 10px #ff6b9d}
+a.home-link{color:#c9a0f5;font-size:.8rem;text-decoration:none;margin-top:5px;opacity:.7}
+#flash-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center}
+#flash-card{background:#2a0a3e;border:3px solid #f0d060;border-radius:20px;padding:32px 44px;display:flex;flex-direction:column;align-items:center;gap:16px;min-width:280px;max-width:90vw}
+#flash-title{font-family:"Comic Sans MS",cursive;color:#c9a0f5;font-size:1rem;font-weight:bold}
+#flash-word{font-family:"Comic Sans MS",cursive;font-size:3.2rem;font-weight:bold;color:#f0d060;text-align:center;min-width:180px}
+#flash-counter{color:#c9a0f5;font-size:.85rem}
+#flash-btns{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+#flash-prev,#flash-next{font-family:"Comic Sans MS",cursive;background:#6b3fa0;color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;font-weight:bold}
+#flash-prev:disabled,#flash-next:disabled{opacity:.3;cursor:default}
+#flash-close{font-family:"Comic Sans MS",cursive;background:#c62828;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+#flash-speak{font-family:"Comic Sans MS",cursive;background:#ff6b9d;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+</style>
+</head>
+<body>
+<h1>Book 2: Long Vowels</h1>
+<div class="book-stage">
+  <div id="page-wrapper">
+    <div id="loading">Loading book&#8230; &#128218;</div>
+    <div id="canvas-container">
+      <canvas id="page-canvas"></canvas>
+      <div id="text-layer" class="textLayer"></div>
+    </div>
+  </div>
+</div>
+<div class="controls">
+  <button id="btn-back">&#9664; Back</button>
+  <div id="speaker-ring" title="Read page">&#128266;</div>
+  <span id="page-counter">1 / 68</span>
+  <button id="btn-read">Read Page</button>
+  <button id="btn-flash">&#128218; Sight Words</button>
+  <button id="btn-words">&#128214; Word Families</button>
+  <button id="btn-next">Next &#9654;</button>
+</div>
+<a href="hub.html" class="home-link">&#8592; Back to Hub</a>
+<div id="flash-modal">
+  <div id="flash-card">
+    <div id="flash-title">Sight Words</div>
+    <div id="flash-word">the</div>
+    <div id="flash-counter">1 / 6</div>
+    <div id="flash-btns">
+      <button id="flash-prev">&#9664;</button>
+      <button id="flash-speak">&#128266; Say It</button>
+      <button id="flash-close">&#10005; Close</button>
+      <button id="flash-next">&#9654;</button>
+    </div>
+  </div>
+</div>
+<script>
+const TOTAL=68,ANIM_MS=420;
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+const HEADER_PAGES=new Set([2,6,10,13,17,21,26,30,35,38,41,46,49,53,57,60,63,66]);
+const SIGHT_WORDS={
+  2:["is","a","and","the","to","for"],6:["who","is","at","the","and"],10:["like","the","is","to","with","but","do","not"],
+  13:["see","what","the","in","said","is","her","a"],17:["the","see","in","on","her","of","does","not","to","for"],
+  21:["is","a","at","his","see","and","to"],26:["is","in","the","has","a"],30:["see","a","his","the","has","with"],
+  35:["and","are","the","like","to"],38:["from","the","is","on","a"],41:["get","and","see","said","it","is","my","do","not","a","have","to"],
+  46:["is","a","has","and"],49:["a","his","in","goes","to","with","the"],53:["no","go","with","a","the","has","to","get","for"],
+  57:["is","a","with","his","in"],60:["has","get","on","his"],63:["on","the"],66:["the","is","with","and"]
+};
+const WORD_FAMILIES={
+  2:["bake","cake","jake","lake","make","snake","take"],6:["ate","late","kate","gate"],10:["dame","fame","game","name","same"],
+  13:["gain","main","pain","rain","drain"],17:["bail","fail","gail","hail","mail","pail","snail","tail"],
+  21:["be","he","me","bee","glee","knee","see","flee","free"],26:["eat","heat","meat","seat"],
+  30:["feel","heel","heal","meal","seal","teal"],35:["dice","mice","ice","nice"],38:["dine","fine","pine","vine"],
+  41:["lie","pie","tie"],46:["boat","coat","goat","moat"],49:["note","wrote","tote","vote"],
+  53:["poke","joke","more","pore","tore","store"],57:["cute","flute","mule","cube"],60:["fruit","suit"],
+  63:["blue","glue","use","fuse"],66:["shark","fish","duck","quack","then","with","chatting","swimming"]
+};
+const PAGE_TEXT={
+  1:"Book 2: Long Vowels and Common Blends. Chapter 1: Long Vowel A — Kates Cake, Ate at the Gate, The Game, The Rain, Gail the Snail. Chapter 2: Long Vowel E — A Bee and Me, Glee Eats, The Seal Heals. Chapter 3: Long Vowel I — Dice and Guy, A Pine Tree, My Pie. Chapter 4: Long Vowel O — Moat, Vote, Tore with a Poke. Chapter 5: Long Vowel U — A Flute, Fruit, The Blue Papers. Chapter 6: Common Blends — The Shark, Duck, and Fish.",
+  2:"Chapter 1: Long Vowel A. Kates Cake. Words: bake, cake, jake, lake, make, snake, take. Sight Words: is, a, and, the, to, for.",
+  3:"Kate is a snake.",4:"Kate bakes and makes a cake for Jake.",5:"Kate and Jake take the cake to the lake.",
+  6:"Ate at the Gate. Words: ate, late, kate, gate. Sight Words: who, is, at, the, and.",
+  7:"Kate is at the gate.",8:"Jake is who is late.",9:"At the gate, Kate and Jake ate.",
+  10:"The Game. Words: dame, fame, game, name, same. Sight Words: like, the, is, to, with, but, do, not.",
+  11:"Kate likes the game.",12:"The game is to name dames with fame, but do not name the same dames.",
+  13:"The Rain. Words: gain, main, pain, rain, drain. Sight Words: see, what, the, in, said, is, her, a.",
+  14:"Kate sees a drain.",15:"Kate said, The rain is her main pain.",16:"The rain is a gain. The rain makes lakes.",
+  17:"Gail the Snail. Words: bail, fail, gail, hail, mail, pail, snail, tail. Sight Words: the, see, in, on, her, of, does, not, to, for.",
+  18:"Gail bails the pail of hail.",19:"Gail puts the pail on her tail.",20:"Gail does not fail to put the pail in the mail for Kate.",
+  21:"Chapter 2: Long Vowel E. A Bee and Me. Words: be, he, me, bee, glee, knee, see, flee, free. Sight Words: is, a, at, his, see, and, to.",
+  22:"Glee is a bee. Glee is me.",23:"To be a bee is to be free.",24:"Glee sits at his knee.",25:"He sees Glee and he flees.",
+  26:"Glee Eats. Words: eat, heat, meat, seat. Sight Words: is, in, the, has, a.",
+  27:"Glee is in the heat.",28:"Glee has a seat.",29:"Glee eats the meat.",
+  30:"The Seal Heals. Words: feel, heel, heal, meal, seal, teal. Sight Words: see, a, his, the, has, with.",
+  31:"Glee sees a teal seal.",32:"Glee feels his heel.",33:"The seal heals Glees heel.",34:"Glee has a meal with the seal.",
+  35:"Chapter 3: Long Vowel I. Dice and Guy. Words: dice, mice, ice, nice. Sight Words: and, are, the, like, to.",
+  36:"Dice and Guy are nice mice.",37:"The mice like to ice skate.",
+  38:"A Pine Tree. Words: dine, fine, pine, vine. Sight Words: from, the, is, on, a.",
+  39:"The vine is on a pine tree.",40:"The mice dine on fine nuts from the pine tree.",
+  41:"My Pie. Words: lie, pie, tie. Sight Words: get, and, see, said, it, is, my, do, not, a, have, to.",
+  42:"Dice and Guy see a pie.",43:"Dice said, It is my pie.",44:"Guy said, Do not lie to get pie. It is a tie.",45:"Dice and Guy have pie.",
+  46:"Chapter 4: Long Vowel O. Moat. Words: boat, coat, goat, moat. Sight Words: is, a, has, and.",
+  47:"Moat is a goat.",48:"Moat has a boat and a coat.",
+  49:"Vote. Words: note, wrote, tote, vote. Sight Words: a, his, in, goes, to, with, the.",
+  50:"Moat wrote a note.",51:"Moat put his note in his tote.",52:"Moat goes to vote with the note.",
+  53:"Tore with a Poke. Words: poke, joke, more, pore, tore, store. Sight Words: no, go, with, a, the, has, to, get, for.",
+  54:"No joke for Moat.",55:"With a poke, Moats paper tore. The paper has a pore.",56:"Moat has to go to the store to get more.",
+  57:"Chapter 5: Long Vowel U. A Flute. Words: cute, flute, mule, cube. Sight Words: is, a, with, his, in.",
+  58:"Luke is a cute mule with a flute.",59:"Luke keeps his flute in a cube.",
+  60:"Fruit. Words: fruit, suit. Sight Words: has, get, on, his.",
+  61:"Luke has fruit.",62:"Lukes fruit gets on his suit.",
+  63:"The Blue Papers. Words: blue, glue, use, fuse. Sight Words: on, the.",
+  64:"Luke uses glue on the blue papers.",65:"The glue Luke uses fuses the blue papers.",
+  66:"Chapter 6: Common Blends. The Shark, Duck, and Fish. Words: shark, fish, duck, quack, then, with, chatting, swimming. Sight Words: the, is, with, and.",
+  67:"Pat hears the duck chit chatting, Quack. Quack. Quack.",68:"Then, Pat is swimming with the duck, shark, and fish."
+};
+let pdfDoc=null,currentPage=1,animating=false;
+const canvas=document.getElementById('page-canvas');
+const canvasContainer=document.getElementById('canvas-container');
+const ctx=canvas.getContext('2d');
+const textLayerDiv=document.getElementById('text-layer');
+const loading=document.getElementById('loading');
+const counter=document.getElementById('page-counter');
+const ring=document.getElementById('speaker-ring');
+const flashBtn=document.getElementById('btn-flash');
+const wordsBtn=document.getElementById('btn-words');
+let voices=[];
+function loadVoices(){voices=speechSynthesis.getVoices();if(!voices.length)speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};}
+loadVoices();
+function getBestVoice(){const P=['Microsoft Aria Online (Natural)','Microsoft Jenny Online (Natural)','Microsoft Emma Online (Natural)','Microsoft Guy Online (Natural)','Microsoft Ana Online (Natural)','Google US English','Samantha','Karen','Moira','Fiona','Google UK English Female','Microsoft Aria','Microsoft Zira','Microsoft Jenny','Microsoft Natasha','Alex'];for(const n of P){const v=voices.find(v=>v.name.toLowerCase().includes(n.toLowerCase()));if(v)return v;}const neural=voices.find(v=>/online|natural|neural/i.test(v.name)&&v.lang.startsWith('en'));if(neural)return neural;return voices.find(v=>v.lang==='en-US')||voices.find(v=>v.lang.startsWith('en'))||voices[0];}
+function speak(text,spanEl){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.trim());const v=getBestVoice();if(v)u.voice=v;u.lang='en-US';u.rate=0.9;u.pitch=1.0;u.volume=1;u.onstart=()=>{ring.classList.add('on');if(spanEl)spanEl.classList.add('speaking');};u.onend=()=>{ring.classList.remove('on');if(spanEl)spanEl.classList.remove('speaking');};speechSynthesis.speak(u);}
+ring.addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
+document.getElementById('btn-read').addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
+let flashWords=[],flashIdx=0;
+function openFlash(words,title){flashWords=words;flashIdx=0;document.getElementById('flash-title').textContent=title;showCard();document.getElementById('flash-modal').style.display='flex';}
+function showCard(){const w=flashWords[flashIdx]||'';document.getElementById('flash-word').textContent=w.toLowerCase();document.getElementById('flash-counter').textContent=(flashIdx+1)+' / '+flashWords.length;document.getElementById('flash-prev').disabled=flashIdx===0;document.getElementById('flash-next').disabled=flashIdx>=flashWords.length-1;speak(w);}
+flashBtn.addEventListener('click',()=>openFlash(SIGHT_WORDS[currentPage]||[],'Sight Words'));
+wordsBtn.addEventListener('click',()=>openFlash(WORD_FAMILIES[currentPage]||[],'Word Families'));
+document.getElementById('flash-speak').addEventListener('click',()=>speak(flashWords[flashIdx]||''));
+document.getElementById('flash-prev').addEventListener('click',()=>{if(flashIdx>0){flashIdx--;showCard();}});
+document.getElementById('flash-next').addEventListener('click',()=>{if(flashIdx<flashWords.length-1){flashIdx++;showCard();}});
+document.getElementById('flash-close').addEventListener('click',()=>{speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';});
+document.getElementById('flash-modal').addEventListener('click',e=>{if(e.target===document.getElementById('flash-modal')){speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';}});
+async function renderPage(num,dir){
+  if(animating)return;animating=true;
+  if(canvasContainer.style.display!=='none'){canvasContainer.classList.add(dir==='fwd'?'anim-exit-left':'anim-exit-right');await new Promise(r=>setTimeout(r,400));canvasContainer.classList.remove('anim-exit-left','anim-exit-right');}
+  canvasContainer.style.display='none';textLayerDiv.innerHTML='';loading.style.display='block';
+  const page=await pdfDoc.getPage(num);
+  const vp=page.getViewport({scale:1});
+  const maxW=Math.min(490,document.getElementById('page-wrapper').clientWidth-20);
+  const sc=maxW/vp.width;const sv=page.getViewport({scale:sc});
+  canvas.width=sv.width;canvas.height=sv.height;
+  await page.render({canvasContext:ctx,viewport:sv}).promise;
+  const tc=await page.getTextContent();
+  const rt=pdfjsLib.renderTextLayer({textContent:tc,container:textLayerDiv,viewport:sv,textDivs:[]});
+  await rt.promise;
+  textLayerDiv.querySelectorAll('span').forEach(span=>{
+    const raw=span.textContent.trim();
+    if(!raw||/^\d+$/.test(raw)||/^[.,!?;:'"()\-]+$/.test(raw))return;
+    span.addEventListener('click',e=>{e.stopPropagation();speak(raw,span);});
+  });
+  loading.style.display='none';canvasContainer.style.display='block';
+  canvasContainer.classList.add(dir==='fwd'?'anim-enter-right':'anim-enter-left');
+  await new Promise(r=>setTimeout(r,ANIM_MS));canvasContainer.classList.remove('anim-enter-right','anim-enter-left');
+  currentPage=num;counter.textContent=num+' / '+TOTAL;
+  document.getElementById('btn-back').disabled=num<=1;document.getElementById('btn-next').disabled=num>=TOTAL;
+  const isHdr=HEADER_PAGES.has(num);
+  flashBtn.style.display=(isHdr&&SIGHT_WORDS[num])?'inline-block':'none';
+  wordsBtn.style.display=(isHdr&&WORD_FAMILIES[num])?'inline-block':'none';
+  animating=false;
+}
+document.getElementById('btn-next').addEventListener('click',()=>{if(currentPage<TOTAL)renderPage(currentPage+1,'fwd');});
+document.getElementById('btn-back').addEventListener('click',()=>{if(currentPage>1)renderPage(currentPage-1,'back');});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')document.getElementById('btn-next').click();if(e.key==='ArrowLeft')document.getElementById('btn-back').click();if(e.key==='Escape'){speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';}});
+pdfjsLib.getDocument('book2.pdf').promise.then(doc=>{pdfDoc=doc;renderPage(1,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
+</script>
+</body>
+</html>

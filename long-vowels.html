@@ -1,0 +1,426 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Long Vowel Sounds | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#F0F7FF; --text:#2C3E50; --blue:#2980B9; --sky:#3498DB; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    header { background:linear-gradient(135deg,#2980B9 0%,#3498DB 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
+    .back-link:hover { background:rgba(255,255,255,.35); }
+    header h1 { font-family:'Fredoka One',cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
+    .header-btns { display:flex; gap:.45rem; align-items:center; }
+    .btn-header { background:rgba(255,255,255,.2); border:none; color:white; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
+    .btn-header:hover { background:rgba(255,255,255,.35); }
+    .btn-header.muted { background:rgba(255,80,80,.45); }
+
+    .settings-bar { background:white; border-bottom:2px solid #D0E8FF; padding:.6rem 1.5rem; display:flex; align-items:center; gap:.75rem 1.25rem; flex-wrap:wrap; justify-content:center; }
+    .settings-label { font-size:.75rem; font-weight:800; color:#bbb; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+    .cat-btns { display:flex; gap:.3rem; flex-wrap:wrap; justify-content:center; }
+    .btn-cat { background:#D0E8FF; color:#2980B9; border:2px solid transparent; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .btn-cat:hover { background:#A8D4F5; }
+    .btn-cat.active { background:#2980B9; color:white; border-color:#2980B9; }
+
+    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:1.5rem 1rem 2rem; gap:1rem; }
+
+    .score-row { display:flex; gap:1.5rem; font-family:'Fredoka One',cursive; font-size:1rem; color:#bbb; }
+    .score-row span { color:#2980B9; font-size:1.2rem; }
+
+    .progress-bar { width:100%; max-width:480px; height:8px; background:#D0E8FF; border-radius:999px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,#2980B9,#3498DB); border-radius:999px; transition:width .4s; }
+
+    .game-card {
+      background:white; border-radius:24px; padding:1.75rem 2rem;
+      box-shadow:0 4px 24px rgba(41,128,185,.12); border:3px solid #D0E8FF;
+      display:flex; flex-direction:column; align-items:center; gap:.9rem;
+      width:100%; max-width:460px;
+    }
+
+    .emoji-display { font-size:clamp(4rem,16vw,7rem); line-height:1; filter:drop-shadow(0 3px 6px rgba(0,0,0,.1)); }
+
+    .word-show {
+      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      font-size:clamp(2.4rem,10vw,4.5rem); line-height:1;
+      display:flex; align-items:baseline; gap:0;
+    }
+    .word-part { color:#2980B9; }
+    .word-blank-box {
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:2em; height:1.15em;
+      background:#D0E8FF; border-radius:8px; border-bottom:4px solid #2980B9;
+      color:#A8D4F5; font-size:.7em;
+      transition:all .3s; padding:0 .15em;
+      vertical-align:baseline;
+    }
+    .word-blank-box.filled { background:#E8F8EE; border-color:#27AE60; color:#27AE60; }
+
+    .pattern-hint {
+      background:#D0E8FF; color:#2980B9; font-family:'Fredoka One',cursive;
+      font-size:.85rem; padding:3px 14px; border-radius:999px;
+    }
+
+    .feedback {
+      font-family:'Fredoka One',cursive; font-size:1.3rem; min-height:1.7rem; text-align:center;
+    }
+    .feedback.ok { color:#27AE60; }
+    .feedback.err { color:#E74C3C; }
+
+    .choices { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; width:100%; max-width:380px; }
+    .btn-choice {
+      background:white; border:3px solid #D0E8FF; color:#2980B9;
+      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      font-size:clamp(1.3rem,5vw,2rem); padding:.65rem .5rem; border-radius:16px;
+      cursor:pointer; transition:all .15s; font-weight:700;
+      box-shadow:0 3px 10px rgba(41,128,185,.1);
+    }
+    .btn-choice:hover:not(:disabled) { background:#D0E8FF; transform:translateY(-2px); box-shadow:0 6px 18px rgba(41,128,185,.2); }
+    .btn-choice.correct { background:#27AE60; border-color:#27AE60; color:white; }
+    .btn-choice.wrong { background:#E74C3C; border-color:#E74C3C; color:white; animation:shake .4s; }
+    .btn-choice:disabled { cursor:default; }
+
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)}
+    }
+
+    footer { text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #D0E8FF; margin-top:auto; }
+    footer a { color:#2980B9; text-decoration:none; }
+    footer a:hover { text-decoration:underline; }
+  </style>
+<link href="fonts.css" rel="stylesheet"></head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">&#8592; Games</a>
+  <h1>Long Vowel Sounds</h1>
+  <div class="header-btns">
+    <button class="btn-header" id="btnMute">&#128266;</button>
+    <button class="btn-header" id="btnVoice">&#128104; Voice</button>
+  </div>
+</header>
+
+<div class="settings-bar">
+  <span class="settings-label">Vowel:</span>
+  <div class="cat-btns">
+    <button class="btn-cat active" data-cat="Long A">Long A</button>
+    <button class="btn-cat" data-cat="Long E">Long E</button>
+    <button class="btn-cat" data-cat="Long I">Long I</button>
+    <button class="btn-cat" data-cat="Long O">Long O</button>
+    <button class="btn-cat" data-cat="Long U">Long U</button>
+  </div>
+</div>
+
+<main>
+  <div class="score-row">
+    <div>Score: <span id="scoreVal">0</span></div>
+    <div>Word <span id="qNum">1</span> of <span id="qTotal">?</span></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="game-card">
+    <div class="emoji-display" id="emojiDisplay">&#127826;</div>
+    <div class="word-show" id="wordShow"></div>
+    <div class="pattern-hint" id="patternHint">Long A sound</div>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+  <div class="choices" id="choices"></div>
+</main>
+
+<footer>
+  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
+</footer>
+
+<script>
+/* ── SPEECH ── */
+let _muted = false, _speaking = false, _pending = null, _queue = [], _voice = null;
+function _launch(msg) {
+  if (_muted) return;
+  window.speechSynthesis.cancel();
+  _queue = msg.split(' | '); _speaking = false; _advance();
+}
+function _advance() {
+  if (!_queue.length) { _speaking=false; if(_pending){const t=_pending;_pending=null;_launch(t);} return; }
+  _speaking = true;
+  const utt = new SpeechSynthesisUtterance(_queue.shift());
+  if (_voice) utt.voice = _voice;
+  utt.rate = 0.92; utt.pitch = 1.0;
+  utt.onend = () => { _speaking=false; setTimeout(_advance,350); };
+  window.speechSynthesis.speak(utt);
+}
+function speak(msg) { if(_muted)return; if(_speaking){_pending=msg;}else{_launch(msg);} }
+function loadVoices() {
+  const all = window.speechSynthesis.getVoices();
+  if (!all.length) return;
+  _voice = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
+          || all.find(v => /aria|jenny|guy\b|ana\b|davis/i.test(v.name))
+          || all.find(v => /google.*english/i.test(v.name))
+          || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
+          || all.find(v => v.lang && /^en/i.test(v.lang))
+          || all[0];
+}
+window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
+document.getElementById('btnMute').addEventListener('click', () => {
+  _muted = !_muted;
+  document.getElementById('btnMute').textContent = _muted ? '🔇' : '🔊';
+  document.getElementById('btnMute').classList.toggle('muted', _muted);
+  if (_muted) window.speechSynthesis.cancel();
+});
+document.getElementById('btnVoice').addEventListener('click', () => {
+  const voices = window.speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.startsWith('en'));
+  if (!voices.length) return;
+  const idx = voices.indexOf(_voice);
+  _voice = voices[(idx+1) % voices.length];
+  speak(`Hello! My name is ${_voice.name.split(' ')[0]}!`);
+});
+
+/* ── GAME DATA ── */
+const VOWEL_DATA = {
+  'Long A': {
+    sound: 'Long A — says its name!',
+    allPatterns: ['a','ai','ay'],
+    wrongPool: ['ee','oa','ow','oo','i'],
+    words: [
+      {word:'cake',start:'c',end:'ke',pattern:'a',emoji:'🎂'},
+      {word:'game',start:'g',end:'me',pattern:'a',emoji:'🎮'},
+      {word:'lake',start:'l',end:'ke',pattern:'a',emoji:'🏞️'},
+      {word:'name',start:'n',end:'me',pattern:'a',emoji:'📛'},
+      {word:'tape',start:'t',end:'pe',pattern:'a',emoji:'📼'},
+      {word:'wave',start:'w',end:'ve',pattern:'a',emoji:'🌊'},
+      {word:'rain',start:'r',end:'n',pattern:'ai',emoji:'🌧️'},
+      {word:'tail',start:'t',end:'l',pattern:'ai',emoji:'🐕'},
+      {word:'mail',start:'m',end:'l',pattern:'ai',emoji:'📬'},
+      {word:'snail',start:'sn',end:'l',pattern:'ai',emoji:'🐌'},
+      {word:'train',start:'tr',end:'n',pattern:'ai',emoji:'🚂'},
+      {word:'day',start:'d',end:'',pattern:'ay',emoji:'☀️'},
+      {word:'play',start:'pl',end:'',pattern:'ay',emoji:'🎠'},
+      {word:'clay',start:'cl',end:'',pattern:'ay',emoji:'🏺'},
+      {word:'tray',start:'tr',end:'',pattern:'ay',emoji:'🍽️'},
+      {word:'spray',start:'spr',end:'',pattern:'ay',emoji:'💦'},
+    ]
+  },
+  'Long E': {
+    sound: 'Long E — says its name!',
+    allPatterns: ['ee','ea'],
+    wrongPool: ['ai','oa','oo','a','ow'],
+    words: [
+      {word:'bee',start:'b',end:'',pattern:'ee',emoji:'🐝'},
+      {word:'tree',start:'tr',end:'',pattern:'ee',emoji:'🌳'},
+      {word:'feet',start:'f',end:'t',pattern:'ee',emoji:'👣',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><ellipse cx="22" cy="54" rx="13" ry="19" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="22" cy="67" rx="11" ry="6" fill="#F0A898"/><ellipse cx="13" cy="37" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="18" cy="35" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="23" cy="34" rx="3" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="28" cy="35" rx="2.5" ry="2.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="32" cy="38" rx="2" ry="2" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="58" cy="54" rx="13" ry="19" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="58" cy="67" rx="11" ry="6" fill="#F0A898"/><ellipse cx="67" cy="37" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="62" cy="35" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="57" cy="34" rx="3" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="52" cy="35" rx="2.5" ry="2.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="48" cy="38" rx="2" ry="2" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/></svg>'},
+      {word:'seed',start:'s',end:'d',pattern:'ee',emoji:'🌱',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><ellipse cx="40" cy="42" rx="24" ry="30" fill="#D4A840"/><ellipse cx="40" cy="42" rx="24" ry="30" fill="none" stroke="#A07810" stroke-width="2"/><path d="M30,18 Q26,42 30,66" fill="none" stroke="rgba(120,70,10,0.45)" stroke-width="3" stroke-linecap="round"/><ellipse cx="32" cy="29" rx="9" ry="12" fill="rgba(255,220,100,0.35)"/><ellipse cx="40" cy="68" rx="8" ry="4" fill="#8B5E10"/></svg>'},
+      {word:'sheep',start:'sh',end:'p',pattern:'ee',emoji:'🐑'},
+      {word:'green',start:'gr',end:'n',pattern:'ee',emoji:'💚'},
+      {word:'sweet',start:'sw',end:'t',pattern:'ee',emoji:'🍬'},
+      {word:'beach',start:'b',end:'ch',pattern:'ea',emoji:'🏖️'},
+      {word:'leaf',start:'l',end:'f',pattern:'ea',emoji:'🍃'},
+      {word:'seal',start:'s',end:'l',pattern:'ea',emoji:'🦭'},
+      {word:'team',start:'t',end:'m',pattern:'ea',emoji:'a team',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 80" style="width:1.1em;height:1em"><circle cx="15" cy="18" r="7" fill="#FDBCB4" stroke="#E8A080" stroke-width="1"/><rect x="8" y="27" width="14" height="18" rx="3" fill="#E74C3C"/><text x="15" y="40" text-anchor="middle" fill="white" font-size="7" font-family="Arial" font-weight="bold">7</text><rect x="9" y="45" width="5" height="15" rx="2" fill="#2C3E50"/><rect x="16" y="45" width="5" height="15" rx="2" fill="#2C3E50"/><circle cx="45" cy="16" r="8" fill="#FDBCB4" stroke="#E8A080" stroke-width="1"/><rect x="37" y="26" width="16" height="20" rx="3" fill="#E74C3C"/><text x="45" y="40" text-anchor="middle" fill="white" font-size="7" font-family="Arial" font-weight="bold">10</text><rect x="38" y="46" width="6" height="16" rx="2" fill="#2C3E50"/><rect x="46" y="46" width="6" height="16" rx="2" fill="#2C3E50"/><circle cx="75" cy="18" r="7" fill="#FDBCB4" stroke="#E8A080" stroke-width="1"/><rect x="68" y="27" width="14" height="18" rx="3" fill="#E74C3C"/><text x="75" y="40" text-anchor="middle" fill="white" font-size="7" font-family="Arial" font-weight="bold">3</text><rect x="69" y="45" width="5" height="15" rx="2" fill="#2C3E50"/><rect x="76" y="45" width="5" height="15" rx="2" fill="#2C3E50"/></svg>'},
+      {word:'beans',start:'b',end:'ns',pattern:'ea',emoji:'🫘'},
+      {word:'dream',start:'dr',end:'m',pattern:'ea',emoji:'💭'},
+      {word:'clean',start:'cl',end:'n',pattern:'ea',emoji:'🧹'},
+    ]
+  },
+  'Long I': {
+    sound: 'Long I — says its name!',
+    allPatterns: ['i','igh'],
+    wrongPool: ['ai','ee','oa','ay','a'],
+    words: [
+      {word:'bike',start:'b',end:'ke',pattern:'i',emoji:'🚲'},
+      {word:'kite',start:'k',end:'te',pattern:'i',emoji:'🪁'},
+      {word:'hide',start:'h',end:'de',pattern:'i',emoji:'🙈'},
+      {word:'ride',start:'r',end:'de',pattern:'i',emoji:'🎠'},
+      {word:'time',start:'t',end:'me',pattern:'i',emoji:'⏰'},
+      {word:'smile',start:'sm',end:'le',pattern:'i',emoji:'😊'},
+      {word:'slide',start:'sl',end:'de',pattern:'i',emoji:'🛝'},
+      {word:'night',start:'n',end:'t',pattern:'igh',emoji:'🌙'},
+      {word:'light',start:'l',end:'t',pattern:'igh',emoji:'💡'},
+      {word:'right',start:'r',end:'t',pattern:'igh',emoji:'✅'},
+      {word:'tight',start:'t',end:'t',pattern:'igh',emoji:'👌'},
+      {word:'flight',start:'fl',end:'t',pattern:'igh',emoji:'✈️'},
+      {word:'bright',start:'br',end:'t',pattern:'igh',emoji:'🔆'},
+    ]
+  },
+  'Long O': {
+    sound: 'Long O — says its name!',
+    allPatterns: ['o','oa','ow'],
+    wrongPool: ['ai','ee','oo','ue','ay'],
+    words: [
+      {word:'bone',start:'b',end:'ne',pattern:'o',emoji:'🦴'},
+      {word:'cone',start:'c',end:'ne',pattern:'o',emoji:'🍦'},
+      {word:'home',start:'h',end:'me',pattern:'o',emoji:'🏠'},
+      {word:'nose',start:'n',end:'se',pattern:'o',emoji:'👃'},
+      {word:'rope',start:'r',end:'pe',pattern:'o',emoji:'🪢'},
+      {word:'stone',start:'st',end:'ne',pattern:'o',emoji:'🪨'},
+      {word:'boat',start:'b',end:'t',pattern:'oa',emoji:'⛵'},
+      {word:'coat',start:'c',end:'t',pattern:'oa',emoji:'🧥'},
+      {word:'goat',start:'g',end:'t',pattern:'oa',emoji:'🐐'},
+      {word:'road',start:'r',end:'d',pattern:'oa',emoji:'🛣️'},
+      {word:'soap',start:'s',end:'p',pattern:'oa',emoji:'🧼'},
+      {word:'snow',start:'sn',end:'',pattern:'ow',emoji:'❄️'},
+      {word:'slow',start:'sl',end:'',pattern:'ow',emoji:'🐢'},
+      {word:'glow',start:'gl',end:'',pattern:'ow',emoji:'✨'},
+      {word:'grow',start:'gr',end:'',pattern:'ow',emoji:'🌱'},
+      {word:'flow',start:'fl',end:'',pattern:'ow',emoji:'a river',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><rect x="0" y="0" width="80" height="80" fill="#AED6F1"/><rect x="0" y="42" width="80" height="38" fill="#58A618"/><path d="M0,46 Q20,40 40,48 Q60,56 80,46 L80,80 L0,80 Z" fill="#2980B9"/><path d="M8,60 Q20,56 32,60" fill="none" stroke="#AED6F1" stroke-width="2" stroke-linecap="round"/><path d="M40,66 Q52,62 65,66" fill="none" stroke="#AED6F1" stroke-width="2" stroke-linecap="round"/><rect x="6" y="33" width="4" height="12" fill="#7B5C2E"/><circle cx="8" cy="28" r="9" fill="#27AE60"/><rect x="68" y="31" width="4" height="13" fill="#7B5C2E"/><circle cx="70" cy="26" r="10" fill="#27AE60"/><circle cx="60" cy="14" r="9" fill="#F1C40F"/></svg>'},
+    ]
+  },
+  'Long U': {
+    sound: 'Long U — says its name!',
+    allPatterns: ['u','ew'],
+    wrongPool: ['ai','ee','oa','oo','ay'],
+    words: [
+      {word:'cube',start:'c',end:'be',pattern:'u',emoji:'🧊'},
+      {word:'cute',start:'c',end:'te',pattern:'u',emoji:'😊'},
+      {word:'mule',start:'m',end:'le',pattern:'u',emoji:'🐴'},
+      {word:'ruler',start:'r',end:'ler',pattern:'u',emoji:'📏'},
+      {word:'tune',start:'t',end:'ne',pattern:'u',emoji:'🎵'},
+      {word:'flute',start:'fl',end:'te',pattern:'u',emoji:'a flute',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><rect x="0" y="0" width="80" height="80" fill="#F0F4FF" rx="8"/><rect x="4" y="34" width="72" height="12" rx="6" fill="#C5A820"/><rect x="4" y="33" width="20" height="14" rx="6" fill="#D4B825"/><ellipse cx="17" cy="40" rx="4" ry="3.5" fill="#8B6914"/><circle cx="32" cy="40" r="3" fill="#8B6914"/><circle cx="41" cy="40" r="3" fill="#8B6914"/><circle cx="50" cy="40" r="3" fill="#8B6914"/><circle cx="59" cy="40" r="3" fill="#8B6914"/><circle cx="68" cy="40" r="2.5" fill="#8B6914"/><rect x="29" y="26" width="8" height="11" rx="3" fill="#D4B825" stroke="#B89A1A" stroke-width="1"/><rect x="38" y="25" width="8" height="11" rx="3" fill="#D4B825" stroke="#B89A1A" stroke-width="1"/><rect x="47" y="26" width="8" height="11" rx="3" fill="#D4B825" stroke="#B89A1A" stroke-width="1"/><text x="8" y="22" font-size="14" fill="#8B6914" opacity="0.7">♪</text><text x="54" y="20" font-size="12" fill="#8B6914" opacity="0.55">♫</text></svg>'},
+      {word:'prune',start:'pr',end:'ne',pattern:'u',emoji:'🫐'},
+      {word:'dew',start:'d',end:'',pattern:'ew',emoji:'💧'},
+      {word:'flew',start:'fl',end:'',pattern:'ew',emoji:'🕊️'},
+      {word:'grew',start:'gr',end:'',pattern:'ew',emoji:'🌱'},
+      {word:'stew',start:'st',end:'',pattern:'ew',emoji:'🍲'},
+      {word:'crew',start:'cr',end:'',pattern:'ew',emoji:'a ship crew',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><rect x="0" y="52" width="80" height="28" fill="#1A6FA8"/><path d="M0,52 Q10,47 20,52 Q30,57 40,52 Q50,47 60,52 Q70,57 80,52 L80,60 Q70,65 60,60 Q50,55 40,60 Q30,65 20,60 Q10,55 0,60 Z" fill="#2E86C1"/><path d="M10,52 Q40,61 70,52 L67,65 Q40,72 13,65 Z" fill="#8B4513"/><rect x="13" y="42" width="54" height="12" rx="2" fill="#D4AC0D"/><rect x="37" y="14" width="5" height="30" fill="#5D4037"/><path d="M42,17 L66,35 L42,42 Z" fill="#FDFEFE" stroke="#BDC3C7" stroke-width="1"/><circle cx="22" cy="37" r="5" fill="#FDBCB4"/><rect x="19" y="31" width="10" height="4" rx="2" fill="#1A252F"/><circle cx="40" cy="37" r="5" fill="#FDBCB4"/><rect x="37" y="31" width="10" height="4" rx="2" fill="#1A252F"/><circle cx="58" cy="37" r="5" fill="#FDBCB4"/><rect x="55" y="31" width="10" height="4" rx="2" fill="#1A252F"/></svg>'},
+      {word:'drew',start:'dr',end:'',pattern:'ew',emoji:'a pencil drawing',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><g transform="rotate(-6 40 40)"><rect x="14" y="7" width="44" height="56" rx="3" fill="white" stroke="#DDD" stroke-width="1.5"/><path d="M20,27 L50,27" stroke="#555" stroke-width="1.5"/><path d="M18,27 L36,14 L54,27" fill="none" stroke="#555" stroke-width="1.5"/><rect x="28" y="37" width="10" height="14" fill="none" stroke="#555" stroke-width="1.5"/><rect x="29" y="38" width="8" height="6" fill="#AED6F1" stroke="#555" stroke-width="1"/><circle cx="46" cy="20" r="5" fill="#F1C40F" opacity="0.85"/></g><g transform="translate(52,8) rotate(35)"><rect x="0" y="0" width="11" height="44" rx="2" fill="#F5C518"/><rect x="0" y="0" width="11" height="7" rx="2" fill="#C0A028"/><rect x="1" y="7" width="9" height="5" fill="#FDBCB4"/><polygon points="0,44 11,44 5.5,54" fill="#F5DEB3"/><polygon points="3,48 8,48 5.5,54" fill="#333"/></g></svg>'},
+    ]
+  }
+};
+
+/* ── GAME STATE ── */
+let currentCat = 'Long A';
+let questions = [], qIdx = 0, score = 0, locked = false;
+
+function shuffle(arr) {
+  for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+
+function getChoices(correct, allPatterns, wrongPool) {
+  const others = allPatterns.filter(p => p !== correct);
+  shuffle(others);
+  const extra = shuffle([...wrongPool]);
+  const choices = [correct];
+  others.forEach(p => { if (choices.length < 4) choices.push(p); });
+  extra.forEach(p => { if (choices.length < 4 && !choices.includes(p)) choices.push(p); });
+  return shuffle(choices);
+}
+
+function startGame(cat) {
+  currentCat = cat;
+  questions = shuffle([...VOWEL_DATA[cat].words]);
+  qIdx = 0; score = 0;
+  document.getElementById('scoreVal').textContent = '0';
+  document.getElementById('qTotal').textContent = questions.length;
+  document.querySelectorAll('.btn-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  showQuestion();
+}
+
+function buildWordDisplay(q, revealed) {
+  const el = document.getElementById('wordShow');
+  el.innerHTML = '';
+  if (q.start) {
+    const s = document.createElement('span');
+    s.className = 'word-part'; s.textContent = q.start; el.appendChild(s);
+  }
+  const blank = document.createElement('span');
+  blank.className = 'word-blank-box' + (revealed ? ' filled' : '');
+  blank.id = 'wordBlankBox';
+  blank.textContent = revealed ? q.pattern : '?';
+  el.appendChild(blank);
+  if (q.end) {
+    const e = document.createElement('span');
+    e.className = 'word-part'; e.textContent = q.end; el.appendChild(e);
+  }
+}
+
+function showQuestion() {
+  locked = false;
+  const q = questions[qIdx];
+  const data = VOWEL_DATA[currentCat];
+  const ed = document.getElementById('emojiDisplay');
+  if (q.img) { ed.innerHTML = q.img; } else { ed.textContent = q.emoji; }
+  buildWordDisplay(q, false);
+  document.getElementById('patternHint').textContent = data.sound;
+  document.getElementById('qNum').textContent = qIdx + 1;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('progressFill').style.width = (qIdx / questions.length * 100) + '%';
+
+  const choices = getChoices(q.pattern, data.allPatterns, data.wrongPool);
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  choices.forEach(pat => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-choice';
+    btn.textContent = pat;
+    btn.addEventListener('click', () => checkAnswer(pat, btn));
+    choicesEl.appendChild(btn);
+  });
+  speak(`How do you spell the vowel sound in ${q.word}?`);
+}
+
+function checkAnswer(pat, btn) {
+  if (locked) return;
+  const q = questions[qIdx];
+  if (pat === q.pattern) {
+    locked = true;
+    btn.classList.add('correct');
+    document.querySelectorAll('.btn-choice').forEach(b => b.disabled = true);
+    buildWordDisplay(q, true);
+    document.getElementById('feedback').textContent = q.word.toUpperCase() + '! Great job! 🎉';
+    document.getElementById('feedback').className = 'feedback ok';
+    score++;
+    document.getElementById('scoreVal').textContent = score;
+    speak(`${q.word}! | Great job! | The ${pat} pattern makes the long vowel sound in ${q.word}!`);
+    setTimeout(advance, 1700);
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('feedback').textContent = 'Try again!';
+    document.getElementById('feedback').className = 'feedback err';
+    speak('Try again!');
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      btn.disabled = true;
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('feedback').className = 'feedback';
+    }, 900);
+  }
+}
+
+function advance() {
+  qIdx++;
+  if (qIdx >= questions.length) { showGameOver(); } else { showQuestion(); }
+}
+
+function showGameOver() {
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('emojiDisplay').textContent = '🎉';
+  document.getElementById('wordShow').innerHTML = '';
+  document.getElementById('patternHint').textContent = 'Game Over!';
+  document.getElementById('feedback').textContent = `You got ${score} of ${questions.length}! Amazing!`;
+  document.getElementById('feedback').className = 'feedback ok';
+  const btn = document.createElement('button');
+  btn.className = 'btn-choice';
+  btn.style.cssText = 'grid-column:1/-1;font-family:"Fredoka One",cursive;font-size:1.1rem;';
+  btn.textContent = 'Play Again! 🔄';
+  btn.addEventListener('click', () => startGame(currentCat));
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  choicesEl.appendChild(btn);
+  speak(`Amazing! You got ${score} out of ${questions.length} words correct!`);
+}
+
+document.querySelectorAll('.btn-cat').forEach(btn => {
+  btn.addEventListener('click', () => startGame(btn.dataset.cat));
+});
+startGame('Long A');
+</script>
+</body>
+</html>
+
+

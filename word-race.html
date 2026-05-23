@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sight Word Race | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFF8F0;
+      --text: #2C3E50;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #FF4040, #FF8C00);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .back-link {
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: .9rem;
+      background: rgba(255,255,255,.22);
+      padding: 6px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+      transition: background .2s;
+    }
+    .back-link:hover { background: rgba(255,255,255,.38); }
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      color: white;
+      font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+      flex: 1;
+      text-align: center;
+    }
+    .btn-mute {
+      background: rgba(255,255,255,.22);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background .2s;
+      line-height: 1;
+    }
+    .btn-mute:hover { background: rgba(255,255,255,.38); }
+    .btn-mute.muted { background: rgba(255,80,80,.45); }
+
+    /* ── LEVEL BAR ── */
+    .level-bar {
+      background: white;
+      border-bottom: 2px solid #FFE0B0;
+      padding: .6rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .55rem;
+      flex-wrap: wrap;
+    }
+    .btn-level {
+      background: #f2f2f2;
+      border: 2px solid #ddd;
+      color: #888;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      padding: 6px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .btn-level:hover { border-color: #FF8C00; color: #FF8C00; }
+    .btn-level.active {
+      background: linear-gradient(135deg, #FF4040, #FF8C00);
+      border-color: transparent;
+      color: white;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 2rem;
+    }
+
+    .game-wrap {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* ── START SCREEN ── */
+    #startScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+      padding: 2.5rem 1rem;
+    }
+    #startScreen .start-emoji {
+      font-size: 5rem;
+      line-height: 1;
+    }
+    #startScreen h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.6rem, 7vw, 2.5rem);
+      color: #FF4040;
+    }
+    #startScreen p {
+      font-size: 1.1rem;
+      color: #777;
+      font-weight: 600;
+    }
+    .btn-new-game {
+      background: linear-gradient(135deg, #FF4040, #FF8C00);
+      border: none;
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      padding: 12px 36px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .2s;
+      box-shadow: 0 4px 16px rgba(255,64,64,.35);
+    }
+    .btn-new-game:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 6px 22px rgba(255,64,64,.45); }
+    .btn-new-game:disabled { opacity: .45; cursor: not-allowed; }
+
+    /* ── GAME AREA ── */
+    #gameArea {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Top bar */
+    .top-bar {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .5rem;
+    }
+    .timer-wrap {
+      flex: 1;
+      height: 12px;
+      border-radius: 6px;
+      background: #e0e0e0;
+      overflow: hidden;
+    }
+    #timerBar {
+      height: 100%;
+      width: 100%;
+      border-radius: 6px;
+      background: #6BCB77;
+      transition: width .1s linear, background .4s;
+    }
+    .score-display {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.5rem;
+      color: #FF8C00;
+      white-space: nowrap;
+      min-width: 3.5rem;
+      text-align: right;
+    }
+
+    /* Prompt card */
+    .prompt-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,.09);
+      text-align: center;
+      border: 3px solid #FFE0A0;
+    }
+    .prompt-label {
+      font-size: .85rem;
+      color: #aaa;
+      font-weight: 600;
+      margin-bottom: .4rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    #promptWord {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.2rem, 9vw, 3.8rem);
+      color: #FF4040;
+      letter-spacing: .05em;
+      line-height: 1.1;
+    }
+
+    /* Lanes */
+    .lanes-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+    .lane {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .6rem 1.2rem;
+      border-radius: 14px;
+      border: 2px solid rgba(0,0,0,.06);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      transition: transform .1s;
+      user-select: none;
+    }
+    .lane:hover:not(.busy) { transform: scale(1.02); }
+    .lane:nth-child(1) { background: #FFF0F0; }
+    .lane:nth-child(2) { background: #EFF5FF; }
+    .lane:nth-child(3) { background: #F0FFF4; }
+    .lane:nth-child(4) { background: #FFFBF0; }
+
+    .lane-car {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .lane:nth-child(1) .lane-car { background: #FF6B6B; }
+    .lane:nth-child(2) .lane-car { background: #3A8EF6; }
+    .lane:nth-child(3) .lane-car { background: #6BCB77; }
+    .lane:nth-child(4) .lane-car { background: #FFD93D; }
+
+    .lane-word {
+      font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: clamp(1.3rem, 5.5vw, 2rem);
+      font-weight: 700;
+      color: #2C3E50;
+      flex: 1;
+    }
+
+    /* Say It button */
+    .btn-say {
+      background: linear-gradient(135deg, #FFD93D, #FF8C00);
+      border: none;
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      padding: 10px 28px;
+      border-radius: 999px;
+      cursor: pointer;
+      align-self: center;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 14px rgba(255,140,0,.3);
+    }
+    .btn-say:hover { transform: scale(1.06); box-shadow: 0 6px 18px rgba(255,140,0,.4); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes zoom {
+      0%   { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(115%); opacity: 0; }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%,75%  { transform: translateX(-6px); }
+      50%      { transform: translateX(6px); }
+    }
+    @keyframes popIn {
+      from { transform: scale(.7); opacity: 0; }
+      to   { transform: scale(1);  opacity: 1; }
+    }
+
+    .lane.correct { animation: zoom .55s ease-in forwards; pointer-events: none; }
+    .lane.shake   { animation: shake .35s; }
+
+    /* ── GAME OVER ── */
+    .game-over {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+    .game-over.show { display: flex; }
+    .game-over-card {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      animation: popIn .4s cubic-bezier(.175,.885,.32,1.275);
+      max-width: 340px;
+      width: 100%;
+      box-shadow: 0 12px 48px rgba(0,0,0,.2);
+    }
+    .game-over-emoji { font-size: 3.5rem; line-height: 1; margin-bottom: .5rem; }
+    .game-over-card h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: #FF4040;
+      margin-bottom: .4rem;
+    }
+    .game-over-card p {
+      font-size: 1.05rem;
+      color: #666;
+      font-weight: 600;
+      margin-bottom: .8rem;
+    }
+    #finalScore {
+      font-family: 'Fredoka One', cursive;
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, #FF4040, #FF8C00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      margin-bottom: 1.2rem;
+      line-height: 1;
+    }
+    .btn-play-again {
+      background: linear-gradient(135deg, #FF4040, #FF8C00);
+      border: none;
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.25rem;
+      padding: 13px 40px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 18px rgba(255,64,64,.35);
+    }
+    .btn-play-again:hover { transform: scale(1.06); box-shadow: 0 7px 24px rgba(255,64,64,.45); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: white;
+      border-top: 2px solid #FFE0B0;
+      text-align: center;
+      padding: 1rem 1.5rem;
+      font-size: .82rem;
+      color: #999;
+    }
+    footer a { color: #FF6B00; text-decoration: none; font-weight: 700; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">← Games</a>
+  <h1>🏎️ Sight Word Race</h1>
+  <button class="btn-mute" id="btnMute">🔊</button>
+</header>
+
+<div class="level-bar">
+  <button class="btn-level" data-level="book1">📗 Book 1</button>
+  <button class="btn-level" data-level="book2">📘 Book 2</button>
+  <button class="btn-level" data-level="book3">📕 Book 3</button>
+</div>
+
+<main>
+  <div class="game-wrap">
+
+    <!-- Start Screen -->
+    <div id="startScreen">
+      <div class="start-emoji">🏎️</div>
+      <h2>Sight Word Race!</h2>
+      <p>Pick a level above to start!</p>
+      <button class="btn-new-game" id="btnNewGame" disabled>New Game</button>
+    </div>
+
+    <!-- Game Area -->
+    <div id="gameArea">
+
+      <!-- Top bar: timer + score -->
+      <div class="top-bar">
+        <div class="top-row">
+          <div class="timer-wrap">
+            <div id="timerBar"></div>
+          </div>
+          <div class="score-display" id="scoreDisplay">⭐ 0</div>
+        </div>
+      </div>
+
+      <!-- Prompt card -->
+      <div class="prompt-card">
+        <div class="prompt-label">Find this word:</div>
+        <div id="promptWord">---</div>
+      </div>
+
+      <!-- Race lanes -->
+      <div class="lanes-wrap" id="lanesWrap">
+        <div class="lane" data-lane="0">
+          <div class="lane-car">🏎️</div>
+          <span class="lane-word" id="word0"></span>
+        </div>
+        <div class="lane" data-lane="1">
+          <div class="lane-car">🏎️</div>
+          <span class="lane-word" id="word1"></span>
+        </div>
+        <div class="lane" data-lane="2">
+          <div class="lane-car">🏎️</div>
+          <span class="lane-word" id="word2"></span>
+        </div>
+        <div class="lane" data-lane="3">
+          <div class="lane-car">🏎️</div>
+          <span class="lane-word" id="word3"></span>
+        </div>
+      </div>
+
+      <!-- Say It button -->
+      <button class="btn-say" id="btnSay">🔈 Say It</button>
+
+    </div><!-- /#gameArea -->
+
+  </div><!-- /.game-wrap -->
+</main>
+
+<!-- Game Over Overlay -->
+<div class="game-over" id="gameOver">
+  <div class="game-over-card">
+    <div class="game-over-emoji">⏱️</div>
+    <h2>Time's Up!</h2>
+    <p id="finalMsg">You got <strong>0</strong> words!</p>
+    <span id="finalScore">0</span>
+    <button class="btn-play-again" id="btnPlayAgain">Play Again</button>
+  </div>
+</div>
+
+<footer>
+  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids 📚</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   SPEECH API
+═══════════════════════════════════════ */
+let _muted=false,_speaking=false,_pending=null,_queue=[],_voice=null;
+function _launch(msg){if(_muted)return;window.speechSynthesis.cancel();_queue=msg.split(' | ');_speaking=false;_advance();}
+function _advance(){if(!_queue.length){_speaking=false;if(_pending){const t=_pending;_pending=null;_launch(t);}return;}_speaking=true;const utt=new SpeechSynthesisUtterance(_queue.shift());if(_voice)utt.voice=_voice;utt.rate=0.92;utt.pitch=1.0;utt.onend=()=>{_speaking=false;setTimeout(_advance,300);};window.speechSynthesis.speak(utt);}
+function speak(msg){if(_muted)return;if(_speaking){_pending=msg;}else{_launch(msg);}}
+function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length)return;_voice=all.find(v=>v.name.includes('Natural')&&/^en/i.test(v.lang))||all.find(v=>/aria|jenny|guy\b|ana\b|davis/i.test(v.name))||all.find(v=>/google.*english/i.test(v.name))||all.find(v=>/\bdavid\b|\bzira\b/i.test(v.name))||all.find(v=>v.lang&&/^en/i.test(v.lang))||all[0];}
+window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
+document.getElementById('btnMute').addEventListener('click',()=>{_muted=!_muted;const b=document.getElementById('btnMute');b.textContent=_muted?'🔇':'🔊';b.classList.toggle('muted',_muted);if(_muted)window.speechSynthesis.cancel();});
+
+/* ═══════════════════════════════════════
+   WORD DATA
+═══════════════════════════════════════ */
+const WORDS = {
+  book1: ['a','am','an','and','are','as','at','ball','can','did','do','for','give','go','got','has','have','he','her','his','I','in','is','it','me','no','not','of','on','said','says','see','she','sorry','that','the','to','up','will','with'],
+  book2: ['but','does','from','get','go','goes','like','my','what','who'],
+  book3: ['bank','give','how','my','new','night','out','say','she','shoe','too','then','ring','took','when','who','why','you','bird','car','corn','girl','far','for','fur','or','purr'],
+};
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+let level = null, score = 0, timeLeft = 60, timerInterval = null, correctLane = -1, busy = false;
+let currentTarget = '';
+
+/* ═══════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ═══════════════════════════════════════
+   TIMER
+═══════════════════════════════════════ */
+function updateTimer() {
+  const bar = document.getElementById('timerBar');
+  const pct = (timeLeft / 60) * 100;
+  bar.style.width = pct + '%';
+  if (pct > 50)       bar.style.background = '#6BCB77';
+  else if (pct > 25)  bar.style.background = '#FFD93D';
+  else                bar.style.background = '#FF6B6B';
+}
+
+function tick() {
+  timeLeft--;
+  updateTimer();
+  if (timeLeft <= 0) endGame();
+}
+
+/* ═══════════════════════════════════════
+   SCORE
+═══════════════════════════════════════ */
+function updateScore() {
+  document.getElementById('scoreDisplay').textContent = '⭐ ' + score;
+}
+
+/* ═══════════════════════════════════════
+   NEXT QUESTION
+═══════════════════════════════════════ */
+function nextQuestion() {
+  if (busy) return;
+
+  const pool = WORDS[level];
+  const target = pool[Math.floor(Math.random() * pool.length)];
+  currentTarget = target;
+
+  // Get 3 distractors different from target
+  let others = shuffle(pool.filter(w => w !== target));
+  // If fewer than 3 available, pad by slightly altering target (edge case safety)
+  while (others.length < 3) {
+    others.push(target + (others.length + 1));
+  }
+  others = others.slice(0, 3);
+
+  const choices = shuffle([target, ...others]);
+  correctLane = choices.indexOf(target);
+
+  // Set prompt
+  document.getElementById('promptWord').textContent = target;
+
+  // Set lane words
+  choices.forEach((word, i) => {
+    document.getElementById('word' + i).textContent = word;
+  });
+
+  speak(target);
+}
+
+/* ═══════════════════════════════════════
+   LANE CLICK HANDLER
+═══════════════════════════════════════ */
+function handleLaneClick(idx) {
+  if (busy) return;
+  busy = true;
+
+  const lanes = document.querySelectorAll('.lane');
+  const lane = lanes[idx];
+
+  if (idx === correctLane) {
+    score++;
+    updateScore();
+    lane.classList.add('correct');
+    speak(currentTarget + ' | Great job!');
+    setTimeout(() => {
+      lane.classList.remove('correct');
+      busy = false;
+      nextQuestion();
+    }, 700);
+  } else {
+    lane.classList.add('shake');
+    speak('Try again!');
+    setTimeout(() => {
+      lane.classList.remove('shake');
+      busy = false;
+    }, 400);
+  }
+}
+
+/* ═══════════════════════════════════════
+   START GAME
+═══════════════════════════════════════ */
+function startGame() {
+  if (!level) return;
+
+  score = 0;
+  timeLeft = 60;
+  busy = false;
+  updateScore();
+  updateTimer();
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(tick, 1000);
+
+  // Hide start screen, show game area
+  document.getElementById('startScreen').style.display = 'none';
+  const ga = document.getElementById('gameArea');
+  ga.style.display = 'flex';
+
+  // Hide game over
+  document.getElementById('gameOver').classList.remove('show');
+
+  nextQuestion();
+}
+
+/* ═══════════════════════════════════════
+   END GAME
+═══════════════════════════════════════ */
+function endGame() {
+  clearInterval(timerInterval);
+  busy = true;
+
+  speak("Time's up! | You got " + score + " words right! | Amazing!");
+
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('finalMsg').innerHTML = 'You got <strong>' + score + '</strong> word' + (score === 1 ? '' : 's') + '!';
+  document.getElementById('gameOver').classList.add('show');
+}
+
+/* ═══════════════════════════════════════
+   EVENT WIRING
+═══════════════════════════════════════ */
+
+// Level buttons
+document.querySelectorAll('.btn-level').forEach(btn => {
+  btn.addEventListener('click', () => {
+    level = btn.dataset.level;
+    document.querySelectorAll('.btn-level').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('btnNewGame').disabled = false;
+    startGame();
+  });
+});
+
+// New Game button (on start screen)
+document.getElementById('btnNewGame').addEventListener('click', () => {
+  if (level) startGame();
+});
+
+// Play Again button
+document.getElementById('btnPlayAgain').addEventListener('click', () => {
+  startGame();
+});
+
+// Say It button
+document.getElementById('btnSay').addEventListener('click', () => {
+  if (currentTarget) speak(currentTarget);
+});
+
+// Lane click via event delegation
+document.getElementById('lanesWrap').addEventListener('click', e => {
+  const lane = e.target.closest('.lane');
+  if (!lane) return;
+  const idx = parseInt(lane.dataset.lane, 10);
+  handleLaneClick(idx);
+});
+
+</script>
+</body>
+</html>

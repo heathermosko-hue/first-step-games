@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snakes &amp; Ladders | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="fonts.css" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid rgba(255,255,255,0.2);
+    }
+
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      color: #fff;
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .back-link {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      background: rgba(255,255,255,0.2);
+      padding: 6px 12px;
+      border-radius: 20px;
+      transition: background 0.2s;
+    }
+    .back-link:hover { background: rgba(255,255,255,0.35); }
+
+    #btnMute {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #btnMute:hover { background: rgba(255,255,255,0.35); }
+
+    #levelBar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
+
+    .lvl-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      padding: 8px 18px;
+      border-radius: 24px;
+      border: 2px solid rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lvl-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-1px); }
+    .lvl-btn.active {
+      background: #fff;
+      color: #764ba2;
+      border-color: #fff;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+    }
+
+    main {
+      flex: 1;
+      padding: 12px 10px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .game-wrap {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ── BOARD ── */
+    .board-container {
+      position: relative;
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
+      border-radius: 12px;
+      border: 4px solid #2C3E50;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,.35);
+    }
+
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      width: 100%;
+      aspect-ratio: 8/5;
+    }
+
+    .cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid rgba(0,0,0,0.12);
+      position: relative;
+      cursor: default;
+      user-select: none;
+      gap: 1px;
+    }
+
+    .cell-num {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(.5rem, 1.8vw, .82rem);
+      line-height: 1;
+      color: rgba(0,0,0,0.65);
+    }
+
+    .cell-label {
+      font-size: clamp(.28rem, 1.0vw, .48rem);
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      color: rgba(0,0,0,0.7);
+    }
+
+    .cell.player-here {
+      box-shadow: inset 0 0 0 3px #FFD700, inset 0 0 12px rgba(255,215,0,0.5);
+      z-index: 2;
+    }
+
+    .board-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .player-token {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+      pointer-events: none;
+      z-index: 10;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,.5));
+      transition: left .4s ease, top .4s ease;
+      display: none;
+    }
+
+    /* ── CONTROLS ── */
+    .controls-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 560px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .status-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(0.9rem, 2.8vw, 1.1rem);
+      color: #2C3E50;
+      text-align: center;
+      min-height: 1.4em;
+    }
+
+    .dice-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .dice-face {
+      font-size: clamp(2rem, 7vw, 2.8rem);
+      line-height: 1;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      transition: transform 0.15s;
+    }
+
+    .btn-roll {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1rem, 3.5vw, 1.3rem);
+      padding: 12px 28px;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(39,174,96,0.4);
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .btn-roll:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(39,174,96,0.5);
+    }
+    .btn-roll:active:not(:disabled) { transform: translateY(0); }
+    .btn-roll:disabled {
+      background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* ── CHALLENGE OVERLAY ── */
+    .challenge-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .challenge-overlay.show { display: flex; }
+
+    .challenge-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px 24px;
+      max-width: 340px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      animation: popIn 0.25s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .chall-icon { font-size: 2rem; margin-bottom: 4px; }
+
+    .challenge-card h3 {
+      font-family: 'Fredoka One', cursive;
+      color: #2C3E50;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .chall-word {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.5rem, 10vw, 4rem);
+      color: #E67E22;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .chall-prompt {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 14px;
+    }
+
+    .chall-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chall-btn {
+      font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: 2px solid #2C3E50;
+      background: #fff;
+      color: #2C3E50;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .chall-btn:hover { background: #f5f5f5; transform: scale(1.02); }
+    .chall-btn.correct { background: #2ecc71; color: #fff; border-color: #27ae60; }
+    .chall-btn.wrong   { background: #e74c3c; color: #fff; border-color: #c0392b; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-8px); }
+      40%     { transform: translateX(8px); }
+      60%     { transform: translateX(-6px); }
+      80%     { transform: translateX(6px); }
+    }
+    .chall-btn.shake { animation: shake 0.4s ease; }
+
+    /* ── WIN OVERLAY ── */
+    .win-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .win-overlay.show { display: flex; }
+
+    .win-card {
+      background: linear-gradient(135deg, #fff9c4, #fff);
+      border-radius: 20px;
+      padding: 36px 28px;
+      max-width: 300px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      animation: popIn 0.3s ease;
+    }
+
+    .win-card h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.5rem;
+      color: #E67E22;
+      margin: 10px 0 6px;
+    }
+
+    .win-card p {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .btn-new {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      padding: 12px 30px;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(102,126,234,0.5);
+      transition: all 0.2s;
+    }
+    .btn-new:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(102,126,234,0.6); }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.8rem;
+    }
+    footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+    footer a:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">← Games</a>
+  <h1>🐍 Snakes &amp; Ladders</h1>
+  <button id="btnMute" title="Mute / Unmute">🔊</button>
+</header>
+
+<div id="levelBar">
+  <button class="lvl-btn" data-level="book1">📗 Book 1</button>
+  <button class="lvl-btn" data-level="book2">📘 Book 2</button>
+  <button class="lvl-btn" data-level="book3">📕 Book 3</button>
+</div>
+
+<main>
+  <div class="game-wrap">
+
+    <div class="board-container" id="boardContainer">
+      <div class="board-grid" id="boardGrid"></div>
+      <svg class="board-svg" id="boardSvg" viewBox="0 0 800 500" preserveAspectRatio="none"></svg>
+      <div class="player-token" id="playerToken">🐱</div>
+    </div>
+
+    <div class="controls-card">
+      <div id="statusText" class="status-text">Pick a book level above to start!</div>
+      <div class="dice-row">
+        <div id="diceDisplay" class="dice-face" style="visibility:hidden">⚀</div>
+        <button id="btnRoll" class="btn-roll" disabled>🎲 Roll the Dice!</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Challenge Modal -->
+<div class="challenge-overlay" id="challengeOverlay">
+  <div class="challenge-card">
+    <div class="chall-icon">📖</div>
+    <h3>Read this word!</h3>
+    <div class="chall-word" id="challWord">—</div>
+    <p class="chall-prompt">Which word is it? Tap the right one!</p>
+    <div class="chall-btns" id="challBtns"></div>
+  </div>
+</div>
+
+<!-- Win Overlay -->
+<div class="win-overlay" id="winOverlay">
+  <div class="win-card">
+    <div style="font-size:3rem">🏆</div>
+    <h2>You Win!</h2>
+    <p>You reached square 40!</p>
+    <button class="btn-new" id="btnPlayAgain">Play Again!</button>
+  </div>
+</div>
+
+<footer>
+  <a href="hub.html">← Back to Games Hub</a> &nbsp;|&nbsp; First Step Reading
+</footer>
+
+<script>
+/* ─── SPEECH API ─── */
+let _muted=false,_speaking=false,_pending=null,_queue=[],_voice=null;
+function _launch(msg){if(_muted)return;window.speechSynthesis.cancel();_queue=msg.split(' | ');_speaking=false;_advance();}
+function _advance(){if(!_queue.length){_speaking=false;if(_pending){const t=_pending;_pending=null;_launch(t);}return;}_speaking=true;const utt=new SpeechSynthesisUtterance(_queue.shift());if(_voice)utt.voice=_voice;utt.rate=0.92;utt.pitch=1.0;utt.onend=()=>{_speaking=false;setTimeout(_advance,300);};window.speechSynthesis.speak(utt);}
+function speak(msg){if(_muted)return;if(_speaking){_pending=msg;}else{_launch(msg);}}
+function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length)return;_voice=all.find(v=>v.name.includes('Natural')&&/^en/i.test(v.lang))||all.find(v=>/aria|jenny|guy\b|ana\b|davis/i.test(v.name))||all.find(v=>/google.*english/i.test(v.name))||all.find(v=>/\bdavid\b|\bzira\b/i.test(v.name))||all.find(v=>v.lang&&/^en/i.test(v.lang))||all[0];}
+window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
+
+/* ─── WORD DATA ─── */
+const WORDS = {
+  book1: ['a','am','an','and','are','as','at','ball','can','did','do','for','give','go','got','has','have','he','her','his','I','in','is','it','me','no','not','of','on','said','says','see','she','sorry','that','the','to','up','will','with'],
+  book2: ['but','does','from','get','go','goes','like','my','what','who'],
+  book3: ['bank','give','how','my','new','night','out','say','she','shoe','too','then','ring','took','when','who','why','you','bird','car','corn','girl','far','for','fur','or','purr'],
+};
+
+/* ─── BOARD DATA ─── */
+const SNAKES  = { 38:9, 30:11, 22:4, 16:2 };
+const LADDERS = { 3:17, 8:25, 13:28, 20:34 };
+
+const PALETTE = ['#FF9AA2','#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA','#FFCBA4','#D4EDDA'];
+
+const DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+/* ─── STATE ─── */
+let level = null, pos = 0, busy = false;
+let currentChallWord = '', currentChallCorrect = 0;
+const cellMap = {};
+
+/* ─── ELEMENTS ─── */
+const boardGrid       = document.getElementById('boardGrid');
+const boardSvg        = document.getElementById('boardSvg');
+const playerToken     = document.getElementById('playerToken');
+const statusText      = document.getElementById('statusText');
+const diceDisplay     = document.getElementById('diceDisplay');
+const btnRoll         = document.getElementById('btnRoll');
+const challengeOverlay= document.getElementById('challengeOverlay');
+const challWord       = document.getElementById('challWord');
+const challBtns       = document.getElementById('challBtns');
+const winOverlay      = document.getElementById('winOverlay');
+const btnPlayAgain    = document.getElementById('btnPlayAgain');
+const btnMute         = document.getElementById('btnMute');
+
+/* ─── GRID MATH ─── */
+function squareToGrid(n) {
+  const rowFromBottom = Math.floor((n - 1) / 8);
+  const posInRow = (n - 1) % 8;
+  const col = rowFromBottom % 2 === 0 ? posInRow : 7 - posInRow;
+  const row = 4 - rowFromBottom;
+  return { col, row };
+}
+
+function squareCenter(n) {
+  const { col, row } = squareToGrid(n);
+  return { x: col * 100 + 50, y: row * 100 + 50 };
+}
+
+/* ─── SVG HELPERS ─── */
+function svgEl(tag, attrs) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+
+function drawLadder(bottomSq, topSq) {
+  const b = squareCenter(bottomSq);
+  const t = squareCenter(topSq);
+  const dx = t.x - b.x, dy = t.y - b.y;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  const px = -dy / len, py = dx / len;
+  const offset = 9;
+
+  // Left rail
+  boardSvg.appendChild(svgEl('line', {
+    x1: b.x + px*offset, y1: b.y + py*offset,
+    x2: t.x + px*offset, y2: t.y + py*offset,
+    stroke: '#8B4513', 'stroke-width': '5', 'stroke-linecap': 'round'
+  }));
+  // Right rail
+  boardSvg.appendChild(svgEl('line', {
+    x1: b.x - px*offset, y1: b.y - py*offset,
+    x2: t.x - px*offset, y2: t.y - py*offset,
+    stroke: '#8B4513', 'stroke-width': '5', 'stroke-linecap': 'round'
+  }));
+  // Rungs
+  for (const tv of [0.2, 0.4, 0.6, 0.8]) {
+    const cx = b.x + dx * tv, cy = b.y + dy * tv;
+    boardSvg.appendChild(svgEl('line', {
+      x1: cx + px*offset, y1: cy + py*offset,
+      x2: cx - px*offset, y2: cy - py*offset,
+      stroke: '#A0522D', 'stroke-width': '4', 'stroke-linecap': 'round'
+    }));
+  }
+  // Gold end circles
+  for (const [cx, cy] of [[b.x, b.y], [t.x, t.y]]) {
+    boardSvg.appendChild(svgEl('circle', {
+      cx, cy, r: '8', fill: '#FFD700', stroke: '#8B4513', 'stroke-width': '2'
+    }));
+  }
+}
+
+function drawSnake(headSq, tailSq, color) {
+  const h = squareCenter(headSq);
+  const t = squareCenter(tailSq);
+  const midX = (h.x + t.x) / 2;
+  const perpOffset = 60;
+  const cp1 = { x: midX + perpOffset, y: h.y + (t.y - h.y) * 0.3 };
+  const cp2 = { x: midX - perpOffset, y: h.y + (t.y - h.y) * 0.7 };
+  const d = `M ${h.x} ${h.y} C ${cp1.x} ${cp1.y}, ${cp2.x} ${cp2.y}, ${t.x} ${t.y}`;
+
+  // Thick body
+  boardSvg.appendChild(svgEl('path', {
+    d, stroke: color, 'stroke-width': '14', fill: 'none',
+    'stroke-linecap': 'round', opacity: '0.82'
+  }));
+  // Highlight
+  boardSvg.appendChild(svgEl('path', {
+    d, stroke: 'rgba(255,255,255,0.35)', 'stroke-width': '5',
+    fill: 'none', 'stroke-linecap': 'round'
+  }));
+  // Tail circle
+  boardSvg.appendChild(svgEl('circle', {
+    cx: t.x, cy: t.y, r: '10', fill: color, opacity: '0.7'
+  }));
+  // Head circle
+  boardSvg.appendChild(svgEl('circle', {
+    cx: h.x, cy: h.y, r: '16', fill: color
+  }));
+  // Snake eye
+  boardSvg.appendChild(svgEl('circle', {
+    cx: h.x + 5, cy: h.y - 5, r: '4', fill: 'white'
+  }));
+  boardSvg.appendChild(svgEl('circle', {
+    cx: h.x + 6, cy: h.y - 4, r: '2', fill: '#333'
+  }));
+}
+
+function buildSnakesAndLadders() {
+  // Clear SVG contents
+  while (boardSvg.firstChild) boardSvg.removeChild(boardSvg.firstChild);
+
+  // Ladders first (behind snakes)
+  drawLadder(3, 17);
+  drawLadder(8, 25);
+  drawLadder(13, 28);
+  drawLadder(20, 34);
+
+  // Snakes on top
+  const snakeColors = { 38: '#E74C3C', 30: '#C0392B', 22: '#E67E22', 16: '#D35400' };
+  for (const [head, tail] of Object.entries(SNAKES)) {
+    drawSnake(Number(head), tail, snakeColors[Number(head)]);
+  }
+}
+
+/* ─── BUILD BOARD ─── */
+function buildBoard() {
+  boardGrid.innerHTML = '';
+  for (const [k] of Object.entries(cellMap)) delete cellMap[k];
+
+  for (let n = 1; n <= 40; n++) {
+    const { col, row } = squareToGrid(n);
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.style.gridColumn = col + 1;
+    cell.style.gridRow    = row + 1;
+
+    // Background color
+    let bg = PALETTE[(n - 1) % 8];
+    if (n === 1)  bg = '#FFD700';
+    if (n === 40) bg = '#FF8C00';
+    if (SNAKES[n]  !== undefined) bg = '#FF6B6B';
+    if (LADDERS[n] !== undefined) bg = '#98FB98';
+    cell.style.background = bg;
+
+    // Number
+    const numEl = document.createElement('div');
+    numEl.className = 'cell-num';
+    numEl.textContent = n;
+    cell.appendChild(numEl);
+
+    // Label
+    let label = '';
+    if (n === 1)  label = 'START 🏁';
+    if (n === 40) label = 'GOAL! 🏆';
+    if (SNAKES[n]  !== undefined) label = '🐍';
+    if (LADDERS[n] !== undefined) label = '🪜';
+
+    if (label) {
+      const labelEl = document.createElement('div');
+      labelEl.className = 'cell-label';
+      labelEl.textContent = label;
+      cell.appendChild(labelEl);
+    }
+
+    boardGrid.appendChild(cell);
+    cellMap[n] = cell;
+  }
+
+  buildSnakesAndLadders();
+}
+
+/* ─── TOKEN POSITIONING ─── */
+function positionToken(n) {
+  const { col, row } = squareToGrid(n);
+  playerToken.style.left = ((col + 0.5) * 12.5) + '%';
+  playerToken.style.top  = ((row + 0.5) * 20) + '%';
+  // Update highlight
+  for (let i = 1; i <= 40; i++) {
+    if (cellMap[i]) cellMap[i].classList.remove('player-here');
+  }
+  if (cellMap[n]) cellMap[n].classList.add('player-here');
+  playerToken.style.display = 'block';
+}
+
+/* ─── SHUFFLE ─── */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ─── CHALLENGE ─── */
+function showChallenge() {
+  const pool   = WORDS[level];
+  const target = pool[Math.floor(Math.random() * pool.length)];
+  const others = pool.filter(w => w !== target);
+  const wrong  = shuffle(others)[0];
+  const choices = shuffle([target, wrong]);
+
+  currentChallWord    = target;
+  currentChallCorrect = choices.indexOf(target);
+
+  challWord.textContent = target;
+  speak(target);
+
+  challBtns.innerHTML = '';
+  choices.forEach((word, idx) => {
+    const btn = document.createElement('button');
+    btn.className   = 'chall-btn';
+    btn.textContent = word;
+    btn.addEventListener('click', () => handleChallClick(idx, btn, choices));
+    challBtns.appendChild(btn);
+  });
+
+  challengeOverlay.classList.add('show');
+}
+
+function handleChallClick(idx, clickedBtn, choices) {
+  const isRight = idx === currentChallCorrect;
+  const allBtns = challBtns.querySelectorAll('.chall-btn');
+  // Disable all buttons immediately
+  allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+  if (isRight) {
+    clickedBtn.classList.add('correct');
+    speak(currentChallWord + '! | Great reading!');
+    setTimeout(() => {
+      hideChallenge();
+      busy = false;
+      btnRoll.disabled = false;
+      statusText.textContent = 'Square ' + pos + '. Roll again!';
+    }, 600);
+  } else {
+    clickedBtn.classList.add('wrong');
+    clickedBtn.classList.add('shake');
+    speak('Not quite! | The word is ' + currentChallWord + '!');
+    setTimeout(() => {
+      // Show which was correct
+      allBtns.forEach((b, i) => {
+        if (i === currentChallCorrect) b.classList.add('correct');
+      });
+      setTimeout(() => {
+        hideChallenge();
+        busy = false;
+        btnRoll.disabled = false;
+        statusText.textContent = 'Square ' + pos + '. Roll again! You stay here.';
+      }, 700);
+    }, 800);
+  }
+}
+
+function hideChallenge() {
+  challengeOverlay.classList.remove('show');
+}
+
+/* ─── MOVE LOGIC ─── */
+function moveToSquare(sq) {
+  pos = sq;
+  positionToken(pos);
+
+  if (pos >= 40) {
+    setTimeout(showWin, 600);
+    return;
+  }
+
+  if (SNAKES[pos] !== undefined) {
+    const tail = SNAKES[pos];
+    statusText.textContent = '🐍 Snake! Sliding from ' + pos + ' to ' + tail + '!';
+    setTimeout(() => {
+      speak('Oh no! A snake! | Slide down to square ' + tail + '!');
+      pos = tail;
+      positionToken(pos);
+      setTimeout(() => {
+        busy = false;
+        btnRoll.disabled = false;
+        statusText.textContent = 'Square ' + pos + '. Roll again!';
+      }, 900);
+    }, 600);
+    return;
+  }
+
+  if (LADDERS[pos] !== undefined) {
+    const top = LADDERS[pos];
+    statusText.textContent = '🪜 Ladder! Climbing from ' + pos + ' to ' + top + '!';
+    setTimeout(() => {
+      speak('A ladder! | Climb up to square ' + top + '!');
+      pos = top;
+      positionToken(pos);
+      setTimeout(() => {
+        busy = false;
+        btnRoll.disabled = false;
+        statusText.textContent = 'Square ' + pos + '. Roll again!';
+      }, 900);
+    }, 600);
+    return;
+  }
+
+  // Word challenge
+  setTimeout(showChallenge, 500);
+}
+
+/* ─── ROLL DICE ─── */
+function rollDice() {
+  if (busy || !level) return;
+  busy = true;
+  btnRoll.disabled = true;
+
+  const roll = Math.floor(Math.random() * 6) + 1;
+  diceDisplay.textContent  = DICE_FACES[roll - 1];
+  diceDisplay.style.visibility = 'visible';
+
+  speak('You rolled a ' + roll + '!');
+  statusText.textContent = 'You rolled a ' + roll + '!';
+
+  // Brief dice animation wobble
+  diceDisplay.style.transform = 'scale(1.3) rotate(15deg)';
+  setTimeout(() => { diceDisplay.style.transform = ''; }, 200);
+
+  const newPos = Math.min(pos + roll, 40);
+
+  setTimeout(() => moveToSquare(newPos), 600);
+}
+
+/* ─── WIN ─── */
+function showWin() {
+  speak('You reached square 40! | You win! | Amazing!');
+  winOverlay.classList.add('show');
+}
+
+/* ─── START GAME ─── */
+function startGame() {
+  pos   = 0;
+  busy  = false;
+  diceDisplay.style.visibility = 'hidden';
+  playerToken.style.display = 'none';
+  buildBoard();
+  btnRoll.disabled = false;
+  statusText.textContent = 'Roll the dice to start your adventure!';
+  winOverlay.classList.remove('show');
+  challengeOverlay.classList.remove('show');
+}
+
+/* ─── EVENT LISTENERS ─── */
+document.querySelectorAll('.lvl-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.lvl-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    level = btn.dataset.level;
+    startGame();
+  });
+});
+
+btnRoll.addEventListener('click', rollDice);
+
+btnPlayAgain.addEventListener('click', () => {
+  winOverlay.classList.remove('show');
+  startGame();
+});
+
+btnMute.addEventListener('click', () => {
+  _muted = !_muted;
+  btnMute.textContent = _muted ? '🔇' : '🔊';
+  if (_muted) window.speechSynthesis.cancel();
+});
+
+/* ─── INIT ─── */
+buildBoard();
+</script>
+</body>
+</html>

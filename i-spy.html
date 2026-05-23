@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Spy Letters | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --purple:#8E44AD; --purplelight:#9B59B6; --bg:#FDF5FF; --text:#2C3E50; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* ── HEADER ── */
+    header { background:linear-gradient(135deg,#8E44AD 0%,#9B59B6 100%); padding:.9rem 1.2rem; display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
+    .back-link { color:white; text-decoration:none; font-weight:700; font-size:.85rem; background:rgba(255,255,255,.2); padding:5px 13px; border-radius:999px; white-space:nowrap; transition:background .2s; }
+    .back-link:hover { background:rgba(255,255,255,.35); }
+    header h1 { font-family:'Fredoka One',cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.7rem); flex:1; text-align:center; }
+    .score-box { background:rgba(255,255,255,.2); color:white; font-family:'Fredoka One',cursive; font-size:1rem; padding:5px 14px; border-radius:999px; white-space:nowrap; }
+    .mute-btn { background:rgba(255,255,255,.2); border:none; color:white; font-size:1.25rem; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; flex-shrink:0; }
+    .mute-btn:hover { background:rgba(255,255,255,.38); }
+    .mute-btn.muted { background:rgba(255,80,80,.45); }
+
+    /* ── MAIN ── */
+    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:.8rem 1rem 1.5rem; gap:.7rem; }
+
+    /* ── INSTRUCTION ── */
+    .find-text { font-size:clamp(.95rem,2.8vw,1.25rem); font-weight:800; color:#666; text-align:center; }
+
+    /* ── LETTER CARD ── */
+    .letter-card {
+      display:flex; align-items:center; justify-content:center; gap:.2em;
+      background:linear-gradient(135deg,#8E44AD,#C0392B);
+      color:white; font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      border-radius:22px; box-shadow:0 8px 28px rgba(142,68,173,.45);
+      padding:.4em .9em;
+      user-select:none;
+      animation:cardPop .35s cubic-bezier(.22,1.6,.36,1);
+    }
+    .letter-card .uc { font-size:clamp(3rem,11vw,5rem); line-height:1; }
+    .letter-card .lc { font-size:clamp(2rem,7.5vw,3.4rem); opacity:.75; line-height:1; }
+    @keyframes cardPop { from{transform:scale(.6);opacity:0} to{transform:scale(1);opacity:1} }
+
+    /* ── GRID ── */
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:9px;
+      width:100%;
+      max-width:580px;
+    }
+    @media(max-width:500px){ .grid { grid-template-columns:repeat(3,1fr); gap:7px; } }
+
+    /* ── PIC CARD ── */
+    .pic-card {
+      background:white;
+      border:3px solid #E0D4EC;
+      border-radius:14px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:.4rem .2rem;
+      cursor:pointer;
+      transition:transform .15s, border-color .15s, box-shadow .15s;
+      aspect-ratio:1;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+      position:relative;
+    }
+    .pic-card:hover { transform:scale(1.07); border-color:var(--purplelight); box-shadow:0 4px 16px rgba(155,89,182,.25); }
+    .pic-card:active { transform:scale(.96); }
+    .pic-card .emoji { font-size:clamp(1.7rem,5.5vw,2.6rem); line-height:1.15; }
+    .pic-card .word { font-size:clamp(.58rem,1.6vw,.78rem); font-weight:800; color:#777; margin-top:.15rem; text-align:center; line-height:1.1; }
+
+    /* states */
+    .pic-card.correct { border-color:#27AE60 !important; background:#EAFAF1 !important; pointer-events:none; animation:popBounce .4s ease forwards; }
+    .pic-card.wrong { border-color:#E74C3C !important; background:#FDEDEC !important; animation:shake .45s ease; }
+    .pic-card.dim { opacity:.35; pointer-events:none; }
+
+    @keyframes popBounce { 0%{transform:scale(1)} 40%{transform:scale(1.2)} 70%{transform:scale(.95)} 100%{transform:scale(1.08)} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-7px)} 40%,80%{transform:translateX(7px)} }
+
+    /* ── FEEDBACK ── */
+    .feedback {
+      font-family:'Fredoka One',cursive;
+      font-size:clamp(1.2rem,4vw,1.7rem);
+      min-height:2rem;
+      text-align:center;
+    }
+    .feedback.ok { color:#27AE60; }
+    .feedback.no { color:#E74C3C; }
+
+    /* ── TAP HINT ── */
+    .tap-hint { font-size:.85rem; font-weight:700; color:#9B59B6; text-align:center; animation:pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    /* ── CONFETTI ── */
+    #confetti-canvas { position:fixed; inset:0; pointer-events:none; z-index:999; }
+  </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<header>
+  <a href="hub.html" class="back-link">← Back</a>
+  <h1>🔍 I Spy Letters</h1>
+  <div class="score-box">⭐ <span id="score">0</span></div>
+  <button class="mute-btn" id="mute-btn" onclick="toggleMute()" title="Toggle sound">🔊</button>
+</header>
+
+<main>
+  <div class="find-text">Find the picture that starts with...</div>
+  <div class="letter-card" id="letter-card">
+    <span class="uc" id="letter-uc">B</span>
+    <span class="lc" id="letter-lc">b</span>
+  </div>
+  <div class="tap-hint" id="tap-hint">🔊 Tap any picture to hear the letter!</div>
+  <div class="grid" id="grid"></div>
+  <div class="feedback" id="feedback"></div>
+</main>
+
+<script>
+/* ── WORD BANK ── only clear, obvious pictures for 4-year-olds ── */
+const WORDS = {
+  A:[{w:'apple',e:'🍎'}],
+  B:[{w:'ball',e:'⚽'},{w:'bear',e:'🐻'},{w:'bus',e:'🚌'},{w:'banana',e:'🍌'},{w:'bee',e:'🐝'},{w:'bird',e:'🐦'},{w:'butterfly',e:'🦋'}],
+  C:[{w:'cat',e:'🐱'},{w:'car',e:'🚗'},{w:'cake',e:'🎂'},{w:'cow',e:'🐄'},{w:'cloud',e:'☁️'},{w:'cookie',e:'🍪'}],
+  D:[{w:'dog',e:'🐶'},{w:'duck',e:'🦆'},{w:'drum',e:'🥁'},{w:'donut',e:'🍩'},{w:'deer',e:'🦌'}],
+  E:[{w:'elephant',e:'🐘'}],
+  F:[{w:'fish',e:'🐟'},{w:'frog',e:'🐸'},{w:'fire',e:'🔥'},{w:'fox',e:'🦊'},{w:'flower',e:'🌸'}],
+  G:[{w:'grapes',e:'🍇'},{w:'giraffe',e:'🦒'},{w:'ghost',e:'👻'}],
+  H:[{w:'horse',e:'🐴'},{w:'house',e:'🏠'},{w:'heart',e:'❤️'},{w:'hippo',e:'🦛'},{w:'hat',e:'🎩'}],
+  I:[{w:'insect',e:'🐛🦗🪲'}],
+  J:[{w:'juice',e:'🧃'},{w:'jellyfish',e:'🪼'}],
+  K:[{w:'kite',e:'🪁'},{w:'key',e:'🔑'},{w:'kangaroo',e:'🦘'}],
+  L:[{w:'lion',e:'🦁'},{w:'leaf',e:'🍃'},{w:'lemon',e:'🍋'},{w:'ladybug',e:'🐞'}],
+  M:[{w:'moon',e:'🌙'},{w:'mouse',e:'🐭'},{w:'monkey',e:'🐒'},{w:'milk',e:'🥛'}],
+  N:[{w:'nose',e:'👃'},{w:'nest',e:'🪺'},{w:'noodles',e:'🍜'}],
+  O:[{w:'octopus',e:'🐙'}],
+  P:[{w:'pig',e:'🐷'},{w:'pizza',e:'🍕'},{w:'penguin',e:'🐧'},{w:'pumpkin',e:'🎃'},{w:'popcorn',e:'🍿'}],
+  Q:[{w:'queen',e:'👸'}],
+  R:[{w:'rabbit',e:'🐰'},{w:'rainbow',e:'🌈'},{w:'rocket',e:'🚀'},{w:'rose',e:'🌹'}],
+  S:[{w:'sun',e:'☀️'},{w:'star',e:'⭐'},{w:'snake',e:'🐍'},{w:'sheep',e:'🐑'},{w:'strawberry',e:'🍓'}],
+  T:[{w:'tiger',e:'🐯'},{w:'tree',e:'🌳'},{w:'turtle',e:'🐢'},{w:'train',e:'🚂'}],
+  U:[{w:'umbrella',e:'☂️'}],
+  V:[{w:'van',e:'🚐'},{w:'volcano',e:'🌋'}],
+  W:[{w:'whale',e:'🐋'},{w:'watermelon',e:'🍉'},{w:'worm',e:'🪱'},{w:'wolf',e:'🐺'}],
+  X:[{w:'x-ray',e:'🩻'}],
+  Y:[{w:'yarn',e:'🧶'},{w:'yo-yo',e:'🪀'}],
+  Z:[{w:'zebra',e:'🦓'}],
+};
+
+const LETTERS = Object.keys(WORDS);
+let score = 0;
+let busy = false;
+
+// No-repeat queue — shuffles all 26 letters, works through them in order
+let letterQueue = [];
+function nextLetter() {
+  if (!letterQueue.length) letterQueue = shuffle([...LETTERS]);
+  return letterQueue.pop();
+}
+
+/* ── HELPERS ── */
+const rand = arr => arr[Math.floor(Math.random() * arr.length)];
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/* ── SPEECH ── */
+let voices = [];
+let muted = false;
+let userHasInteracted = false;
+let pendingSpeech = null;
+
+/* ── MUTE TOGGLE ── */
+function toggleMute() {
+  muted = !muted;
+  const btn = document.getElementById('mute-btn');
+  btn.textContent = muted ? '🔇' : '🔊';
+  btn.classList.toggle('muted', muted);
+  if (muted) { speechSynthesis.cancel(); return; }
+  // Unmuting counts as a user interaction — fire any pending speech
+  onFirstInteraction();
+  if (pendingSpeech) { const t = pendingSpeech; pendingSpeech = null; speak(t); }
+}
+
+/* ── FIRST INTERACTION ── */
+function onFirstInteraction() {
+  if (userHasInteracted) return;
+  userHasInteracted = true;
+  document.getElementById('tap-hint').style.display = 'none';
+  if (pendingSpeech && !muted) {
+    const t = pendingSpeech; pendingSpeech = null; speak(t);
+  }
+}
+
+function getBestVoice() {
+  // Priority 1: Microsoft Natural neural voices (Edge/Windows — most human)
+  const natural = voices.find(v => /natural/i.test(v.name) && v.lang.startsWith('en'));
+  if (natural) return natural;
+  // Priority 2: Any online/neural/cloud voice
+  const online = voices.find(v => /online|neural|premium|enhanced/i.test(v.name) && v.lang.startsWith('en'));
+  if (online) return online;
+  // Priority 3: Known high-quality named voices
+  const preferred = ['Aria','Jenny','Guy','Samantha','Karen','Moira','Serena',
+                     'Google US English','Google UK English Female'];
+  for (const name of preferred) {
+    const v = voices.find(v => v.name.includes(name) && v.lang.startsWith('en'));
+    if (v) return v;
+  }
+  return voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.startsWith('en'));
+}
+
+function speak(text, delay = 120) {
+  if (!window.speechSynthesis || muted) return;
+  if (!userHasInteracted) { pendingSpeech = text; return; }
+  speechSynthesis.cancel();
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.88; u.pitch = 1.0; u.volume = 1.0;
+    const v = getBestVoice();
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  }, delay);
+}
+
+function initVoices(callback) {
+  voices = speechSynthesis.getVoices();
+  if (voices.length) { callback(); return; }
+  speechSynthesis.onvoiceschanged = () => {
+    voices = speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged = null;
+    callback();
+  };
+  setTimeout(() => { if (!voices.length) voices = speechSynthesis.getVoices(); callback(); }, 500);
+}
+
+/* ── NEW ROUND ── */
+function newRound() {
+  busy = false;
+  setFeedback('', '');
+
+  // Re-animate letter card
+  const card = document.getElementById('letter-card');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = '';
+
+  // Pick target letter (no repeats until all 26 used)
+  const letter = nextLetter();
+  const targetPool = WORDS[letter];
+  const correctItem = rand(targetPool);
+
+  document.getElementById('letter-uc').textContent = letter;
+  document.getElementById('letter-lc').textContent = letter.toLowerCase();
+
+  // Pick 11 distractors from other letters
+  const otherLetters = shuffle(LETTERS.filter(l => l !== letter));
+  const distractors = [];
+  const used = new Set([correctItem.w]);
+  for (const L of otherLetters) {
+    if (distractors.length >= 11) break;
+    const pool = WORDS[L].filter(x => !used.has(x.w));
+    if (!pool.length) continue;
+    const pick = rand(pool);
+    used.add(pick.w);
+    distractors.push({ ...pick, isCorrect: false });
+  }
+
+  const items = shuffle([
+    { ...correctItem, isCorrect: true },
+    ...distractors
+  ]);
+
+  // Render
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  for (const item of items) {
+    const el = document.createElement('div');
+    el.className = 'pic-card';
+    el.innerHTML = `<span class="emoji">${item.e}</span>`;
+    el.addEventListener('click', () => { onFirstInteraction(); handleClick(el, item.isCorrect); });
+    grid.appendChild(el);
+  }
+
+  speak(`I spy something that starts with the letter ${letter}. Can you find it?`);
+}
+
+/* ── CLICK HANDLER ── */
+function handleClick(el, isCorrect) {
+  if (busy) return;
+  if (isCorrect) {
+    busy = true;
+    el.classList.add('correct');
+    // dim the rest
+    document.querySelectorAll('.pic-card:not(.correct)').forEach(c => c.classList.add('dim'));
+    score++;
+    document.getElementById('score').textContent = score;
+    setFeedback('⭐ Great job!', 'ok');
+    speak('Great job! You found it!');
+    launchConfetti();
+    setTimeout(newRound, 1600);
+  } else {
+    el.classList.add('wrong');
+    setFeedback('Try again! 🔍', 'no');
+    speak('Try again!');
+    setTimeout(() => {
+      el.classList.remove('wrong');
+      setFeedback('', '');
+    }, 700);
+  }
+}
+
+function setFeedback(text, cls) {
+  const el = document.getElementById('feedback');
+  el.textContent = text;
+  el.className = 'feedback' + (cls ? ' ' + cls : '');
+}
+
+/* ── CONFETTI ── */
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const COLS = ['#8E44AD','#27AE60','#F39C12','#E74C3C','#3498DB','#F1C40F'];
+  const pieces = Array.from({ length: 70 }, () => ({
+    x: Math.random() * canvas.width,
+    y: -12,
+    vx: (Math.random() - 0.5) * 5,
+    vy: Math.random() * 4 + 2,
+    color: COLS[Math.floor(Math.random() * COLS.length)],
+    size: Math.random() * 9 + 4,
+    angle: Math.random() * 360,
+    spin: (Math.random() - 0.5) * 10,
+    shape: Math.random() < 0.5 ? 'rect' : 'circle'
+  }));
+  let raf;
+  (function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      if (p.shape === 'circle') {
+        ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      }
+      ctx.restore();
+      p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.angle += p.spin;
+    });
+    if (pieces.some(p => p.y < canvas.height + 20)) raf = requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  })();
+}
+
+/* ── START ── */
+initVoices(newRound);
+</script>
+</body>
+</html>

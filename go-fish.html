@@ -1,0 +1,1486 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Go Fish ABC! | Letter Learning Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:    #3A8EF6;
+      --indigo:  #6B48FF;
+      --coral:   #FF6B6B;
+      --orange:  #FF8E53;
+      --yellow:  #FFD93D;
+      --green:   #6BCB77;
+      --bg:      #E8F4FF;
+      --text:    #2C3E50;
+      --card-w:  62px;
+      --card-h:  90px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #3A8EF6 0%, #6B48FF 100%);
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      color: white;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    header h1 span { font-size: 1.4rem; }
+
+    .header-btns { display: flex; gap: 0.6rem; align-items: center; }
+
+    .btn-header {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 6px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-header:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── SCOREBOARD ── */
+    .scoreboard {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      background: white;
+      padding: 0.7rem 1.5rem;
+      border-bottom: 3px solid #D0E8FF;
+      flex-wrap: wrap;
+    }
+
+    .score-block { text-align: center; }
+
+    .score-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #888;
+    }
+
+    .score-value {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .score-block.computer .score-value { color: var(--coral); }
+    .score-block.player  .score-value  { color: var(--blue); }
+
+    .score-divider { width: 2px; height: 36px; background: #E0E0E0; border-radius: 2px; }
+
+    /* ── GAME AREA ── */
+    .game-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 1rem;
+      gap: 0.75rem;
+    }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0.3rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #666;
+    }
+
+    .legend-dot { width: 18px; height: 18px; border-radius: 5px; }
+    .legend-dot.upper { background: linear-gradient(135deg, #3A8EF6, #6B48FF); }
+    .legend-dot.lower { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+
+    /* ── COMPUTER ZONE ── */
+    .computer-zone {
+      background: white;
+      border-radius: 16px;
+      padding: 0.9rem 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .zone-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+
+    .computer-title { font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--coral); }
+    .player-title   { font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--blue); }
+    .pairs-count-badge { font-size: 0.8rem; font-weight: 700; color: #888; }
+
+    /* ── MIDDLE ROW ── */
+    .middle-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: white;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      flex-wrap: wrap;
+    }
+
+    /* ── DECK ── */
+    .deck-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .deck-stack {
+      position: relative;
+      width: var(--card-w);
+      height: var(--card-h);
+    }
+
+    .deck-layer {
+      position: absolute;
+      width: var(--card-w);
+      height: var(--card-h);
+      border-radius: 10px;
+      background: repeating-linear-gradient(45deg, #1a237e, #1a237e 8px, #283593 8px, #283593 16px);
+      border: 3px solid rgba(255,255,255,0.18);
+    }
+
+    .deck-layer-3 { top: 8px; left: 8px; opacity: 0.35; }
+    .deck-layer-2 { top: 4px; left: 4px; opacity: 0.65; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+    .deck-layer-1 { top: 0; left: 0; box-shadow: 0 4px 14px rgba(0,0,0,0.22); }
+
+    .deck-layer-1::after {
+      content: '?';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.2rem;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .deck-label { font-family: 'Fredoka One', cursive; font-size: 0.8rem; color: #777; text-align: center; }
+    .deck-hint  { font-size: 0.78rem; font-weight: 800; color: var(--blue); text-align: center; min-height: 1.1em; }
+
+    .deck-area.active .deck-stack {
+      cursor: pointer;
+      animation: deckFloat 0.9s ease-in-out infinite;
+    }
+    .deck-area.active .deck-layer-1 {
+      box-shadow: 0 0 0 3px var(--yellow), 0 6px 22px rgba(255,217,61,0.55);
+    }
+    .deck-area.active .deck-stack:hover { animation: none; transform: scale(1.08) translateY(-4px); }
+
+    @keyframes deckFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-7px); }
+    }
+
+    .deck-area.empty .deck-stack { opacity: 0.28; }
+    .deck-area.empty .deck-label { color: #bbb; }
+
+    /* ── DRAWN CARD SLOT ── */
+    .deck-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .drawn-slot {
+      width: var(--card-w);
+      min-height: var(--card-h);
+      position: relative;
+    }
+
+    .drawn-slot .card {
+      animation: cardReveal 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .drawn-name {
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.75rem;
+      color: #27AE60;
+      white-space: nowrap;
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .drawn-tap {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--blue);
+      text-align: center;
+      animation: tapBlink 0.8s ease-in-out infinite;
+    }
+
+    @keyframes tapBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    @keyframes cardReveal {
+      from { transform: scale(0.3) translateY(30px) rotate(-20deg); opacity: 0; }
+      to   { transform: scale(1)   translateY(0)    rotate(0deg);   opacity: 1; }
+    }
+
+    /* ── MESSAGE ── */
+    .message-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      min-width: 160px;
+    }
+
+    .message-row { display: flex; align-items: flex-start; gap: 0.6rem; }
+
+    .message-fish {
+      font-size: 1.9rem;
+      flex-shrink: 0;
+      transition: transform 0.3s;
+      line-height: 1;
+    }
+
+    .message-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .message-text.highlight { color: var(--blue); }
+    .message-text.success   { color: #27AE60; }
+    .message-text.gofish    { color: var(--coral); }
+    .message-text.respond   { color: #6B48FF; font-size: 1rem; }
+
+    .btn-ask {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.05rem;
+      background: linear-gradient(135deg, #FFD93D, #FF8E53);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(255,142,83,0.4);
+      transition: transform 0.15s, opacity 0.2s;
+      white-space: nowrap;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      align-self: flex-start;
+    }
+    .btn-ask:hover   { transform: scale(1.05); }
+    .btn-ask:active  { transform: scale(0.97); }
+    .btn-ask:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+    .btn-gofish {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.05rem;
+      background: linear-gradient(135deg, #6BCB77, #27AE60);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(39,174,96,0.45);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      align-self: flex-start;
+      animation: deckFloat 0.85s ease-in-out infinite;
+    }
+    .btn-gofish:hover { animation: none; transform: scale(1.08); }
+
+    /* ── HAND ── */
+    .hand {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: calc(var(--card-h) + 4px);
+      align-items: flex-start;
+    }
+
+    /* ── PLAYER ZONE ── */
+    .player-zone {
+      background: white;
+      border-radius: 16px;
+      padding: 0.9rem 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border: 3px solid #D0E8FF;
+      transition: border-color 0.3s;
+    }
+
+    .player-zone.respond-mode {
+      border-color: var(--yellow);
+      box-shadow: 0 0 0 3px rgba(255,217,61,0.3), 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    /* ── CARDS ── */
+    .card {
+      width: var(--card-w);
+      height: var(--card-h);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      user-select: none;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .card-pic    { font-size: 1.2rem; line-height: 1.15; }
+    .card-letter { font-size: 1.6rem; line-height: 1; font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive; }
+    .card-word   { font-size: 0.46rem; font-family: 'Nunito', sans-serif; font-weight: 800;
+                   opacity: 0.85; text-transform: uppercase; letter-spacing: 0.3px; }
+
+    .card-upper {
+      background: linear-gradient(160deg, #3A8EF6 0%, #6B48FF 100%);
+      color: white;
+      border: 3px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 10px rgba(58,142,246,0.35);
+    }
+
+    .card-lower {
+      background: linear-gradient(160deg, #FF6B6B 0%, #FF8E53 100%);
+      color: white;
+      border: 3px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 10px rgba(255,107,107,0.35);
+    }
+
+    .card-back {
+      background: repeating-linear-gradient(45deg, #1a237e, #1a237e 8px, #283593 8px, #283593 16px);
+      border: 3px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .card-back::after {
+      content: '?';
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .card-type-tag {
+      position: absolute;
+      top: 4px;
+      left: 5px;
+      font-size: 0.42rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      opacity: 0.75;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .card-playable { cursor: pointer; }
+    .card-playable:hover {
+      transform: translateY(-8px) scale(1.04);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    }
+
+    .card-selected {
+      transform: translateY(-18px) scale(1.06) !important;
+      box-shadow: 0 0 0 3px var(--yellow), 0 12px 28px rgba(255,217,61,0.5) !important;
+    }
+
+    /* Card the computer is asking for — glows and bounces */
+    .card-wanted {
+      animation: wantedPulse 0.75s ease-in-out infinite !important;
+      cursor: pointer !important;
+      transform: translateY(-6px) !important;
+    }
+
+    @keyframes wantedPulse {
+      0%, 100% { box-shadow: 0 0 0 3px var(--yellow), 0 8px 20px rgba(255,217,61,0.5); }
+      50%       { box-shadow: 0 0 0 5px var(--orange), 0 12px 28px rgba(255,142,83,0.7); }
+    }
+
+    /* Other cards dimmed while responding */
+    .card-dimmed { opacity: 0.35; pointer-events: none; }
+
+    /* ── PAIRS ── */
+    .pairs-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 0.6rem; }
+
+    .pair-chip {
+      background: linear-gradient(135deg, #E8F4FF, #D4EDFF);
+      border: 2px solid #3A8EF6;
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.85rem;
+      color: var(--blue);
+      animation: chipPop 0.4s ease;
+    }
+
+    .pair-chip.computer-chip {
+      background: linear-gradient(135deg, #FFE8E8, #FFD4D4);
+      border-color: var(--coral);
+      color: var(--coral);
+    }
+
+    @keyframes chipPop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    /* ── GAME OVER OVERLAY ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .overlay.active { display: flex; }
+
+    .overlay-box {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.6); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .overlay-emoji  { font-size: 4rem; margin-bottom: 0.5rem; }
+
+    .overlay-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .overlay-title.win  { color: #27AE60; }
+    .overlay-title.lose { color: var(--coral); }
+    .overlay-title.tie  { color: var(--blue); }
+
+    .overlay-score { font-size: 1.1rem; font-weight: 700; color: #555; margin-bottom: 1.5rem; }
+    .overlay-score span      { color: var(--blue);  font-size: 1.3rem; }
+    .overlay-score span.comp { color: var(--coral); }
+
+    .btn-play-again {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #3A8EF6, #6B48FF);
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(58,142,246,0.4);
+      transition: transform 0.15s;
+    }
+    .btn-play-again:hover { transform: scale(1.05); }
+
+    /* ── HOW TO PLAY ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem 1.75rem;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-box h2 { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--blue); margin-bottom: 1rem; }
+
+    .modal-box ol { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .modal-box li { font-size: 0.95rem; font-weight: 600; line-height: 1.5; color: #444; }
+    .modal-box li strong { color: var(--text); }
+
+    .modal-close {
+      margin-top: 1.5rem;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.05rem;
+      background: var(--blue);
+      color: white;
+      border: none;
+      padding: 10px 30px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── CONFETTI ── */
+    .confetti-piece {
+      position: fixed;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+      pointer-events: none;
+      z-index: 300;
+    }
+
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      :root { --card-w: 50px; --card-h: 74px; }
+      .card { font-size: 1.6rem; }
+      .card-pic    { font-size: 0.95rem; }
+      .card-letter { font-size: 1.3rem; }
+      header h1 { font-size: 1.25rem; }
+    }
+
+    /* ── VOICE BUTTONS ── */
+    .voice-group { display: flex; gap: 4px; align-items: center; }
+
+    .btn-voice {
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.75);
+      border: 2px solid rgba(255,255,255,0.2);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .btn-voice:hover { background: rgba(255,255,255,0.25); color: white; }
+    .btn-voice.active {
+      background: rgba(255,255,255,0.9);
+      color: #3A8EF6;
+      border-color: transparent;
+    }
+
+    .btn-mute {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      font-size: 1.15rem;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-mute:hover { background: rgba(255,255,255,0.35); }
+    .btn-mute.muted { background: rgba(255,100,100,0.35); }
+  </style>
+<link href="fonts.css" rel="stylesheet"></head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <h1><span>🐠</span> Go Fish ABC!</h1>
+  <div class="header-btns">
+    <button class="btn-mute" id="btnMute" title="Toggle sound">🔊</button>
+    <button class="btn-voice" id="btnVoice0">👨 Voice</button>
+    <button class="btn-header" id="btnHow">How to Play</button>
+    <button class="btn-header" id="btnNew">New Game</button>
+    <a href="hub.html" class="btn-header">← Games</a>
+  </div>
+</header>
+
+<!-- SCOREBOARD -->
+<div class="scoreboard">
+  <div class="score-block computer">
+    <div class="score-label">Computer Pairs</div>
+    <div class="score-value" id="compScore">0</div>
+  </div>
+  <div class="score-divider"></div>
+  <div class="score-block player">
+    <div class="score-label">Your Pairs</div>
+    <div class="score-value" id="playerScore">0</div>
+  </div>
+</div>
+
+<!-- GAME AREA -->
+<div class="game-area">
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot upper"></div><span>Uppercase (A B C)</span></div>
+    <div class="legend-item"><div class="legend-dot lower"></div><span>Lowercase (a b c)</span></div>
+  </div>
+
+  <!-- COMPUTER ZONE -->
+  <div class="computer-zone">
+    <div class="zone-header">
+      <div class="computer-title">🤖 Computer's Hand</div>
+      <div class="pairs-count-badge" id="compPairsDisplay"></div>
+    </div>
+    <div class="hand" id="computerHand"></div>
+    <div class="pairs-row" id="compPairsRow"></div>
+  </div>
+
+  <!-- MIDDLE ROW: deck + message -->
+  <div class="middle-row">
+    <div class="deck-area" id="deckArea">
+      <div class="deck-group">
+        <div class="deck-stack" id="deckStack">
+          <div class="deck-layer deck-layer-3"></div>
+          <div class="deck-layer deck-layer-2"></div>
+          <div class="deck-layer deck-layer-1"></div>
+        </div>
+        <div class="drawn-slot" id="drawnSlot"></div>
+      </div>
+      <div class="deck-label" id="deckLabel">38 cards left</div>
+      <div class="deck-hint"  id="deckHint"></div>
+    </div>
+
+    <div class="message-area">
+      <div class="message-row">
+        <div class="message-fish" id="fishEmoji">🐠</div>
+        <div class="message-text" id="messageText">Getting ready...</div>
+      </div>
+      <button class="btn-ask" id="btnAsk" disabled>Ask Computer!</button>
+      <button class="btn-gofish" id="btnGoFish" style="display:none">🐠 Go Fish!</button>
+    </div>
+  </div>
+
+  <!-- PLAYER ZONE -->
+  <div class="player-zone" id="playerZone">
+    <div class="zone-header">
+      <div class="player-title">🙋 Your Hand</div>
+      <div class="pairs-count-badge" id="playerPairsDisplay"></div>
+    </div>
+    <div class="hand" id="playerHand"></div>
+    <div class="pairs-row" id="playerPairsRow"></div>
+  </div>
+
+</div>
+
+<!-- GAME OVER OVERLAY -->
+<div class="overlay" id="gameOverOverlay">
+  <div class="overlay-box">
+    <div class="overlay-emoji" id="overlayEmoji">🎉</div>
+    <div class="overlay-title" id="overlayTitle">You Won!</div>
+    <div class="overlay-score" id="overlayScore"></div>
+    <button class="btn-play-again" id="btnPlayAgain">Play Again!</button>
+  </div>
+</div>
+
+<!-- HOW TO PLAY MODAL -->
+<div class="modal-overlay" id="howToPlayModal">
+  <div class="modal-box">
+    <h2>🐠 How to Play Go Fish ABC!</h2>
+    <ol>
+      <li><strong>Goal:</strong> Collect the most letter pairs! A pair is an uppercase and lowercase of the same letter — like <strong>A + a</strong> or <strong>B + b</strong>.</li>
+      <li><strong>Blue cards</strong> are uppercase letters (A, B, C…). <strong>Red/orange cards</strong> are lowercase (a, b, c…).</li>
+      <li><strong>Your turn:</strong> Click a letter in your hand, then click <b>"Ask Computer!"</b> to ask for its match.</li>
+      <li>If the computer <strong>has</strong> it — you collect the pair and go again! 🎉</li>
+      <li>If the computer says <strong>"Go Fish!"</strong> — click the glowing deck to draw a card.</li>
+      <li><strong>Computer's turn:</strong> If it asks for a letter you have, the matching card will <b>glow gold</b> — click it to give it to the computer!</li>
+      <li>The player with the most pairs when all 26 are found <strong>wins!</strong></li>
+    </ol>
+    <button class="modal-close" id="modalClose">Got it! Let's Play!</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  GO FISH ABC — GAME ENGINE
+// ═══════════════════════════════════════════════════
+
+const ALPHABET   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const FISH_ICONS = ['🐠', '🐡', '🐟', '🦈', '🐙', '🦑', '🐚'];
+
+const CARD_DATA = {
+  A:{ pic:'🍎', word:'Apple' },    B:{ pic:'🐝', word:'Bee' },
+  C:{ pic:'🎂', word:'Cake' },      D:{ pic:'🐶', word:'Dog' },
+  E:{ pic:'🥚', word:'Egg' },      F:{ pic:'🐸', word:'Frog' },
+  G:{ pic:'🦍', word:'Gorilla' },  H:{ pic:'🐴', word:'Horse' },
+  I:{ pic:'❄️', word:'Igloo' },   J:{ pic:'🎃', word:'Jack-o-lantern' },
+  K:{ pic:'🦘', word:'Kangaroo' }, L:{ pic:'🦁', word:'Lion' },
+  M:{ pic:'🐒', word:'Monkey' },   N:{ pic:'🌙', word:'Night' },
+  O:{ pic:'🐙', word:'Octopus' },  P:{ pic:'🐧', word:'Penguin' },
+  Q:{ pic:'👸', word:'Queen' },    R:{ pic:'🐰', word:'Rabbit' },
+  S:{ pic:'⭐', word:'Star' },      T:{ pic:'🐯', word:'Tiger' },
+  U:{ pic:'☂️', word:'Umbrella' }, V:{ pic:'🎻', word:'Violin' },
+  W:{ pic:'🐋', word:'Whale' },    X:{ pic:'🩻', word:'X-ray' },
+  Y:{ pic:'🪀', word:'Yo-yo' },    Z:{ pic:'🦓', word:'Zebra' },
+};
+
+// Probability constants
+const PLAYER_SUCCESS_ODDS   = 1 / 3;  // chance computer "has" the card
+const COMPUTER_SUCCESS_ODDS = 1 / 4;  // chance player "has" the card
+
+let state    = {};
+let busy     = false;
+let _muted   = false;
+let _speaking = false;
+let _pending  = null;
+let _queue    = [];
+
+function createDeck() {
+  const cards = [];
+  for (const L of ALPHABET) {
+    cards.push({ id: 'U' + L, letter: L, upper: true });
+    cards.push({ id: 'L' + L, letter: L, upper: false });
+  }
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  return cards;
+}
+
+function initGame() {
+  busy = false;
+  state = {
+    deck: createDeck(),
+    playerHand: [],
+    computerHand: [],
+    playerPairs: [],
+    computerPairs: [],
+    selected: null,
+    // phases: 'player' | 'draw' | 'computer' | 'respond' | 'over'
+    phase: 'player',
+    pendingAsk: null,   // { letter, upper, display } — what computer is asking for
+  };
+
+  for (let i = 0; i < 7; i++) {
+    state.playerHand.push(state.deck.pop());
+    state.computerHand.push(state.deck.pop());
+  }
+
+  checkPairs(state.playerHand,   state.playerPairs);
+  checkPairs(state.computerHand, state.computerPairs);
+
+  clearDrawnCard();
+  setMessage('Click on a letter to ask the computer if it has a match!', 'normal');
+  speak('Click on a letter to start!');
+  renderAll();
+  document.getElementById('gameOverOverlay').classList.remove('active');
+}
+
+// ── RIGGED DRAWS ──────────────────────────────────
+function drawForPlayer() {
+  // Find a card in the deck that matches a letter already in the player's hand
+  const want = new Set(state.playerHand.map(c => c.letter));
+  const idx  = state.deck.findIndex(c => want.has(c.letter));
+  if (idx !== -1) {
+    const last = state.deck.length - 1;
+    [state.deck[idx], state.deck[last]] = [state.deck[last], state.deck[idx]];
+  }
+  return state.deck.pop();
+}
+
+function drawForComputer() {
+  // Find a card in the deck that does NOT match any letter already in the computer's hand
+  const has  = new Set(state.computerHand.map(c => c.letter));
+  const idx  = state.deck.findIndex(c => !has.has(c.letter));
+  if (idx !== -1) {
+    const last = state.deck.length - 1;
+    [state.deck[idx], state.deck[last]] = [state.deck[last], state.deck[idx]];
+  }
+  return state.deck.pop();
+}
+
+// ── PAIR REMOVAL ──────────────────────────────────
+function checkPairs(hand, pairsArr) {
+  let found = true;
+  while (found) {
+    found = false;
+    outer:
+    for (let i = 0; i < hand.length; i++) {
+      for (let j = i + 1; j < hand.length; j++) {
+        if (hand[i].letter === hand[j].letter) {
+          pairsArr.push(hand[i].letter);
+          hand.splice(j, 1);
+          hand.splice(i, 1);
+          found = true;
+          break outer;
+        }
+      }
+    }
+  }
+}
+
+// ── CARD SELECTION (player's turn) ────────────────
+function selectCard(cardId) {
+  if (busy || state.phase !== 'player') return;
+
+  const card = state.playerHand.find(c => c.id === cardId);
+  if (!card) return;
+
+  state.selected = cardId;
+  const have     = card.upper ? card.letter : card.letter.toLowerCase();
+  const want     = card.upper ? card.letter.toLowerCase() : card.letter;
+  const haveCase = card.upper ? 'uppercase' : 'lowercase';
+  const wantCase = card.upper ? 'lowercase' : 'uppercase';
+  const word     = CARD_DATA[card.letter].word;
+  setMessage(`${word}! You picked ${haveCase} <b>${have}</b>. Click <b>"Ask Computer!"</b> to ask for ${wantCase} <b>${want}</b>.`, 'highlight');
+  speak(`${have} | ${word}`);
+  document.getElementById('btnAsk').disabled = false;
+  renderHands();
+}
+
+// ── PLAYER ASKS COMPUTER (1/3 success odds) ───────
+function playerAsk() {
+  if (busy || state.phase !== 'player' || !state.selected) return;
+  busy = true;
+  document.getElementById('btnAsk').disabled = true;
+
+  const card = state.playerHand.find(c => c.id === state.selected);
+  if (!card) { busy = false; return; }
+
+  const wantUpper   = !card.upper;
+  const wantLetter  = card.letter;
+  const wantDisplay = wantUpper ? wantLetter : wantLetter.toLowerCase();
+  const haveDisplay = card.upper ? card.letter : card.letter.toLowerCase();
+  const wantCase    = wantUpper ? 'uppercase' : 'lowercase';
+  const haveCase    = card.upper ? 'uppercase' : 'lowercase';
+
+  state.selected = null;
+
+  const gotIt = Math.random() < PLAYER_SUCCESS_ODDS;
+
+  if (gotIt) {
+    // ✅ Computer "has" it — transfer card, make pair
+    const existingIdx = state.computerHand.findIndex(c => c.letter === wantLetter && c.upper === wantUpper);
+    if (existingIdx !== -1) {
+      state.computerHand.splice(existingIdx, 1);
+    } else if (state.computerHand.length > 0) {
+      state.computerHand.pop();
+    }
+    state.playerHand = state.playerHand.filter(c => c.id !== card.id);
+    state.playerPairs.push(wantLetter);
+
+    setMessage(`🎉 The computer had ${wantCase} <b>${wantDisplay}</b>! You matched ${haveCase} <b>${haveDisplay}</b> + ${wantCase} <b>${wantDisplay}</b>! Pick another letter!`, 'success');
+    speak(`You got a pair! ${haveCase} ${haveDisplay} and ${wantCase} ${wantDisplay}! Pick another letter!`);
+    busy = false;
+    renderAll();
+    checkGameOver();
+
+    if (state.phase !== 'over') {
+      if (state.playerHand.length === 0 && state.deck.length > 0) {
+        const d = drawForPlayer();
+        state.playerHand.push(d);
+        checkPairs(state.playerHand, state.playerPairs);
+        renderAll();
+        checkGameOver();
+      }
+      if (state.phase !== 'over') {
+        setMessage(`🎉 You got a pair! Click on a letter to ask the computer if it has a match!`, 'success');
+        renderAll();
+      }
+    }
+
+  } else {
+    // ❌ Go Fish — player must click deck
+    speak(`Go Fish! I don't have ${wantCase} ${wantDisplay}. Click the deck to draw a card!`);
+    setMessage(`🤖 Computer says: <b>"Go Fish!"</b> — I don't have ${wantCase} <b>${wantDisplay}</b>. Click the deck to draw a card!`, 'gofish');
+    state.phase = 'draw';
+    busy = false;
+    renderAll();
+  }
+}
+
+// ── DRAWN CARD PREVIEW ────────────────────────────
+let _drawnAdvanceTimer = null;
+
+function showDrawnCard(card, onAdvance) {
+  const slot = document.getElementById('drawnSlot');
+  slot.innerHTML = '';
+
+  const el = buildCard(card, false);
+  const lbl = document.createElement('div');
+  lbl.className   = 'drawn-name';
+  const caseLabel = card.upper ? 'uppercase' : 'lowercase';
+  const letterLbl = card.upper ? card.letter : card.letter.toLowerCase();
+  lbl.textContent = `${caseLabel} ${letterLbl} — ${CARD_DATA[card.letter].word}`;
+
+  const tap = document.createElement('div');
+  tap.className   = 'drawn-tap';
+  tap.textContent = '👆 tap';
+
+  slot.appendChild(el);
+  slot.appendChild(lbl);
+  slot.appendChild(tap);
+  slot.style.cursor = 'pointer';
+
+  // Tapping the card advances immediately; auto-advance after 2 s
+  const advance = () => {
+    if (_drawnAdvanceTimer) { clearTimeout(_drawnAdvanceTimer); _drawnAdvanceTimer = null; }
+    slot.removeEventListener('click', advance);
+    slot.style.cursor = '';
+    slot.innerHTML = '';
+    onAdvance();
+  };
+
+  slot.addEventListener('click', advance);
+  _drawnAdvanceTimer = setTimeout(advance, 5000);
+}
+
+function clearDrawnCard() {
+  if (_drawnAdvanceTimer) { clearTimeout(_drawnAdvanceTimer); _drawnAdvanceTimer = null; }
+  const slot = document.getElementById('drawnSlot');
+  slot.innerHTML = '';
+  slot.style.cursor = '';
+}
+
+// ── PLAYER DRAWS FROM DECK ────────────────────────
+function drawFromDeck() {
+  if (busy || state.phase !== 'draw') return;
+  busy = true;
+
+  if (state.deck.length === 0) {
+    speak(`The deck is empty! Computer's turn.`);
+    setMessage('The deck is empty! Computer\'s turn.', 'normal');
+    state.phase = 'computer';
+    busy = false;
+    renderAll();
+    speakThen(runComputerTurn);
+    return;
+  }
+
+  const drawn       = drawForPlayer();
+  const drawnCase   = drawn.upper ? 'uppercase' : 'lowercase';
+  const drawnLetter = drawn.upper ? drawn.letter : drawn.letter.toLowerCase();
+
+  // Change phase so the deck can't be clicked again while card is previewing
+  state.phase = 'preview';
+  busy = false;
+
+  // Show the drawn card next to the deck; advance when tapped or after 2 s
+  renderDeck();
+  const drawnWord = CARD_DATA[drawn.letter].word;
+  speak(`You drew ${drawnCase} ${drawnLetter}. ${drawnWord}!`);
+  setMessage(`You drew ${drawnCase} <b>${drawnLetter}</b> — ${drawnWord}!`, 'success');
+
+  showDrawnCard(drawn, () => {
+    // Card accepted — add to hand and continue
+    state.playerHand.push(drawn);
+
+    const prevLen = state.playerPairs.length;
+    checkPairs(state.playerHand, state.playerPairs);
+    const gotPair = state.playerPairs.length > prevLen;
+
+    if (gotPair) {
+      const newPair = state.playerPairs[state.playerPairs.length - 1];
+      setMessage(`${drawnCase} <b>${drawnLetter}</b> made a pair — <b>${newPair.toUpperCase()} + ${newPair.toLowerCase()}</b>! 🎉 Computer's turn.`, 'success');
+    } else {
+      setMessage(`${drawnCase} <b>${drawnLetter}</b> goes into your hand. Computer's turn!`, 'normal');
+    }
+
+    state.phase = 'computer';
+    renderAll();
+    checkGameOver();
+    if (state.phase !== 'over') speakThen(runComputerTurn);
+  });
+}
+
+// ── PLAYER RESPONDS TO COMPUTER ASK ───────────────
+function playerRespond(cardId) {
+  if (busy || state.phase !== 'respond') return;
+
+  const card = state.playerHand.find(c => c.id === cardId);
+  if (!card) return;
+
+  const ask         = state.pendingAsk;
+  const cardDisplay = card.upper ? card.letter : card.letter.toLowerCase();
+
+  if (card.letter === ask.letter && card.upper === ask.upper) {
+    // ✅ Correct card clicked!
+    state.playerHand = state.playerHand.filter(c => c.id !== cardId);
+    state.computerPairs.push(ask.letter);
+    state.pendingAsk = null;
+
+    speak(`Good job! You gave the computer ${ask.display}. Computer made a pair!`);
+    setMessage(`Computer got <b>${ask.display}</b> from you and made a pair! Going again...`, 'gofish');
+    state.phase = 'computer';
+    renderAll();
+    checkGameOver();
+    if (state.phase !== 'over') speakThen(runComputerTurn);
+
+  } else {
+    // ❌ Wrong card — give a hint
+    setMessage(
+      `🤖 That's <b>${cardDisplay}</b>, not <b>${ask.display}</b>! Look for the letter <b>${ask.display}</b> — it's glowing! Click it!`,
+      'gofish'
+    );
+    renderHands(); // re-render so wanted card keeps glowing
+  }
+}
+
+// ── PLAYER CLICKS GO FISH (computer didn't get the card) ──
+function clickGoFish() {
+  if (state.phase !== 'gofish-wait') return;
+  state.phase = 'computer';
+  renderAll();
+
+  speak(`Computer goes fishing!`);
+  setMessage(`🐠 Computer goes fishing...`, 'normal');
+
+  speakThen(() => {
+    if (state.deck.length > 0) {
+      const drawn = drawForComputer();
+      state.computerHand.push(drawn);
+      const prevLen = state.computerPairs.length;
+      checkPairs(state.computerHand, state.computerPairs);
+      const gotPair = state.computerPairs.length > prevLen;
+      if (gotPair) {
+        const np = state.computerPairs[state.computerPairs.length - 1];
+        speak(`Computer made a pair! Your turn!`);
+        setMessage(`Computer drew a card and made a pair — <b>${np.toUpperCase()} + ${np.toLowerCase()}</b>! Your turn — click on a letter!`, 'normal');
+      } else {
+        speak(`Computer drew a card. Your turn!`);
+        setMessage('Computer drew a card. Your turn — click on a letter!', 'normal');
+      }
+    } else {
+      speak(`No cards left. Your turn!`);
+      setMessage('No cards in the deck! Your turn — click on a letter!', 'normal');
+    }
+    state.phase = 'player';
+    busy = false;
+    renderAll();
+    checkGameOver();
+  }, 300);
+}
+
+// ── COMPUTER TURN (1/4 success odds) ──────────────
+function runComputerTurn() {
+  if (state.phase !== 'computer') return;
+
+  if (state.computerHand.length === 0) {
+    if (state.deck.length > 0) {
+      state.computerHand.push(drawForComputer());
+      checkPairs(state.computerHand, state.computerPairs);
+      renderAll();
+      checkGameOver();
+      if (state.phase === 'over') return;
+    } else {
+      state.phase = 'player';
+      busy = false;
+      setMessage('Computer has no cards! Click on a letter to ask the computer if it has a match!', 'normal');
+      renderAll();
+      return;
+    }
+  }
+
+  // Computer picks a random card from its hand and asks for the match
+  const idx         = Math.floor(Math.random() * state.computerHand.length);
+  const askCard     = state.computerHand[idx];
+  const wantUpper   = !askCard.upper;
+  const wantLetter  = askCard.letter;
+  const wantDisplay = wantUpper ? wantLetter : wantLetter.toLowerCase();
+  const wantCase    = wantUpper ? 'uppercase' : 'lowercase';
+
+  speak(`It's the computer's turn to ask for a card. The computer asks for ${wantCase} ${wantDisplay}.`);
+  setMessage(`🤖 Computer asks: <b>"Do you have <u>${wantCase} ${wantDisplay}</u>?"</b>`, 'normal');
+  renderAll();
+
+  speakThen(() => {
+    const existingIdx = state.playerHand.findIndex(c => c.letter === wantLetter && c.upper === wantUpper);
+    const playerHasIt = existingIdx !== -1;
+
+    if (playerHasIt) {
+      state.pendingAsk = { letter: wantLetter, upper: wantUpper, display: wantDisplay };
+      state.phase = 'respond';
+      speak(`You have it! Click the glowing ${wantCase} ${wantDisplay} card to give it to the computer.`);
+      setMessage(`🤖 You have <b>${wantCase} ${wantDisplay}</b>! Click the glowing card in your hand.`, 'respond');
+      renderAll();
+
+    } else {
+      // Player doesn't have it — wait for them to click Go Fish
+      speak(`You don't have ${wantCase} ${wantDisplay}. Click Go Fish!`);
+      setMessage(`🐠 You don't have <b>${wantCase} ${wantDisplay}</b>! Click <b>Go Fish!</b>`, 'gofish');
+      state.phase = 'gofish-wait';
+      renderAll();
+    }
+  });
+}
+
+// ── GAME OVER ─────────────────────────────────────
+function checkGameOver() {
+  const total         = state.playerPairs.length + state.computerPairs.length;
+  const playerEmpty   = state.playerHand.length === 0;
+  const computerEmpty = state.computerHand.length === 0;
+
+  // End when all 26 pairs found, OR either hand runs out of cards
+  if (total !== 26 && !playerEmpty && !computerEmpty) return;
+
+  state.phase = 'over';
+  renderAll();
+
+  const p = state.playerPairs.length;
+  const c = state.computerPairs.length;
+
+  document.getElementById('overlayScore').innerHTML =
+    `You: <span>${p}</span> pairs &nbsp;|&nbsp; Computer: <span class="comp">${c}</span> pairs`;
+
+  if (p > c) {
+    speak(`You won! Good job! You got ${p} pairs and the computer got ${c}!`);
+    document.getElementById('overlayEmoji').textContent = '🏆';
+    document.getElementById('overlayTitle').textContent = 'You Won!';
+    document.getElementById('overlayTitle').className   = 'overlay-title win';
+    launchConfetti();
+  } else if (c > p) {
+    speak(`The computer won with ${c} pairs! Good job! You got ${p} pairs. Try again!`);
+    document.getElementById('overlayEmoji').textContent = '🤖';
+    document.getElementById('overlayTitle').textContent = 'Computer Won!';
+    document.getElementById('overlayTitle').className   = 'overlay-title lose';
+  } else {
+    speak(`It's a tie! You both got ${p} pairs! Good job!`);
+    document.getElementById('overlayEmoji').textContent = '🤝';
+    document.getElementById('overlayTitle').textContent = "It's a Tie!";
+    document.getElementById('overlayTitle').className   = 'overlay-title tie';
+  }
+
+  document.getElementById('gameOverOverlay').classList.add('active');
+}
+
+// ── CONFETTI ──────────────────────────────────────
+function launchConfetti() {
+  const colors = ['#3A8EF6','#FF6B6B','#FFD93D','#6BCB77','#6B48FF','#FF8E53'];
+  for (let i = 0; i < 70; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = `
+      left: ${Math.random() * 100}vw; top: -12px;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      animation-duration: ${1.5 + Math.random() * 2}s;
+      animation-delay: ${Math.random() * 0.6}s;
+      width: ${6 + Math.random() * 8}px; height: ${6 + Math.random() * 8}px;
+    `;
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+}
+
+// ── MESSAGING ─────────────────────────────────────
+function setMessage(html, type) {
+  const el   = document.getElementById('messageText');
+  const fish = document.getElementById('fishEmoji');
+  el.innerHTML         = html;
+  el.className         = 'message-text ' + (type || '');
+  fish.textContent     = FISH_ICONS[Math.floor(Math.random() * FISH_ICONS.length)];
+  fish.style.transform = 'scale(1.4) rotate(-15deg)';
+  setTimeout(() => fish.style.transform = '', 300);
+}
+
+// ── VOICE SETUP ───────────────────────────────────
+let _voices     = [];
+let _voiceIndex = 0;
+
+function loadVoices() {
+  const all = window.speechSynthesis.getVoices();
+  if (all.length === 0) return;
+  const best = all.find(v => /natural/i.test(v.name) && /^en/i.test(v.lang))
+             || all.find(v => /aria|jenny|guy\b|ana\b|davis|emma|brian|joanna|matthew/i.test(v.name) && /^en/i.test(v.lang))
+             || all.find(v => /google.*english/i.test(v.name))
+             || all.find(v => /microsoft.*online/i.test(v.name) && /^en/i.test(v.lang))
+             || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
+             || all.find(v => v.lang && /^en/i.test(v.lang))
+             || all[0];
+  _voices = [best];
+}
+
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+
+// ── SPEECH ENGINE ─────────────────────────────────
+
+function speak(text) {
+  if (!window.speechSynthesis || _muted) return;
+  // Strip HTML, emojis, and extra whitespace
+  const clean = text
+    .replace(/<[^>]+>/g, '')
+    .replace(/[\u{1F000}-\u{1FFFF}]|[\u{2600}-\u{27BF}]|️|⃣/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!clean) return;
+
+  if (_speaking || _queue.length > 0) {
+    _pending = clean;   // replace pending; current sentence always finishes
+    _queue   = [];      // discard remaining sentences from previous call
+    return;
+  }
+  _launch(clean);
+}
+
+function _launch(text) {
+  // Split into individual sentences so there's a pause at . ! ?
+  _queue   = text.replace(/([.!?])\s+/g, '$1\n').split('\n').map(s => s.trim()).filter(Boolean);
+  _pending = null;
+  _advance();
+}
+
+function _advance() {
+  if (_queue.length === 0) {
+    _speaking = false;
+    if (_pending) { const t = _pending; _pending = null; _launch(t); }
+    return;
+  }
+  _speaking = true;
+  const utt = new SpeechSynthesisUtterance(_queue.shift());
+  if (_voices[_voiceIndex]) utt.voice = _voices[_voiceIndex];
+  utt.rate  = 0.92;
+  utt.pitch = 1.0;
+  utt.onend = () => { _speaking = false; setTimeout(_advance, 380); };
+  window.speechSynthesis.speak(utt);
+}
+
+// Fires callback only after ALL speech (current + queued + pending) is done.
+function speakThen(callback, pauseAfter = 450) {
+  if (!window.speechSynthesis || (!_speaking && !_queue.length && !_pending)) {
+    setTimeout(callback, pauseAfter);
+    return;
+  }
+  const poll = setInterval(() => {
+    if (!_speaking && !_queue.length && !_pending) {
+      clearInterval(poll);
+      setTimeout(callback, pauseAfter);
+    }
+  }, 120);
+}
+
+// ── RENDER ────────────────────────────────────────
+function renderAll() {
+  renderHands();
+  renderScores();
+  renderPairs();
+  renderDeck();
+}
+
+function renderHands() {
+  const isRespond = state.phase === 'respond';
+
+  // ── Player hand ──
+  const ph = document.getElementById('playerHand');
+  ph.innerHTML = '';
+
+  // Show "click a letter" prompt in player zone title area
+  document.getElementById('playerZone').classList.toggle('respond-mode', isRespond);
+
+  for (const card of state.playerHand) {
+    const isWanted = isRespond
+      && state.pendingAsk
+      && card.letter === state.pendingAsk.letter
+      && card.upper  === state.pendingAsk.upper;
+
+    const el = buildCard(card, isWanted || state.phase === 'player');
+
+    if (isRespond) {
+      if (isWanted) {
+        el.classList.add('card-wanted');
+        el.addEventListener('click', () => playerRespond(card.id));
+      } else {
+        el.classList.add('card-dimmed');
+      }
+    }
+
+    ph.appendChild(el);
+  }
+
+  if (state.playerHand.length === 0) {
+    const msg = document.createElement('span');
+    msg.style.cssText = 'color:#aaa; font-weight:700; font-size:0.9rem; padding:6px 0;';
+    msg.textContent = state.deck.length > 0 ? 'Drawing...' : 'No cards left!';
+    ph.appendChild(msg);
+  }
+
+  // ── Computer hand (face-down) ──
+  const ch = document.getElementById('computerHand');
+  ch.innerHTML = '';
+  for (let i = 0; i < state.computerHand.length; i++) {
+    const el = document.createElement('div');
+    el.className = 'card card-back';
+    ch.appendChild(el);
+  }
+  if (state.computerHand.length === 0) {
+    const msg = document.createElement('span');
+    msg.style.cssText = 'color:#aaa; font-weight:700; font-size:0.9rem; padding:6px 0;';
+    msg.textContent = 'No cards';
+    ch.appendChild(msg);
+  }
+
+  // Show/hide Ask button and Go Fish button
+  const btnAsk    = document.getElementById('btnAsk');
+  const btnGoFish = document.getElementById('btnGoFish');
+  btnAsk.style.display    = (state.phase === 'player' || state.phase === 'draw') ? '' : 'none';
+  btnGoFish.style.display = state.phase === 'gofish-wait' ? '' : 'none';
+  if (state.phase === 'player' && !state.selected) {
+    btnAsk.disabled = true;
+  }
+}
+
+function buildCard(card, clickable) {
+  const el = document.createElement('div');
+  el.className = `card ${card.upper ? 'card-upper' : 'card-lower'}${clickable ? ' card-playable' : ''}`;
+  if (state.selected === card.id) el.classList.add('card-selected');
+
+  const data   = CARD_DATA[card.letter];
+  const letter = card.upper ? card.letter : card.letter.toLowerCase();
+  el.innerHTML = `
+    <span class="card-type-tag">${card.upper ? 'uppercase' : 'lowercase'}</span>
+    <span class="card-pic">${data.pic}</span>
+    <span class="card-letter">${letter}</span>
+    <span class="card-word">${data.word}</span>
+  `;
+
+  if (clickable && state.phase === 'player' && !busy) {
+    el.addEventListener('click', () => selectCard(card.id));
+  }
+  return el;
+}
+
+function renderScores() {
+  document.getElementById('playerScore').textContent = state.playerPairs.length;
+  document.getElementById('compScore').textContent   = state.computerPairs.length;
+  document.getElementById('playerPairsDisplay').textContent =
+    state.playerPairs.length ? `${state.playerPairs.length} pair${state.playerPairs.length !== 1 ? 's' : ''}` : '';
+  document.getElementById('compPairsDisplay').textContent =
+    state.computerPairs.length ? `${state.computerPairs.length} pair${state.computerPairs.length !== 1 ? 's' : ''}` : '';
+}
+
+function renderPairs() {
+  const pr = document.getElementById('playerPairsRow');
+  pr.innerHTML = '';
+  for (const L of state.playerPairs) {
+    const chip = document.createElement('div');
+    chip.className = 'pair-chip';
+    chip.textContent = `${L}${L.toLowerCase()}`;
+    pr.appendChild(chip);
+  }
+
+  const cr = document.getElementById('compPairsRow');
+  cr.innerHTML = '';
+  for (const L of state.computerPairs) {
+    const chip = document.createElement('div');
+    chip.className = 'pair-chip computer-chip';
+    chip.textContent = `${L}${L.toLowerCase()}`;
+    cr.appendChild(chip);
+  }
+}
+
+function renderDeck() {
+  const area  = document.getElementById('deckArea');
+  const label = document.getElementById('deckLabel');
+  const hint  = document.getElementById('deckHint');
+  const count = state.deck.length;
+
+  label.textContent = count === 1 ? '1 card left' : `${count} cards left`;
+  area.classList.remove('active', 'empty');
+
+  if (count === 0) {
+    area.classList.add('empty');
+    hint.textContent = 'Deck is empty';
+  } else if (state.phase === 'draw') {
+    area.classList.add('active');
+    hint.textContent = '👆 Click to draw!';
+  } else if (state.phase === 'preview') {
+    hint.textContent = '';   // drawn card slot handles its own hint
+  } else {
+    hint.textContent = '';
+  }
+}
+
+// ── EVENT LISTENERS ───────────────────────────────
+document.getElementById('btnMute').addEventListener('click', () => {
+  _muted = !_muted;
+  const btn = document.getElementById('btnMute');
+  btn.textContent = _muted ? '🔇' : '🔊';
+  btn.classList.toggle('muted', _muted);
+  if (_muted) { _queue = []; _pending = null; window.speechSynthesis.cancel(); _speaking = false; }
+});
+document.getElementById('btnAsk').addEventListener('click', playerAsk);
+document.getElementById('btnGoFish').addEventListener('click', clickGoFish);
+document.getElementById('deckStack').addEventListener('click', drawFromDeck);
+document.getElementById('btnNew').addEventListener('click', initGame);
+document.getElementById('btnPlayAgain').addEventListener('click', initGame);
+document.getElementById('btnHow').addEventListener('click', () =>
+  document.getElementById('howToPlayModal').classList.add('active'));
+document.getElementById('modalClose').addEventListener('click', () =>
+  document.getElementById('howToPlayModal').classList.remove('active'));
+document.getElementById('howToPlayModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('howToPlayModal'))
+    document.getElementById('howToPlayModal').classList.remove('active');
+});
+
+// ── START ─────────────────────────────────────────
+initGame();
+</script>
+</body>
+</html>
+
+

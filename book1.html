@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book 1: ABC's and Short Vowels</title>
+<script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d2b1a;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Comic Sans MS","Comic Sans",cursive;overflow:hidden}
+h1{color:#7fe87a;font-size:1.3rem;text-align:center;margin-bottom:10px;text-shadow:0 2px 8px #000}
+.book-stage{position:relative;width:520px;height:580px;perspective:1200px}
+#page-wrapper{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+#loading{color:#a5d6a7;font-size:1.2rem;text-align:center;padding:20px}
+#canvas-container{position:relative;display:none;border-radius:8px;box-shadow:0 8px 32px #0009;overflow:hidden}
+#page-canvas{display:block;max-width:490px;max-height:560px;background:#fff}
+.textLayer{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;line-height:1;pointer-events:none}
+.textLayer span{position:absolute;color:transparent;cursor:pointer;pointer-events:auto;border-radius:3px;transition:background .15s}
+.textLayer span:hover{background:rgba(150,255,100,.35)!important}
+.textLayer span.speaking{background:rgba(100,220,50,.5)!important}
+@keyframes exitLeft{from{transform:rotateY(0);opacity:1}to{transform:rotateY(-70deg);opacity:0}}
+@keyframes enterRight{from{transform:rotateY(70deg);opacity:0}to{transform:rotateY(0);opacity:1}}
+@keyframes exitRight{from{transform:rotateY(0);opacity:1}to{transform:rotateY(70deg);opacity:0}}
+@keyframes enterLeft{from{transform:rotateY(-70deg);opacity:0}to{transform:rotateY(0);opacity:1}}
+.anim-exit-left{animation:exitLeft .4s ease-in forwards}
+.anim-exit-right{animation:exitRight .4s ease-in forwards}
+.anim-enter-right{animation:enterRight .42s ease-out forwards}
+.anim-enter-left{animation:enterLeft .42s ease-out forwards}
+.controls{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;justify-content:center}
+button{font-family:"Comic Sans MS",cursive;font-size:.85rem;padding:6px 13px;border:none;border-radius:24px;cursor:pointer;font-weight:bold;transition:transform .1s}
+button:active{transform:scale(.95)}
+button:disabled{opacity:.4;cursor:default}
+#btn-back{background:#2e7d32;color:#fff}
+#btn-next{background:#7fe87a;color:#0d2b1a}
+#btn-read{background:#ff8f00;color:#fff}
+#btn-flash{background:#e040fb;color:#fff;display:none}
+#btn-words{background:#26c6da;color:#003;display:none}
+#page-counter{color:#a5d6a7;font-size:.9rem;min-width:80px;text-align:center}
+#speaker-ring{width:28px;height:28px;border-radius:50%;border:3px solid #a5d6a7;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;flex-shrink:0}
+#speaker-ring.on{border-color:#ff8f00;box-shadow:0 0 10px #ff8f00}
+a.home-link{color:#a5d6a7;font-size:.8rem;text-decoration:none;margin-top:5px;opacity:.7}
+#flash-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center}
+#flash-card{background:#1b3a24;border:3px solid #7fe87a;border-radius:20px;padding:32px 44px;display:flex;flex-direction:column;align-items:center;gap:16px;min-width:280px;max-width:90vw}
+#flash-title{font-family:"Comic Sans MS",cursive;color:#a5d6a7;font-size:1rem;font-weight:bold}
+#flash-word{font-family:"Comic Sans MS",cursive;font-size:3.2rem;font-weight:bold;color:#7fe87a;text-align:center;min-width:180px}
+#flash-counter{color:#a5d6a7;font-size:.85rem}
+#flash-btns{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+#flash-prev,#flash-next{font-family:"Comic Sans MS",cursive;background:#2e7d32;color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;font-weight:bold}
+#flash-prev:disabled,#flash-next:disabled{opacity:.3;cursor:default}
+#flash-close{font-family:"Comic Sans MS",cursive;background:#c62828;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+#flash-speak{font-family:"Comic Sans MS",cursive;background:#ff8f00;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+</style>
+</head>
+<body>
+<h1>Book 1: ABC's and Short Vowels</h1>
+<div class="book-stage">
+  <div id="page-wrapper">
+    <div id="loading">Loading book&#8230; &#128218;</div>
+    <div id="canvas-container">
+      <canvas id="page-canvas"></canvas>
+      <div id="text-layer" class="textLayer"></div>
+    </div>
+  </div>
+</div>
+<div class="controls">
+  <button id="btn-back">&#9664; Back</button>
+  <div id="speaker-ring" title="Read page">&#128266;</div>
+  <span id="page-counter">1 / 92</span>
+  <button id="btn-read">Read Page</button>
+  <button id="btn-flash">&#128218; Sight Words</button>
+  <button id="btn-words">&#128214; Word Families</button>
+  <button id="btn-next">Next &#9654;</button>
+</div>
+<a href="hub.html" class="home-link">&#8592; Back to Hub</a>
+<div id="flash-modal">
+  <div id="flash-card">
+    <div id="flash-title">Sight Words</div>
+    <div id="flash-word">the</div>
+    <div id="flash-counter">1 / 7</div>
+    <div id="flash-btns">
+      <button id="flash-prev">&#9664;</button>
+      <button id="flash-speak">&#128266; Say It</button>
+      <button id="flash-close">&#10005; Close</button>
+      <button id="flash-next">&#9654;</button>
+    </div>
+  </div>
+</div>
+<script>
+const TOTAL=92,ANIM_MS=420;
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+const HEADER_PAGES=new Set([2,8,13,18,23,28,33,35,38,41,44,48,52,55,59,62,65,68,71,74,77,80,83,86,88,91]);
+const SIGHT_WORDS={
+  2:["is","a","has","and","not","the","at"],8:["is","a","and","has","said","to","not","an"],13:["i","a","am","not","has","and","have"],
+  18:["has","is","and","are"],23:["with","has","a","the","and","in","her"],28:["in","is","a","not","to","has"],
+  33:["for","a","do","not","at","the"],35:["are","and","the","in","with"],38:["she","will","a","not","me","the","i","at","in"],
+  41:["is","a","with","as","he"],44:["has","a","is","the","in"],48:["has","that","a","to","it","is","said","sorry"],
+  52:["has","an","is","give","it","to"],55:["did","see","the","in"],59:["on","his"],62:["is","a","see","on","and"],
+  65:["has","no","got","a","with"],68:["the","see","on","of","a","said"],71:["see","the","a"],74:["go","said","the","on","at","is"],
+  77:["has","a","that","says","in","the","is","an"],80:["the","and","a","on"],83:["the","has","in","see","up","on"],
+  86:["has","a","in","the","can"],88:["on","is","her"],91:["the","ball","in"]
+};
+const WORD_FAMILIES={
+  2:["at","bat","cat","fat","hat","mat","pat","rat","sat","that"],8:["an","can","dan","man","pan","ran","van"],
+  13:["ham","jam","pam","sam","yam"],18:["bad","dad","glad","mad","sad","bag","gag","wag"],
+  23:["cab","dab","cap","lap","map","nap","rap","tap"],28:["ed","bed","fed","red","ted","wed"],
+  33:["beg","leg","keg"],35:["ben","hen","ken","len","men","pen","ten"],
+  38:["bet","get","jet","let","met","pet","set","vet","wet","yet"],41:["big","jig","pig","wig","zig"],
+  44:["bin","fin","in","pin","tin","win"],48:["bit","fit","hit","it","kit","sit"],52:["him","jim","kim","rim"],
+  55:["did","hid","kid","lid"],59:["lip","sip","dip","tip","hip"],62:["dog","frog","hog","log"],
+  65:["bob","job","rob","sob"],68:["cop","hop","mop","pop","top","stop"],71:["dot","got","hot","lot","pot"],
+  74:["nod","rod","sod"],77:["box","fox","lox","ox"],80:["bug","dug","hug","mug","rug","tug"],
+  83:["cup","pup","up","fun","run","sun"],86:["but","cut","hut","nut"],88:["gum","hum","tum"],91:["bud","mud"]
+};
+const PAGE_TEXT={
+  1:"Book 1: ABCs and Short Vowels. Chapter 1: Short Vowel A — Mat and Pat, Dan, Not Sam and Not Pam, Dads Bag, Dab Rap a Tap. Chapter 2: Short Vowel E — Red, Red Begs, The Hens, The Jet. Chapter 3: Short Vowel I — The Pig, Win, The Fit, Kim, Hid, Sip. Chapter 4: Short Vowel O — Bob the Dog, A Job, The Cop, The Hot Dot, The Hot Rod, The Box. Chapter 5: Short Vowel U — Mug the Bug, The Fun Pup, The Nut, Gum, Mud.",
+  2:"Short Vowel A. Mat and Pat. Words: at, bat, cat, fat, hat, mat, pat, rat, sat, that. Sight Words: is, a, has, and, not, the, at.",
+  3:"Mat is a rat. Pat is a rat.",4:"Mat has a hat and a bat.",5:"Mat has not pat that fat cat.",
+  6:"Pat has not pat that fat cat.",7:"The fat cat sat at a mat.",
+  8:"Dan. Words: an, can, dan, man, pan, ran, van. Sight Words: is, a, and, has, said, to, not, an.",
+  9:"Dan is a man.",10:"Dan has an apple. Dan has a can.",11:"Dan has a pan. Dan said, Not rats!",
+  12:"Mat and Pat ran to a van.",
+  13:"Not Sam and Not Pam. Words: ham, jam, pam, sam, yam. Sight Words: I, a, am, not, has, and, have.",
+  14:"I am Mat, not Sam.",15:"I am Pat, not Pam.",16:"Pat has a yam. Mat has ham and jam.",
+  17:"Mat and Pat have ham, jam, and a yam.",
+  18:"Dads Bag. Words: bad, dad, glad, mad, sad, bag, gag, wag. Sight Words: has, is, and, are.",
+  19:"Mat has Dads bag. Mat wags.",20:"Mat is bad. Dad is mad.",21:"Gag! Gag! Gag! Mat is sad.",22:"Dad and Mat are glad.",
+  23:"Dab. Rap a Tap. Words: cab, dab, cap, lap, map, nap, rap, tap. Sight Words: with, has, a, the, and, in, her.",
+  24:"Dab. Dab. Dab.",25:"Rap a tap. Tap. Tap. Tap.",26:"Pat has a nap with a cap in her lap.",27:"Pat has a cap and a map. The cab.",
+  28:"Short Vowel E. Red. Words: ed, bed, fed, red, ted, wed. Sight Words: in, is, a, not, to, has.",
+  29:"Red is a T Rex.",30:"Red is not wed to Ed.",31:"Red is fed.",32:"Red has a ted in bed.",
+  33:"Red Begs. Words: beg, leg, keg. Sight Words: for, a, do, not, at, the.",
+  34:"Red begs for a keg. Red does not beg at the leg.",
+  35:"The Hens. Words: ben, hen, ken, len, men, pen, ten. Sight Words: are, and, the, in, with.",
+  36:"Ben, Ken, and Len are men hens.",37:"The ten hens are in the pen with Red.",
+  38:"The Jet. Words: bet, get, jet, let, met, pet, set, vet, wet, yet. Sight Words: she, will, a, not, me, the, I, at, in.",
+  39:"I met the pet at the vet.",40:"Red bets she gets a jet. Yet, she will not let me set the wet pet in the jet.",
+  41:"Short Vowel I. The Pig. Words: big, jig, pig, wig, zig. Sight Words: is, a, with, as, he.",
+  42:"Jim is a big pig.",43:"Jim zigs as he jigs. Jim is with a wig.",
+  44:"Win. Words: bin, fin, in, pin, tin, win. Sight Words: has, a, is, the, in.",
+  45:"Jim is in the bin.",46:"Jim has a fin.",47:"Jim wins a tin pin.",
+  48:"The Fit. Words: bit, fit, hit, it, kit, sit. Sight Words: has, that, a, to, it, is, said, sorry.",
+  49:"Kit has a fit that Jim wins. Kit hit. Kit bit.",50:"Kit sits. It is sad to sit.",51:"Kit said, Sorry Jim!",
+  52:"Kim. Words: him, jim, kim, rim. Sight Words: has, an, is, give, it, to.",
+  53:"Kim has an apple rim. Jim is sad.",54:"Kim gives it to him.",
+  55:"Hid. Words: did, hid, kid, lid. Sight Words: did, see, the, in.",
+  56:"Did Jim see the kid doll?",57:"The kid doll hid in the lid.",58:"Jim sees the kid doll in the lid.",
+  59:"Sip. Words: lip, sip, dip, tip, hip. Sight Words: on, his.",
+  60:"Jim dips. Jim tips on his hips.",61:"Jims lips sip.",
+  62:"Short Vowel O. Bob the Dog. Words: dog, frog, hog, log. Sight Words: is, a, see, on, and.",
+  63:"Bob is a dog.",64:"Bob sees a frog on a log and a hog.",
+  65:"A Job. Words: bob, job, rob, sob. Sight Words: has, no, got, a, with.",
+  66:"Bob sobs. Bob has no job.",67:"Bob got a job with Rob.",
+  68:"The Cop. Words: cop, hop, mop, pop, top, stop. Sight Words: the, see, on, of, a, said.",
+  69:"The cop sees Bob hop on top of a mop.",70:"The mop said, Pop! The cop said, Stop!",
+  71:"The Hot Dot. Words: dot, got, hot, lot, pot. Sight Words: see, the, a.",
+  72:"Bob sees the hot dot.",73:"The pot got a lot hot.",
+  74:"The Hot Rod. Words: nod, rod, sod. Sight Words: go, said, the, on, at, is.",
+  75:"Bob is on the sod. Bob nods at the hot rod.",76:"Bob said, Go hot rod!",
+  77:"The Box. Words: box, fox, lox, ox. Sight Words: has, a, that, says, in, the, is, an.",
+  78:"Bob has a box that says, Lox.",79:"In the box is a fox and an ox.",
+  80:"Short Vowel U. Mug the Bug. Words: bug, dug, hug, mug, rug, tug. Sight Words: the, and, a, on.",
+  81:"Mug the bug hugs Dug.",82:"Mug and Dug tug on a rug.",
+  83:"The Fun Pup. Words: cup, pup, up, fun, run, sun. Sight Words: the, has, in, see, up, on.",
+  84:"The pup runs in the sun. The pup has fun.",85:"The pup sees Mug up on the cup.",
+  86:"The Nut. Words: but, cut, hut, nut. Sight Words: has, a, in, the, can.",
+  87:"Mug has a nut in the hut. But, Mug can cut the nut.",
+  88:"Gum. Words: gum, hum, tum. Sight Words: on, is, her.",
+  89:"Mug sits on gum.",90:"Gum is on her tum. Hum.",
+  91:"Mud. Words: bud, mud. Sight Words: the, ball, in.",
+  92:"Mugs bud hit the ball in the mud."
+};
+let pdfDoc=null,currentPage=1,animating=false;
+const canvas=document.getElementById('page-canvas');
+const canvasContainer=document.getElementById('canvas-container');
+const ctx=canvas.getContext('2d');
+const textLayerDiv=document.getElementById('text-layer');
+const loading=document.getElementById('loading');
+const counter=document.getElementById('page-counter');
+const ring=document.getElementById('speaker-ring');
+const flashBtn=document.getElementById('btn-flash');
+const wordsBtn=document.getElementById('btn-words');
+let voices=[];
+function loadVoices(){voices=speechSynthesis.getVoices();if(!voices.length)speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};}
+loadVoices();
+function getBestVoice(){const P=['Microsoft Aria Online (Natural)','Microsoft Jenny Online (Natural)','Microsoft Emma Online (Natural)','Microsoft Guy Online (Natural)','Microsoft Ana Online (Natural)','Google US English','Samantha','Karen','Moira','Fiona','Google UK English Female','Microsoft Aria','Microsoft Zira','Microsoft Jenny','Microsoft Natasha','Alex'];for(const n of P){const v=voices.find(v=>v.name.toLowerCase().includes(n.toLowerCase()));if(v)return v;}const neural=voices.find(v=>/online|natural|neural/i.test(v.name)&&v.lang.startsWith('en'));if(neural)return neural;return voices.find(v=>v.lang==='en-US')||voices.find(v=>v.lang.startsWith('en'))||voices[0];}
+function speak(text,spanEl){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.trim());const v=getBestVoice();if(v)u.voice=v;u.lang='en-US';u.rate=0.9;u.pitch=1.0;u.volume=1;u.onstart=()=>{ring.classList.add('on');if(spanEl)spanEl.classList.add('speaking');};u.onend=()=>{ring.classList.remove('on');if(spanEl)spanEl.classList.remove('speaking');};speechSynthesis.speak(u);}
+ring.addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
+document.getElementById('btn-read').addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
+let flashWords=[],flashIdx=0;
+function openFlash(words,title){flashWords=words;flashIdx=0;document.getElementById('flash-title').textContent=title;showCard();document.getElementById('flash-modal').style.display='flex';}
+function showCard(){const w=flashWords[flashIdx]||'';document.getElementById('flash-word').textContent=w.toLowerCase();document.getElementById('flash-counter').textContent=(flashIdx+1)+' / '+flashWords.length;document.getElementById('flash-prev').disabled=flashIdx===0;document.getElementById('flash-next').disabled=flashIdx>=flashWords.length-1;speak(w);}
+flashBtn.addEventListener('click',()=>openFlash(SIGHT_WORDS[currentPage]||[],'Sight Words'));
+wordsBtn.addEventListener('click',()=>openFlash(WORD_FAMILIES[currentPage]||[],'Word Families'));
+document.getElementById('flash-speak').addEventListener('click',()=>speak(flashWords[flashIdx]||''));
+document.getElementById('flash-prev').addEventListener('click',()=>{if(flashIdx>0){flashIdx--;showCard();}});
+document.getElementById('flash-next').addEventListener('click',()=>{if(flashIdx<flashWords.length-1){flashIdx++;showCard();}});
+document.getElementById('flash-close').addEventListener('click',()=>{speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';});
+document.getElementById('flash-modal').addEventListener('click',e=>{if(e.target===document.getElementById('flash-modal')){speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';}});
+async function renderPage(num,dir){
+  if(animating)return;animating=true;
+  if(canvasContainer.style.display!=='none'){canvasContainer.classList.add(dir==='fwd'?'anim-exit-left':'anim-exit-right');await new Promise(r=>setTimeout(r,400));canvasContainer.classList.remove('anim-exit-left','anim-exit-right');}
+  canvasContainer.style.display='none';textLayerDiv.innerHTML='';loading.style.display='block';
+  const page=await pdfDoc.getPage(num);
+  const vp=page.getViewport({scale:1});
+  const maxW=Math.min(490,document.getElementById('page-wrapper').clientWidth-20);
+  const sc=maxW/vp.width;const sv=page.getViewport({scale:sc});
+  canvas.width=sv.width;canvas.height=sv.height;
+  await page.render({canvasContext:ctx,viewport:sv}).promise;
+  const tc=await page.getTextContent();
+  const rt=pdfjsLib.renderTextLayer({textContent:tc,container:textLayerDiv,viewport:sv,textDivs:[]});
+  await rt.promise;
+  textLayerDiv.querySelectorAll('span').forEach(span=>{
+    const raw=span.textContent.trim();
+    if(!raw||/^\d+$/.test(raw)||/^[.,!?;:'"()\-]+$/.test(raw))return;
+    span.addEventListener('click',e=>{e.stopPropagation();speak(raw,span);});
+  });
+  loading.style.display='none';canvasContainer.style.display='block';
+  canvasContainer.classList.add(dir==='fwd'?'anim-enter-right':'anim-enter-left');
+  await new Promise(r=>setTimeout(r,ANIM_MS));canvasContainer.classList.remove('anim-enter-right','anim-enter-left');
+  currentPage=num;counter.textContent=num+' / '+TOTAL;
+  document.getElementById('btn-back').disabled=num<=1;document.getElementById('btn-next').disabled=num>=TOTAL;
+  const isHdr=HEADER_PAGES.has(num);
+  flashBtn.style.display=(isHdr&&SIGHT_WORDS[num])?'inline-block':'none';
+  wordsBtn.style.display=(isHdr&&WORD_FAMILIES[num])?'inline-block':'none';
+  animating=false;
+}
+document.getElementById('btn-next').addEventListener('click',()=>{if(currentPage<TOTAL)renderPage(currentPage+1,'fwd');});
+document.getElementById('btn-back').addEventListener('click',()=>{if(currentPage>1)renderPage(currentPage-1,'back');});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')document.getElementById('btn-next').click();if(e.key==='ArrowLeft')document.getElementById('btn-back').click();if(e.key==='Escape'){speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';}});
+pdfjsLib.getDocument('book1.pdf').promise.then(doc=>{pdfDoc=doc;renderPage(1,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
+</script>
+</body>
+</html>

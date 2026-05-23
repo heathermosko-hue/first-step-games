@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Family Builder | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#FFF8F0; --text:#2C3E50; --orange:#E67E22; --amber:#F39C12; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    header { background:linear-gradient(135deg,#E67E22 0%,#F39C12 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
+    .back-link:hover { background:rgba(255,255,255,.35); }
+    header h1 { font-family:'Fredoka One',cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
+    .header-btns { display:flex; gap:.45rem; align-items:center; }
+    .btn-header { background:rgba(255,255,255,.2); border:none; color:white; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
+    .btn-header:hover { background:rgba(255,255,255,.35); }
+    .btn-header.muted { background:rgba(255,80,80,.45); }
+
+    .settings-bar { background:white; border-bottom:2px solid #FFE5C8; padding:.6rem 1.5rem; display:flex; align-items:center; gap:.75rem 1.25rem; flex-wrap:wrap; justify-content:center; }
+    .settings-label { font-size:.75rem; font-weight:800; color:#bbb; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+    .cat-btns { display:flex; gap:.3rem; flex-wrap:wrap; justify-content:center; }
+    .btn-cat { background:#FFF0DC; color:#E67E22; border:2px solid transparent; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .btn-cat:hover { background:#FFD9A8; }
+    .btn-cat.active { background:#E67E22; color:white; border-color:#E67E22; }
+
+    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:1.5rem 1rem 2rem; gap:1rem; }
+
+    .score-row { display:flex; gap:1.5rem; font-family:'Fredoka One',cursive; font-size:1rem; color:#bbb; }
+    .score-row span { color:#E67E22; font-size:1.2rem; }
+
+    .progress-bar { width:100%; max-width:480px; height:8px; background:#FFE5C8; border-radius:999px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,#E67E22,#F39C12); border-radius:999px; transition:width .4s; }
+
+    .game-card {
+      background:white; border-radius:24px; padding:1.75rem 2rem;
+      box-shadow:0 4px 24px rgba(230,126,34,.12); border:3px solid #FFE5C8;
+      display:flex; flex-direction:column; align-items:center; gap:.9rem;
+      width:100%; max-width:460px;
+    }
+
+    .emoji-display { font-size:clamp(4rem,16vw,7rem); line-height:1; filter:drop-shadow(0 3px 6px rgba(0,0,0,.1)); }
+
+    .word-show {
+      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      font-size:clamp(3rem,12vw,5.5rem); line-height:1;
+      display:flex; align-items:baseline;
+    }
+    .word-blank {
+      display:inline-block; color:#FFD9A8; border-bottom:5px solid #F39C12;
+      min-width:.65em; text-align:center; transition:color .3s, border-color .3s;
+    }
+    .word-blank.filled { color:#27AE60; border-color:#27AE60; }
+    .word-end-part { color:#E67E22; }
+
+    .family-tag {
+      background:#FFF0DC; color:#E67E22; font-family:'Fredoka One',cursive;
+      font-size:.9rem; padding:3px 14px; border-radius:999px;
+    }
+
+    .feedback {
+      font-family:'Fredoka One',cursive; font-size:1.3rem; min-height:1.7rem; text-align:center;
+    }
+    .feedback.ok { color:#27AE60; }
+    .feedback.err { color:#E74C3C; }
+
+    .choices { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; width:100%; max-width:340px; }
+    .btn-choice {
+      background:white; border:3px solid #FFE5C8; color:#E67E22;
+      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      font-size:clamp(2rem,8vw,3rem); padding:.6rem; border-radius:16px;
+      cursor:pointer; transition:all .15s;
+      box-shadow:0 3px 10px rgba(230,126,34,.1);
+    }
+    .btn-choice:hover:not(:disabled) { background:#FFF0DC; transform:translateY(-2px); box-shadow:0 6px 18px rgba(230,126,34,.2); }
+    .btn-choice.correct { background:#27AE60; border-color:#27AE60; color:white; }
+    .btn-choice.wrong { background:#E74C3C; border-color:#E74C3C; color:white; animation:shake .4s; }
+    .btn-choice:disabled { cursor:default; }
+
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)}
+    }
+
+    footer { text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #FFE5C8; margin-top:auto; }
+    footer a { color:#E67E22; text-decoration:none; }
+    footer a:hover { text-decoration:underline; }
+  </style>
+<link href="fonts.css" rel="stylesheet"></head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">&#8592; Games</a>
+  <h1>Word Family Builder</h1>
+  <div class="header-btns">
+    <button class="btn-header" id="btnMute">&#128266;</button>
+    <button class="btn-header" id="btnVoice">&#128104; Voice</button>
+  </div>
+</header>
+
+<div class="settings-bar">
+  <span class="settings-label">Vowel:</span>
+  <div class="cat-btns">
+    <button class="btn-cat active" data-cat="Short A">Short A</button>
+    <button class="btn-cat" data-cat="Short E">Short E</button>
+    <button class="btn-cat" data-cat="Short I">Short I</button>
+    <button class="btn-cat" data-cat="Short O">Short O</button>
+    <button class="btn-cat" data-cat="Short U">Short U</button>
+  </div>
+</div>
+
+<main>
+  <div class="score-row">
+    <div>Score: <span id="scoreVal">0</span></div>
+    <div>Word <span id="qNum">1</span> of <span id="qTotal">?</span></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="game-card">
+    <div class="emoji-display" id="emojiDisplay">&#127825;</div>
+    <div class="word-show">
+      <span class="word-blank" id="wordBlank">_</span><span class="word-end-part" id="wordEnd">at</span>
+    </div>
+    <div class="family-tag" id="familyTag">_at family</div>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+  <div class="choices" id="choices"></div>
+</main>
+
+<footer>
+  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
+</footer>
+
+<script>
+/* ── SPEECH ── */
+let _muted = false, _speaking = false, _pending = null, _queue = [], _voice = null;
+function _launch(msg) {
+  if (_muted) return;
+  window.speechSynthesis.cancel();
+  _queue = msg.split(' | '); _speaking = false; _advance();
+}
+function _advance() {
+  if (!_queue.length) { _speaking=false; if (_pending){const t=_pending;_pending=null;_launch(t);} return; }
+  _speaking = true;
+  const utt = new SpeechSynthesisUtterance(_queue.shift());
+  if (_voice) utt.voice = _voice;
+  utt.rate = 0.92; utt.pitch = 1.0;
+  utt.onend = () => { _speaking=false; setTimeout(_advance,350); };
+  window.speechSynthesis.speak(utt);
+}
+function speak(msg) { if (_muted) return; if (_speaking){_pending=msg;} else {_launch(msg);} }
+function loadVoices() {
+  const all = window.speechSynthesis.getVoices();
+  if (!all.length) return;
+  _voice = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
+          || all.find(v => /aria|jenny|guy\b|ana\b|davis/i.test(v.name))
+          || all.find(v => /google.*english/i.test(v.name))
+          || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
+          || all.find(v => v.lang && /^en/i.test(v.lang))
+          || all[0];
+}
+window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
+
+document.getElementById('btnMute').addEventListener('click', () => {
+  _muted = !_muted;
+  document.getElementById('btnMute').textContent = _muted ? '🔇' : '🔊';
+  document.getElementById('btnMute').classList.toggle('muted', _muted);
+  if (_muted) window.speechSynthesis.cancel();
+});
+document.getElementById('btnVoice').addEventListener('click', () => {
+  const voices = window.speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.startsWith('en'));
+  if (!voices.length) return;
+  const idx = voices.indexOf(_voice);
+  _voice = voices[(idx+1) % voices.length];
+  speak(`Hello! My name is ${_voice.name.split(' ')[0]}!`);
+});
+
+/* ── WORD DATA ── */
+const WORD_GROUPS = {
+  'Short A': {
+    letters: 'b,c,f,h,m,p,r,s,t,v,w'.split(','),
+    families: [
+      { family:'an', words:[
+        {letter:'c',word:'can',emoji:'🥫'},{letter:'m',word:'man',emoji:'👨'},
+        {letter:'p',word:'pan',emoji:'🍳'},{letter:'f',word:'fan',emoji:'a fan',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><rect x="35" y="67" width="10" height="11" rx="1" fill="#7A4E2D"/><ellipse cx="40" cy="78" rx="16" ry="3.5" fill="#5C3A1E"/><circle cx="40" cy="37" r="28" fill="none" stroke="#B87333" stroke-width="5"/><ellipse cx="40" cy="23" rx="7" ry="13" fill="#CD8B3C" opacity="0.85"/><ellipse cx="40" cy="23" rx="7" ry="13" fill="#CD8B3C" opacity="0.85" transform="rotate(120 40 37)"/><ellipse cx="40" cy="23" rx="7" ry="13" fill="#CD8B3C" opacity="0.85" transform="rotate(240 40 37)"/><circle cx="40" cy="37" r="6" fill="#8B5E3C"/><circle cx="40" cy="37" r="3" fill="#B87333"/></svg>'},
+        {letter:'r',word:'ran',emoji:'🏃'},{letter:'v',word:'van',emoji:'🚐'}
+      ]},
+      { family:'at', words:[
+        {letter:'c',word:'cat',emoji:'🐱'},{letter:'b',word:'bat',emoji:'🦇'},
+        {letter:'h',word:'hat',emoji:'🎩'},{letter:'m',word:'mat',emoji:'a mat',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><rect x="8" y="22" width="64" height="36" rx="3" fill="#C8913A"/><rect x="8" y="27" width="64" height="5" fill="#4A6FA5"/><rect x="8" y="48" width="64" height="5" fill="#4A6FA5"/><line x1="8" y1="36" x2="72" y2="36" stroke="#A0722A" stroke-width="1.5"/><line x1="8" y1="40" x2="72" y2="40" stroke="#A0722A" stroke-width="1.5"/><line x1="8" y1="44" x2="72" y2="44" stroke="#A0722A" stroke-width="1.5"/><line x1="14" y1="22" x2="13" y2="14" stroke="#C49A40" stroke-width="2"/><line x1="21" y1="22" x2="20" y2="14" stroke="#C49A40" stroke-width="2"/><line x1="28" y1="22" x2="27" y2="14" stroke="#C49A40" stroke-width="2"/><line x1="35" y1="22" x2="34" y2="14" stroke="#C49A40" stroke-width="2"/><line x1="42" y1="22" x2="41" y2="14" stroke="#C49A40" stroke-width="2"/><line x1="49" y1="22" x2="48" y2="14" stroke="#C49A40" stroke-width="2"/><line x1="56" y1="22" x2="55" y2="14" stroke="#C49A40" stroke-width="2"/><line x1="63" y1="22" x2="62" y2="14" stroke="#C49A40" stroke-width="2"/><line x1="14" y1="58" x2="13" y2="66" stroke="#C49A40" stroke-width="2"/><line x1="21" y1="58" x2="20" y2="66" stroke="#C49A40" stroke-width="2"/><line x1="28" y1="58" x2="27" y2="66" stroke="#C49A40" stroke-width="2"/><line x1="35" y1="58" x2="34" y2="66" stroke="#C49A40" stroke-width="2"/><line x1="42" y1="58" x2="41" y2="66" stroke="#C49A40" stroke-width="2"/><line x1="49" y1="58" x2="48" y2="66" stroke="#C49A40" stroke-width="2"/><line x1="56" y1="58" x2="55" y2="66" stroke="#C49A40" stroke-width="2"/><line x1="63" y1="58" x2="62" y2="66" stroke="#C49A40" stroke-width="2"/></svg>'},
+        {letter:'r',word:'rat',emoji:'🐀'},{letter:'s',word:'sat',emoji:'💺'}
+      ]},
+      { family:'ag', words:[
+        {letter:'b',word:'bag',emoji:'👜'},{letter:'t',word:'tag',emoji:'🏷️'},
+        {letter:'r',word:'rag',emoji:'a rag',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><path d="M12,20 Q18,15 28,18 Q38,14 48,19 Q58,15 66,22 Q70,30 68,42 Q72,52 65,58 Q58,66 46,62 Q36,70 24,64 Q14,68 10,58 Q6,46 10,34 Z" fill="#5B7FA6"/><line x1="20" y1="32" x2="58" y2="30" stroke="#4A6A8E" stroke-width="1.2" opacity="0.6"/><line x1="18" y1="40" x2="62" y2="38" stroke="#4A6A8E" stroke-width="1.2" opacity="0.6"/><line x1="17" y1="48" x2="62" y2="47" stroke="#4A6A8E" stroke-width="1.2" opacity="0.6"/><ellipse cx="40" cy="42" rx="12" ry="8" fill="#7FA0C5" opacity="0.35"/><line x1="64" y1="22" x2="70" y2="16" stroke="#7FA0C5" stroke-width="1.5"/><line x1="66" y1="28" x2="73" y2="24" stroke="#7FA0C5" stroke-width="1.5"/><line x1="48" y1="62" x2="50" y2="70" stroke="#7FA0C5" stroke-width="1.5"/><line x1="40" y1="64" x2="40" y2="72" stroke="#7FA0C5" stroke-width="1.5"/><line x1="28" y1="63" x2="25" y2="71" stroke="#7FA0C5" stroke-width="1.5"/></svg>'},{letter:'w',word:'wag',emoji:'🐕'}
+      ]}
+    ]
+  },
+  'Short E': {
+    letters: 'b,d,h,j,k,l,m,n,p,t,v,w'.split(','),
+    families: [
+      { family:'en', words:[
+        {letter:'h',word:'hen',emoji:'🐔'},{letter:'d',word:'den',emoji:'🏠'},
+        {letter:'m',word:'men',emoji:'👥'},{letter:'p',word:'pen',emoji:'🖊️'},
+        {letter:'t',word:'ten',emoji:'🔟'}
+      ]},
+      { family:'et', words:[
+        {letter:'n',word:'net',emoji:'🥅'},{letter:'p',word:'pet',emoji:'🐾'},
+        {letter:'w',word:'wet',emoji:'💧'},{letter:'j',word:'jet',emoji:'✈️'},
+        {letter:'v',word:'vet',emoji:'💊'}
+      ]},
+      { family:'eg', words:[
+        {letter:'l',word:'leg',emoji:'🦵'},{letter:'p',word:'peg',emoji:'📌'},
+        {letter:'b',word:'beg',emoji:'🙏'},{letter:'k',word:'keg',emoji:'🛢️'}
+      ]}
+    ]
+  },
+  'Short I': {
+    letters: 'b,d,f,h,j,k,l,p,s,t,w'.split(','),
+    families: [
+      { family:'ig', words:[
+        {letter:'b',word:'big',emoji:'🐘'},{letter:'d',word:'dig',emoji:'⛏️'},
+        {letter:'p',word:'pig',emoji:'🐷'},{letter:'w',word:'wig',emoji:'💈'},
+        {letter:'j',word:'jig',emoji:'💃'}
+      ]},
+      { family:'it', words:[
+        {letter:'b',word:'bit',emoji:'🔩'},{letter:'h',word:'hit',emoji:'🏏'},
+        {letter:'k',word:'kit',emoji:'🧰'},{letter:'l',word:'lit',emoji:'🕯️'},
+        {letter:'s',word:'sit',emoji:'🪑'}
+      ]},
+      { family:'in', words:[
+        {letter:'f',word:'fin',emoji:'🐟'},{letter:'p',word:'pin',emoji:'📍'},
+        {letter:'t',word:'tin',emoji:'🫙'},{letter:'w',word:'win',emoji:'🏆'},
+        {letter:'b',word:'bin',emoji:'🗑️'}
+      ]}
+    ]
+  },
+  'Short O': {
+    letters: 'b,c,d,f,h,j,l,p'.split(','),
+    families: [
+      { family:'og', words:[
+        {letter:'d',word:'dog',emoji:'🐶'},{letter:'f',word:'fog',emoji:'🌫️'},
+        {letter:'j',word:'jog',emoji:'🏃'},{letter:'l',word:'log',emoji:'🪵'},
+        {letter:'h',word:'hog',emoji:'🐗'}
+      ]},
+      { family:'ot', words:[
+        {letter:'d',word:'dot',emoji:'⚫'},{letter:'h',word:'hot',emoji:'🌡️'},
+        {letter:'p',word:'pot',emoji:'🍲'},{letter:'c',word:'cot',emoji:'🛏️'},
+        {letter:'l',word:'lot',emoji:'🅿️'}
+      ]},
+      { family:'ox', words:[
+        {letter:'b',word:'box',emoji:'📦'},{letter:'f',word:'fox',emoji:'🦊'}
+      ]}
+    ]
+  },
+  'Short U': {
+    letters: 'b,c,f,h,j,m,n,r,s,t'.split(','),
+    families: [
+      { family:'ug', words:[
+        {letter:'b',word:'bug',emoji:'🐛'},{letter:'h',word:'hug',emoji:'🤗'},
+        {letter:'j',word:'jug',emoji:'🫙'},{letter:'m',word:'mug',emoji:'☕'},
+        {letter:'r',word:'rug',emoji:'🪣'},{letter:'t',word:'tug',emoji:'⛵'}
+      ]},
+      { family:'ut', words:[
+        {letter:'c',word:'cut',emoji:'✂️'},{letter:'h',word:'hut',emoji:'🛖'},
+        {letter:'n',word:'nut',emoji:'🥜'},{letter:'b',word:'but',emoji:'↔️'}
+      ]},
+      { family:'un', words:[
+        {letter:'b',word:'bun',emoji:'🍞'},{letter:'f',word:'fun',emoji:'🎉'},
+        {letter:'r',word:'run',emoji:'🏃'},{letter:'s',word:'sun',emoji:'☀️'}
+      ]}
+    ]
+  }
+};
+
+/* ── GAME STATE ── */
+let currentCat = 'Short A';
+let questions = [], qIdx = 0, score = 0, locked = false;
+
+function shuffle(arr) {
+  for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+
+function buildQuestions(cat) {
+  const group = WORD_GROUPS[cat];
+  const qs = [];
+  group.families.forEach(f => f.words.forEach(w => qs.push({...w, family: f.family})));
+  return shuffle(qs);
+}
+
+function getChoices(correct, allLetters) {
+  const pool = allLetters.filter(l => l !== correct);
+  shuffle(pool);
+  return shuffle([correct, ...pool.slice(0,3)]);
+}
+
+function startGame(cat) {
+  currentCat = cat;
+  questions = buildQuestions(cat);
+  qIdx = 0; score = 0;
+  document.getElementById('scoreVal').textContent = '0';
+  document.getElementById('qTotal').textContent = questions.length;
+  document.querySelectorAll('.btn-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  showQuestion();
+}
+
+function showQuestion() {
+  locked = false;
+  const q = questions[qIdx];
+  const ed = document.getElementById('emojiDisplay');
+  if (q.img) { ed.innerHTML = q.img; } else { ed.textContent = q.emoji; }
+  const blank = document.getElementById('wordBlank');
+  blank.textContent = '_';
+  blank.className = 'word-blank';
+  document.getElementById('wordEnd').textContent = q.family;
+  document.getElementById('familyTag').textContent = `_${q.family} family`;
+  document.getElementById('qNum').textContent = qIdx + 1;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('progressFill').style.width = (qIdx / questions.length * 100) + '%';
+
+  const choices = getChoices(q.letter, WORD_GROUPS[currentCat].letters);
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  choices.forEach(letter => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-choice';
+    btn.textContent = letter;
+    btn.addEventListener('click', () => checkAnswer(letter, btn));
+    choicesEl.appendChild(btn);
+  });
+  speak(`What letter starts the word? | dash ${q.family}!`);
+}
+
+function checkAnswer(letter, btn) {
+  if (locked) return;
+  const q = questions[qIdx];
+  if (letter === q.letter) {
+    locked = true;
+    btn.classList.add('correct');
+    document.querySelectorAll('.btn-choice').forEach(b => b.disabled = true);
+    const blank = document.getElementById('wordBlank');
+    blank.textContent = letter;
+    blank.classList.add('filled');
+    document.getElementById('feedback').textContent = q.word.toUpperCase() + '! Great job! 🎉';
+    document.getElementById('feedback').className = 'feedback ok';
+    score++;
+    document.getElementById('scoreVal').textContent = score;
+    speak(`${q.word}! | Great job! | ${q.word} starts with the letter ${letter}!`);
+    setTimeout(advance, 1700);
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('feedback').textContent = 'Try again!';
+    document.getElementById('feedback').className = 'feedback err';
+    speak('Try again!');
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      btn.disabled = true;
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('feedback').className = 'feedback';
+    }, 900);
+  }
+}
+
+function advance() {
+  qIdx++;
+  if (qIdx >= questions.length) { showGameOver(); } else { showQuestion(); }
+}
+
+function showGameOver() {
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('emojiDisplay').textContent = '🎉';
+  document.getElementById('wordBlank').textContent = '';
+  document.getElementById('wordEnd').textContent = '';
+  document.getElementById('familyTag').textContent = 'Game Over!';
+  document.getElementById('feedback').textContent = `You got ${score} of ${questions.length}! Amazing!`;
+  document.getElementById('feedback').className = 'feedback ok';
+  const btn = document.createElement('button');
+  btn.className = 'btn-choice';
+  btn.style.cssText = 'grid-column:1/-1;font-family:"Fredoka One",cursive;font-size:1.1rem;';
+  btn.textContent = 'Play Again! 🔄';
+  btn.addEventListener('click', () => startGame(currentCat));
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  choicesEl.appendChild(btn);
+  speak(`Amazing! You got ${score} out of ${questions.length} words correct!`);
+}
+
+document.querySelectorAll('.btn-cat').forEach(btn => {
+  btn.addEventListener('click', () => startGame(btn.dataset.cat));
+});
+startGame('Short A');
+</script>
+</body>
+</html>
+
+

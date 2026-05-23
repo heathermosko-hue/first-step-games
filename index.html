@@ -1,0 +1,602 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn to Read Games | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:   #3A8EF6;
+      --indigo: #6B48FF;
+      --coral:  #FF6B6B;
+      --yellow: #FFD93D;
+      --green:  #6BCB77;
+      --purple: #9B59B6;
+      --bg:     #F0F7FF;
+      --text:   #2C3E50;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #3A8EF6 0%, #6B48FF 100%);
+      padding: 2.5rem 1rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: 'A a B b C c D d E e F f G g H h I i J j K k L l M m N n';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.12);
+      letter-spacing: 6px;
+      padding: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: 'O o P p Q q R r S s T t U u V v W w X x Y y Z z';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.12);
+      letter-spacing: 6px;
+      padding: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .header-inner { position: relative; z-index: 1; }
+
+    .site-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 16px;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.2rem, 7vw, 3.6rem);
+      color: white;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.2);
+      line-height: 1.1;
+    }
+
+    header p {
+      color: rgba(255,255,255,0.9);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-top: 0.6rem;
+    }
+
+    .header-links {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-top: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .header-link {
+      display: inline-block;
+      color: white;
+      font-weight: 700;
+      text-decoration: none;
+      background: rgba(255,255,255,0.2);
+      padding: 7px 20px;
+      border-radius: 999px;
+      transition: background 0.2s;
+      font-size: 0.9rem;
+    }
+    .header-link:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 1060px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-head {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-head h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: var(--text);
+    }
+
+    .section-head p {
+      color: #666;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 0.35rem;
+    }
+
+    /* ── CATEGORY LABEL ── */
+    .category-label {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      color: var(--blue);
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .category-label::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, #D0E8FF, transparent);
+      border-radius: 2px;
+    }
+
+    /* ── GAMES GRID ── */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .game-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.75rem 1.25rem 1.5rem;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .game-card.playable {
+      border: 3px solid transparent;
+      background: linear-gradient(white, white) padding-box,
+                  linear-gradient(135deg, #3A8EF6, #6BCB77) border-box;
+    }
+    .game-card.playable:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 36px rgba(58,142,246,0.22);
+    }
+
+    .game-card.locked {
+      opacity: 0.68;
+      cursor: default;
+      border: 3px solid #E8E8E8;
+    }
+
+    .game-icon {
+      font-size: 3.8rem;
+      line-height: 1;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+      margin-bottom: 0.25rem;
+    }
+
+    .game-card h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.15rem;
+      color: var(--text);
+      line-height: 1.25;
+    }
+
+    .game-card p {
+      font-size: 0.85rem;
+      color: #666;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .play-btn {
+      display: inline-block;
+      margin-top: 0.85rem;
+      background: linear-gradient(135deg, #3A8EF6, #6B48FF);
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      padding: 9px 26px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(58,142,246,0.35);
+      transition: opacity 0.2s;
+    }
+    .game-card.playable:hover .play-btn { opacity: 0.85; }
+
+    .coming-soon-badge {
+      display: inline-block;
+      margin-top: 0.85rem;
+      background: #F0F0F0;
+      color: #999;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.9rem;
+      padding: 6px 18px;
+      border-radius: 999px;
+    }
+
+    /* ── FEATURED CARD ── */
+    .game-card.featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      text-align: left;
+      gap: 1.5rem;
+      padding: 2rem 2rem;
+      max-width: 600px;
+      justify-self: center;
+      width: 100%;
+    }
+
+    .game-card.featured .game-icon { font-size: 5rem; flex-shrink: 0; }
+
+    .featured-body { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .game-card.featured h3 { font-size: 1.4rem; }
+
+    .new-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #FFD93D, #FF8E53);
+      color: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.75rem;
+      padding: 2px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      align-self: flex-start;
+    }
+
+    /* ── ALPHABET STRIP ── */
+    .alpha-strip {
+      margin-top: 3rem;
+      background: white;
+      border-radius: 18px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+
+    .alpha-strip h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #999;
+    }
+
+    .alpha-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .alpha-pair {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: transform .15s;
+    }
+    .alpha-pair:hover { transform: scale(1.2); }
+    .alpha-pair:active { transform: scale(.9); }
+    .alpha-pair.pop { animation: alphaPop .38s ease; }
+    @keyframes alphaPop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.45); }
+      70%  { transform: scale(.88); }
+      100% { transform: scale(1); }
+    }
+
+    .alpha-upper {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #3A8EF6, #6B48FF);
+      color: white;
+      font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(58,142,246,.35);
+    }
+
+    .alpha-lower {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+      color: white;
+      font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(255,107,107,.35);
+    }
+
+    .alpha-word-display {
+      text-align: center;
+      margin-top: .8rem;
+      font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #3A8EF6;
+      min-height: 1.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1.75rem;
+      font-size: 0.9rem;
+      color: #999;
+      font-weight: 600;
+      border-top: 2px solid #E8F0FF;
+      margin-top: 1rem;
+    }
+    footer a { color: var(--blue); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 520px) {
+      .game-card.featured { flex-direction: column; text-align: center; }
+      .game-card.featured .featured-body { align-items: center; }
+      .new-badge { align-self: center; }
+    }
+  </style>
+<link href="fonts.css" rel="stylesheet"></head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="site-badge">📚 First Step Reading</span>
+    <h1>Learn to Read Games</h1>
+    <p>Free fun games that make learning letters easy!</p>
+    <div class="header-links">
+      <a href="https://www.firststepreading.com" class="header-link">← First Step Reading</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="section-head">
+    <h2>Pick a Game to Play!</h2>
+    <p>All games are free — just click and start learning!</p>
+  </div>
+
+  <div class="category-label">🔤 Letter Games</div>
+
+  <div class="games-grid">
+
+    <a href="go-fish.html" class="game-card playable featured">
+      <div class="game-icon">🐠</div>
+      <div class="featured-body">
+        <span class="new-badge">✨ Available Now!</span>
+        <h3>Uppercase and Lowercase Letter Go Fish Game</h3>
+        <p>Match uppercase and lowercase letters to collect pairs! Play against the computer and be the first to match all 26 letters of the alphabet.</p>
+        <span class="play-btn">Play Now!</span>
+      </div>
+    </a>
+
+    <a href="memory.html" class="game-card playable">
+      <div class="game-icon">🃏</div>
+      <h3>Uppercase and Lowercase Letter Memory Match Game</h3>
+      <p>Flip cards to find matching uppercase and lowercase letter pairs!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="bingo.html" class="game-card playable">
+      <div class="game-icon">🎯</div>
+      <h3>Uppercase and Lowercase Letter Bingo Game</h3>
+      <p>Hear a letter called and mark it on your bingo card! Get 5 in a row to win!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="sound-match.html" class="game-card playable">
+      <div class="game-icon">🖼️</div>
+      <h3>Uppercase and Lowercase Letter and Initial Picture Sound Match Game</h3>
+      <p>See a letter and pick the picture that starts with that letter sound!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="trace.html" class="game-card playable">
+      <div class="game-icon">✏️</div>
+      <h3>Trace the Letters</h3>
+      <p>Practice writing all uppercase and lowercase letters!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+  </div>
+
+  <div class="category-label">📖 Sight Word Games</div>
+
+  <div class="games-grid">
+
+    <a href="sw-go-fish.html" class="game-card playable featured">
+      <div class="game-icon">🐠</div>
+      <div class="featured-body">
+        <span class="new-badge">✨ Available Now!</span>
+        <h3>Sight Word Go Fish Game</h3>
+        <p>Collect matching pairs of sight words! Ask the computer for the word you need, or go fish and draw from the deck.</p>
+        <span class="play-btn">Play Now!</span>
+      </div>
+    </a>
+
+    <a href="sw-bingo.html" class="game-card playable">
+      <div class="game-icon">🎯</div>
+      <h3>Sight Word Bingo Game</h3>
+      <p>Listen for sight words and mark them on your bingo card! Get 5 in a row to win!</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+  </div>
+
+  <div class="category-label">🔊 Phonics Games</div>
+
+  <div class="games-grid">
+
+    <a href="word-family.html" class="game-card playable">
+      <div class="game-icon">🏗️</div>
+      <h3>Word Family Builder</h3>
+      <p>Pick the starting letter to complete CVC word families! Short A, E, I, O, and U vowels.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="long-vowels.html" class="game-card playable">
+      <div class="game-icon">🔤</div>
+      <h3>Long Vowel Sounds</h3>
+      <p>Learn how to spell long vowel sounds! a-e, ai, ay / ee, ea / i-e, igh / o-e, oa, ow / u-e, ew.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="irregular-sounds.html" class="game-card playable">
+      <div class="game-icon">🎲</div>
+      <h3>Irregular Sound Combinations</h3>
+      <p>Practice tricky vowel teams! ou/ow, oi/oy, oo, au/aw, and silent letter combinations.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="digraphs.html" class="game-card playable">
+      <div class="game-icon">🔗</div>
+      <h3>Digraphs</h3>
+      <p>Learn letter blends and digraphs! sh, ch, th, wh, ph and all the consonant blends.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+    <a href="r-controlled.html" class="game-card playable">
+      <div class="game-icon">🌀</div>
+      <h3>R-Controlled Vowels</h3>
+      <p>Practice the bossy R! ar, er, ir, or, and ur vowel patterns change the vowel sound.</p>
+      <span class="play-btn">Play Now!</span>
+    </a>
+
+  </div>
+
+  <div class="alpha-strip">
+    <h3>Tap a letter to hear its name &amp; sound!</h3>
+    <div class="alpha-row" id="alphaRow"></div>
+    <div class="alpha-word-display" id="alphaWordDisplay"></div>
+  </div>
+
+</main>
+
+<footer>
+  <p>
+    Part of <a href="https://www.firststepreading.com">First Step Reading</a>
+    &nbsp;|&nbsp;
+    Free learn-to-read games for kids 📚
+  </p>
+</footer>
+
+<script>
+/* ── ALPHABET LETTER DATA ── */
+const ALPHA_DATA = {
+  A:{sound:'aaa',word:'Apple',emoji:'🍎'},   B:{sound:'buh',word:'Ball',emoji:'⚽'},
+  C:{sound:'kuh',word:'Cat',emoji:'🐱'},     D:{sound:'duh',word:'Dog',emoji:'🐶'},
+  E:{sound:'eh',word:'Egg',emoji:'🥚'},      F:{sound:'fff',word:'Fish',emoji:'🐟'},
+  G:{sound:'guh',word:'Grapes',emoji:'🍇'},  H:{sound:'huh',word:'Hat',emoji:'🎩'},
+  I:{sound:'ih',word:'Igloo',emoji:'🧊'},    J:{sound:'juh',word:'Jar',emoji:'🫙'},
+  K:{sound:'kuh',word:'Kite',emoji:'🪁'},    L:{sound:'lll',word:'Lion',emoji:'🦁'},
+  M:{sound:'mmm',word:'Moon',emoji:'🌙'},    N:{sound:'nnn',word:'Nut',emoji:'🥜'},
+  O:{sound:'ah',word:'Octopus',emoji:'🐙'},  P:{sound:'puh',word:'Pizza',emoji:'🍕'},
+  Q:{sound:'kwuh',word:'Queen',emoji:'👑'},  R:{sound:'rrr',word:'Rainbow',emoji:'🌈'},
+  S:{sound:'sss',word:'Star',emoji:'⭐'},    T:{sound:'tuh',word:'Tree',emoji:'🌳'},
+  U:{sound:'uh',word:'Umbrella',emoji:'☂️'}, V:{sound:'vvv',word:'Violin',emoji:'🎻'},
+  W:{sound:'wuh',word:'Whale',emoji:'🐋'},   X:{sound:'ks',word:'Xylophone',emoji:'🎸'},
+  Y:{sound:'yuh',word:'Yo-yo',emoji:'🪀'},   Z:{sound:'zzz',word:'Zebra',emoji:'🦓'}
+};
+
+/* ── SPEECH ── */
+let _av = null;
+function loadAlphaVoice() {
+  const all = window.speechSynthesis.getVoices();
+  if (!all.length) return;
+  _av = all.find(v => v.name.toLowerCase().includes('richard'))
+      || all.find(v => v.lang && v.lang.startsWith('en')) || all[0];
+}
+window.speechSynthesis.onvoiceschanged = loadAlphaVoice;
+loadAlphaVoice();
+
+function speakLetter(L) {
+  const d = ALPHA_DATA[L];
+  window.speechSynthesis.cancel();
+  const parts = [
+    `${L}!`,
+    `${L.toLowerCase()}!`,
+    `${L} says ${d.sound}!`,
+    `${L} is for ${d.word}!`
+  ];
+  let i = 0;
+  function next() {
+    if (i >= parts.length) return;
+    const utt = new SpeechSynthesisUtterance(parts[i++]);
+    if (_av) utt.voice = _av;
+    utt.rate = 0.85; utt.pitch = 1.0;
+    utt.onend = () => setTimeout(next, 280);
+    window.speechSynthesis.speak(utt);
+  }
+  next();
+}
+
+/* ── BUILD TILES ── */
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const row = document.getElementById('alphaRow');
+const wordDisplay = document.getElementById('alphaWordDisplay');
+
+for (const L of letters) {
+  const btn = document.createElement('button');
+  btn.className = 'alpha-pair';
+  btn.setAttribute('aria-label', `Letter ${L}`);
+  btn.innerHTML = `<div class="alpha-upper">${L}</div><div class="alpha-lower">${L.toLowerCase()}</div>`;
+  btn.addEventListener('click', () => {
+    const d = ALPHA_DATA[L];
+    // Pop animation
+    btn.classList.remove('pop');
+    void btn.offsetWidth;
+    btn.classList.add('pop');
+    btn.addEventListener('animationend', () => btn.classList.remove('pop'), {once:true});
+    // Update word display
+    wordDisplay.textContent = `${d.emoji}  ${L} / ${L.toLowerCase()}  —  "${d.sound}"  —  ${L} is for ${d.word}!`;
+    // Speak
+    speakLetter(L);
+  });
+  row.appendChild(btn);
+}
+</script>
+
+</body>
+</html>
+
+
