@@ -10,7 +10,7 @@
   <style>
     :root { --bg:#FFF8F0; --text:#2C3E50; --orange:#E67E22; --amber:#F39C12; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     header { background:linear-gradient(135deg,#E67E22 0%,#F39C12 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
@@ -28,7 +28,7 @@
     .btn-cat:hover { background:#FFD9A8; }
     .btn-cat.active { background:#E67E22; color:white; border-color:#E67E22; }
 
-    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:1.5rem 1rem 2rem; gap:1rem; }
+    main { flex:1; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:1.5rem 1rem 2rem; gap:1rem; }
 
     .score-row { display:flex; gap:1.5rem; font-family:'Fredoka One',cursive; font-size:1rem; color:#bbb; }
     .score-row span { color:#E67E22; font-size:1.2rem; }
@@ -85,9 +85,6 @@
       0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)}
     }
 
-    footer { text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #FFE5C8; margin-top:auto; }
-    footer a { color:#E67E22; text-decoration:none; }
-    footer a:hover { text-decoration:underline; }
   </style>
 <link href="fonts.css" rel="stylesheet"></head>
 <body>
@@ -130,10 +127,6 @@
   <div class="feedback" id="feedback"></div>
   <div class="choices" id="choices"></div>
 </main>
-
-<footer>
-  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
-</footer>
 
 <script>
 /* ── SPEECH ── */
@@ -234,7 +227,7 @@ const WORD_GROUPS = {
       ]},
       { family:'in', words:[
         {letter:'f',word:'fin',emoji:'🐟'},{letter:'p',word:'pin',emoji:'📍'},
-        {letter:'t',word:'tin',emoji:'🫙'},{letter:'w',word:'win',emoji:'🏆'},
+        {letter:'t',word:'tin',emoji:'a tin',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><rect x="20" y="18" width="40" height="50" fill="#B8C0C8"/><rect x="20" y="18" width="8" height="50" fill="#909AA0" opacity="0.6"/><ellipse cx="40" cy="18" rx="20" ry="6" fill="#D0D8E0" stroke="#A0A8B0" stroke-width="1.5"/><ellipse cx="40" cy="68" rx="20" ry="6" fill="#9098A0"/><ellipse cx="40" cy="28" rx="20" ry="3.5" fill="none" stroke="#909AA0" stroke-width="2"/><ellipse cx="40" cy="58" rx="20" ry="3.5" fill="none" stroke="#909AA0" stroke-width="2"/><ellipse cx="40" cy="22" rx="20" ry="4" fill="none" stroke="#C0C8D0" stroke-width="2.5"/><rect x="46" y="22" width="4" height="40" fill="rgba(255,255,255,0.35)"/></svg>'},{letter:'w',word:'win',emoji:'🏆'},
         {letter:'b',word:'bin',emoji:'🗑️'}
       ]}
     ]
@@ -263,7 +256,7 @@ const WORD_GROUPS = {
       { family:'ug', words:[
         {letter:'b',word:'bug',emoji:'🐛'},{letter:'h',word:'hug',emoji:'🤗'},
         {letter:'j',word:'jug',emoji:'🫙'},{letter:'m',word:'mug',emoji:'☕'},
-        {letter:'r',word:'rug',emoji:'🪣'},{letter:'t',word:'tug',emoji:'⛵'}
+        {letter:'r',word:'rug',emoji:'a rug',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><line x1="14" y1="22" x2="12" y2="14" stroke="#E8C87A" stroke-width="2"/><line x1="22" y1="22" x2="20" y2="14" stroke="#E8C87A" stroke-width="2"/><line x1="30" y1="22" x2="28" y2="14" stroke="#E8C87A" stroke-width="2"/><line x1="38" y1="22" x2="36" y2="14" stroke="#E8C87A" stroke-width="2"/><line x1="46" y1="22" x2="44" y2="14" stroke="#E8C87A" stroke-width="2"/><line x1="54" y1="22" x2="52" y2="14" stroke="#E8C87A" stroke-width="2"/><line x1="62" y1="22" x2="60" y2="14" stroke="#E8C87A" stroke-width="2"/><rect x="8" y="22" width="64" height="36" rx="3" fill="#C0392B"/><rect x="12" y="26" width="56" height="28" rx="2" fill="#E74C3C"/><rect x="16" y="30" width="48" height="20" rx="2" fill="#C0392B"/><rect x="12" y="36" width="56" height="8" fill="#E8C87A" opacity="0.5"/><polygon points="40,30 50,40 40,50 30,40" fill="#E8C87A" opacity="0.6"/><line x1="14" y1="58" x2="12" y2="66" stroke="#E8C87A" stroke-width="2"/><line x1="22" y1="58" x2="20" y2="66" stroke="#E8C87A" stroke-width="2"/><line x1="30" y1="58" x2="28" y2="66" stroke="#E8C87A" stroke-width="2"/><line x1="38" y1="58" x2="36" y2="66" stroke="#E8C87A" stroke-width="2"/><line x1="46" y1="58" x2="44" y2="66" stroke="#E8C87A" stroke-width="2"/><line x1="54" y1="58" x2="52" y2="66" stroke="#E8C87A" stroke-width="2"/><line x1="62" y1="58" x2="60" y2="66" stroke="#E8C87A" stroke-width="2"/></svg>'},{letter:'t',word:'tug',emoji:'⛵'}
       ]},
       { family:'ut', words:[
         {letter:'c',word:'cut',emoji:'✂️'},{letter:'h',word:'hut',emoji:'🛖'},
@@ -396,6 +389,7 @@ document.querySelectorAll('.btn-cat').forEach(btn => {
 });
 startGame('Short A');
 </script>
+<script src="auth/student-bar.js"></script>
 </body>
 </html>
 

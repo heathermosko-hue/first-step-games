@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Online Homework</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Comic Sans MS","Comic Sans",cursive;background:linear-gradient(160deg,#e8f5e9 0%,#e3f2fd 100%);min-height:100vh;color:#000}
+.nav{background:#1a237e;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:10}
+.nav label{font-size:.85rem;font-weight:bold}
+.nav select{font-family:"Comic Sans MS",cursive;font-size:.85rem;padding:4px 8px;border-radius:6px;border:none;cursor:pointer;max-width:230px}
+.nav a{color:#aacfff;font-size:.85rem;margin-left:auto;text-decoration:none}
+#content{max-width:640px;margin:0 auto;padding:14px 12px 40px}
+/* Chapter header */
+.ch-header{background:#fff;border-radius:18px;padding:14px 18px;margin-bottom:16px;box-shadow:0 3px 14px #0001;display:flex;align-items:center;gap:14px;border:3px solid #90caf9}
+.ch-em{font-size:3rem;flex-shrink:0}
+.ch-sub{font-size:.7rem;color:#666;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.ch-title{font-size:1.3rem;font-weight:900}
+.ch-book{font-size:.75rem;color:#555;margin-top:2px}
+/* Cards */
+.card{background:#fff;border-radius:18px;padding:16px 18px;margin-bottom:16px;box-shadow:0 3px 14px #0001}
+.card-hdr{font-size:1rem;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+/* Story */
+.story-card{border:2.5px solid #81c784}
+.story-card .card-hdr{color:#2e7d32}
+.story-text{font-size:1rem;line-height:1.75;margin-bottom:3px}
+/* Comprehension */
+.comp-card{border:2.5px solid #ffd54f}
+.comp-card .card-hdr{color:#e65100}
+.q-block{margin-bottom:12px;padding:10px 12px;border:1.5px solid #ffe082;border-radius:12px;background:#fffde7}
+.q-text{font-size:1rem;line-height:1.5;margin-bottom:9px}
+.blank{display:inline-block;min-width:65px;border-bottom:2.5px solid #000;vertical-align:bottom;height:18px}
+.choices{display:flex;gap:9px;flex-wrap:wrap}
+.cbtn{font-family:"Comic Sans MS",cursive;font-size:1.05rem;font-weight:900;padding:9px 22px;border:3px solid #444;border-radius:30px;cursor:pointer;background:#fff;transition:all .18s;min-width:76px}
+.cbtn:hover:not([disabled]){background:#f5f5f5;transform:scale(1.05)}
+.cbtn.correct{background:#c8e6c9!important;border-color:#2e7d32!important;color:#1b5e20}
+.cbtn.wrong{background:#ffcdd2!important;border-color:#c62828!important;color:#b71c1c}
+.cbtn[disabled]{cursor:default}
+.q-msg{font-size:.92rem;font-weight:900;margin-top:7px;min-height:22px}
+.comp-score{text-align:center;font-size:1.05rem;font-weight:900;margin-top:10px;padding:9px;border-radius:12px;background:#f1f8e9;border:2px solid #aed581}
+/* Flashcards */
+.sw-card{border:2.5px solid #ce93d8}
+.sw-card .card-hdr{color:#6a1b9a}
+.wf-card{border:2.5px solid #81d4fa}
+.wf-card .card-hdr{color:#01579b}
+.flash-word{font-size:3.8rem;font-weight:900;text-align:center;padding:20px 12px 14px;letter-spacing:.04em;min-height:90px;display:flex;align-items:center;justify-content:center}
+.flash-ctrl{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
+.farr{font-family:"Comic Sans MS",cursive;font-size:1.3rem;width:46px;height:46px;border-radius:50%;border:2.5px solid #000;background:#fff;cursor:pointer;font-weight:900;transition:transform .1s;display:flex;align-items:center;justify-content:center}
+.farr:active{transform:scale(.88)}
+.farr:disabled{opacity:.3;cursor:default}
+.fctr{font-size:.9rem;font-weight:bold;color:#666;min-width:60px;text-align:center}
+.fsay{font-family:"Comic Sans MS",cursive;font-size:.95rem;font-weight:900;padding:8px 22px;border:2.5px solid #000;border-radius:24px;cursor:pointer;display:block;margin:0 auto;transition:transform .1s}
+.fsay:active{transform:scale(.95)}
+.sw-card .fsay{background:#ede7f6}
+.wf-card .fsay{background:#e1f5fe}
+/* Find It */
+.find-card{border:2.5px solid #ffb74d}
+.find-card .card-hdr{color:#bf360c}
+.find-key{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:10px;font-size:.87rem;font-weight:bold}
+.key-bub{border:2.5px solid #000;border-radius:14px;padding:2px 10px;font-size:.87rem;font-weight:900;background:#fff8e1}
+.find-score{font-size:.92rem;font-weight:900;margin-bottom:10px;color:#bf360c}
+.find-grid{display:flex;flex-wrap:wrap;gap:8px}
+.fbub{min-width:70px;height:44px;padding:0 10px;border:2.5px solid #000;border-radius:25px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.92rem;cursor:pointer;user-select:none;transition:all .2s;background:#fff;font-family:"Comic Sans MS",cursive}
+.fbub:hover:not(.found){background:#fff9c4;transform:scale(1.04)}
+.fbub.found{background:#c8e6c9;border-color:#2e7d32;color:#1b5e20;transform:scale(1.06)}
+.fbub.nope{animation:shake .32s}
+.find-done{text-align:center;font-size:1.1rem;font-weight:900;color:#2e7d32;margin-top:10px;min-height:28px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}60%{transform:translateX(6px)}}
+/* Finish button */
+.finish-wrap{text-align:center;margin:4px 0 24px}
+.finish-btn{font-family:"Comic Sans MS",cursive;font-size:1.35rem;font-weight:900;padding:16px 0;border-radius:30px;border:3px solid #bbb;background:#e0e0e0;color:#aaa;cursor:default;transition:all .35s;width:100%;letter-spacing:.02em}
+.finish-btn.ready{background:#66bb6a;border-color:#2e7d32;color:#fff;cursor:pointer;animation:glow 1.4s ease-in-out infinite alternate}
+@keyframes glow{from{box-shadow:0 0 8px rgba(102,187,106,.5)}to{box-shadow:0 0 28px rgba(102,187,106,1),0 0 48px rgba(102,187,106,.35)}}
+.finish-msg{margin-top:14px;font-size:.97rem;font-weight:bold;min-height:24px}
+.finish-msg.todo{color:#c62828;text-align:left;line-height:1.8}
+.finish-msg.done{color:#2e7d32;font-size:1.25rem;text-align:center}
+</style>
+</head>
+<body>
+<div class="nav">
+  <label>Book:</label>
+  <select id="sel-book" onchange="onBookChange()">
+    <option value="1">Book 1: ABCs &amp; Short Vowels</option>
+    <option value="2">Book 2: Long Vowels &amp; Blends</option>
+    <option value="3">Book 3: Consonants &amp; Exceptions</option>
+  </select>
+  <label>Chapter:</label>
+  <select id="sel-ch" onchange="onChChange()"></select>
+  <a href="hub.html" id="back-link">&#8592; Back</a>
+  <script>(function(){var p=new URLSearchParams(location.search),b=p.get('book'),c=p.get('ch');if(b&&c){var el=document.getElementById('back-link');el.href='book'+b+'.html?page='+c;el.textContent='← Back to Book '+b;}})()</script>
+</div>
+<div id="content"></div>
+<script>
+const CH={
+"1-2":{t:"Mat and Pat",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel A",em:"&#x1F400;",
+  st:["Mat is a rat. Pat is a rat.","Mat has a hat and a bat.","The fat cat sat at a mat."],
+  w:["at","bat","cat","fat","hat","mat","pat","rat","sat","that"],
+  sw:["is","a","has","and","not","the","at"],
+  q:[["Mat is a _____.","rat","cat"],["Mat has a hat and a _____.","bat","hat"],["The fat cat sat at a _____.","mat","pat"]]},
+"1-8":{t:"Dan",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel A",em:"&#x1F468;",
+  st:["Dan is a man.","Dan has an apple. Dan has a can.","Mat and Pat ran to a van."],
+  w:["an","can","dan","man","pan","ran","van"],
+  sw:["is","a","and","has","said","to","not","an"],
+  q:[["Dan is a _____.","man","can"],["Dan has a pan and a _____.","can","man"],["Mat and Pat ran to a _____.","van","pan"]]},
+"1-13":{t:"Not Sam and Not Pam",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel A",em:"&#x1F356;",
+  st:["I am Mat, not Sam.","I am Pat, not Pam.","Pat has a yam. Mat has ham and jam."],
+  w:["ham","jam","pam","sam","yam"],
+  sw:["i","a","am","not","has","and","have"],
+  q:[["I am Mat, not _____.","Sam","Pam"],["Pat has a _____.","yam","ham"],["Mat has ham and _____.","jam","yam"]]},
+"1-18":{t:"Dad's Bag",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel A",em:"&#x1F392;",
+  st:["Mat has Dad's bag. Mat wags.","Mat is bad. Dad is mad.","Dad and Mat are glad."],
+  w:["bad","dad","glad","mad","sad","bag","gag","wag"],
+  sw:["has","is","and","are"],
+  q:[["Mat has Dad's _____.","bag","gag"],["Dad is _____.","mad","sad"],["Dad and Mat are _____.","glad","mad"]]},
+"1-23":{t:"Dab. Rap a Tap",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel A",em:"&#x1F5FA;&#xFE0F;",
+  st:["Dab. Dab. Dab.","Rap a tap. Tap. Tap. Tap.","Pat has a nap with a cap in her lap."],
+  w:["cab","dab","cap","lap","map","nap","rap","tap"],
+  sw:["with","has","a","the","and","in","her"],
+  q:[["Pat has a nap with a cap in her _____.","lap","map"],["Pat has a cap and a _____.","map","nap"],["Rap a _____.","tap","cap"]]},
+"1-28":{t:"Red",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel E",em:"&#x1F995;",
+  st:["Red is a T Rex.","Red is not wed to Ed.","Red is fed. Red has a ted in bed."],
+  w:["ed","bed","fed","red","ted","wed"],
+  sw:["in","is","a","not","to","has"],
+  q:[["Red is a T _____.","Rex","Red"],["Red has a ted in _____.","bed","wed"],["Red is not wed to _____.","Ed","Red"]]},
+"1-33":{t:"Red Begs",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel E",em:"&#x1FAA3;",
+  st:["Red begs for a keg.","Red does not beg at the leg."],
+  w:["beg","leg","keg"],
+  sw:["for","a","do","not","at","the"],
+  q:[["Red begs for a _____.","keg","beg"],["Red does not beg at the _____.","leg","keg"],["Red _____ for a keg.","begs","runs"]]},
+"1-35":{t:"The Hens",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel E",em:"&#x1F413;",
+  st:["Ben, Ken, and Len are men hens.","The ten hens are in the pen with Red."],
+  w:["ben","hen","ken","len","men","pen","ten"],
+  sw:["are","and","the","in","with"],
+  q:[["Ben, Ken, and Len are _____.","men","hens"],["The ten hens are in the _____.","pen","den"],["The hens are with _____.","Red","Ed"]]},
+"1-38":{t:"The Jet",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel E",em:"&#x2708;&#xFE0F;",
+  st:["I met the pet at the vet.","Red bets she gets a jet.","She will not let me set the wet pet in the jet."],
+  w:["bet","get","jet","let","met","pet","set","vet","wet","yet"],
+  sw:["she","will","a","not","me","the","i","at","in"],
+  q:[["I met the pet at the _____.","vet","jet"],["Red bets she gets a _____.","jet","pet"],["She will not let me set the wet pet in the _____.","jet","vet"]]},
+"1-41":{t:"The Pig",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel I",em:"&#x1F437;",
+  st:["Jim is a big pig.","Jim zigs as he jigs. Jim is with a wig."],
+  w:["big","jig","pig","wig","zig"],
+  sw:["is","a","with","as","he"],
+  q:[["Jim is a big _____.","pig","wig"],["Jim zigs as he _____.","jigs","digs"],["Jim is with a _____.","wig","jig"]]},
+"1-44":{t:"Win",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel I",em:"&#x1F3C6;",
+  st:["Jim is in the bin.","Jim has a fin.","Jim wins a tin pin."],
+  w:["bin","fin","in","pin","tin","win"],
+  sw:["has","a","is","the","in"],
+  q:[["Jim is in the _____.","bin","fin"],["Jim has a _____.","fin","pin"],["Jim wins a tin _____.","pin","bin"]]},
+"1-48":{t:"The Fit",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel I",em:"&#x1F624;",
+  st:["Kit has a fit that Jim wins. Kit hit. Kit bit.","Kit sits. It is sad to sit.","Kit said, Sorry Jim!"],
+  w:["bit","fit","hit","it","kit","sit"],
+  sw:["has","that","a","to","it","is","said","sorry"],
+  q:[["Kit has a fit that Jim _____.","wins","sits"],["Kit said, Sorry _____!","Jim","Kim"],["Kit _____. It is sad to sit.","sits","hits"]]},
+"1-52":{t:"Kim",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel I",em:"&#x1F34E;",
+  st:["Kim has an apple rim. Jim is sad.","Kim gives it to him."],
+  w:["him","jim","kim","rim"],
+  sw:["has","an","is","give","it","to"],
+  q:[["Kim has an apple _____.","rim","him"],["Jim is _____.","sad","glad"],["Kim gives it to _____.","him","Jim"]]},
+"1-55":{t:"Hid",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel I",em:"&#x1FA86;",
+  st:["Did Jim see the kid doll?","The kid doll hid in the lid.","Jim sees the kid doll in the lid."],
+  w:["did","hid","kid","lid"],
+  sw:["did","see","the","in"],
+  q:[["Did Jim see the kid _____?","doll","ball"],["The kid doll hid in the _____.","lid","bin"],["Jim _____ the kid doll in the lid.","sees","hid"]]},
+"1-59":{t:"Sip",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel I",em:"&#x1F4A7;",
+  st:["Jim dips. Jim tips on his hips.","Jim's lips sip."],
+  w:["lip","sip","dip","tip","hip"],
+  sw:["on","his"],
+  q:[["Jim tips on his _____.","hips","lips"],["Jim's lips _____.","sip","dip"],["Jim _____ on his hips.","tips","dips"]]},
+"1-62":{t:"Bob the Dog",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel O",em:"&#x1F415;",
+  st:["Bob is a dog.","Bob sees a frog on a log and a hog."],
+  w:["dog","frog","hog","log"],
+  sw:["is","a","see","on","and"],
+  q:[["Bob is a _____.","dog","log"],["Bob sees a frog on a _____.","log","hog"],["Bob sees a frog on a log and a _____.","hog","frog"]]},
+"1-65":{t:"A Job",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel O",em:"&#x1F4BC;",
+  st:["Bob sobs. Bob has no job.","Bob got a job with Rob."],
+  w:["bob","job","rob","sob"],
+  sw:["has","no","got","a","with"],
+  q:[["Bob sobs. Bob has no _____.","job","bob"],["Bob got a job with _____.","Rob","Bob"],["Bob _____.","sobs","hops"]]},
+"1-68":{t:"The Cop",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel O",em:"&#x1F46E;",
+  st:["The cop sees Bob hop on top of a mop.","The mop said, Pop! The cop said, Stop!"],
+  w:["cop","hop","mop","pop","top","stop"],
+  sw:["the","see","on","of","a","said"],
+  q:[["The cop sees Bob hop on top of a _____.","mop","top"],["The mop said, _____!","Pop","Hop"],["The cop said, _____!","Stop","Pop"]]},
+"1-71":{t:"The Hot Dot",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel O",em:"&#x1F535;",
+  st:["Bob sees the hot dot.","The pot got a lot hot."],
+  w:["dot","got","hot","lot","pot"],
+  sw:["see","the","a"],
+  q:[["Bob sees the hot _____.","dot","pot"],["The pot got a lot _____.","hot","dot"],["Bob _____ the hot dot.","sees","got"]]},
+"1-74":{t:"The Hot Rod",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel O",em:"&#x1F697;",
+  st:["Bob is on the sod. Bob nods at the hot rod.","Bob said, Go hot rod!"],
+  w:["nod","rod","sod"],
+  sw:["go","said","the","on","at","is"],
+  q:[["Bob is on the _____.","sod","rod"],["Bob nods at the hot _____.","rod","sod"],["Bob said, Go hot _____!","rod","sod"]]},
+"1-77":{t:"The Box",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel O",em:"&#x1F4E6;",
+  st:["Bob has a box that says, Lox.","In the box is a fox and an ox."],
+  w:["box","fox","lox","ox"],
+  sw:["has","a","that","says","in","the","is","an"],
+  q:[["Bob has a box that says, _____.","Lox","Fox"],["In the box is a fox and an _____.","ox","box"],["Bob has a _____.","box","fox"]]},
+"1-80":{t:"Mug the Bug",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel U",em:"&#x1F41B;",
+  st:["Mug the bug hugs Dug.","Mug and Dug tug on a rug."],
+  w:["bug","dug","hug","mug","rug","tug"],
+  sw:["the","and","a","on"],
+  q:[["Mug the bug hugs _____.","Dug","Mug"],["Mug and Dug tug on a _____.","rug","bug"],["Mug the bug _____ Dug.","hugs","tugs"]]},
+"1-83":{t:"The Fun Pup",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel U",em:"&#x1F436;",
+  st:["The pup runs in the sun. The pup has fun.","The pup sees Mug up on the cup."],
+  w:["cup","pup","up","fun","run","sun"],
+  sw:["the","has","in","see","up","on"],
+  q:[["The pup runs in the _____.","sun","fun"],["The pup sees Mug up on the _____.","cup","pup"],["The pup has _____.","fun","run"]]},
+"1-86":{t:"The Nut",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel U",em:"&#x1F95C;",
+  st:["Mug has a nut in the hut.","But, Mug can cut the nut."],
+  w:["but","cut","hut","nut"],
+  sw:["has","a","in","the","can"],
+  q:[["Mug has a nut in the _____.","hut","but"],["Mug can _____ the nut.","cut","hut"],["Mug has a _____.","nut","cut"]]},
+"1-88":{t:"Gum",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel U",em:"&#x1F33F;",
+  st:["Mug sits on gum.","Gum is on her tum. Hum."],
+  w:["gum","hum","tum"],
+  sw:["on","is","her"],
+  q:[["Mug sits on _____.","gum","hum"],["Gum is on her _____.","tum","hum"],["Mug sits on _____.","gum","tum"]]},
+"1-91":{t:"Mud",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel U",em:"&#x1F4A9;",
+  st:["Mug's bud hit the ball in the mud."],
+  w:["bud","mud"],
+  sw:["the","ball","in"],
+  q:[["Mug's bud hit the ball in the _____.","mud","bud"],["Mug's _____ hit the ball.","bud","mud"],["The ball is in the _____.","mud","bud"]]},
+"2-2":{t:"Kate's Cake",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel A",em:"&#x1F382;",
+  st:["Kate is a snake.","Kate bakes and makes a cake for Jake.","Kate and Jake take the cake to the lake."],
+  w:["bake","cake","jake","lake","make","snake","take"],
+  sw:["is","a","and","the","to","for"],
+  q:[["Kate is a _____.","snake","cake"],["Kate bakes and makes a cake for _____.","Jake","lake"],["Kate and Jake take the cake to the _____.","lake","make"]]},
+"2-6":{t:"Ate at the Gate",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel A",em:"&#x1F6AA;",
+  st:["Kate is at the gate.","Jake is who is late.","At the gate, Kate and Jake ate."],
+  w:["ate","late","kate","gate"],
+  sw:["who","is","at","the","and"],
+  q:[["Kate is at the _____.","gate","late"],["Jake is who is _____.","late","ate"],["At the gate, Kate and Jake _____.","ate","late"]]},
+"2-10":{t:"The Game",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel A",em:"&#x1F3AE;",
+  st:["Kate likes the game.","The game is to name dames with fame, but do not name the same dames."],
+  w:["dame","fame","game","name","same"],
+  sw:["like","the","is","to","with","but","do","not"],
+  q:[["Kate likes the _____.","game","name"],["The game is to name dames with _____.","fame","game"],["Do not name the _____ dames.","same","fame"]]},
+"2-13":{t:"The Rain",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel A",em:"&#x1F327;&#xFE0F;",
+  st:["Kate sees a drain.","Kate said, The rain is her main pain.","The rain is a gain. The rain makes lakes."],
+  w:["gain","main","pain","rain","drain"],
+  sw:["see","what","the","in","said","is","her","a"],
+  q:[["Kate sees a _____.","drain","rain"],["The rain is her main _____.","pain","gain"],["The rain is a _____.","gain","drain"]]},
+"2-17":{t:"Gail the Snail",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel A",em:"&#x1F40C;",
+  st:["Gail bails the pail of hail.","Gail puts the pail on her tail.","Gail does not fail to put the pail in the mail for Kate."],
+  w:["bail","fail","gail","hail","mail","pail","snail","tail"],
+  sw:["the","see","in","on","her","of","does","not","to","for"],
+  q:[["Gail bails the pail of _____.","hail","mail"],["Gail puts the pail on her _____.","tail","mail"],["Gail puts the pail in the _____.","mail","tail"]]},
+"2-21":{t:"A Bee and Me",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel E",em:"&#x1F41D;",
+  st:["Glee is a bee. Glee is me.","To be a bee is to be free.","Glee sits at his knee."],
+  w:["be","he","me","bee","glee","knee","see","flee","free"],
+  sw:["is","a","at","his","see","and","to"],
+  q:[["Glee is a _____.","bee","me"],["Glee sits at his _____.","knee","bee"],["To be a bee is to be _____.","free","flee"]]},
+"2-26":{t:"Glee Eats",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel E",em:"&#x1F969;",
+  st:["Glee is in the heat.","Glee has a seat.","Glee eats the meat."],
+  w:["eat","heat","meat","seat"],
+  sw:["is","in","the","has","a"],
+  q:[["Glee is in the _____.","heat","seat"],["Glee has a _____.","seat","heat"],["Glee eats the _____.","meat","seat"]]},
+"2-30":{t:"The Seal Heals",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel E",em:"&#x1F9AD;",
+  st:["Glee sees a teal seal.","Glee feels his heel.","The seal heals Glee's heel. Glee has a meal with the seal."],
+  w:["feel","heel","heal","meal","seal","teal"],
+  sw:["see","a","his","the","has","with"],
+  q:[["Glee sees a teal _____.","seal","meal"],["The seal heals Glee's _____.","heel","feel"],["Glee has a meal with the _____.","seal","teal"]]},
+"2-35":{t:"Dice and Guy",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel I",em:"&#x1F3B2;",
+  st:["Dice and Guy are nice mice.","The mice like to ice skate."],
+  w:["dice","mice","ice","nice"],
+  sw:["and","are","the","like","to"],
+  q:[["Dice and Guy are nice _____.","mice","ice"],["The mice like to _____ skate.","ice","dice"],["Dice and Guy are _____.","nice","mice"]]},
+"2-38":{t:"A Pine Tree",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel I",em:"&#x1F332;",
+  st:["The vine is on a pine tree.","The mice dine on fine nuts from the pine tree."],
+  w:["dine","fine","pine","vine"],
+  sw:["from","the","is","on","a"],
+  q:[["The vine is on a _____ tree.","pine","fine"],["The mice _____ on fine nuts.","dine","pine"],["The nuts are from the _____ tree.","pine","vine"]]},
+"2-41":{t:"My Pie",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel I",em:"&#x1F967;",
+  st:["Dice and Guy see a pie.","Dice said, It is my pie.","Guy said, Do not lie to get pie. It is a tie."],
+  w:["lie","pie","tie"],
+  sw:["get","and","see","said","it","is","my","do","not","a","have","to"],
+  q:[["Dice said, It is my _____.","pie","tie"],["Guy said, Do not lie to get _____.","pie","tie"],["It is a _____.","tie","pie"]]},
+"2-46":{t:"Moat",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel O",em:"&#x1F410;",
+  st:["Moat is a goat.","Moat has a boat and a coat."],
+  w:["boat","coat","goat","moat"],
+  sw:["is","a","has","and"],
+  q:[["Moat is a _____.","goat","boat"],["Moat has a boat and a _____.","coat","goat"],["Moat has a _____.","boat","coat"]]},
+"2-49":{t:"Vote",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel O",em:"&#x1F4CB;",
+  st:["Moat wrote a note.","Moat put his note in his tote.","Moat goes to vote with the note."],
+  w:["note","wrote","tote","vote"],
+  sw:["a","his","in","goes","to","with","the"],
+  q:[["Moat wrote a _____.","note","vote"],["Moat put his note in his _____.","tote","note"],["Moat goes to _____.","vote","note"]]},
+"2-53":{t:"Tore with a Poke",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel O",em:"&#x1F3EA;",
+  st:["No joke for Moat.","With a poke, Moat's paper tore. The paper has a pore.","Moat has to go to the store to get more."],
+  w:["poke","joke","more","pore","tore","store"],
+  sw:["no","go","with","a","the","has","to","get","for"],
+  q:[["With a poke, Moat's paper _____.","tore","more"],["The paper has a _____.","pore","tore"],["Moat has to go to the _____ to get more.","store","pore"]]},
+"2-57":{t:"A Flute",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel U",em:"&#x1F3B5;",
+  st:["Luke is a cute mule with a flute.","Luke keeps his flute in a cube."],
+  w:["cute","flute","mule","cube"],
+  sw:["is","a","with","his","in"],
+  q:[["Luke is a cute _____ with a flute.","mule","cube"],["Luke keeps his flute in a _____.","cube","mule"],["Luke is _____.","cute","flute"]]},
+"2-60":{t:"Fruit",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel U",em:"&#x1F34E;",
+  st:["Luke has fruit.","Luke's fruit gets on his suit."],
+  w:["fruit","suit"],
+  sw:["has","get","on","his"],
+  q:[["Luke has _____.","fruit","suit"],["Luke's fruit gets on his _____.","suit","fruit"],["Luke has _____.","fruit","suit"]]},
+"2-63":{t:"The Blue Papers",bk:"Book 2: Long Vowels & Blends",ch:"Long Vowel U",em:"&#x1F4C4;",
+  st:["Luke uses glue on the blue papers.","The glue Luke uses fuses the blue papers."],
+  w:["blue","glue","use","fuse"],
+  sw:["on","the"],
+  q:[["Luke uses glue on the _____ papers.","blue","glue"],["The glue Luke uses _____ the papers.","fuses","uses"],["Luke uses _____.","glue","blue"]]},
+"2-66":{t:"The Shark, Duck, and Fish",bk:"Book 2: Long Vowels & Blends",ch:"Common Blends",em:"&#x1F988;",
+  st:["Pat hears the duck chit chatting, Quack. Quack. Quack.","Then, Pat is swimming with the duck, shark, and fish."],
+  w:["shark","fish","duck","quack","then","with","chatting","swimming"],
+  sw:["the","is","with","and"],
+  q:[["Pat hears the duck chit _____.","chatting","swimming"],["Then, Pat is _____ with the duck.","swimming","chatting"],["Pat is with the duck, _____, and fish.","shark","quack"]]},
+"3-2":{t:"The Bay",bk:"Book 3: Consonants & Exceptions",ch:"Irregular A",em:"&#x1F3D6;&#xFE0F;",
+  st:["Kate pays to lay in the rays at the bay for the day.","At the bay, Kate may say, Yay! It is fun at the bay!"],
+  w:["bay","day","hay","jay","lay","may","pay","ray","say","way"],
+  sw:["to","in","the","at","for","it","is"],
+  q:[["Kate pays to lay in the rays at the _____.","bay","day"],["Kate may _____ at the bay.","say","pay"],["It is _____ at the bay.","fun","run"]]},
+"3-5":{t:"The Bank",bk:"Book 3: Consonants & Exceptions",ch:"Irregular A",em:"&#x1F3E6;",
+  st:["Hank has a bank on a plank.","Hank hit the tank.","The bank sank in the tank.","Kate gets the bank for Hank."],
+  w:["bank","hank","rank","sank","tank","plank"],
+  sw:["has","a","on","the","in","get","for"],
+  q:[["Hank has a bank on a _____.","plank","tank"],["The bank _____ in the tank.","sank","rank"],["Kate gets the bank for _____.","Hank","plank"]]},
+"3-10":{t:"The King",bk:"Book 3: Consonants & Exceptions",ch:"Irregular E",em:"&#x1F451;",
+  st:["Dice sees Ming, the King of Wings.","The King has a ring.","Ding. It is time for Ming, the King of Wings, to sing."],
+  w:["king","ring","sing","wing","ding","bring","sting","thing"],
+  sw:["see","the","of","has","a","it","is","for","to"],
+  q:[["Dice sees Ming, the King of _____.","Wings","Rings"],["The King has a _____.","ring","wing"],["It is time for Ming to _____.","sing","ring"]]},
+"3-14":{t:"The Kite at Night",bk:"Book 3: Consonants & Exceptions",ch:"Irregular I",em:"&#x1FA81;",
+  st:["Guy sights Dice with a kite at night.","Guy said, Why fight?","The mice hug tight with might."],
+  w:["kite","bite","mite","site","night","light","fight","might","right","sight","tight"],
+  sw:["with","a","at","said","the"],
+  q:[["Guy sights Dice with a kite at _____.","night","light"],["Guy said, Why _____?","fight","night"],["The mice hug tight with _____.","might","fight"]]},
+"3-19":{t:"The Stout Cow",bk:"Book 3: Consonants & Exceptions",ch:"Irregular O",em:"&#x1F404;",
+  st:["Moat said with a pout, How is the stout cow now?","The man said, The cow is now out and about."],
+  w:["cow","now","bow","how","out","pout","stout","about","shout","loud"],
+  sw:["said","with","a","is","the","and"],
+  q:[["How is the _____ cow now?","stout","pout"],["The cow is now out and _____.","about","shout"],["Moat said with a _____.","pout","bout"]]},
+"3-22":{t:"The Bunny",bk:"Book 3: Consonants & Exceptions",ch:"Irregular Y",em:"&#x1F430;",
+  st:["Teddy said, Sorry Daddy. Do you see the funny bunny?","Daddy said, I see the funny bunny.","Mommy said, I see a funny baby bunny."],
+  w:["bunny","funny","sunny","daddy","teddy","mommy","lady","baby","sorry"],
+  sw:["said","sorry","do","you","see","the","i","a"],
+  q:[["Do you see the funny _____?","bunny","sunny"],["Teddy said, Sorry _____.","Daddy","Mommy"],["Mommy sees a funny _____ bunny.","baby","lady"]]},
+"3-27":{t:"The Fry",bk:"Book 3: Consonants & Exceptions",ch:"Irregular Y",em:"&#x1F35F;",
+  st:["Dice buys the fry.","Dice said, It is my fry!","Shy Guy said, Why?","Dice said, I will share the fry."],
+  w:["fry","dry","fly","shy","cry","try","buy","guy","bye"],
+  sw:["said","it","is","my","i","will"],
+  q:[["Dice said, It is my _____.","fry","dry"],["Shy Guy said, _____?","Why","Buy"],["Dice said, I will share the _____.","fry","try"]]},
+"3-33":{t:"Boo!",bk:"Book 3: Consonants & Exceptions",ch:"Irregular Oo",em:"&#x1F47B;",
+  st:["Moat said, Boo!","The man said boo too."],
+  w:["boo","moo","too","zoo","goo"],
+  sw:["said","the"],
+  q:[["Moat said, _____!","Boo","Moo"],["The man said boo _____.","too","goo"],["Moat said _____.","boo","moo"]]},
+"3-36":{t:"New Shoes",bk:"Book 3: Consonants & Exceptions",ch:"Irregular Oo",em:"&#x1F45F;",
+  st:["In Crew, Luke got dew on his new shoes.","Who got new shoes for Luke?","Luke knew he got the shoes from Drew."],
+  w:["new","dew","drew","crew","knew","blew","grew"],
+  sw:["who","for","he","the","from","in","on","his"],
+  q:[["Luke got _____ on his new shoes.","dew","new"],["Luke _____ he got the shoes from Drew.","knew","blew"],["Who got new shoes for _____?","Luke","Drew"]]},
+"3-40":{t:"Mood for Food",bk:"Book 3: Consonants & Exceptions",ch:"Food & Mood",em:"&#x1F37D;&#xFE0F;",
+  st:["Moat is in the mood for food.","Moat eats food."],
+  w:["food","mood","brood","good","hood","wood"],
+  sw:["is","the","for","in"],
+  q:[["Moat is in the mood for _____.","food","wood"],["Moat _____ food.","eats","moods"],["Moat is in a good _____.","mood","food"]]},
+"3-43":{t:"The Moon",bk:"Book 3: Consonants & Exceptions",ch:"Moon & Noon",em:"&#x1F319;",
+  st:["Moat sees the toons and then is in bed soon.","It is not noon. Moat sees the moon."],
+  w:["moon","noon","soon","toon","spoon","boon"],
+  sw:["it","is","not","see","the","and","then","in"],
+  q:[["Moat sees the toons and then is in bed _____.","soon","boon"],["It is not _____.","noon","moon"],["Moat sees the _____.","moon","spoon"]]},
+"3-46":{t:"The Pool",bk:"Book 3: Consonants & Exceptions",ch:"Pool & Cool",em:"&#x1F3CA;",
+  st:["Is the pool cool?","Moat uses the tool to see if the pool is cool.","It is cool."],
+  w:["pool","cool","fool","tool","school"],
+  sw:["the","to","is","see","it"],
+  q:[["Moat uses the _____ to see if the pool is cool.","tool","fool"],["Is the _____ cool?","pool","fool"],["The pool is _____.","cool","tool"]]},
+"3-50":{t:"The Cookbook",bk:"Book 3: Consonants & Exceptions",ch:"Book & Cook",em:"&#x1F4DA;",
+  st:["Moat looks for his cookbook.","The book is in the nook on a hook.","Moat took the book to cook."],
+  w:["book","cook","hook","look","nook","took"],
+  sw:["for","his","the","is","in","on","a","to"],
+  q:[["The book is in the _____ on a hook.","nook","cook"],["Moat _____ the book to cook.","took","look"],["Moat looks for his _____.","cookbook","hook"]]},
+"3-54":{t:"Pat's Crown",bk:"Book 3: Consonants & Exceptions",ch:"Consonant Blends",em:"&#x1F451;",
+  st:["Pat puts glue on her crown.","Pat sees a blue flower with a green stem.","Pat sees a clown with a frog."],
+  w:["crown","grown","frown","brown","clown","flower","glue","blue"],
+  sw:["on","her","see","a","with","and"],
+  q:[["Pat puts _____ on her crown.","glue","blue"],["Pat sees a _____ flower.","blue","grown"],["Pat sees a _____ with a frog.","clown","crown"]]},
+"3-58":{t:"Mat and the Snake",bk:"Book 3: Consonants & Exceptions",ch:"Consonant Blends",em:"&#x1F40D;",
+  st:["In the Spring, Mat sees a snail, a snake, and a skunk.","The snake slides, and that scares Mat.","The snake smiles at Mat."],
+  w:["snake","snail","skunk","spring","slides","smiles"],
+  sw:["in","the","a","and","that","at"],
+  q:[["In the Spring, Mat sees a snail, a snake, and a _____.","skunk","spring"],["The snake _____ at Mat.","smiles","slides"],["The snake _____, and that scares Mat.","slides","smiles"]]},
+"3-62":{t:"Kate's Twigs",bk:"Book 3: Consonants & Exceptions",ch:"Consonant Blends",em:"&#x1F331;",
+  st:["Kate and the shark see a thorn in the twigs.","Kate and the shark make a square and a star with the twigs."],
+  w:["twigs","square","star","thorn","shark"],
+  sw:["and","the","a","in","with"],
+  q:[["Kate and the shark see a _____ in the twigs.","thorn","star"],["Kate makes a _____ with the twigs.","square","thorn"],["Kate and the _____ see a thorn.","shark","star"]]},
+"3-65":{t:"Luke is Sick",bk:"Book 3: Consonants & Exceptions",ch:"Consonant Blends",em:"&#x1F912;",
+  st:["Luke is sick.","Luke's dad hands Luke a quilt and milk.","Luke gets his dad a golf ball for all his help."],
+  w:["sick","shut","hands","quilt","golf","help","milk"],
+  sw:["is","the","a","and","his","get","for"],
+  q:[["Luke is _____.","sick","shut"],["Luke's dad hands Luke a _____ and milk.","quilt","golf"],["Luke gets his dad a _____ ball.","golf","quilt"]]},
+"3-70":{t:"Moat and the Chip",bk:"Book 3: Consonants & Exceptions",ch:"Consonant Blends",em:"&#x1F426;",
+  st:["Moat gives his bird a chip.","The bird makes a mess.","Moat gives his bird a bath and puts his bird on the desk."],
+  w:["chip","bath","desk","mess","bird","gives"],
+  sw:["give","his","a","the","said","and","on"],
+  q:[["Moat gives his _____ a chip.","bird","desk"],["The bird makes a _____.","mess","bath"],["Moat gives his bird a _____.","bath","chip"]]},
+"3-75":{t:"Glee and the Queen",bk:"Book 3: Consonants & Exceptions",ch:"Consonant Blends",em:"&#x1F478;",
+  st:["When Glee sees the queen,","Glee sits on her knee.","Then, Glee sits on the Queen's thumb.","The Queen sees Glee and runs."],
+  w:["queen","when","knee","thumb","then","runs"],
+  sw:["see","the","on","her","and"],
+  q:[["Glee sits on her _____.","knee","thumb"],["The Queen sees Glee and _____.","runs","sits"],["Glee sits on the Queen's _____.","thumb","knee"]]},
+"3-80":{t:"A Bird",bk:"Book 3: Consonants & Exceptions",ch:"Controlled R",em:"&#x1F426;",
+  st:["Pat sees a girl bird.","Pat has corn or seed for the bird.","Pat runs to the car and goes far."],
+  w:["bird","girl","corn","seed","fur","car","far"],
+  sw:["see","a","has","for","the","and","to","goes"],
+  q:[["Pat sees a _____ bird.","girl","corn"],["Pat has corn or _____ for the bird.","seed","fur"],["Pat runs to the _____ and goes far.","car","far"]]}
+};
+
+// ── State ──────────────────────────────────────────────
+let swIdx=0,wfIdx=0,swWords=[],wfWords=[],qAnswered=[],findSWset=new Set(),findFound=new Set();
+let swDone=false,wfDone=false;
+// ── Voices ─────────────────────────────────────────────
+let voices=[];
+function loadVoices(){voices=speechSynthesis.getVoices();if(!voices.length)speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};}
+loadVoices();
+function getBestVoice(){const P=['Microsoft Aria Online (Natural)','Microsoft Jenny Online (Natural)','Microsoft Emma Online (Natural)','Microsoft Guy Online (Natural)','Google US English','Samantha','Karen','Moira','Google UK English Female','Microsoft Aria','Microsoft Zira'];for(const n of P){const v=voices.find(v=>v.name.toLowerCase().includes(n.toLowerCase()));if(v)return v;}const neural=voices.find(v=>/online|natural|neural/i.test(v.name)&&v.lang.startsWith('en'));if(neural)return neural;return voices.find(v=>v.lang==='en-US')||voices.find(v=>v.lang.startsWith('en'))||voices[0];}
+function speak(w){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(w).trim());const v=getBestVoice();if(v)u.voice=v;u.lang='en-US';u.rate=0.88;u.pitch=1.0;speechSynthesis.speak(u);}
+// ── Shuffle ────────────────────────────────────────────
+function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+// ── Navigation helpers ─────────────────────────────────
+function getBookChs(bk){return Object.keys(CH).filter(k=>k.startsWith(bk+'-')).sort((a,b)=>parseInt(a.split('-')[1])-parseInt(b.split('-')[1]));}
+function populateCh(bk){const sel=document.getElementById('sel-ch');const chs=getBookChs(bk);sel.innerHTML=chs.map(k=>`<option value="${k}">${CH[k].ch}: ${CH[k].t}</option>`).join('');return chs[0]||null;}
+function onBookChange(){const bk=document.getElementById('sel-book').value;const first=populateCh(bk);if(first)render(first);}
+function onChChange(){render(document.getElementById('sel-ch').value);}
+
+// ── Render ─────────────────────────────────────────────
+function render(key){
+  const d=CH[key];
+  if(!d){document.getElementById('content').innerHTML='<p style="padding:30px">Not found.</p>';return;}
+  swWords=[...d.sw];swIdx=0;
+  wfWords=[...d.w];wfIdx=0;
+  qAnswered=new Array(d.q.length).fill(false);
+  findSWset=new Set(d.sw);
+  findFound=new Set();
+  swDone=swWords.length<=1;
+  wfDone=wfWords.length<=1;
+
+  // Build comp questions (shuffle answer order)
+  const qBlocks=d.q.map(([q,a,b],i)=>{
+    const choices=shuffle([[a,true],[b,false]]);
+    const btns=choices.map(([word,cor])=>`<button class="cbtn" data-correct="${cor}" onclick="checkAns(this,${i})">${word}</button>`).join('');
+    return `<div class="q-block" id="qb${i}"><div class="q-text">${q.replace('_____','<span class="blank"></span>')}</div><div class="choices">${btns}</div><div class="q-msg" id="qm${i}"></div></div>`;
+  }).join('');
+
+  // Build Find It bubbles
+  const dist=['bat','cat','cup','dog','fun','hat','hot','log','map','nap','pan','pet','rat','run','sit','top','wig','red','big','hop','set','fox','mud','jog','rim'].filter(x=>!d.sw.includes(x));
+  const need=Math.max(0,15-d.sw.length);
+  const bubArr=shuffle([...d.sw,...shuffle(dist).slice(0,need)]);
+  const bubs=bubArr.map(w=>`<div class="fbub" onclick="clickBub(this,'${w}')">${w}</div>`).join('');
+  const keyBubs=d.sw.map(w=>`<span class="key-bub">${w}</span>`).join('');
+
+  document.getElementById('content').innerHTML=`
+    <div class="ch-header">
+      <div class="ch-em">${d.em}</div>
+      <div><div class="ch-sub">${d.bk}</div><div class="ch-title">${d.t}</div><div class="ch-book">${d.ch}</div></div>
+    </div>
+
+    <div class="card story-card">
+      <div class="card-hdr">&#128218; Read the Story</div>
+      ${d.st.map(s=>`<p class="story-text">${s}</p>`).join('')}
+    </div>
+
+    <div class="card comp-card">
+      <div class="card-hdr">&#11088; Reading Comprehension</div>
+      ${qBlocks}
+      <div class="comp-score" id="comp-score">Score: 0 / ${d.q.length}</div>
+    </div>
+
+    <div class="card sw-card">
+      <div class="card-hdr">&#128156; Sight Word Flashcards</div>
+      <div class="flash-word" id="sw-word"></div>
+      <div class="flash-ctrl">
+        <button class="farr" id="sw-prev" onclick="swPrev()">&#9664;</button>
+        <span class="fctr" id="sw-ctr">1 / ${d.sw.length}</span>
+        <button class="farr" id="sw-next" onclick="swNext()">&#9654;</button>
+      </div>
+      <button class="fsay" onclick="speak(swWords[swIdx])">&#128266; Say It</button>
+    </div>
+
+    <div class="card find-card">
+      <div class="card-hdr">&#128269; Find It! &mdash; Tap the sight words</div>
+      <div class="find-key">&#128270; Words to find:&nbsp;${keyBubs}</div>
+      <div class="find-score" id="find-score">Found: 0 / ${d.sw.length}</div>
+      <div class="find-grid">${bubs}</div>
+      <div class="find-done" id="find-done"></div>
+    </div>
+
+    <div class="card wf-card">
+      <div class="card-hdr">&#128218; Word Family Flashcards</div>
+      <div class="flash-word" id="wf-word"></div>
+      <div class="flash-ctrl">
+        <button class="farr" id="wf-prev" onclick="wfPrev()">&#9664;</button>
+        <span class="fctr" id="wf-ctr">1 / ${d.w.length}</span>
+        <button class="farr" id="wf-next" onclick="wfNext()">&#9654;</button>
+      </div>
+      <button class="fsay" onclick="speak(wfWords[wfIdx])">&#128266; Say It</button>
+    </div>
+
+    <div class="finish-wrap">
+      <button class="finish-btn" id="finish-btn" onclick="clickFinish()">&#9989; Finish Homework</button>
+      <div class="finish-msg" id="finish-msg"></div>
+    </div>`;
+
+  updateSW();updateWF();updateFinishBtn();
+}
+
+// ── Comprehension ──────────────────────────────────────
+function checkAns(btn,idx){
+  const isOk=btn.dataset.correct==='true';
+  const block=document.getElementById('qb'+idx);
+  if(isOk){
+    btn.classList.add('correct');
+    block.querySelectorAll('.cbtn').forEach(b=>{b.disabled=true;});
+    document.getElementById('qm'+idx).textContent='⭐ Great job!';
+    qAnswered[idx]=true;
+    updateCompScore();
+    updateFinishBtn();
+    speak('Great job');
+  } else {
+    btn.classList.add('wrong');
+    block.querySelectorAll('.cbtn').forEach(b=>b.disabled=true);
+    document.getElementById('qm'+idx).textContent='❌ Try again!';
+    speak('Try again');
+    setTimeout(()=>{
+      btn.classList.remove('wrong');
+      block.querySelectorAll('.cbtn').forEach(b=>b.disabled=false);
+      document.getElementById('qm'+idx).textContent='';
+    },1100);
+  }
+}
+function updateCompScore(){
+  const n=qAnswered.filter(Boolean).length;
+  const tot=qAnswered.length;
+  const el=document.getElementById('comp-score');
+  if(!el)return;
+  el.textContent=n===tot?'&#127881; You got '+n+' / '+tot+'! Amazing!':'Score: '+n+' / '+tot;
+  if(n===tot)el.innerHTML='&#127881; You got '+n+' / '+tot+'! Amazing! &#11088;';
+}
+
+// ── Sight Word Flashcard ───────────────────────────────
+function updateSW(){
+  const w=document.getElementById('sw-word');if(!w)return;
+  w.textContent=swWords[swIdx]||'';
+  document.getElementById('sw-ctr').textContent=(swIdx+1)+' / '+swWords.length;
+  document.getElementById('sw-prev').disabled=swIdx===0;
+  document.getElementById('sw-next').disabled=swIdx>=swWords.length-1;
+}
+function swPrev(){if(swIdx>0){swIdx--;updateSW();speak(swWords[swIdx]);}}
+function swNext(){if(swIdx<swWords.length-1){swIdx++;updateSW();speak(swWords[swIdx]);if(swIdx>=swWords.length-1){swDone=true;updateFinishBtn();}}}
+
+// ── Word Family Flashcard ──────────────────────────────
+function updateWF(){
+  const w=document.getElementById('wf-word');if(!w)return;
+  w.textContent=wfWords[wfIdx]||'';
+  document.getElementById('wf-ctr').textContent=(wfIdx+1)+' / '+wfWords.length;
+  document.getElementById('wf-prev').disabled=wfIdx===0;
+  document.getElementById('wf-next').disabled=wfIdx>=wfWords.length-1;
+}
+function wfPrev(){if(wfIdx>0){wfIdx--;updateWF();speak(wfWords[wfIdx]);}}
+function wfNext(){if(wfIdx<wfWords.length-1){wfIdx++;updateWF();speak(wfWords[wfIdx]);if(wfIdx>=wfWords.length-1){wfDone=true;updateFinishBtn();}}}
+
+// ── Find It ────────────────────────────────────────────
+function clickBub(el,word){
+  if(el.classList.contains('found'))return;
+  if(findSWset.has(word)){
+    el.classList.add('found');
+    findFound.add(word);
+    speak(word);
+    const sc=document.getElementById('find-score');
+    if(sc)sc.textContent='Found: '+findFound.size+' / '+findSWset.size;
+    if(findFound.size>=findSWset.size){
+      const dn=document.getElementById('find-done');
+      if(dn)dn.innerHTML='&#127881; You found all the sight words! &#11088;';
+      speak('You found all the sight words, great job!');
+      updateFinishBtn();
+    }
+  } else {
+    el.classList.add('nope');
+    setTimeout(()=>el.classList.remove('nope'),340);
+  }
+}
+
+// ── Finish Button ──────────────────────────────────────
+function updateFinishBtn(){
+  const btn=document.getElementById('finish-btn');
+  if(!btn)return;
+  const allQ=qAnswered.length>0&&qAnswered.every(Boolean);
+  const allFind=findSWset.size>0&&findFound.size>=findSWset.size;
+  const allDone=allQ&&swDone&&allFind&&wfDone;
+  btn.classList.toggle('ready',allDone);
+}
+function clickFinish(){
+  const allQ=qAnswered.length>0&&qAnswered.every(Boolean);
+  const allFind=findSWset.size>0&&findFound.size>=findSWset.size;
+  const allDone=allQ&&swDone&&allFind&&wfDone;
+  const msg=document.getElementById('finish-msg');
+  if(!msg)return;
+  if(allDone){
+    msg.innerHTML='&#127881;&#127881; Great job! You finished your homework! &#11088;&#127881;&#127881;';
+    msg.className='finish-msg done';
+    document.getElementById('finish-btn').innerHTML='&#127881; Done!';
+    speak('Great job! You finished all your homework!');
+  } else {
+    const todo=[];
+    if(!allQ)todo.push('Answer all 3 reading questions &#11088;');
+    if(!swDone)todo.push('Click through ALL the sight word flashcards &#128156;');
+    if(!allFind)todo.push('Find ALL the sight words in Find It! &#128269;');
+    if(!wfDone)todo.push('Click through ALL the word family flashcards &#128218;');
+    msg.innerHTML='You still need to finish:<br>&#8226; '+todo.join('<br>&#8226; ');
+    msg.className='finish-msg todo';
+    speak('You still need to finish: '+todo.map(t=>t.replace(/&#[^;]+;/g,'')).join(', '));
+  }
+}
+
+// ── Init ───────────────────────────────────────────────
+const p=new URLSearchParams(location.search);
+const initBk=p.get('book')||'1';
+const initCh=p.get('ch');
+document.getElementById('sel-book').value=initBk;
+const firstKey=populateCh(initBk);
+const key=initCh?(initBk+'-'+initCh):firstKey;
+if(initCh){document.getElementById('sel-ch').value=key;}
+render(document.getElementById('sel-ch').value||firstKey);
+</script>
+</body>
+</html>

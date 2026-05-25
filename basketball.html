@@ -28,7 +28,8 @@
       font-family: 'Nunito', sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -36,7 +37,7 @@
     /* ── Header ── */
     header {
       background: linear-gradient(135deg, #E67E22, #F39C12);
-      padding: .75rem 1rem;
+      padding: .45rem 1.2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -114,6 +115,8 @@
     /* ── Main content area ── */
     main {
       flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -494,19 +497,6 @@
     }
     .overlay-card .play-again-btn:hover { transform: scale(1.05); box-shadow: 0 6px 18px rgba(230,126,34,.55); }
 
-    /* ── Footer ── */
-    footer {
-      background: #fff;
-      border-top: 2px solid #f0e0cc;
-      padding: .8rem 1rem;
-      text-align: center;
-      font-size: .82rem;
-      color: #888;
-      font-weight: 600;
-    }
-
-    footer a { color: var(--orange); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
 
     /* ── Animations ── */
     @keyframes shake {
@@ -654,10 +644,6 @@
   </div>
 </div>
 
-<!-- ── FOOTER ── -->
-<footer>
-  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids 📚</p>
-</footer>
 
 <script>
 /* ══════════════════════════════════════════

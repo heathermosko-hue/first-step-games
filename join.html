@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joining... | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Fredoka One',cursive;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:2rem;
+      background:linear-gradient(160deg,#6B48FF 0%,#3A8EF6 50%,#6BCB77 100%);
+      flex-direction:column;
+    }
+
+    .card {
+      background:#fff;
+      border-radius:36px;
+      padding:3rem 2.5rem;
+      max-width:440px;
+      width:100%;
+      box-shadow:0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .big-icon {
+      font-size:5rem;
+      display:block;
+      margin-bottom:0.5rem;
+      animation:spin 1s linear infinite;
+    }
+    .big-icon.done  { animation:pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards; }
+    .big-icon.error { animation:shake 0.5s ease; }
+
+    @keyframes spin  { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+    @keyframes pop   { 0%{transform:scale(0.5)} 100%{transform:scale(1)} }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)}
+      20%,60%{transform:translateX(-12px)}
+      40%,80%{transform:translateX(12px)}
+    }
+
+    h1 {
+      color:#2C3E50;
+      font-size:clamp(1.8rem,6vw,2.8rem);
+      margin-bottom:0.4rem;
+      line-height:1.1;
+    }
+    .sub {
+      font-family:'Nunito',sans-serif;
+      font-weight:900;
+      color:#888;
+      font-size:clamp(0.95rem,3vw,1.15rem);
+      margin-bottom:1.5rem;
+      line-height:1.5;
+    }
+
+    .progress-bar {
+      width:100%;
+      height:8px;
+      background:#F0F0F0;
+      border-radius:999px;
+      overflow:hidden;
+      margin-bottom:1.5rem;
+    }
+    .progress-fill {
+      height:100%;
+      background:linear-gradient(90deg,#6B48FF,#3A8EF6);
+      border-radius:999px;
+      width:0%;
+      transition:width 1s ease;
+    }
+    .progress-fill.member { background:linear-gradient(90deg,#F5A623,#FF6B6B); }
+
+    .btn-manual {
+      display:block;
+      width:100%;
+      padding:14px;
+      background:linear-gradient(135deg,#FF6B6B,#FF8E53);
+      color:#fff;
+      border:none;
+      border-radius:16px;
+      font-family:'Fredoka One',cursive;
+      font-size:1.2rem;
+      cursor:pointer;
+      text-decoration:none;
+      box-shadow:0 5px 20px rgba(255,107,107,0.3);
+    }
+
+    .logo {
+      color:rgba(255,255,255,0.85);
+      font-size:1.2rem;
+      margin-bottom:1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">📚 First Step Reading</div>
+
+  <div class="card">
+    <span class="big-icon" id="icon">⏳</span>
+    <h1 id="heading">Joining…</h1>
+    <p class="sub" id="sub">Just a moment!</p>
+    <div class="progress-bar" id="prog-bar">
+      <div class="progress-fill" id="prog-fill"></div>
+    </div>
+    <a href="hub.html" class="btn-manual" id="manual-btn" style="display:none">
+      🎮 Go to Games Now!
+    </a>
+  </div>
+
+<script>
+  const CLASS_CODE_START = 9;
+  const CLASS_CODE_END   = 16;
+
+  function isClassCodeHours() {
+    const now = new Date(), h = now.getHours(), d = now.getDay();
+    return d >= 1 && d <= 5 && h >= CLASS_CODE_START && h < CLASS_CODE_END;
+  }
+
+  function detectCodeType(code) {
+    const c = (code || '').trim().toUpperCase();
+    if (/^FSR-[A-Z0-9]{6}$/.test(c)) return 'class';
+    if (/^MBR-[A-Z0-9]{6}$/.test(c)) return 'member';
+    if (c === 'FIRSTSTEP')             return 'class';
+    return null;
+  }
+
+  function setIcon(emoji, cls) {
+    const el = document.getElementById('icon');
+    el.textContent = emoji;
+    el.className   = 'big-icon ' + (cls || '');
+  }
+
+  function showSuccess(emoji, heading, sub, isMember) {
+    setIcon(emoji, 'done');
+    document.getElementById('heading').textContent = heading;
+    document.getElementById('sub').textContent     = sub;
+    const fill = document.getElementById('prog-fill');
+    if (isMember) fill.classList.add('member');
+    fill.style.width = '100%';
+    // Show manual button as fallback after 1s
+    setTimeout(() => {
+      document.getElementById('manual-btn').style.display = 'block';
+    }, 1200);
+  }
+
+  function showError(emoji, heading, sub) {
+    setIcon(emoji, 'error');
+    document.getElementById('heading').textContent = heading;
+    document.getElementById('sub').innerHTML       = sub;
+    document.getElementById('prog-bar').style.display = 'none';
+    document.getElementById('manual-btn').style.display = 'block';
+    document.getElementById('manual-btn').href     = 'students.html';
+    document.getElementById('manual-btn').textContent = '🎒 Go to Student Page';
+    document.getElementById('manual-btn').style.background = 'linear-gradient(135deg,#6B48FF,#3A8EF6)';
+  }
+
+  // ── READ URL PARAM ──
+  const params = new URLSearchParams(window.location.search);
+  const code   = params.get('code');
+
+  if (!code) {
+    showError('🤔', 'No Code Found', 'This link doesn\'t have a code in it. Ask your teacher for a new QR code!');
+  } else {
+    const type = detectCodeType(code);
+    // Start progress animation
+    setTimeout(() => { document.getElementById('prog-fill').style.width = '60%'; }, 100);
+
+    if (type === null) {
+      showError('❌', 'Unknown Code', 'This code isn\'t recognized. Ask your teacher for a new QR code!');
+
+    } else if (type === 'member') {
+      // Members: always valid 24/7
+      sessionStorage.setItem('fsr_code_valid',  '1');
+      sessionStorage.setItem('fsr_access_type', 'member');
+      showSuccess('⭐', 'Welcome, Member!', 'Loading your games right now…', true);
+      setTimeout(() => { window.location.href = 'hub.html'; }, 1800);
+
+    } else if (type === 'class' && isClassCodeHours()) {
+      // Class code during valid hours
+      sessionStorage.setItem('fsr_code_valid',  '1');
+      sessionStorage.setItem('fsr_access_type', 'class');
+      showSuccess('🎉', 'You\'re In!', 'Opening the games hub now…', false);
+      setTimeout(() => { window.location.href = 'hub.html'; }, 1800);
+
+    } else if (type === 'class' && !isClassCodeHours()) {
+      // Class code outside valid hours
+      const now = new Date(), d = now.getDay(), h = now.getHours();
+      const isWeekend = d === 0 || d === 6;
+      const msg = isWeekend
+        ? 'Class codes work <strong>Mon–Fri, 9AM–4PM</strong>.<br>Come back on a school day!'
+        : h < CLASS_CODE_START
+          ? `Class codes start at <strong>9:00 AM</strong> today.<br>Come back soon!`
+          : `Class codes work until <strong>4:00 PM</strong>, Mon–Fri.<br>Come back tomorrow!`;
+      showError('⏰', 'Not Time Yet!', msg);
+    }
+  }
+</script>
+</body>
+</html>

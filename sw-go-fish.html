@@ -28,7 +28,8 @@
       font-family: 'Nunito', sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -123,6 +124,8 @@
     /* ── GAME AREA ── */
     .game-area {
       flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       max-width: 900px;
@@ -578,16 +581,6 @@
     .btn-level:hover{ background:#C8F5EC; }
     .btn-level.active{ background:linear-gradient(135deg,#16A085,#1ABC9C); color:white; }
 
-    /* ── FOOTER ── */
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.82rem;
-      color: #888;
-      font-weight: 600;
-    }
-    footer a { color: var(--teal); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 480px) {
@@ -685,11 +678,6 @@
   </div>
 
 </div>
-
-<!-- FOOTER -->
-<footer>
-  Part of <a href="https://firststepreading.netlify.app" target="_blank" rel="noopener">First Step Reading</a> | Free learn-to-read games for kids 📚
-</footer>
 
 <!-- GAME OVER OVERLAY -->
 <div class="overlay" id="gameOverOverlay">

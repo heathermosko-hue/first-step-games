@@ -10,7 +10,7 @@
   <style>
     :root { --bg:#F0FFF8; --text:#2C3E50; --green:#27AE60; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
     header { background:linear-gradient(135deg,#27AE60 0%,#2ECC71 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
@@ -23,7 +23,7 @@
     .btn-header.muted { background:rgba(255,80,80,.45); }
 
     /* ── MAIN ── */
-    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:1.25rem 1rem 2rem; gap:1.1rem; }
+    main { flex:1; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:1.25rem 1rem 2rem; gap:1.1rem; }
 
     /* ── LETTER INFO ── */
     .letter-info-bar {
@@ -146,10 +146,6 @@
       text-align:center;
     }
 
-    /* ── FOOTER ── */
-    footer { text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #B2F0D4; margin-top:auto; }
-    footer a { color:#27AE60; text-decoration:none; }
-    footer a:hover { text-decoration:underline; }
 
     @media(max-width:400px) {
       .trace-row { gap:10px; }
@@ -208,10 +204,6 @@
   <div class="tip-text">Draw over the ghost letter with your finger or mouse!</div>
 
 </main>
-
-<footer>
-  <p>Part of <a href="https://firststepreading.netlify.app">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
-</footer>
 
 <script>
 /* ── SPEECH STATE ── */
@@ -281,7 +273,7 @@ const STROKE_DATA = {
   'D': ['M 22,10 L 22,90','M 22,10 Q 78,10 78,50 Q 78,90 22,90'],
   'E': ['M 22,10 L 22,90','M 22,10 L 75,10','M 22,50 L 65,50','M 22,90 L 75,90'],
   'F': ['M 22,10 L 22,90','M 22,10 L 75,10','M 22,50 L 65,50'],
-  'G': ['M 74,22 Q 72,8 52,8 Q 16,8 16,50 Q 16,92 52,92 Q 72,92 74,78','M 74,50 L 52,50'],
+  'G': ['M 74,28 Q 72,8 50,8 Q 16,8 16,50 Q 16,92 50,92 Q 72,92 74,50','M 74,50 L 50,50'],
   'H': ['M 22,10 L 22,90','M 78,10 L 78,90','M 22,50 L 78,50'],
   'I': ['M 50,10 L 50,90','M 25,10 L 75,10','M 25,90 L 75,90'],
   'J': ['M 22,10 L 72,10','M 62,10 L 62,72 Q 62,90 42,90 Q 22,90 22,74'],
@@ -303,9 +295,9 @@ const STROKE_DATA = {
   'Z': ['M 18,10 L 82,10','M 82,10 L 18,90','M 18,90 L 82,90'],
   // LOWERCASE
   'a': ['M 68,44 Q 68,28 50,28 Q 28,28 28,52 Q 28,75 50,75 Q 68,75 68,55','M 68,28 L 68,75'],
-  'b': ['M 22,10 L 22,90','M 22,45 Q 22,28 42,28 Q 68,28 68,52 Q 68,75 42,75 Q 22,75 22,60'],
+  'b': ['M 22,10 L 22,90','M 22,80 Q 22,30 46,28 Q 72,28 72,52 Q 72,80 46,80 Q 22,80 22,80'],
   'c': ['M 68,38 Q 68,22 50,22 Q 22,22 22,52 Q 22,78 50,78 Q 68,78 68,65'],
-  'd': ['M 68,44 Q 68,28 50,28 Q 28,28 28,52 Q 28,75 50,75 Q 68,75 68,55','M 78,10 L 78,78'],
+  'd': ['M 68,44 Q 68,28 50,28 Q 28,28 28,52 Q 28,75 50,75 Q 68,75 68,44','M 68,10 L 68,82'],
   'e': ['M 22,52 L 68,52','M 68,52 Q 68,25 50,25 Q 22,25 22,52 Q 22,78 50,78 Q 68,78 68,65'],
   'f': ['M 70,22 Q 70,10 55,10 Q 40,10 40,25 L 40,90','M 24,42 L 64,42'],
   'g': ['M 68,44 Q 68,28 50,28 Q 28,28 28,52 Q 28,75 50,75 Q 68,75 68,55','M 68,28 L 68,85 Q 68,95 50,95 Q 30,95 28,82'],

@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Sign In | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:   #3A8EF6;
+      --indigo: #6B48FF;
+      --coral:  #FF6B6B;
+      --yellow: #FFD93D;
+      --green:  #6BCB77;
+      --purple: #9B59B6;
+      --gold:   #F5A623;
+      --bg:     #FFF8F0;
+      --text:   #2C3E50;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Nunito',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background:#fff;
+      box-shadow:0 2px 12px rgba(0,0,0,0.07);
+      padding:0 2rem;
+      height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .nav-logo {
+      font-family:'Fredoka One',cursive;
+      font-size:1.35rem;
+      color:var(--indigo);
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      gap:0.5rem;
+    }
+    .nav-logo span { color:var(--coral); }
+    .nav-links { display:flex; gap:1.2rem; align-items:center; }
+    .nav-links a {
+      font-weight:700;
+      font-size:0.9rem;
+      color:#666;
+      text-decoration:none;
+      transition:color 0.18s;
+    }
+    .nav-links a:hover { color:var(--indigo); }
+    .nav-links .btn-student {
+      background:linear-gradient(135deg,var(--coral),#FF8E53);
+      color:#fff;
+      padding:8px 20px;
+      border-radius:999px;
+      font-family:'Fredoka One',cursive;
+      font-size:0.95rem;
+    }
+    .nav-links .btn-student:hover { opacity:0.88; color:#fff; }
+
+    /* ── HERO ── */
+    .hero {
+      background:linear-gradient(135deg,#6B48FF 0%,#3A8EF6 50%,#6BCB77 100%);
+      padding:3rem 1rem 3.5rem;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::before {
+      content:'📚 🌟 ✏️ 🎮 📖 🌟 📚 ✏️ 🎮 📖 🌟 📚 ✏️ 🎮 📖';
+      position:absolute; top:8px; left:0; right:0;
+      font-size:0.9rem; opacity:0.15; white-space:nowrap; overflow:hidden; letter-spacing:6px;
+    }
+    .hero h1 {
+      font-family:'Fredoka One',cursive;
+      font-size:clamp(2rem,6vw,3.2rem);
+      color:#fff;
+      text-shadow:0 3px 12px rgba(0,0,0,0.2);
+    }
+    .hero p {
+      color:rgba(255,255,255,0.9);
+      font-size:1.1rem;
+      font-weight:700;
+      margin-top:0.5rem;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex:1;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:2.5rem 1.5rem 3rem;
+    }
+
+    /* ── TEACHER GATE (outside school hours) ── */
+    #teacher-gate {
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      max-width:480px;
+      width:100%;
+    }
+    .gate-card {
+      background:#fff;
+      border-radius:28px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.1);
+      padding:2.5rem 2.5rem 2rem;
+      width:100%;
+    }
+    .gate-card .gate-icon { font-size:4rem; display:block; margin-bottom:1rem; }
+    .gate-card h2 {
+      font-family:'Fredoka One',cursive;
+      font-size:1.8rem;
+      color:var(--indigo);
+      margin-bottom:0.5rem;
+    }
+    .gate-card > p { font-weight:700; color:#888; margin-bottom:1rem; }
+    .gate-hours-box {
+      background:linear-gradient(135deg,#F8F4FF,#EEF6FF);
+      border:2px solid #C5B3FF;
+      border-radius:16px;
+      padding:1rem 1.5rem;
+      font-family:'Fredoka One',cursive;
+      font-size:1.1rem;
+      color:var(--indigo);
+      margin-bottom:1rem;
+      line-height:1.6;
+    }
+    .gate-note { font-size:0.9rem; font-weight:700; color:#aaa; }
+    .btn-goto-hub {
+      display:block;
+      padding:13px 20px;
+      background:linear-gradient(135deg,var(--coral),#FF8E53);
+      color:#fff;
+      border-radius:14px;
+      font-family:'Fredoka One',cursive;
+      font-size:1.1rem;
+      text-decoration:none;
+      text-align:center;
+      box-shadow:0 4px 16px rgba(255,107,107,0.3);
+      transition:opacity 0.18s;
+      margin-top:1.5rem;
+    }
+    .btn-goto-hub:hover { opacity:0.88; color:#fff; }
+
+    /* ── SIGN-IN WRAP ── */
+    .signin-wrap {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:2rem;
+      max-width:860px;
+      width:100%;
+    }
+
+    /* ── PANEL CARD ── */
+    .panel {
+      background:#fff;
+      border-radius:28px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.10);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .panel-header {
+      padding:1.6rem 2rem 1.4rem;
+      text-align:center;
+    }
+    .panel-header .icon { font-size:2.8rem; margin-bottom:0.4rem; display:block; }
+    .panel-header h2 {
+      font-family:'Fredoka One',cursive;
+      font-size:1.5rem;
+      color:#fff;
+    }
+    .panel-header p { color:rgba(255,255,255,0.9); font-size:0.9rem; font-weight:700; margin-top:0.25rem; }
+    .panel-teacher .panel-header { background:linear-gradient(135deg,#6B48FF,#3A8EF6); }
+    .panel-student .panel-header { background:linear-gradient(135deg,var(--coral),#FF8E53); }
+    .panel-member .panel-header  { background:linear-gradient(135deg,var(--gold),#FF6B6B); }
+    .panel-body { padding:2rem; flex:1; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom:1.2rem; }
+    .form-group label {
+      display:block;
+      font-weight:800;
+      font-size:0.85rem;
+      color:#555;
+      margin-bottom:0.4rem;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    .form-group input {
+      width:100%;
+      padding:13px 16px;
+      border:2px solid #E8E8E8;
+      border-radius:14px;
+      font-family:'Nunito',sans-serif;
+      font-size:1rem;
+      font-weight:700;
+      color:var(--text);
+      background:#FAFAFA;
+      transition:border-color 0.2s, box-shadow 0.2s;
+      outline:none;
+    }
+    .form-group input:focus {
+      border-color:var(--indigo);
+      box-shadow:0 0 0 3px rgba(107,72,255,0.12);
+      background:#fff;
+    }
+    .form-group input.error { border-color:var(--coral); }
+    .btn-signin {
+      width:100%;
+      padding:14px;
+      background:linear-gradient(135deg,#6B48FF,#3A8EF6);
+      color:#fff;
+      border:none;
+      border-radius:14px;
+      font-family:'Fredoka One',cursive;
+      font-size:1.15rem;
+      cursor:pointer;
+      box-shadow:0 4px 16px rgba(107,72,255,0.3);
+      transition:opacity 0.18s, transform 0.18s;
+      margin-top:0.5rem;
+    }
+    .btn-signin:hover { opacity:0.88; transform:translateY(-1px); }
+    .error-msg {
+      background:#FFF0F0;
+      color:#c0392b;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:700;
+      font-size:0.9rem;
+      margin-top:0.8rem;
+      display:none;
+    }
+    .error-msg.show { display:block; }
+
+    /* ── STUDENT PANEL ── */
+    .student-info { text-align:center; padding:0.5rem 0; }
+    .student-info .steps { list-style:none; text-align:left; margin:0.8rem 0; }
+    .student-info .steps li {
+      display:flex;
+      align-items:flex-start;
+      gap:0.75rem;
+      padding:0.5rem 0;
+      font-weight:700;
+      color:#555;
+      font-size:0.92rem;
+      border-bottom:1px solid #f0f0f0;
+    }
+    .student-info .steps li:last-child { border-bottom:none; }
+    .step-num {
+      width:26px; height:26px; min-width:26px;
+      background:linear-gradient(135deg,var(--coral),#FF8E53);
+      color:#fff;
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Fredoka One',cursive;
+      font-size:0.82rem;
+    }
+
+    /* ── DASHBOARD ── */
+    #teacher-dashboard {
+      display:none;
+      max-width:720px;
+      width:100%;
+      background:#fff;
+      border-radius:28px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.10);
+      overflow:hidden;
+    }
+    .dash-header {
+      background:linear-gradient(135deg,#6B48FF,#3A8EF6);
+      padding:1.8rem 2rem;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:1rem;
+    }
+    .dash-header h2 { font-family:'Fredoka One',cursive; font-size:1.6rem; }
+    .dash-header p { font-weight:700; opacity:0.9; font-size:0.95rem; margin-top:0.2rem; }
+    .btn-signout {
+      background:rgba(255,255,255,0.2);
+      color:#fff;
+      border:2px solid rgba(255,255,255,0.5);
+      border-radius:999px;
+      padding:6px 18px;
+      font-family:'Fredoka One',cursive;
+      font-size:0.9rem;
+      cursor:pointer;
+      transition:background 0.18s;
+    }
+    .btn-signout:hover { background:rgba(255,255,255,0.35); }
+
+    /* ── LIVE STATUS ── */
+    .live-status {
+      display:inline-flex;
+      align-items:center;
+      gap:0.5rem;
+      padding:6px 16px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:0.85rem;
+    }
+    .live-status.school { background:#EDFBF0; color:#27AE60; border:2px solid #6BCB77; }
+    .live-status.after  { background:#FFF4E6; color:#E67E22; border:2px solid #FF9F43; }
+    .live-status .dot {
+      width:8px; height:8px; border-radius:50%;
+      animation:pulse 1.4s infinite;
+    }
+    .live-status.school .dot { background:#27AE60; }
+    .live-status.after .dot  { background:#E67E22; }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.4; transform:scale(1.3); }
+    }
+
+    /* ── DASH BODY ── */
+    .dash-body { padding:2rem; display:flex; flex-direction:column; gap:1.8rem; }
+
+    /* ── CODE GEN SECTION ── */
+    .code-gen-section {
+      border-radius:20px;
+      padding:1.6rem;
+      border:2px solid;
+    }
+    .code-gen-section.class-section {
+      background:linear-gradient(135deg,#F8F4FF,#EEF6FF);
+      border-color:#C5B3FF;
+    }
+    .code-gen-section.member-section {
+      background:linear-gradient(135deg,#FFFBEE,#FFF3CC);
+      border-color:#F5D070;
+    }
+
+    .section-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:0.5rem;
+      margin-bottom:0.4rem;
+    }
+    .section-head h3 {
+      font-family:'Fredoka One',cursive;
+      font-size:1.15rem;
+      color:var(--text);
+    }
+    .time-badge {
+      display:inline-block;
+      padding:4px 12px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:0.78rem;
+      letter-spacing:0.3px;
+    }
+    .time-badge.class-badge { background:#C5B3FF; color:#4A2FCC; }
+    .time-badge.member-badge { background:#F5D070; color:#7A5100; }
+
+    .section-desc {
+      font-size:0.88rem;
+      font-weight:700;
+      color:#777;
+      margin-bottom:1rem;
+      line-height:1.5;
+    }
+
+    .btn-generate {
+      padding:10px 22px;
+      border:none;
+      border-radius:12px;
+      font-family:'Fredoka One',cursive;
+      font-size:1rem;
+      cursor:pointer;
+      transition:opacity 0.18s, transform 0.15s;
+      box-shadow:0 3px 12px rgba(0,0,0,0.15);
+    }
+    .btn-generate:hover { opacity:0.88; transform:translateY(-1px); }
+    .class-section .btn-generate { background:linear-gradient(135deg,#6B48FF,#3A8EF6); color:#fff; }
+    .member-section .btn-generate { background:linear-gradient(135deg,#F5A623,#FF6B6B); color:#fff; }
+
+    /* Add member row */
+    .add-member-row {
+      display:flex;
+      gap:0.75rem;
+      margin-bottom:0.8rem;
+      flex-wrap:wrap;
+    }
+    .member-name-input {
+      flex:1;
+      min-width:160px;
+      padding:10px 14px;
+      border:2px solid #F0D080;
+      border-radius:12px;
+      font-family:'Nunito',sans-serif;
+      font-size:0.95rem;
+      font-weight:700;
+      color:var(--text);
+      background:#fff;
+      outline:none;
+      transition:border-color 0.2s;
+    }
+    .member-name-input:focus { border-color:var(--gold); }
+
+    /* Code / member list items */
+    .code-list { margin-top:1rem; display:flex; flex-direction:column; gap:0.6rem; }
+    .empty-msg { font-size:0.88rem; font-weight:700; color:#aaa; text-align:center; padding:0.5rem 0; }
+
+    .code-item {
+      background:#fff;
+      border-radius:14px;
+      padding:0.75rem 1rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:0.5rem;
+      box-shadow:0 2px 8px rgba(0,0,0,0.07);
+    }
+    .code-item-left { display:flex; flex-direction:column; gap:2px; }
+    .member-name-label { font-weight:800; font-size:0.9rem; color:var(--text); }
+    .code-mono {
+      font-family:'Fredoka One',cursive;
+      font-size:1.1rem;
+      color:var(--indigo);
+      letter-spacing:0.05em;
+    }
+    .code-mono.member-mono { color:#C07000; }
+    .code-date { font-size:0.78rem; font-weight:700; color:#bbb; }
+    .code-item-actions { display:flex; gap:0.5rem; align-items:center; }
+    .btn-item-copy {
+      padding:6px 14px;
+      border:none;
+      border-radius:8px;
+      font-family:'Fredoka One',cursive;
+      font-size:0.85rem;
+      cursor:pointer;
+      transition:opacity 0.18s;
+    }
+    .class-section .btn-item-copy { background:linear-gradient(135deg,#6B48FF,#3A8EF6); color:#fff; }
+    .member-section .btn-item-copy { background:linear-gradient(135deg,#F5A623,#FF6B6B); color:#fff; }
+    .btn-item-copy:hover { opacity:0.8; }
+    .btn-item-delete {
+      padding:6px 10px;
+      background:#FFF0F0;
+      color:#e74c3c;
+      border:none;
+      border-radius:8px;
+      font-size:0.85rem;
+      cursor:pointer;
+      transition:background 0.18s;
+    }
+    .btn-item-delete:hover { background:#FFD5D5; }
+
+    /* ── HOURS CARDS ── */
+    .hours-section {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+    }
+    .hours-card {
+      border-radius:16px;
+      padding:1.1rem;
+      text-align:center;
+    }
+    .hours-card.free   { background:linear-gradient(135deg,#EDFBF0,#D4F5DC); border:2px solid #6BCB77; }
+    .hours-card.class  { background:linear-gradient(135deg,#F8F4FF,#EEF6FF); border:2px solid #C5B3FF; }
+    .hours-card.member { background:linear-gradient(135deg,#FFFBEE,#FFF0CC); border:2px solid #F5D070; }
+    .hours-card .hc-icon { font-size:1.8rem; display:block; margin-bottom:0.3rem; }
+    .hours-card h4 { font-family:'Fredoka One',cursive; font-size:0.95rem; margin-bottom:0.25rem; }
+    .hours-card p { font-size:0.78rem; font-weight:700; color:#666; line-height:1.5; }
+
+    /* ── OPEN HUB BTN ── */
+    .btn-open-hub {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:0.6rem;
+      padding:16px;
+      background:linear-gradient(135deg,#6BCB77,#3A8EF6);
+      color:#fff;
+      border-radius:14px;
+      font-family:'Fredoka One',cursive;
+      font-size:1.2rem;
+      text-decoration:none;
+      box-shadow:0 4px 18px rgba(107,203,119,0.3);
+      transition:opacity 0.18s, transform 0.18s;
+    }
+    .btn-open-hub:hover { opacity:0.88; transform:translateY(-1px); color:#fff; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align:center;
+      padding:1.5rem 1rem;
+      font-size:0.85rem;
+      color:#aaa;
+      font-weight:700;
+      border-top:2px solid #FFE8D0;
+    }
+
+    @media (max-width:700px) {
+      .signin-wrap { grid-template-columns:1fr; }
+      .hours-section { grid-template-columns:1fr; }
+      .add-member-row { flex-direction:column; }
+    }
+    @media (max-width:480px) {
+      .dash-body { padding:1.2rem; }
+      .code-gen-section { padding:1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="hub.html" class="nav-logo">📚 <span>First</span>StepReading</a>
+  <div class="nav-links">
+    <a href="hub.html">Games Hub</a>
+    <a href="students.html" class="btn-student">🎒 Students</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Welcome Back, Teacher! 👩‍🏫</h1>
+  <p>Manage class codes, members, and student access</p>
+</div>
+
+<!-- MAIN -->
+<main id="main-area">
+
+  <!-- TEACHER TIME GATE (shown outside Mon–Fri 9AM–4PM) -->
+  <div id="teacher-gate">
+    <div class="gate-card">
+      <span class="gate-icon">🔒</span>
+      <h2>Login Closed</h2>
+      <p>Teacher &amp; student login is available:</p>
+      <div class="gate-hours-box">Monday – Friday<br>9:00 AM – 4:00 PM</div>
+      <p class="gate-note">Come back during school hours to sign in.</p>
+      <a href="students.html" class="btn-goto-hub" style="margin-bottom:1.2rem">🎒 Student / Member Page →</a>
+
+      <!-- Admin bypass -->
+      <div style="border-top:2px solid #f0f0f0;padding-top:1.2rem;margin-top:0.5rem;">
+        <button onclick="toggleAdminForm()" style="background:none;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.85rem;color:#bbb;cursor:pointer;text-decoration:underline;">
+          🔑 Admin Access
+        </button>
+        <div id="admin-form" style="display:none;margin-top:1rem;">
+          <div class="form-group" style="margin-bottom:0.8rem;text-align:left;">
+            <label for="admin-password">Admin Password</label>
+            <input type="password" id="admin-password" placeholder="••••••••••"
+              onkeydown="if(event.key==='Enter')adminLogin()">
+          </div>
+          <button onclick="adminLogin()" class="btn-signin">🔑 Admin Sign In →</button>
+          <div class="error-msg" id="admin-error">❌ Incorrect admin password.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SIGN-IN SECTION -->
+  <div class="signin-wrap" id="signin-section" style="display:none">
+
+    <!-- TEACHER PANEL -->
+    <div class="panel panel-teacher">
+      <div class="panel-header">
+        <span class="icon">👩‍🏫</span>
+        <h2>I'm a Teacher</h2>
+        <p>Sign in to your teacher dashboard</p>
+      </div>
+      <div class="panel-body">
+        <form id="login-form" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="your@email.com" autocomplete="email" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="••••••••••" autocomplete="current-password" required>
+          </div>
+          <button type="submit" class="btn-signin">Sign In →</button>
+          <div class="error-msg" id="login-error">
+            ❌ Incorrect email or password. Please try again.
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- STUDENT / MEMBER PANEL -->
+    <div class="panel panel-student">
+      <div class="panel-header">
+        <span class="icon">🎒</span>
+        <h2>Students &amp; Members</h2>
+        <p>Enter a code or use member login</p>
+      </div>
+      <div class="panel-body">
+        <div class="student-info">
+          <ul class="steps">
+            <li>
+              <span class="step-num">1</span>
+              <span>Ask your teacher for a <strong>class code</strong> (FSR-XXXXXX)</span>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <span>Class codes work <strong>Mon–Fri, 9AM–4PM</strong></span>
+            </li>
+            <li>
+              <span class="step-num">⭐</span>
+              <span><strong>Members</strong> use their member code — works <strong>anytime, 24/7!</strong></span>
+            </li>
+          </ul>
+          <a href="students.html" class="btn-goto-hub" style="margin-top:0.5rem">🎮 Go to Games / Member Login →</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /signin-wrap -->
+
+  <!-- TEACHER DASHBOARD (shown after login) -->
+  <div id="teacher-dashboard">
+
+    <div class="dash-header">
+      <div>
+        <h2>👩‍🏫 Teacher Dashboard</h2>
+        <p id="dash-welcome">Welcome back!</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;">
+        <span class="live-status" id="live-status">
+          <span class="dot"></span>
+          <span id="status-text">Checking...</span>
+        </span>
+        <button class="btn-signout" onclick="signOut()">Sign Out</button>
+      </div>
+    </div>
+
+    <div class="dash-body">
+
+      <!-- QUICK NAV BUTTONS -->
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <a href="classroom.html" class="btn-open-hub" style="flex:1;min-width:180px;background:linear-gradient(135deg,#6B48FF,#3A8EF6);box-shadow:0 4px 18px rgba(107,72,255,0.3);">📱 Create Class QR Code</a>
+        <a href="hub.html" class="btn-open-hub" style="flex:1;min-width:180px;">🎮 Games Hub</a>
+        <a href="hub.html" class="btn-open-hub" style="flex:1;min-width:180px;background:linear-gradient(135deg,#FF6B6B,#FF8E53);box-shadow:0 4px 18px rgba(255,107,107,0.3);">🏠 Main Page</a>
+      </div>
+
+      <!-- ── CLASS CODE ── -->
+      <div class="code-gen-section class-section">
+        <div class="section-head">
+          <h3>📅 Class Code</h3>
+          <span class="time-badge class-badge">Mon–Fri, 9:00 AM – 4:00 PM</span>
+        </div>
+        <p class="section-desc">Your class code never expires — it works every Monday–Friday, 9AM–4PM. Share it once and you're done!</p>
+        <div id="class-code-list" class="code-list">
+          <p class="empty-msg">No class code yet — <a href="classroom.html" style="color:var(--indigo)">set it up here</a>.</p>
+        </div>
+        <a href="classroom.html" class="btn-generate" style="display:inline-block;text-decoration:none;margin-top:0.6rem;">
+          📱 View QR Code &amp; Manage Class
+        </a>
+      </div>
+
+      <!-- ── MEMBER ACCOUNTS ── -->
+      <div class="code-gen-section member-section">
+        <div class="section-head">
+          <h3>⭐ Member Accounts</h3>
+          <span class="time-badge member-badge">24/7 — Anytime Access</span>
+        </div>
+        <p class="section-desc">Members can access all games around the clock — great for families with a paid membership. Enter their name and generate a code to share.</p>
+        <div class="add-member-row">
+          <input type="text" id="member-name-input" class="member-name-input"
+            placeholder="Family or student name" maxlength="40"
+            onkeydown="if(event.key==='Enter')addMember()">
+          <button class="btn-generate" onclick="addMember()">+ Add Member</button>
+        </div>
+        <div id="member-list" class="code-list">
+          <p class="empty-msg">No members added yet.</p>
+        </div>
+      </div>
+
+      <!-- HOURS OVERVIEW -->
+      <div class="hours-section">
+        <div class="hours-card free">
+          <span class="hc-icon">🟢</span>
+          <h4>Free Access</h4>
+          <p><strong>Mon – Fri</strong><br>7:00 AM – 4:00 PM<br>No code needed!</p>
+        </div>
+        <div class="hours-card class">
+          <span class="hc-icon">📅</span>
+          <h4>Class Codes</h4>
+          <p><strong>Mon – Fri</strong><br>9:00 AM – 4:00 PM<br>Teacher-generated codes</p>
+        </div>
+        <div class="hours-card member">
+          <span class="hc-icon">⭐</span>
+          <h4>Members</h4>
+          <p><strong>Any Day</strong><br>Any Time — 24/7<br>Paid membership access</p>
+        </div>
+      </div>
+
+    </div><!-- /dash-body -->
+  </div><!-- /teacher-dashboard -->
+
+</main>
+
+<footer>
+  First Step Reading © 2024 — <a href="http://www.firststepreading.com" style="color:#aaa">firststepreading.com</a>
+</footer>
+
+<script>
+  // ── CONFIG ──
+  const TEACHER_EMAIL    = 'heathermosko@gmail.com';
+  const TEACHER_PASSWORD = 'FirstStep1!';
+  const ADMIN_PASSWORD   = 'HeatherAdmin1!';  // 24/7 bypass — Heather only
+  const GATE_START       = 9;   // 9 AM
+  const GATE_END         = 16;  // 4 PM
+
+  // ── HELPERS ──
+  function isTeacherHours() {
+    const now = new Date();
+    const h   = now.getHours();
+    const day = now.getDay();
+    return day >= 1 && day <= 5 && h >= GATE_START && h < GATE_END;
+  }
+
+  function genCode(prefix) {
+    // Use unambiguous chars (no I, O, 0, 1 — easy for kids to read)
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let s = prefix + '-';
+    for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+    return s;
+  }
+
+  function fmtDate(ts) {
+    return new Date(ts).toLocaleDateString('en-US',
+      { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+  }
+
+  // ── LIVE STATUS ──
+  function updateStatus() {
+    const now = new Date();
+    const h   = now.getHours();
+    const day = now.getDay();
+    const el  = document.getElementById('live-status');
+    const tx  = document.getElementById('status-text');
+    if (!el) return;
+    const isWeekday = day >= 1 && day <= 5;
+    if (isWeekday && h >= TEACHER_START && h < TEACHER_END) {
+      el.className = 'live-status school';
+      tx.textContent = 'School Hours — Hub is FREE right now';
+    } else if (!isWeekday) {
+      el.className = 'live-status after';
+      tx.textContent = 'Weekend — Students need a code or membership';
+    } else {
+      el.className = 'live-status after';
+      tx.textContent = 'Outside school hours — code or membership required';
+    }
+  }
+
+  // ── GENERATE CLASS CODE ──
+  function generateClassCode() {
+    const code = genCode('FSR');
+    const history = JSON.parse(localStorage.getItem('fsr_code_history') || '[]');
+    history.unshift({ code, created: Date.now() });
+    localStorage.setItem('fsr_code_history', JSON.stringify(history.slice(0, 20)));
+    renderClassCodes();
+    // Auto-copy the new code
+    navigator.clipboard.writeText(code).catch(() => {});
+  }
+
+  function deleteClassCode(code) {
+    if (!confirm('Remove this class code?')) return;
+    const history = JSON.parse(localStorage.getItem('fsr_code_history') || '[]');
+    localStorage.setItem('fsr_code_history',
+      JSON.stringify(history.filter(c => c.code !== code)));
+    renderClassCodes();
+  }
+
+  function renderClassCodes() {
+    const list = document.getElementById('class-code-list');
+    if (!list) return;
+    const code = localStorage.getItem('fsr_primary_code');
+    if (!code) {
+      list.innerHTML = '<p class="empty-msg">No class code yet — <a href="classroom.html" style="color:var(--indigo)">set it up here</a>.</p>';
+      return;
+    }
+    list.innerHTML = `
+      <div class="code-item">
+        <div class="code-item-left">
+          <span class="code-mono">${code}</span>
+          <span class="code-date">♻️ Permanent — works every Mon–Fri, 9AM–4PM</span>
+        </div>
+        <div class="code-item-actions">
+          <button class="btn-item-copy" onclick="copyText('${code}', this)">📋 Copy</button>
+          <a href="classroom.html" class="btn-item-copy" style="text-decoration:none;display:inline-flex;align-items:center;">📱 QR</a>
+        </div>
+      </div>`;
+  }
+
+  // ── ADD MEMBER ──
+  function addMember() {
+    const inp  = document.getElementById('member-name-input');
+    const name = inp.value.trim();
+    if (!name) { inp.focus(); inp.style.borderColor = '#e74c3c'; setTimeout(() => inp.style.borderColor = '', 1200); return; }
+    const code    = genCode('MBR');
+    const members = JSON.parse(localStorage.getItem('fsr_members') || '[]');
+    members.unshift({ name, code, added: Date.now() });
+    localStorage.setItem('fsr_members', JSON.stringify(members));
+    inp.value = '';
+    renderMembers();
+    navigator.clipboard.writeText(code).catch(() => {});
+  }
+
+  function deleteMember(code) {
+    if (!confirm('Remove this member? They will lose 24/7 access.')) return;
+    const members = JSON.parse(localStorage.getItem('fsr_members') || '[]');
+    localStorage.setItem('fsr_members',
+      JSON.stringify(members.filter(m => m.code !== code)));
+    renderMembers();
+  }
+
+  function renderMembers() {
+    const list = document.getElementById('member-list');
+    if (!list) return;
+    const members = JSON.parse(localStorage.getItem('fsr_members') || '[]');
+    if (!members.length) {
+      list.innerHTML = '<p class="empty-msg">No members added yet.</p>';
+      return;
+    }
+    list.innerHTML = members.map(m => `
+      <div class="code-item">
+        <div class="code-item-left">
+          <span class="member-name-label">${m.name}</span>
+          <span class="code-mono member-mono">${m.code}</span>
+          <span class="code-date">Added ${fmtDate(m.added)} · 24/7 access</span>
+        </div>
+        <div class="code-item-actions">
+          <button class="btn-item-copy" onclick="copyText('${m.code}', this)">📋 Copy</button>
+          <button class="btn-item-delete" onclick="deleteMember('${m.code}')">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── COPY HELPER ──
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    });
+  }
+
+  // ── LOGIN ──
+  function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const pass  = document.getElementById('password').value;
+    const errEl = document.getElementById('login-error');
+
+    if (email !== TEACHER_EMAIL.toLowerCase()) {
+      errEl.textContent = '❌ Incorrect email or password. Please try again.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    if (pass === TEACHER_PASSWORD) {
+      if (isTeacherHours()) {
+        errEl.classList.remove('show');
+        localStorage.setItem('fsr_teacher_logged_in', '1');
+        showDashboard();
+      } else {
+        errEl.innerHTML = '🕐 Teacher login is only available<br><strong>Monday–Friday, 9:00 AM – 4:00 PM</strong>.';
+        errEl.classList.add('show');
+        document.getElementById('password').classList.add('error');
+        setTimeout(() => document.getElementById('password').classList.remove('error'), 1500);
+      }
+      return;
+    }
+
+    // Wrong password
+    errEl.textContent = '❌ Incorrect email or password. Please try again.';
+    errEl.classList.add('show');
+    document.getElementById('password').classList.add('error');
+    setTimeout(() => document.getElementById('password').classList.remove('error'), 1500);
+  }
+
+  // ── ADMIN LOGIN (gate bypass, 24/7) ──
+  function toggleAdminForm() {
+    const f = document.getElementById('admin-form');
+    f.style.display = f.style.display === 'none' ? 'block' : 'none';
+    if (f.style.display === 'block') document.getElementById('admin-password').focus();
+  }
+
+  function adminLogin() {
+    const pass  = document.getElementById('admin-password').value;
+    const errEl = document.getElementById('admin-error');
+    if (pass === ADMIN_PASSWORD) {
+      localStorage.setItem('fsr_teacher_logged_in', '1');
+      localStorage.setItem('fsr_is_admin', '1');
+      showDashboard();
+    } else {
+      errEl.classList.add('show');
+      document.getElementById('admin-password').value = '';
+      document.getElementById('admin-password').focus();
+      setTimeout(() => errEl.classList.remove('show'), 2500);
+    }
+  }
+
+  // ── SHOW DASHBOARD ──
+  function showDashboard() {
+    document.getElementById('signin-section').style.display    = 'none';
+    document.getElementById('teacher-gate').style.display      = 'none';
+    const dash = document.getElementById('teacher-dashboard');
+    dash.style.display = 'block';
+    document.getElementById('dash-welcome').textContent =
+      'Welcome, ' + TEACHER_EMAIL.split('@')[0] + '!';
+    updateStatus();
+    setInterval(updateStatus, 60000);
+    renderClassCodes();
+    renderMembers();
+  }
+
+  // ── SIGN OUT ──
+  function signOut() {
+    localStorage.removeItem('fsr_teacher_logged_in');
+    localStorage.removeItem('fsr_is_admin');
+    document.getElementById('teacher-dashboard').style.display = 'none';
+    if (isTeacherHours()) {
+      document.getElementById('signin-section').style.display = 'grid';
+    } else {
+      document.getElementById('teacher-gate').style.display = 'flex';
+    }
+    document.getElementById('login-form').reset();
+  }
+
+  // ── INIT ──
+  (function init() {
+    // Already logged in → always show dashboard (admin or teacher)
+    if (localStorage.getItem('fsr_teacher_logged_in') === '1') {
+      showDashboard();
+      return;
+    }
+    // Not logged in: gate outside Mon–Fri 9AM–4PM
+    if (isTeacherHours()) {
+      document.getElementById('signin-section').style.display = 'grid';
+    } else {
+      document.getElementById('teacher-gate').style.display = 'flex';
+    }
+  })();
+</script>
+</body>
+</html>

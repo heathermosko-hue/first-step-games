@@ -10,7 +10,7 @@
   <style>
     :root { --bg:#F0F7FF; --text:#2C3E50; --blue:#2980B9; --sky:#3498DB; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     header { background:linear-gradient(135deg,#2980B9 0%,#3498DB 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
@@ -28,7 +28,7 @@
     .btn-cat:hover { background:#A8D4F5; }
     .btn-cat.active { background:#2980B9; color:white; border-color:#2980B9; }
 
-    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:1.5rem 1rem 2rem; gap:1rem; }
+    main { flex:1; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:1.5rem 1rem 2rem; gap:1rem; }
 
     .score-row { display:flex; gap:1.5rem; font-family:'Fredoka One',cursive; font-size:1rem; color:#bbb; }
     .score-row span { color:#2980B9; font-size:1.2rem; }
@@ -89,9 +89,6 @@
       0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)}
     }
 
-    footer { text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #D0E8FF; margin-top:auto; }
-    footer a { color:#2980B9; text-decoration:none; }
-    footer a:hover { text-decoration:underline; }
   </style>
 <link href="fonts.css" rel="stylesheet"></head>
 <body>
@@ -133,9 +130,6 @@
   <div class="choices" id="choices"></div>
 </main>
 
-<footer>
-  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
-</footer>
 
 <script>
 /* ── SPEECH ── */

@@ -23,7 +23,8 @@
       font-family: 'Nunito', sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -104,6 +105,8 @@
     /* ── MAIN ── */
     main {
       flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -411,17 +414,6 @@
     }
     .btn-play-again:hover { transform: scale(1.06); box-shadow: 0 7px 24px rgba(107,72,255,.45); }
 
-    /* ── FOOTER ── */
-    footer {
-      background: white;
-      border-top: 2px solid #EDE0FF;
-      text-align: center;
-      padding: 1rem 1.5rem;
-      font-size: .82rem;
-      color: #999;
-    }
-    footer a { color: var(--purple); text-decoration: none; font-weight: 700; }
-    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -496,10 +488,6 @@
   </div>
 </div>
 
-<footer>
-  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids 📚</p>
-</footer>
-
 <script>
 /* ═══════════════════════════════════════
    SPEECH API
@@ -517,11 +505,11 @@ window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
 const WORD_DATA = {
   'CVC Words': [
     {word:'cat',emoji:'🐱'},{word:'dog',emoji:'🐶'},{word:'sun',emoji:'☀️'},
-    {word:'hat',emoji:'🎩'},{word:'big',emoji:'🐘'},{word:'run',emoji:'🏃'},
-    {word:'hop',emoji:'🐸'},{word:'bed',emoji:'🛏️'},{word:'cup',emoji:'🥤'},
+    {word:'hat',emoji:'🎩'},{word:'big',emoji:'🐘',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80" style="width:1.25em;height:1em"><rect x="24" y="62" width="9" height="14" rx="3" fill="#9EB0C8"/><rect x="36" y="62" width="9" height="14" rx="3" fill="#9EB0C8"/><rect x="48" y="62" width="9" height="14" rx="3" fill="#9EB0C8"/><ellipse cx="43" cy="52" rx="24" ry="17" fill="#B0C0D8"/><circle cx="26" cy="37" r="16" fill="#B0C0D8"/><ellipse cx="38" cy="33" rx="10" ry="14" fill="#9EB0C8"/><ellipse cx="38" cy="33" rx="6" ry="10" fill="#C8AEAE"/><path d="M13,43 Q3,50 7,60 Q9,65 13,62 Q11,56 19,52" fill="#B0C0D8"/><circle cx="21" cy="34" r="2.5" fill="#333"/><circle cx="22" cy="33" r="0.9" fill="white"/><ellipse cx="84" cy="71" rx="6" ry="4.5" fill="#A8A8A8"/><circle cx="79" cy="65" r="5" fill="#A8A8A8"/><circle cx="76" cy="60" r="3.2" fill="#A8A8A8"/><circle cx="76" cy="60" r="1.8" fill="#E8B0B8"/><circle cx="82" cy="59" r="2.6" fill="#A8A8A8"/><circle cx="82" cy="59" r="1.4" fill="#E8B0B8"/><circle cx="77" cy="65" r="1.3" fill="#333"/><circle cx="75" cy="67" r="1" fill="#CC8888"/><path d="M90,71 Q95,67 93,75" fill="none" stroke="#A8A8A8" stroke-width="1.5" stroke-linecap="round"/><line x1="83" y1="48" x2="68" y2="44" stroke="#FF3333" stroke-width="2.5" stroke-linecap="round"/><polygon points="68,44 75,40 74,47" fill="#FF3333"/></svg>'},{word:'run',emoji:'🏃'},
+    {word:'hop',emoji:'🐸',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><ellipse cx="40" cy="77" rx="18" ry="3.5" fill="rgba(0,0,0,0.1)"/><path d="M18,73 Q22,67 26,73" fill="none" stroke="#BBB" stroke-width="2" stroke-linecap="round"/><path d="M54,73 Q58,67 62,73" fill="none" stroke="#BBB" stroke-width="2" stroke-linecap="round"/><ellipse cx="40" cy="51" rx="17" ry="14" fill="#C8956A"/><ellipse cx="40" cy="54" rx="10" ry="9" fill="#EDE4D0"/><circle cx="40" cy="30" r="13" fill="#C8956A"/><ellipse cx="31" cy="14" rx="5.5" ry="12" fill="#C8956A"/><ellipse cx="31" cy="14" rx="3" ry="9" fill="#E8A0B0"/><ellipse cx="49" cy="14" rx="5.5" ry="12" fill="#C8956A"/><ellipse cx="49" cy="14" rx="3" ry="9" fill="#E8A0B0"/><circle cx="35" cy="28" r="2.2" fill="#2C2C2C"/><circle cx="45" cy="28" r="2.2" fill="#2C2C2C"/><circle cx="36" cy="27" r="0.8" fill="white"/><circle cx="46" cy="27" r="0.8" fill="white"/><ellipse cx="40" cy="33" rx="2" ry="1.5" fill="#E8A0A0"/><path d="M37,35 Q40,37 43,35" fill="none" stroke="#CC8888" stroke-width="1.2" stroke-linecap="round"/><path d="M26,57 Q16,64 14,58 Q16,50 26,55" fill="#C8956A"/><path d="M54,57 Q64,64 66,58 Q64,50 54,55" fill="#C8956A"/><ellipse cx="26" cy="43" rx="8" ry="5" fill="#C8956A" transform="rotate(-20 26 43)"/><ellipse cx="54" cy="43" rx="8" ry="5" fill="#C8956A" transform="rotate(20 54 43)"/><circle cx="54" cy="56" r="5" fill="white"/></svg>'},{word:'bed',emoji:'🛏️'},{word:'cup',emoji:'🥤'},
     {word:'pig',emoji:'🐷'},{word:'map',emoji:'🗺️'},{word:'bus',emoji:'🚌'},
-    {word:'top',emoji:'🪀'},{word:'bug',emoji:'🐛'},{word:'red',emoji:'🔴'},
-    {word:'pop',emoji:'🎈'},{word:'web',emoji:'🕸️'},{word:'jet',emoji:'✈️'},
+    {word:'top',emoji:'🪀',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><ellipse cx="40" cy="74" rx="16" ry="4" fill="rgba(0,0,0,0.12)"/><line x1="24" y1="71" x2="18" y2="77" stroke="#CCC" stroke-width="2" stroke-linecap="round"/><line x1="56" y1="71" x2="62" y2="77" stroke="#CCC" stroke-width="2" stroke-linecap="round"/><rect x="37" y="2" width="6" height="14" rx="3" fill="#444"/><path d="M14,18 L40,70 L66,18 Z" fill="#E74C3C"/><path d="M22,33 L40,70 L58,33 Z" fill="#F1C40F"/><path d="M30,52 L40,70 L50,52 Z" fill="#3498DB"/><ellipse cx="40" cy="18" rx="26" ry="7.5" fill="#C0392B"/><ellipse cx="35" cy="16" rx="8" ry="3" fill="rgba(255,255,255,0.4)"/><circle cx="40" cy="70" r="3.5" fill="#333"/></svg>'},{word:'bug',emoji:'🐛'},{word:'red',emoji:'🔴'},
+    {word:'pop',emoji:'🎈',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><circle cx="40" cy="36" r="22" fill="#FFE066" opacity="0.6"/><path d="M40,34 Q30,14 24,20 Q20,30 30,36" fill="#FF4444"/><path d="M40,34 Q50,14 56,20 Q60,30 50,36" fill="#FF4444"/><path d="M40,36 Q20,40 18,50 Q24,58 34,50" fill="#FF4444"/><path d="M40,36 Q60,40 62,50 Q56,58 46,50" fill="#FF4444"/><path d="M36,40 Q30,56 34,64 Q40,68 44,60 Q44,50 42,40" fill="#FF4444"/><polygon points="40,20 42.5,30 53,26 45,34 54,42 43,39 40,50 37,39 26,42 35,34 27,26 37.5,30" fill="#FFE066"/><text x="40" y="41" text-anchor="middle" dominant-baseline="middle" font-size="10" font-family="Impact,Arial" font-weight="900" fill="#CC0000">POP!</text><path d="M40,66 Q42,72 38,77" fill="none" stroke="#FF4444" stroke-width="2" stroke-linecap="round"/><circle cx="13" cy="15" r="2.5" fill="#FF4444"/><circle cx="67" cy="13" r="2" fill="#FFE066"/><circle cx="11" cy="57" r="2" fill="#FF8800"/><circle cx="69" cy="55" r="2" fill="#FF4444"/></svg>'},{word:'web',emoji:'🕸️'},{word:'jet',emoji:'✈️'},
     {word:'fox',emoji:'🦊'},{word:'log',emoji:'🪵'},
   ],
   'Book 1': [
@@ -560,9 +548,9 @@ const WORD_DATA = {
   'Long Vowels': [
     {word:'cake',emoji:'🎂'},{word:'kite',emoji:'🪁'},{word:'bone',emoji:'🦴'},
     {word:'cube',emoji:'🧊'},{word:'rain',emoji:'🌧️'},{word:'feet',emoji:'🦶',img:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" style="width:1em;height:1em"><ellipse cx="22" cy="54" rx="13" ry="19" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="22" cy="67" rx="11" ry="6" fill="#F0A898"/><ellipse cx="13" cy="37" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="18" cy="35" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="23" cy="34" rx="3" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="28" cy="35" rx="2.5" ry="2.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="32" cy="38" rx="2" ry="2" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="58" cy="54" rx="13" ry="19" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="58" cy="67" rx="11" ry="6" fill="#F0A898"/><ellipse cx="67" cy="37" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="62" cy="35" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="57" cy="34" rx="3" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="52" cy="35" rx="2.5" ry="2.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="48" cy="38" rx="2" ry="2" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/></svg>'},
-    {word:'boat',emoji:'⛵'},{word:'snow',emoji:'❄️'},{word:'bee',emoji:'🐝'},
+    {word:'boat',emoji:'⛵'},{word:'bee',emoji:'🐝'},
     {word:'tree',emoji:'🌳'},{word:'bike',emoji:'🚲'},{word:'rose',emoji:'🌹'},
-    {word:'leaf',emoji:'🍃'},{word:'moon',emoji:'🌙'},{word:'day',emoji:'☀️'},
+    {word:'leaf',emoji:'🍃'},{word:'day',emoji:'☀️'},
     {word:'vine',emoji:'🌿'},{word:'toad',emoji:'🐸'},{word:'tune',emoji:'🎵'},
     {word:'blue',emoji:'💙'},{word:'grape',emoji:'🍇'},
   ],
@@ -916,5 +904,6 @@ document.getElementById('btnMute').addEventListener('click', () => {
 });
 
 </script>
+<script src="auth/student-bar.js"></script>
 </body>
 </html>

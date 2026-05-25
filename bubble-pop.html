@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Bubble Pop! | First Step Reading</title>
+<style>
+:root { --accent:#3A8EF6; --accent2:#6B48FF; }
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  height:100dvh; overflow:hidden;
+  display:flex; flex-direction:column;
+  background:#C8E8FF;
+  user-select:none; -webkit-tap-highlight-color:transparent;
+}
+
+/* ── HEADER ── */
+header{
+  background:var(--accent);
+  padding:.55rem 1rem;
+  display:flex; align-items:center; gap:.7rem;
+  flex-shrink:0; z-index:10;
+  box-shadow:0 2px 8px rgba(0,0,0,.18);
+}
+.back-link{
+  color:white; text-decoration:none; font-weight:bold;
+  background:rgba(255,255,255,.22); padding:6px 14px;
+  border-radius:999px; font-size:.82rem; white-space:nowrap;
+  transition:background .2s; font-family:"Comic Sans MS","Comic Sans",cursive;
+}
+.back-link:hover{ background:rgba(255,255,255,.38); }
+header h1{
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold; color:white;
+  font-size:clamp(1.05rem,4vw,1.45rem); flex:1; text-align:center;
+}
+.header-right{
+  display:flex; align-items:center; gap:.45rem; flex-shrink:0;
+}
+.score-badge{
+  background:rgba(255,255,255,.25); color:white;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold; font-size:.92rem;
+  padding:5px 13px; border-radius:999px; white-space:nowrap;
+}
+.speaker-btn{
+  background:rgba(255,255,255,.22); border:none; color:white;
+  font-size:1.15rem; width:36px; height:36px; border-radius:50%;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:background .2s; flex-shrink:0;
+}
+.speaker-btn:hover{ background:rgba(255,255,255,.38); }
+.speaker-btn.muted{ background:rgba(0,0,0,.28); opacity:.7; }
+
+/* ── CATEGORY BAR ── */
+.cat-bar{
+  background:white; border-bottom:3px solid rgba(0,0,0,.07);
+  padding:.38rem .5rem; display:flex; gap:.32rem;
+  flex-wrap:nowrap; overflow-x:auto; flex-shrink:0;
+  scrollbar-width:none;
+}
+.cat-bar::-webkit-scrollbar{ display:none; }
+.btn-cat{
+  border:2px solid #ddd; background:white; color:#888;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold;
+  font-size:.7rem; padding:4px 11px; border-radius:999px;
+  cursor:pointer; white-space:nowrap; transition:all .2s; flex-shrink:0;
+}
+.btn-cat.active{ background:var(--accent); border-color:var(--accent); color:white; }
+
+/* ── PROMPT ── */
+.prompt-area{
+  background:white; border-bottom:3px solid rgba(0,0,0,.06);
+  padding:.45rem 1rem; display:flex; align-items:center;
+  gap:.9rem; flex-shrink:0; justify-content:center;
+  min-height:72px;
+}
+.prompt-pic{
+  font-size:2.4rem; line-height:1; flex-shrink:0;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.12));
+}
+.prompt-pic svg{ width:2.4rem; height:2.4rem; }
+.prompt-pic.word{
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold;
+  font-size:clamp(1.7rem,6vw,2.2rem); color:var(--accent);
+  background:#EDF6FF; padding:4px 18px; border-radius:12px;
+  filter:none;
+}
+.prompt-text{ display:flex; flex-direction:column; }
+.prompt-hint{
+  color:#555; font-size:.78rem; font-weight:bold;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  letter-spacing:.01em;
+}
+.prompt-sub{
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold; font-size:1rem; color:#333; margin-top:2px;
+}
+
+/* ── LIVES ── */
+.lives-bar{
+  padding:.22rem 1rem; text-align:center; font-size:1.35rem;
+  flex-shrink:0; background:rgba(255,255,255,.6); letter-spacing:.1rem;
+}
+
+/* ── GAME FIELD ── */
+.game-field{
+  flex:1; position:relative; overflow:hidden;
+  background:linear-gradient(180deg,#B2D9FF 0%,#D4EDFF 55%,#EBF7FF 100%);
+}
+
+/* ── BUBBLES ── */
+.bubble{
+  position:absolute; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; touch-action:manipulation;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold; text-align:center; line-height:1.1;
+  border:3px solid rgba(255,255,255,.85);
+  box-shadow:
+    inset -7px -7px 18px rgba(0,0,0,.08),
+    inset 5px 5px 14px rgba(255,255,255,.88),
+    0 4px 12px rgba(0,0,0,.13);
+  overflow:hidden; will-change:top;
+  transition:transform .08s;
+}
+.bubble:active{ transform:scale(.92) !important; }
+/* Shine highlight */
+.bubble::before{
+  content:''; position:absolute;
+  top:12%; left:18%; width:30%; height:24%;
+  background:rgba(255,255,255,.72); border-radius:50%;
+  transform:rotate(-28deg); pointer-events:none;
+}
+.b-word{ position:relative; z-index:1; padding:3px; word-break:break-word; }
+
+/* Pop animations */
+@keyframes popOK{
+  0%  { transform:scale(1);   opacity:1; }
+  45% { transform:scale(1.7); opacity:.85; }
+  100%{ transform:scale(.05); opacity:0; }
+}
+@keyframes popNo{
+  0%,100%{ transform:scale(1) rotate(0); }
+  25%    { transform:scale(.88) rotate(-6deg); }
+  75%    { transform:scale(.88) rotate( 6deg); }
+}
+.bubble.pop-ok { animation:popOK .32s forwards; pointer-events:none; }
+.bubble.pop-no { animation:popNo .38s; }
+
+/* Score burst */
+@keyframes scoreBurst{
+  0%  { transform:translateY(0)    scale(1);   opacity:1; }
+  100%{ transform:translateY(-55px) scale(1.4); opacity:0; }
+}
+.score-burst{
+  position:absolute; pointer-events:none; z-index:60;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold; font-size:1.35rem; color:#FFD700;
+  text-shadow:0 1px 4px rgba(0,0,0,.25);
+  animation:scoreBurst .75s forwards;
+}
+
+/* Sparkles */
+@keyframes sparkFly{
+  0%  { transform:translate(0,0) scale(1.1); opacity:1; }
+  100%{ transform:translate(var(--dx),var(--dy)) scale(0); opacity:0; }
+}
+.sparkle{
+  position:absolute; pointer-events:none; z-index:55;
+  font-size:1.2rem;
+  animation:sparkFly .6s forwards;
+}
+
+/* ── OVERLAY ── */
+.overlay{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,20,60,.42); z-index:100; backdrop-filter:blur(2px);
+}
+.overlay-card{
+  background:white; border-radius:26px;
+  padding:2rem 2.2rem; text-align:center;
+  max-width:320px; width:90%;
+  box-shadow:0 10px 40px rgba(0,0,0,.3);
+}
+.overlay-card h2{
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold;
+  font-size:2rem; color:var(--accent); margin-bottom:.4rem;
+}
+.overlay-card p{
+  color:#999; font-size:.9rem; font-weight:bold;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  margin-bottom:1rem;
+}
+.final-score{
+  display:none;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold;
+  font-size:2.2rem; color:#F5A623;
+  margin:.4rem 0 1rem;
+}
+.btn-play{
+  background:var(--accent); color:white; border:none;
+  font-family:"Comic Sans MS","Comic Sans",cursive;
+  font-weight:bold; font-size:1.1rem;
+  padding:13px 0; border-radius:999px; cursor:pointer; width:100%;
+  box-shadow:0 5px 16px rgba(58,142,246,.45); transition:opacity .2s;
+}
+.btn-play:hover{ opacity:.88; }
+
+@media(max-width:480px){
+  .prompt-pic{ font-size:2rem; }
+  .prompt-pic.word{ font-size:1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">&#8592; Back to Games</a>
+  <h1 id="pageTitle">Bubble Pop!</h1>
+  <div class="header-right">
+    <button id="speakerBtn" class="speaker-btn" onclick="toggleSpeaker()" title="Toggle voice">&#128266;</button>
+    <div class="score-badge">&#11088; <span id="scoreEl">0</span></div>
+  </div>
+</header>
+
+<div class="cat-bar" id="catBar"></div>
+
+<div class="prompt-area" id="promptArea" style="display:none">
+  <div class="prompt-pic" id="promptPic"></div>
+  <div class="prompt-text">
+    <div class="prompt-hint" id="promptHint">Pop the bubble!</div>
+    <div class="prompt-sub"  id="promptSub"></div>
+  </div>
+</div>
+
+<div class="lives-bar" id="livesBar" style="display:none"></div>
+
+<div class="game-field" id="gameField">
+  <div class="overlay" id="overlay">
+    <div class="overlay-card">
+      <h2 id="ovTitle">&#129671; Bubble Pop!</h2>
+      <p id="ovMsg">Pop the right bubbles and score points! You have 3 lives.</p>
+      <div class="final-score" id="finalScore"></div>
+      <button class="btn-play" id="btnPlay" onclick="startGame()">Start Game!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════ DATA ═══════════════════════ */
+const CATS = {
+  letters:{
+    title:'Letter Sounds', emoji:'🔤',
+    accent:'#3A8EF6',
+    bg:'linear-gradient(180deg,#B8D8FF 0%,#D5EAFF 55%,#EBF4FF 100%)',
+    promptType:'emoji',
+    items:[
+      {show:'🍎',sub:'apple',   word:'A'},{show:'🎈',sub:'balloon', word:'B'},
+      {show:'🐱',sub:'cat',     word:'C'},{show:'🐶',sub:'dog',     word:'D'},
+      {show:'🐘',sub:'elephant',word:'E'},{show:'🐸',sub:'frog',    word:'F'},
+      {show:'🦍',sub:'gorilla', word:'G'},{show:'🏠',sub:'house',   word:'H'},
+      {show:'🐜🐛🦗',sub:'insects', word:'I'},{show:'🧃',sub:'juice',   word:'J'},
+      {show:'👑',sub:'king',    word:'K'},{show:'🦁',sub:'lion',    word:'L'},
+      {show:'🌙',sub:'moon',    word:'M'},{show:'🥜',sub:'nut',     word:'N'},
+      {show:'🐙',sub:'octopus', word:'O'},{show:'🐧',sub:'penguin', word:'P'},
+      {show:'👸',sub:'queen',   word:'Q'},{show:'🌈',sub:'rainbow', word:'R'},
+      {show:'⭐',sub:'star',    word:'S'},{show:'🐯',sub:'tiger',   word:'T'},
+      {show:'☂️', sub:'umbrella',word:'U'},{show:'🎻',sub:'violin',  word:'V'},
+      {show:'🐋',sub:'whale',   word:'W'},{show:'🩻',sub:'x-ray',   word:'X'},
+      {show:'🧶',sub:'yarn',    word:'Y'},{show:'🦓',sub:'zebra',   word:'Z'},
+    ]
+  },
+  lowercase:{
+    title:'Letters', emoji:'🔡',
+    accent:'#7B61FF',
+    bg:'linear-gradient(180deg,#DCD4FF 0%,#EAE5FF 55%,#F4F2FF 100%)',
+    promptType:'word',
+    items:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l=>({show:l, sub:'', word:l.toLowerCase()}))
+  },
+  sight:{
+    title:'Sight Word Bubble Pop', emoji:'👁️',
+    accent:'#FF6B6B',
+    bg:'linear-gradient(180deg,#FFD4D4 0%,#FFE8E8 55%,#FFF4F4 100%)',
+    promptType:'word',
+    items:[
+      'a','and','at','big','can','do','get','go','has','he',
+      'her','his','I','in','is','it','like','me','my','no',
+      'not','of','on','see','she','so','the','to','up','was','we','you'
+    ].map(w=>({show:w, sub:'', word:w}))
+  },
+  cvc:{
+    title:'Word Family Bubble Pop', emoji:'📝',
+    accent:'#6BCB77',
+    bg:'linear-gradient(180deg,#C2F0C6 0%,#DCF8DF 55%,#F0FFF1 100%)',
+    promptType:'emoji',
+    items:[
+      {show:'🐱',sub:'cat',word:'cat'},{show:'🦇',sub:'bat',word:'bat'},
+      {show:'🎩',sub:'hat',word:'hat'},{show:'🐀',sub:'rat',word:'rat'},
+      {show:'🥫',sub:'can',word:'can'},{show:'👨',sub:'man',word:'man'},
+      {show:'🚐',sub:'van',word:'van'},{show:'🛏️',sub:'bed',word:'bed'},
+      {show:'🔴',sub:'red',word:'red'},{show:'🐷',sub:'pig',word:'pig'},
+      {show:'🐛',sub:'bug',word:'bug'},{show:'☕',sub:'cup',word:'cup'},
+      {show:'☀️',sub:'sun',word:'sun'},{show:'🚌',sub:'bus',word:'bus'},
+      {show:'🗺️',sub:'map',word:'map'},{show:'👄',sub:'lip',word:'lip'},
+      {show:'📦',sub:'box',word:'box'},{show:'🪵',sub:'log',word:'log'},
+      {show:'🌫️',sub:'fog',word:'fog'},{show:'🏆',sub:'top',word:'top'},
+      {show:'🐇',sub:'hop',word:'hop'},{show:'🥚',sub:'egg',word:'egg'},
+      {show:'🐏',sub:'ram',word:'ram'},{show:'🥜',sub:'nut',word:'nut'},
+      {show:'🎯',sub:'dot',word:'dot'},{show:'🌶️',sub:'hot',word:'hot'},
+      {show:'🏃',sub:'run',word:'run'},{show:'🐝',sub:'web',word:'web'},
+    ]
+  },
+  longvowels:{
+    title:'Long Vowels Bubble Pop', emoji:'🗣️',
+    accent:'#E6A817',
+    bg:'linear-gradient(180deg,#FFF0C0 0%,#FFF8DD 55%,#FFFEEE 100%)',
+    promptType:'emoji',
+    items:[
+      {show:'🎂',sub:'cake', word:'cake'},{show:'🏞️',sub:'lake', word:'lake'},
+      {show:'🚪',sub:'gate', word:'gate'},{show:'🌧️',sub:'rain', word:'rain'},
+      {show:'🦶',sub:'feet', word:'feet'},{show:'🌱',sub:'seed', word:'seed'},
+      {show:'🐝',sub:'bee',  word:'bee'}, {show:'🪁',sub:'kite', word:'kite'},
+      {show:'🚲',sub:'bike', word:'bike'},{show:'🦴',sub:'bone', word:'bone'},
+      {show:'⛵',sub:'boat', word:'boat'},{show:'🐐',sub:'goat', word:'goat'},
+      {show:'🌲',sub:'pine', word:'pine'},{show:'🧊',sub:'cube', word:'cube'},
+      {show:'🌹',sub:'rose', word:'rose'},{show:'🎵',sub:'tune', word:'tune'},
+      {show:'🍃',sub:'leaf', word:'leaf'},{show:'🌳',sub:'tree', word:'tree'},
+      {show:'🧥',sub:'coat', word:'coat'},{show:'🌊',sub:'wave', word:'wave'},
+      {show:'📬',sub:'mail', word:'mail'},{show:'🪢',sub:'rope', word:'rope'},
+      {show:'🍦',sub:'cone', word:'cone'},{show:'🛣️',sub:'road', word:'road'},
+    ]
+  },
+  irregular:{
+    title:'Irregular Sounds Bubble Pop', emoji:'🌊',
+    accent:'#9B59B6',
+    bg:'linear-gradient(180deg,#E4CCFF 0%,#F0DEFF 55%,#F9F0FF 100%)',
+    promptType:'emoji',
+    items:[
+      {show:'🏠',sub:'house', word:'house'},{show:'🐭',sub:'mouse', word:'mouse'},
+      {show:'☁️',sub:'cloud', word:'cloud'},{show:'👑',sub:'crown', word:'crown'},
+      {show:'🦉',sub:'owl',   word:'owl'},  {show:'🐄',sub:'cow',   word:'cow'},
+      {show:'🪙',sub:'coin',  word:'coin'}, {show:'👦',sub:'boy',   word:'boy'},
+      {show:'🧸',sub:'toy',   word:'toy'},  {show:'🌙',sub:'moon',  word:'moon'},
+      {show:'🍔',sub:'food',  word:'food'}, {show:'🦷',sub:'tooth', word:'tooth'},
+      {show:'📚',sub:'book',  word:'book'}, {show:'🦶',sub:'foot',  word:'foot'},
+      {show:'🐾',sub:'paw',   word:'paw'},  {show:'🪚',sub:'saw',   word:'saw'},
+      {show:'🟫',sub:'brown', word:'brown'},{show:'🤡',sub:'clown', word:'clown'},
+      {show:'🏘️',sub:'town',  word:'town'}, {show:'👢',sub:'boot',  word:'boot'},
+      {show:'🏊',sub:'pool',  word:'pool'}, {show:'🪵',sub:'wood',  word:'wood'},
+      {show:'🪝',sub:'hook',  word:'hook'}, {show:'🎵',sub:'tune',  word:'tune'},
+    ]
+  },
+  digraphs:{
+    title:'Digraphs Bubble Pop', emoji:'🌸',
+    accent:'#E67E22',
+    bg:'linear-gradient(180deg,#FFE4C0 0%,#FFF0DC 55%,#FFF8EE 100%)',
+    promptType:'emoji',
+    items:[
+      {show:'🚢',sub:'ship',   word:'ship'},  {show:'🐟',sub:'fish',   word:'fish'},
+      {show:'🐚',sub:'shell',  word:'shell'}, {show:'🦈',sub:'shark',  word:'shark'},
+      {show:'🐑',sub:'sheep',  word:'sheep'}, {show:'👟',sub:'shoe',   word:'shoe'},
+      {show:'🍟',sub:'chip',   word:'chip'},  {show:'📦',sub:'chest',  word:'chest'},
+      {show:'⛓️',sub:'chain',  word:'chain'}, {show:'🐋',sub:'whale',  word:'whale'},
+      {show:'📱',sub:'phone',  word:'phone'}, {show:'👍',sub:'thumb',  word:'thumb'},
+      {show:'🛁',sub:'bath',   word:'bath'},  {show:'🦷',sub:'teeth',  word:'teeth'},
+      {show:'🦆',sub:'duck',   word:'duck'},  {show:'🧦',sub:'sock',   word:'sock'},
+      {show:'🎡',sub:'wheel',  word:'wheel'}, {show:'🧀',sub:'cheese', word:'cheese'},
+      {show:'🪑',sub:'bench',  word:'bench'}, {show:'3️⃣',sub:'three',  word:'three'},
+      {show:'🌾',sub:'wheat',  word:'wheat'}, {show:'🔑',sub:'key',    word:'key'},
+      {show:'🤔',sub:'think',  word:'think'}, {show:'🏆',sub:'trophy', word:'trophy'},
+    ]
+  },
+  rcontrolled:{
+    title:'R-Controlled Bubble Pop', emoji:'⭐',
+    accent:'#2471A3',
+    bg:'linear-gradient(180deg,#C4DEFF 0%,#D8EBFF 55%,#EDF5FF 100%)',
+    promptType:'emoji',
+    items:[
+      {show:'🚗',sub:'car',   word:'car'},  {show:'⭐',sub:'star',  word:'star'},
+      {show:'🏚️',sub:'barn',  word:'barn'}, {show:'🌳',sub:'park',  word:'park'},
+      {show:'🚜',sub:'farm',  word:'farm'}, {show:'🫙',sub:'jar',   word:'jar'},
+      {show:'🧶',sub:'yarn',  word:'yarn'}, {show:'🐦',sub:'bird',  word:'bird'},
+      {show:'👧',sub:'girl',  word:'girl'}, {show:'👕',sub:'shirt', word:'shirt'},
+      {show:'👗',sub:'skirt', word:'skirt'},{show:'🌽',sub:'corn',  word:'corn'},
+      {show:'🍴',sub:'fork',  word:'fork'}, {show:'🐴',sub:'horse', word:'horse'},
+      {show:'🔥',sub:'burn',  word:'burn'}, {show:'👜',sub:'purse', word:'purse'},
+      {show:'🏄',sub:'surf',  word:'surf'}, {show:'👩‍⚕️',sub:'nurse', word:'nurse'},
+      {show:'💪',sub:'arm',   word:'arm'},  {show:'🌑',sub:'dark',  word:'dark'},
+      {show:'🥄',sub:'stir',  word:'stir'}, {show:'🎯',sub:'dart',  word:'dart'},
+      {show:'🧱',sub:'fort',  word:'fort'}, {show:'🌊',sub:'shore', word:'shore'},
+    ]
+  }
+};
+
+/* ═══════════════════════ SVG PICTURE OVERRIDES ═══════════════════════ */
+/* Same custom images used in pinball.html and phonics-bingo.html */
+const PIC_OVERRIDES = {
+  'feet':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><ellipse cx="22" cy="54" rx="13" ry="19" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="22" cy="67" rx="11" ry="6" fill="#F0A898"/><ellipse cx="13" cy="37" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="18" cy="35" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="23" cy="34" rx="3" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="28" cy="35" rx="2.5" ry="2.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="32" cy="38" rx="2" ry="2" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="58" cy="54" rx="13" ry="19" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="58" cy="67" rx="11" ry="6" fill="#F0A898"/><ellipse cx="67" cy="37" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="62" cy="35" rx="3.5" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="57" cy="34" rx="3" ry="3" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="52" cy="35" rx="2.5" ry="2.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/><ellipse cx="48" cy="38" rx="2" ry="2" fill="#FDBCB4" stroke="#D09080" stroke-width="1"/></svg>`,
+  'foot':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><path d="M40,72 Q22,72 18,58 Q14,44 18,32 Q24,18 32,16 Q40,14 46,20 L50,18 Q56,16 60,22 Q64,30 58,38 Q52,42 44,42 Q42,54 42,62 Q42,72 40,72 Z" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="30" cy="15" rx="6" ry="5" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="40" cy="12" rx="5.5" ry="4.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="49" cy="14" rx="5" ry="4" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="56" cy="19" rx="4.5" ry="4" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><ellipse cx="61" cy="27" rx="4" ry="3.5" fill="#FDBCB4" stroke="#D09080" stroke-width="1.5"/><path d="M18,50 Q22,44 26,50" fill="none" stroke="#D09080" stroke-width="1.5" opacity="0.4"/></svg>`,
+  'gate':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect x="0" y="68" width="80" height="12" fill="#6BB030"/><rect x="3" y="10" width="11" height="60" rx="2" fill="#8B6020"/><rect x="66" y="10" width="11" height="60" rx="2" fill="#8B6020"/><ellipse cx="8.5" cy="10" rx="5.5" ry="3" fill="#A07828"/><ellipse cx="71.5" cy="10" rx="5.5" ry="3" fill="#A07828"/><rect x="16" y="20" width="9" height="48" rx="2" fill="#D4B87A"/><polygon points="16,20 20.5,12 25,20" fill="#D4B87A"/><rect x="29" y="20" width="9" height="48" rx="2" fill="#D4B87A"/><polygon points="29,20 33.5,12 38,20" fill="#D4B87A"/><rect x="42" y="20" width="9" height="48" rx="2" fill="#D4B87A"/><polygon points="42,20 46.5,12 51,20" fill="#D4B87A"/><rect x="55" y="20" width="9" height="48" rx="2" fill="#D4B87A"/><polygon points="55,20 59.5,12 64,20" fill="#D4B87A"/><rect x="14" y="28" width="52" height="6" rx="2" fill="#B89050"/><rect x="14" y="52" width="52" height="6" rx="2" fill="#B89050"/><line x1="15" y1="34" x2="65" y2="58" stroke="#A07840" stroke-width="3" stroke-linecap="round"/><circle cx="15" cy="32" r="3" fill="#888"/><circle cx="15" cy="55" r="3" fill="#888"/></svg>`,
+  'seed':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><ellipse cx="40" cy="42" rx="24" ry="30" fill="#D4A840"/><ellipse cx="40" cy="42" rx="24" ry="30" fill="none" stroke="#A07810" stroke-width="2"/><path d="M30,18 Q26,42 30,66" fill="none" stroke="rgba(120,70,10,0.45)" stroke-width="3" stroke-linecap="round"/><ellipse cx="32" cy="29" rx="9" ry="12" fill="rgba(255,220,100,0.35)"/><ellipse cx="40" cy="68" rx="8" ry="4" fill="#8B5E10"/></svg>`,
+  'chip':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><path d="M22,18 L58,18 L53,72 L27,72 Z" fill="#F0C000"/><path d="M22,18 Q40,28 58,18" fill="#FFD700"/><path d="M27,72 Q40,66 53,72" fill="#C8A000"/><path d="M24,36 Q40,44 56,36 L55,46 Q40,54 25,46 Z" fill="#D4A800" opacity="0.45"/><ellipse cx="28" cy="13" rx="11" ry="6" fill="#F5DEB3" stroke="#C8904A" stroke-width="1.2" transform="rotate(-18 28 13)"/><ellipse cx="52" cy="11" rx="11" ry="6" fill="#F0D090" stroke="#C8904A" stroke-width="1.2" transform="rotate(15 52 11)"/><ellipse cx="40" cy="9" rx="9" ry="5" fill="#F5DEB3" stroke="#C8904A" stroke-width="1" transform="rotate(3 40 9)"/><rect x="27" y="38" width="26" height="20" rx="4" fill="#FFE840" opacity="0.85"/><text x="40" y="48" text-anchor="middle" font-size="6.5" font-family="Arial" font-weight="bold" fill="#7A3800">CHIPS</text><text x="40" y="56" text-anchor="middle" font-size="5" font-family="Arial" fill="#7A3800">Potato</text></svg>`,
+  'chest': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect x="8" y="38" width="64" height="34" rx="3" fill="#8B4513" stroke="#5C2E00" stroke-width="1.5"/><path d="M8,38 Q8,16 40,16 Q72,16 72,38 Z" fill="#A0522D" stroke="#5C2E00" stroke-width="1.5"/><path d="M8,28 Q40,20 72,28" fill="none" stroke="#DAA520" stroke-width="3"/><rect x="8" y="50" width="64" height="5" fill="#6B3311"/><line x1="22" y1="38" x2="22" y2="72" stroke="#6B3311" stroke-width="2" opacity="0.5"/><line x1="40" y1="38" x2="40" y2="72" stroke="#6B3311" stroke-width="2" opacity="0.5"/><line x1="58" y1="38" x2="58" y2="72" stroke="#6B3311" stroke-width="2" opacity="0.5"/><rect x="32" y="44" width="16" height="14" rx="3" fill="#DAA520" stroke="#B8860B" stroke-width="1.5"/><circle cx="40" cy="49" r="3" fill="#8B6914"/><path d="M38,52 L38,56 L42,56 L42,52" fill="#8B6914"/><rect x="35" y="35" width="10" height="5" rx="2" fill="#DAA520"/></svg>`,
+  'bench': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect x="10" y="20" width="60" height="8" rx="2" fill="#C8854A" stroke="#A06830" stroke-width="1"/><line x1="22" y1="28" x2="16" y2="56" stroke="#8B5E2A" stroke-width="4" stroke-linecap="round"/><line x1="36" y1="28" x2="30" y2="56" stroke="#8B5E2A" stroke-width="4" stroke-linecap="round"/><line x1="44" y1="28" x2="50" y2="56" stroke="#8B5E2A" stroke-width="4" stroke-linecap="round"/><line x1="58" y1="28" x2="64" y2="56" stroke="#8B5E2A" stroke-width="4" stroke-linecap="round"/><rect x="4" y="42" width="32" height="7" rx="2" fill="#D4935A" stroke="#A06830" stroke-width="1"/><rect x="44" y="42" width="32" height="7" rx="2" fill="#D4935A" stroke="#A06830" stroke-width="1"/><line x1="2" y1="68" x2="78" y2="68" stroke="#6BB030" stroke-width="4" stroke-linecap="round"/></svg>`,
+  'skirt': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect x="24" y="8" width="32" height="10" rx="4" fill="#8E44AD"/><polygon points="24,18 56,18 72,74 8,74" fill="#C39BD3"/><rect x="24" y="8" width="32" height="10" rx="4" fill="#8E44AD"/><line x1="9" y1="74" x2="71" y2="74" stroke="#8E44AD" stroke-width="2.5" stroke-linecap="round"/><line x1="30" y1="20" x2="18" y2="72" stroke="rgba(142,68,173,0.3)" stroke-width="1.5"/><line x1="40" y1="20" x2="40" y2="74" stroke="rgba(142,68,173,0.3)" stroke-width="1.5"/><line x1="50" y1="20" x2="62" y2="72" stroke="rgba(142,68,173,0.3)" stroke-width="1.5"/></svg>`,
+  'fork':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect x="19" y="6" width="6" height="26" rx="3" fill="#B8B8B8"/><rect x="29" y="6" width="6" height="26" rx="3" fill="#B8B8B8"/><rect x="39" y="6" width="6" height="26" rx="3" fill="#B8B8B8"/><rect x="49" y="6" width="6" height="26" rx="3" fill="#B8B8B8"/><rect x="19" y="30" width="36" height="6" rx="3" fill="#B8B8B8"/><rect x="33" y="36" width="13" height="10" rx="3" fill="#B8B8B8"/><rect x="30" y="44" width="20" height="28" rx="10" fill="#B8B8B8"/><rect x="34" y="48" width="4" height="20" rx="2" fill="rgba(255,255,255,0.4)"/></svg>`,
+  'stir':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><g transform="rotate(40,40,40)"><rect x="38" y="24" width="5" height="44" rx="2.5" fill="#D0D0D0"/></g><path d="M10,40 Q10,70 40,70 Q70,70 70,40 Z" fill="#D4A45A"/><ellipse cx="40" cy="40" rx="30" ry="8" fill="#C08040"/><path d="M14,46 Q14,66 40,66 Q66,66 66,46 Z" fill="#E8C87A"/><g transform="rotate(40,40,40)"><ellipse cx="40" cy="14" rx="9" ry="6" fill="#D8D8D8" stroke="#B8B8B8" stroke-width="1"/><ellipse cx="40" cy="14" rx="7" ry="4.5" fill="#C8C8C8"/><rect x="38" y="20" width="5" height="8" rx="2" fill="#D0D0D0"/></g></svg>`,
+  'fort':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect x="0" y="70" width="80" height="10" fill="#7B9B4A"/><rect x="6" y="28" width="68" height="44" fill="#A09060"/><rect x="6" y="18" width="13" height="14" rx="1" fill="#A09060"/><rect x="23" y="18" width="13" height="14" rx="1" fill="#A09060"/><rect x="44" y="18" width="13" height="14" rx="1" fill="#A09060"/><rect x="61" y="18" width="13" height="14" rx="1" fill="#A09060"/><path d="M31,72 L31,54 Q40,47 49,54 L49,72 Z" fill="#3A2A1A"/><rect x="10" y="34" width="12" height="9" rx="2" fill="#3A2A1A"/><rect x="58" y="34" width="12" height="9" rx="2" fill="#3A2A1A"/></svg>`,
+  'top':   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><ellipse cx="40" cy="74" rx="16" ry="4" fill="rgba(0,0,0,0.12)"/><line x1="24" y1="71" x2="18" y2="77" stroke="#CCC" stroke-width="2" stroke-linecap="round"/><line x1="56" y1="71" x2="62" y2="77" stroke="#CCC" stroke-width="2" stroke-linecap="round"/><rect x="37" y="2" width="6" height="14" rx="3" fill="#444"/><path d="M14,18 L40,70 L66,18 Z" fill="#E74C3C"/><path d="M22,33 L40,70 L58,33 Z" fill="#F1C40F"/><path d="M30,52 L40,70 L50,52 Z" fill="#3498DB"/><ellipse cx="40" cy="18" rx="26" ry="7.5" fill="#C0392B"/><ellipse cx="35" cy="16" rx="8" ry="3" fill="rgba(255,255,255,0.4)"/><circle cx="40" cy="70" r="3.5" fill="#333"/></svg>`,
+  'farm':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" fill="#87CEEB"/><rect x="0" y="62" width="80" height="18" fill="#6AAF2A"/><rect x="12" y="34" width="44" height="30" fill="#C0392B"/><polygon points="8,34 40,8 72,34" fill="#8B1A1A"/><rect x="22" y="44" width="24" height="20" rx="1" fill="#F5F0E8"/><line x1="22" y1="44" x2="46" y2="64" stroke="#8B1A1A" stroke-width="2"/><line x1="46" y1="44" x2="22" y2="64" stroke="#8B1A1A" stroke-width="2"/><line x1="34" y1="44" x2="34" y2="64" stroke="#8B1A1A" stroke-width="1.5"/><rect x="31" y="18" width="18" height="14" rx="2" fill="#F5F0E8"/><path d="M31,25 L40,18 L49,25" fill="#D4C88A"/><rect x="58" y="38" width="13" height="26" fill="#C0A060"/><ellipse cx="64" cy="38" rx="6.5" ry="4" fill="#A08040"/><rect x="2" y="56" width="3" height="10" rx="1" fill="#A0784A"/><rect x="8" y="57" width="3" height="8" rx="1" fill="#A0784A"/><line x1="2" y1="60" x2="12" y2="60" stroke="#A0784A" stroke-width="1.5"/></svg>`,
+};
+
+/* ═══════════════════════ BUBBLE COLORS ═══════════════════════ */
+const BCOLORS = [
+  '#FFB3BA','#FFD6A5','#FDFFB6','#B5EAD7','#C7E9F1',
+  '#E2C9F7','#FFD7E8','#C9F0C9','#FAD2B0','#B3D9FF'
+];
+
+/* ═══════════════════════ STATE ═══════════════════════ */
+let catKey = 'letters';
+let target  = null;
+let bubbles = [];
+let score   = 0;
+let lives   = 3;
+let running = false;
+let animId  = null;
+let bId     = 0;
+const MAX_B = 6;
+
+/* ═══════════════════════ VOICE ═══════════════════════ */
+let voiceEnabled = true;
+let bestVoice    = null;
+let voiceReady   = false;
+
+function loadBestVoice(){
+  const voices = speechSynthesis.getVoices();
+  if(!voices.length) return;
+  voiceReady = true;
+  const priority = [
+    v => v.name === 'Google US English',
+    v => v.name.includes('Aria') && v.name.includes('Natural'),
+    v => v.name.includes('Jenny') && v.name.includes('Natural'),
+    v => v.name.includes('Microsoft') && v.name.includes('Online') && v.lang==='en-US',
+    v => v.name === 'Samantha',
+    v => v.name === 'Karen',
+    v => v.name === 'Victoria',
+    v => v.name === 'Daniel',
+    v => v.name.includes('Google') && v.lang.startsWith('en'),
+    v => v.lang === 'en-US',
+    v => v.lang.startsWith('en'),
+  ];
+  for(const test of priority){
+    const found = voices.find(test);
+    if(found){ bestVoice = found; return; }
+  }
+  bestVoice = voices[0] || null;
+}
+
+speechSynthesis.addEventListener('voiceschanged', loadBestVoice);
+loadBestVoice();
+
+function _utt(text, rate, pitch){
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate  = rate  || 0.88;
+  u.pitch = pitch || 1.08;
+  u.lang  = 'en-US';
+  if(bestVoice) u.voice = bestVoice;
+  return u;
+}
+
+function _ready(){
+  try{ if(speechSynthesis.paused) speechSynthesis.resume(); }catch(e){}
+}
+
+/* Speak one phrase immediately */
+function speakOnly(text, rate=0.88){
+  if(!voiceEnabled) return;
+  try{
+    speechSynthesis.cancel();
+    _ready();
+    speechSynthesis.speak(_utt(text, rate, 1.08));
+  }catch(e){}
+}
+
+/* Speak a phrase then a word — queued so they play back-to-back */
+function speakThenWord(phrase, word){
+  if(!voiceEnabled) return;
+  try{
+    speechSynthesis.cancel();
+    _ready();
+    speechSynthesis.speak(_utt(phrase, 0.88, 1.08));
+    speechSynthesis.speak(_utt(word,   0.72, 1.05));
+  }catch(e){}
+}
+
+function speakPrompt(item){
+  if(!voiceEnabled) return;
+  if(catKey === 'letters'){
+    speakOnly(`What letter does the word ${item.sub} start with?`, 0.84);
+  } else if(catKey === 'lowercase'){
+    speakThenWord('Pop the lowercase letter', item.word);
+  } else if(catKey === 'sight'){
+    speakThenWord('Find this word', item.word);
+  } else if(catKey === 'longvowels'){
+    speakThenWord('Pop the long vowel word', item.word);
+  } else if(catKey === 'rcontrolled'){
+    speakThenWord('Pop the bossy R word', item.word);
+  } else {
+    speakThenWord('Pop the word', item.word);
+  }
+}
+
+function toggleSpeaker(){
+  voiceEnabled = !voiceEnabled;
+  const btn = document.getElementById('speakerBtn');
+  btn.innerHTML = voiceEnabled ? '&#128266;' : '&#128263;';
+  btn.classList.toggle('muted', !voiceEnabled);
+  if(!voiceEnabled) speechSynthesis.cancel();
+}
+
+/* ═══════════════════════ AUDIO (beeps) ═══════════════════════ */
+const ACtx = window.AudioContext || window.webkitAudioContext;
+let ac = null;
+function ensureAC(){ if(!ac && ACtx){ try{ ac=new ACtx(); }catch(e){} } }
+function beep(freq,dur,type='sine',vol=.28){
+  if(!ac) return;
+  try{
+    const o=ac.createOscillator(), g=ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.type=type; o.frequency.value=freq;
+    g.gain.setValueAtTime(vol,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+dur);
+    o.start(); o.stop(ac.currentTime+dur);
+  }catch(e){}
+}
+function sndCorrect(){ beep(660,.07); setTimeout(()=>beep(880,.11),70); setTimeout(()=>beep(1100,.14),150); }
+function sndWrong()  { beep(180,.25,'sawtooth',.2); }
+
+/* ═══════════════════════ INIT ═══════════════════════ */
+(function init(){
+  const bar    = document.getElementById('catBar');
+  const keys   = ['letters','lowercase','sight','cvc','longvowels','irregular','digraphs','rcontrolled'];
+  const labels = ['🔤 Letter Sounds','🔡 Letters','👁️ Sight Words','📝 Word Families','🗣️ Long Vowels','🌊 Irregular','🌸 Digraphs','⭐ R-Controlled'];
+  keys.forEach((k,i)=>{
+    const b = document.createElement('button');
+    b.className = 'btn-cat'; b.textContent = labels[i];
+    b.onclick = ()=>{ ensureAC(); selectCat(k); };
+    bar.appendChild(b);
+  });
+  const p = new URLSearchParams(location.search);
+  selectCat(CATS[p.get('cat')] ? p.get('cat') : 'letters');
+})();
+
+function selectCat(key){
+  catKey = key;
+  const c = CATS[key];
+  document.documentElement.style.setProperty('--accent', c.accent);
+  document.querySelector('header').style.background = c.accent;
+  document.getElementById('gameField').style.background = c.bg;
+  document.querySelectorAll('.btn-cat').forEach((b,i)=>{
+    b.classList.toggle('active',
+      ['letters','lowercase','sight','cvc','longvowels','irregular','digraphs','rcontrolled'][i]===key);
+  });
+  document.getElementById('pageTitle').textContent = c.title;
+  stopGame();
+  showOverlay(false);
+}
+
+/* ═══════════════════════ OVERLAY ═══════════════════════ */
+function showOverlay(isEnd){
+  const c  = CATS[catKey];
+  if(!isEnd){
+    document.getElementById('ovTitle').textContent = `${c.emoji} ${c.title}`;
+    document.getElementById('ovMsg').textContent   = 'Pop the right bubbles — 3 lives!';
+    document.getElementById('finalScore').style.display = 'none';
+    document.getElementById('btnPlay').textContent = 'Start Game!';
+  } else {
+    document.getElementById('ovTitle').textContent = lives<=0 ? '💔 Game Over!' : '🎉 Amazing!';
+    document.getElementById('ovMsg').textContent   = lives<=0 ? 'Better luck next time!' : 'You popped them all!';
+    const fs = document.getElementById('finalScore');
+    fs.style.display = 'block';
+    fs.textContent   = `⭐ ${score} points`;
+    document.getElementById('btnPlay').textContent = 'Play Again!';
+  }
+  document.getElementById('overlay').style.display = 'flex';
+}
+
+/* ═══════════════════════ GAME CONTROL ═══════════════════════ */
+function startGame(){
+  ensureAC();
+  score=0; lives=3; bubbles=[]; bId=0; target=null;
+  document.getElementById('scoreEl').textContent = '0';
+  updateLives();
+  document.getElementById('promptArea').style.display = 'flex';
+  document.getElementById('livesBar').style.display   = 'block';
+  document.getElementById('overlay').style.display    = 'none';
+  document.querySelectorAll('.bubble').forEach(b=>b.remove());
+
+  nextTarget();
+  for(let i=0;i<MAX_B-1;i++) setTimeout(()=>spawnDistractor(), i*180);
+
+  running = true;
+  if(animId) cancelAnimationFrame(animId);
+  loop();
+}
+
+function stopGame(){
+  running = false;
+  if(animId){ cancelAnimationFrame(animId); animId=null; }
+  document.querySelectorAll('.bubble').forEach(b=>b.remove());
+  bubbles = [];
+  document.getElementById('promptArea').style.display = 'none';
+  document.getElementById('livesBar').style.display   = 'none';
+}
+
+function endGame(){
+  running = false;
+  if(animId){ cancelAnimationFrame(animId); animId=null; }
+  setTimeout(()=>showOverlay(true), 400);
+}
+
+/* ═══════════════════════ TARGET & BUBBLES ═══════════════════════ */
+function getUnused(exclude){
+  const used = new Set(bubbles.map(b=>b.item.word));
+  if(exclude) used.add(exclude);
+  const pool = CATS[catKey].items.filter(it=>!used.has(it.word));
+  return pool.length ? pool[Math.floor(Math.random()*pool.length)]
+                     : CATS[catKey].items[Math.floor(Math.random()*CATS[catKey].items.length)];
+}
+
+function nextTarget(){
+  const item = getUnused(target ? target.word : null);
+  target = item;
+  updatePrompt(item);
+  spawnBubble(item, true);
+}
+
+function spawnDistractor(){
+  if(!running) return;
+  const item = getUnused(target ? target.word : null);
+  spawnBubble(item, false);
+}
+
+function spawnBubble(item, isTarget){
+  const field = document.getElementById('gameField');
+  const fw    = field.clientWidth;
+  const fh    = field.clientHeight;
+  const wlen  = item.word.length;
+  const size  = wlen===1 ? 72 : wlen<=3 ? 76 : wlen<=5 ? 82 : 88;
+  const fz    = wlen===1 ? 26 : wlen<=3 ? 20 : wlen<=5 ? 16 : 12;
+  const x     = Math.random()*(fw-size-12)+6;
+  const speed = .5 + Math.random()*.6;
+  const color = BCOLORS[Math.floor(Math.random()*BCOLORS.length)];
+
+  const el = document.createElement('div');
+  el.className = 'bubble';
+  el.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${fh+size+10}px;background:${color};font-size:${fz}px;color:#333;`;
+
+  const sp = document.createElement('span');
+  sp.className = 'b-word'; sp.textContent = item.word;
+  el.appendChild(sp);
+
+  const id  = bId++;
+  el.dataset.id = id;
+  const obj = { id, item, el, x, y:fh+size+10, speed, size, isTarget, popping:false };
+
+  el.addEventListener('pointerdown', e=>{ e.preventDefault(); onPop(obj); });
+  bubbles.push(obj);
+  field.appendChild(el);
+}
+
+function removeBubble(obj){
+  const i = bubbles.indexOf(obj);
+  if(i>=0) bubbles.splice(i,1);
+  obj.el.remove();
+}
+
+/* ═══════════════════════ POP HANDLER ═══════════════════════ */
+function onPop(obj){
+  if(obj.popping || !running) return;
+  obj.popping = true;
+  ensureAC();
+
+  if(obj.isTarget){
+    score += 10;
+    document.getElementById('scoreEl').textContent = score;
+    sndCorrect();
+    obj.el.classList.add('pop-ok');
+    spawnBurst(obj);
+    spawnSparkles(obj);
+    setTimeout(()=>{
+      removeBubble(obj);
+      if(!running) return;
+      spawnDistractor();
+      nextTarget();
+    }, 320);
+  } else {
+    sndWrong();
+    lives--;
+    updateLives();
+    obj.el.classList.add('pop-no');
+    setTimeout(()=>{
+      if(obj.el.parentNode){ obj.el.classList.remove('pop-no'); obj.popping=false; }
+    }, 380);
+    if(lives<=0) endGame();
+  }
+}
+
+/* ═══════════════════════ GAME LOOP ═══════════════════════ */
+function loop(){
+  if(!running){ animId=null; return; }
+  for(let i=bubbles.length-1;i>=0;i--){
+    const b = bubbles[i];
+    if(b.popping && b.isTarget) continue;
+    b.y -= b.speed;
+    b.el.style.top = b.y+'px';
+    if(b.y + b.size < -5){
+      const wasT = b.isTarget;
+      removeBubble(b);
+      if(wasT){ spawnDistractor(); nextTarget(); }
+      else      spawnDistractor();
+    }
+  }
+  animId = requestAnimationFrame(loop);
+}
+
+/* ═══════════════════════ PROMPT ═══════════════════════ */
+function updatePrompt(item){
+  const c    = CATS[catKey];
+  const pic  = document.getElementById('promptPic');
+  const sub  = document.getElementById('promptSub');
+  const hint = document.getElementById('promptHint');
+
+  // Update hint text
+  if(catKey === 'letters'){
+    hint.textContent = 'What letter does it start with?';
+  } else if(catKey === 'lowercase'){
+    hint.textContent = 'Pop the lowercase letter:';
+  } else if(catKey === 'sight'){
+    hint.textContent = 'Find this word:';
+  } else if(catKey === 'longvowels'){
+    hint.textContent = 'Pop the long vowel word:';
+  } else if(catKey === 'rcontrolled'){
+    hint.textContent = 'Pop the bossy R word:';
+  } else {
+    hint.textContent = 'Pop the word:';
+  }
+
+  // Update picture + sub label
+  if(c.promptType === 'word'){
+    pic.className   = 'prompt-pic word';
+    pic.textContent = item.show;
+    sub.textContent = '';
+  } else {
+    pic.className   = 'prompt-pic';
+    if(PIC_OVERRIDES[item.word]){
+      pic.innerHTML = PIC_OVERRIDES[item.word];
+    } else {
+      pic.textContent = item.show;
+    }
+    sub.textContent = item.sub ? item.sub : '';
+  }
+
+  // Speak the prompt
+  speakPrompt(item);
+}
+
+/* ═══════════════════════ LIVES ═══════════════════════ */
+function updateLives(){
+  document.getElementById('livesBar').textContent =
+    '❤️'.repeat(Math.max(0,lives)) + '🖤'.repeat(Math.max(0,3-lives));
+}
+
+/* ═══════════════════════ EFFECTS ═══════════════════════ */
+function spawnBurst(obj){
+  const field = document.getElementById('gameField');
+  const cx = obj.x + obj.size/2;
+  const cy = obj.y + obj.size/2;
+  const el = document.createElement('div');
+  el.className = 'score-burst';
+  el.style.cssText = `left:${cx-18}px;top:${cy-12}px;`;
+  el.textContent = '+10';
+  field.appendChild(el);
+  setTimeout(()=>el.remove(), 800);
+}
+
+function spawnSparkles(obj){
+  const field  = document.getElementById('gameField');
+  const cx     = obj.x + obj.size/2;
+  const cy     = obj.y + obj.size/2;
+  const emojis = ['✨','⭐','💛','🌟','💥','🎉'];
+  for(let i=0;i<7;i++){
+    const sp  = document.createElement('div');
+    sp.className = 'sparkle';
+    const ang = (i/7)*Math.PI*2 + Math.random()*.4;
+    const d   = 36 + Math.random()*28;
+    sp.style.cssText = `left:${cx}px;top:${cy}px;--dx:${Math.cos(ang)*d}px;--dy:${Math.sin(ang)*d}px;`;
+    sp.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    field.appendChild(sp);
+    setTimeout(()=>sp.remove(), 700);
+  }
+}
+</script>
+<script src="auth/student-bar.js"></script>
+</body>
+</html>

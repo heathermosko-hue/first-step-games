@@ -19,7 +19,8 @@
       font-family: 'Nunito', sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -100,6 +101,8 @@
     /* ── MAIN ── */
     main {
       flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -204,17 +207,18 @@
       border: 3px solid #FFE0A0;
     }
     .prompt-label {
-      font-size: .85rem;
-      color: #aaa;
-      font-weight: 600;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: .95rem;
+      color: #888;
+      font-weight: 700;
       margin-bottom: .4rem;
-      text-transform: uppercase;
-      letter-spacing: .06em;
+      letter-spacing: .02em;
     }
     #promptWord {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
       font-size: clamp(2.2rem, 9vw, 3.8rem);
       color: #FF4040;
+      font-weight: 700;
       letter-spacing: .05em;
       line-height: 1.1;
     }
@@ -252,6 +256,7 @@
       justify-content: center;
       font-size: 1.6rem;
       flex-shrink: 0;
+      transform: scaleX(-1);
     }
     .lane:nth-child(1) .lane-car { background: #FF6B6B; }
     .lane:nth-child(2) .lane-car { background: #3A8EF6; }
@@ -285,7 +290,7 @@
     /* ── ANIMATIONS ── */
     @keyframes zoom {
       0%   { transform: translateX(0); opacity: 1; }
-      100% { transform: translateX(115%); opacity: 0; }
+      100% { transform: translateX(-115%); opacity: 0; }
     }
     @keyframes shake {
       0%,100% { transform: translateX(0); }
@@ -360,17 +365,6 @@
     }
     .btn-play-again:hover { transform: scale(1.06); box-shadow: 0 7px 24px rgba(255,64,64,.45); }
 
-    /* ── FOOTER ── */
-    footer {
-      background: white;
-      border-top: 2px solid #FFE0B0;
-      text-align: center;
-      padding: 1rem 1.5rem;
-      font-size: .82rem;
-      color: #999;
-    }
-    footer a { color: #FF6B00; text-decoration: none; font-weight: 700; }
-    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -456,9 +450,6 @@
   </div>
 </div>
 
-<footer>
-  <p>Part of <a href="https://www.firststepreading.com">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids 📚</p>
-</footer>
 
 <script>
 /* ═══════════════════════════════════════

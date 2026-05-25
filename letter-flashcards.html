@@ -9,11 +9,12 @@
 body {
   font-family: 'Comic Neue','Comic Sans MS','Comic Sans',cursive;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
+  padding: 8px 16px;
   user-select: none;
 }
 header {
@@ -50,6 +51,8 @@ header {
 
 /* Flip card */
 .card-scene {
+  flex: 1;
+  min-height: 0;
   width: 300px; height: 360px;
   perspective: 900px;
   cursor: pointer;
@@ -128,7 +131,7 @@ header {
   justify-content: center;
   gap: 6px;
   max-width: 340px;
-  margin-top: 10px;
+  margin-top: 4px;
 }
 .dot {
   width: 26px; height: 26px;
@@ -144,6 +147,26 @@ header {
 }
 .dot.active { background: white; color: #764ba2; font-weight: bold; }
 .dot:hover  { background: rgba(255,255,255,0.4); }
+
+/* Case toggle button */
+.case-toggle {
+  background: white;
+  border: none;
+  color: #764ba2;
+  padding: 16px 40px;
+  border-radius: 50px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  margin-bottom: 14px;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, color 0.2s;
+  letter-spacing: 0.5px;
+}
+.case-toggle:hover { transform: scale(1.06); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.case-toggle:active { transform: scale(0.97); }
+.case-toggle.is-lower { background: #44CF6C; color: white; }
 </style>
 </head>
 <body>
@@ -168,6 +191,8 @@ header {
     </div>
   </div>
 </div>
+
+<button class="case-toggle" id="case-toggle-btn" onclick="flipCard()">🔡 Switch to Lowercase</button>
 
 <div class="nav-row">
   <button class="nav-btn" id="prev-btn" onclick="go(-1)" disabled>◀</button>
@@ -230,6 +255,9 @@ function showLetter() {
   document.getElementById('next-btn').disabled = cur === 25;
   document.getElementById('card').classList.remove('flipped');
   flipped = false;
+  const tb = document.getElementById('case-toggle-btn');
+  tb.textContent = '🔡 Switch to Lowercase';
+  tb.classList.remove('is-lower');
   updateDots();
   speak('Capital ' + L + '... lowercase ' + L.toLowerCase());
 }
@@ -239,6 +267,9 @@ function flipCard() {
   document.getElementById('card').classList.toggle('flipped', flipped);
   const L = LETTERS[cur];
   speak(flipped ? 'Lowercase ' + L.toLowerCase() : 'Capital ' + L);
+  const tb = document.getElementById('case-toggle-btn');
+  tb.textContent = flipped ? '🔠 Switch to Uppercase' : '🔡 Switch to Lowercase';
+  tb.classList.toggle('is-lower', flipped);
 }
 function go(dir) {
   onInteract();

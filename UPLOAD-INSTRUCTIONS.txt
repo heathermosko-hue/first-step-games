@@ -1,0 +1,206 @@
+================================================================
+  FIRST STEP READING — Server Upload Instructions
+  For: InMotion Hosting / cPanel
+  Site: www.firststepreading.com
+================================================================
+
+WHAT THIS DOES
+--------------
+Adds the phonics reading games + teacher/student classroom system
+to the website. Teachers can create classes, students log in with
+a class code or QR scan and pick their animal icon.
+
+
+================================================================
+PART 1 — CREATE THE MYSQL DATABASE  (5 minutes)
+================================================================
+
+1. Log into cPanel
+   Go to:  https://www.firststepreading.com/cpanel
+   OR:     https://secure.inmotionhosting.com:2083
+   (Use the same username/password you use to manage the hosting)
+
+2. Click "MySQL Databases"  (under the Databases section)
+
+3. Create the database
+   - Under "Create New Database"
+   - Type:  readinggames
+   - Click: "Create Database"
+   - NOTE the full name — InMotion adds a prefix, e.g.  firstste_readinggames
+
+4. Create a database user
+   - Scroll down to "MySQL Users"
+   - Under "Add New User"
+   - Username: gameuser        (InMotion will make it firstste_gameuser)
+   - Password: Pick a strong password and WRITE IT DOWN
+   - Click: "Create User"
+
+5. Add the user to the database
+   - Scroll down to "Add User to Database"
+   - User:     firstste_gameuser   (whatever yours was named)
+   - Database: firstste_readinggames
+   - Click: "Add"
+   - On the next screen check "ALL PRIVILEGES" → click "Make Changes"
+
+6. Write down these 4 values — you'll need them in Part 3:
+   ┌─────────────────────────────────────────────────────┐
+   │  DB_HOST:  localhost                                │
+   │  DB_USER:  firstste_gameuser   (your actual name)  │
+   │  DB_PASS:  (the password you chose in step 4)      │
+   │  DB_NAME:  firstste_readinggames  (your actual name)│
+   └─────────────────────────────────────────────────────┘
+
+
+================================================================
+PART 2 — UPLOAD THE FILES  (10 minutes)
+================================================================
+
+1. Open File Manager in cPanel
+   - Click "File Manager" in cPanel
+   - Make sure you are inside the  public_html  folder
+     (it should say /public_html in the top bar)
+
+2. Check if a "reading-games" folder already exists
+   - Look for a folder named:  reading-games
+   - If it EXISTS: open it and skip to step 4
+   - If it does NOT exist: click "New Folder" → type  reading-games → click Create
+
+3. Go into the reading-games folder
+   - Double-click the reading-games folder to open it
+
+4. Upload the game files
+   Click "Upload" and upload ALL of these files:
+   (they are all in the C:\Users\heath\reading-games\ folder on your wife's computer)
+
+   ✅ hub.html
+   ✅ bubble-pop.html
+   ✅ phonics-bingo.html
+   ✅ pinball.html
+   ✅ digraphs.html
+   ✅ word-family.html
+   ✅ r-controlled.html
+   ✅ spell-it.html
+   ✅ fonts.css          (if this file exists in the folder)
+
+   TIP: You can select all files at once and upload them together.
+        Check "Overwrite existing files" if asked.
+
+5. Create the auth subfolder
+   - While still inside reading-games, click "New Folder"
+   - Type:  auth
+   - Click Create
+
+6. Go into the auth folder (double-click it)
+
+7. Upload the auth files
+   Upload ALL of these files from  C:\Users\heath\reading-games\auth\  on your wife's computer:
+
+   ✅ db.php
+   ✅ setup.php
+   ✅ logout.php
+   ✅ teacher-login.php
+   ✅ teacher-register.php
+   ✅ teacher-dashboard.php
+   ✅ teacher-class.php
+   ✅ student-login.php
+   ✅ student-games.php
+   ✅ api.php
+   ✅ student-bar.js
+
+
+================================================================
+PART 3 — EDIT db.php WITH YOUR DATABASE DETAILS  (2 minutes)
+================================================================
+
+1. In File Manager, navigate to:  public_html/reading-games/auth/
+2. Right-click on  db.php  → click "Edit"  (or "Code Editor")
+3. Find these 5 lines at the top and replace the placeholder text:
+
+   FIND:      define('DB_HOST',       'localhost');
+   LEAVE AS:  define('DB_HOST',       'localhost');   ← don't change this one
+
+   FIND:      define('DB_USER',       'YOUR_DB_USERNAME');
+   CHANGE TO: define('DB_USER',       'firstste_gameuser');   ← your actual username
+
+   FIND:      define('DB_PASS',       'YOUR_DB_PASSWORD');
+   CHANGE TO: define('DB_PASS',       'yourActualPassword');  ← the password from Part 1
+
+   FIND:      define('DB_NAME',       'YOUR_DB_NAME');
+   CHANGE TO: define('DB_NAME',       'firstste_readinggames'); ← your actual db name
+
+   FIND:      define('COOKIE_SECRET', 'change-me-to-any-long-random-string-32chars');
+   CHANGE TO: define('COOKIE_SECRET', 'FirstStepReading2024SecretKey!XYZ');
+              ← just type any random letters/numbers, at least 20 characters long
+
+4. Click "Save Changes"
+
+
+================================================================
+PART 4 — RUN THE DATABASE SETUP  (1 minute)
+================================================================
+
+1. Open a browser and go to:
+   https://www.firststepreading.com/reading-games/auth/setup.php
+
+2. You should see a green success message with a list of tables created:
+   ✅ teachers table created
+   ✅ classes table created
+   ✅ students table created
+   ✅ assigned_games table created
+   ✅ progress table created
+
+   If you see a RED error message, double-check your db.php values from Part 3.
+
+3. IMPORTANT — Delete setup.php after it works!
+   - Go back to File Manager
+   - Navigate to  public_html/reading-games/auth/
+   - Right-click  setup.php  → Delete
+   (This is a security step — it prevents anyone from resetting the database)
+
+
+================================================================
+PART 5 — TEST IT  (2 minutes)
+================================================================
+
+Visit these URLs to confirm everything works:
+
+  Main game hub:
+  https://www.firststepreading.com/reading-games/hub.html
+
+  Teacher registration (create your first teacher account):
+  https://www.firststepreading.com/reading-games/auth/teacher-register.php
+
+  Student login:
+  https://www.firststepreading.com/reading-games/auth/student-login.php
+
+
+================================================================
+TROUBLESHOOTING
+================================================================
+
+"DB error: Access denied"
+  → Double-check DB_USER and DB_PASS in db.php
+  → Make sure you added the user to the database with ALL PRIVILEGES (Part 1, Step 5)
+
+"DB error: Unknown database"
+  → Double-check DB_NAME in db.php — include the prefix (firstste_readinggames)
+
+"404 Not Found" on any page
+  → Make sure the files are in public_html/reading-games/ (not inside a subfolder of that)
+
+"setup.php shows nothing / blank page"
+  → PHP may have an error — check cPanel → Error Logs
+
+Pages load but look broken / no styling
+  → The HTML files are self-contained, this shouldn't happen.
+     Try clearing browser cache (Ctrl+Shift+R)
+
+
+================================================================
+DONE!
+The site is live. Your wife can now:
+  - Share this link with teachers:
+    https://www.firststepreading.com/reading-games/hub.html
+  - Teachers register at:
+    https://www.firststepreading.com/reading-games/auth/teacher-register.php
+================================================================

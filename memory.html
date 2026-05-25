@@ -10,7 +10,7 @@
   <style>
     :root { --bg:#F5F0FF; --text:#2C3E50; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
     header { background:linear-gradient(135deg,#8E44AD 0%,#6B48FF 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
@@ -38,7 +38,7 @@
     .stat-value { font-family:'Fredoka One',cursive; font-size:1.6rem; color:#8E44AD; line-height:1.1; }
 
     /* ── MAIN ── */
-    main { flex:1; display:flex; flex-direction:column; align-items:center; padding:1.25rem 1rem 2rem; gap:1rem; }
+    main { flex:1; overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:.5rem .5rem .2rem; gap:.5rem; }
 
     /* ── GRID ── */
     .card-grid { display:grid; gap:8px; }
@@ -85,7 +85,7 @@
 
     .card-letter {
       font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
-      font-size:clamp(1.5rem,5vw,2.1rem);
+      font-size:clamp(1rem,4.5vw,2.1rem);
       color:white;
       font-weight:bold;
       line-height:1;
@@ -112,9 +112,6 @@
     .confetti-piece { position:fixed; width:9px; height:9px; top:-10px; border-radius:2px; pointer-events:none; z-index:200; animation:cffall linear forwards; }
     @keyframes cffall { to { transform:translateY(105vh) rotate(720deg); opacity:0; } }
 
-    footer { text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #EDE0FF; margin-top:auto; }
-    footer a { color:#8E44AD; text-decoration:none; }
-    footer a:hover { text-decoration:underline; }
 
     @media(max-width:360px) { .card-grid { gap:6px; } }
   </style>
@@ -165,10 +162,6 @@
     <button class="btn-play-again" id="btnPlayAgain">Play Again!</button>
   </div>
 </div>
-
-<footer>
-  <p>Part of <a href="https://firststepreading.netlify.app">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
-</footer>
 
 <script>
 /* ── SPEECH STATE ── */
@@ -250,10 +243,12 @@ function initGame() {
 /* ── RENDER ── */
 function renderGrid() {
   const n     = PAIR_COUNTS[difficulty];
-  const cols  = (n <= 8) ? 4 : 4;
-  const wMap  = { easy:'min(300px,90vw)', medium:'min(340px,94vw)', hard:'min(340px,94vw)' };
+  const cols  = n <= 8 ? 4 : n <= 16 ? 8 : 9;
+  const gap   = n <= 8 ? 8 : 5;
+  const wMap  = { easy:'min(300px,90vw)', medium:'min(98vw,520px)', hard:'min(99vw,600px)' };
   const grid  = document.getElementById('cardGrid');
   grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.style.gap = gap + 'px';
   grid.style.width = wMap[difficulty];
   grid.innerHTML = '';
 

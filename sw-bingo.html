@@ -10,7 +10,7 @@
   <style>
     :root { --bg:#FFF8F0; --text:#2C3E50; --accent1:#E67E22; --accent2:#F39C12; }
     *{ margin:0; padding:0; box-sizing:border-box; }
-    body{ font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+    body{ font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
     header{ background:linear-gradient(135deg,#E67E22 0%,#F39C12 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
@@ -34,18 +34,18 @@
     .btn-glow.on{ background:linear-gradient(135deg,#FFD93D,#FF8E53); color:white; border-color:transparent; }
 
     /* ── MAIN ── */
-    main{ flex:1; display:flex; flex-direction:column; align-items:center; padding:1.25rem 1rem 2rem; gap:1rem; }
+    main{ flex:1; overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:.35rem .5rem .2rem; gap:.35rem; }
 
     /* ── CALLED AREA ── */
-    .called-area{ background:white; border-radius:20px; padding:.9rem 2rem .75rem; text-align:center; box-shadow:0 4px 20px rgba(230,126,34,.13); min-width:240px; min-height:100px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .called-area{ background:white; border-radius:16px; padding:.35rem 1.5rem .3rem; text-align:center; box-shadow:0 4px 20px rgba(230,126,34,.13); min-width:180px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
     .called-label{ font-size:.78rem; font-weight:700; color:#bbb; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:.35rem; }
-    .called-word{ font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; font-size:clamp(2.2rem,8vw,3.4rem); color:#E67E22; line-height:1.1; }
+    .called-word{ font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; font-size:clamp(1.8rem,6vw,2.6rem); color:#E67E22; line-height:1.1; }
     .called-placeholder{ font-family:'Fredoka One',cursive; font-size:3.2rem; color:#ddd; }
 
     /* ── BINGO GRID ── */
     .bingo-wrap{ display:flex; flex-direction:column; gap:5px; align-items:center; }
     .bingo-header-row,.bingo-grid{ display:grid; gap:5px; }
-    .bingo-header-cell{ font-family:'Fredoka One',cursive; font-size:1.5rem; color:white; background:linear-gradient(135deg,#E67E22,#F39C12); border-radius:8px; display:flex; align-items:center; justify-content:center; height:44px; }
+    .bingo-header-cell{ font-family:'Fredoka One',cursive; font-size:1.3rem; color:white; background:linear-gradient(135deg,#E67E22,#F39C12); border-radius:7px; display:flex; align-items:center; justify-content:center; height:32px; }
     .bingo-cell{ background:white; border:2.5px solid #FFE0B2; border-radius:9px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:default; transition:transform .12s,box-shadow .15s,background .2s,border-color .2s; aspect-ratio:1; font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; user-select:none; text-align:center; padding:3px; }
     .bingo-cell.free-cell{ background:linear-gradient(135deg,#FFD93D,#FF8E53); border-color:transparent; color:white; font-size:1.2rem; line-height:1.25; }
     .bingo-cell.marked-cell{ background:linear-gradient(135deg,#6BCB77,#27AE60); border-color:transparent; color:white; }
@@ -62,7 +62,9 @@
     @keyframes win-bounce{ from{ transform:scale(1); } to{ transform:scale(1.06); } }
 
     /* ── CALL BUTTON ── */
-    .btn-call{ background:linear-gradient(135deg,#E67E22,#F39C12); color:white; font-family:'Fredoka One',cursive; font-size:1.2rem; padding:13px 38px; border:none; border-radius:999px; cursor:pointer; box-shadow:0 5px 18px rgba(230,126,34,.35); transition:transform .15s,opacity .2s; }
+    .btn-call{ background:linear-gradient(135deg,#E67E22,#F39C12); color:white; font-family:'Fredoka One',cursive; font-size:1.1rem; padding:9px 30px; border:none; border-radius:999px; cursor:pointer; box-shadow:0 5px 18px rgba(230,126,34,.35); transition:transform .15s,opacity .2s; }
+    .progress-area{ display:none !important; }
+    .called-chips{ display:none !important; }
     .btn-call:hover:not(:disabled){ transform:translateY(-2px); }
     .btn-call:disabled{ opacity:.45; cursor:default; transform:none; }
     .btn-call-row{ display:flex; gap:.6rem; align-items:center; justify-content:center; }
@@ -94,9 +96,6 @@
     .confetti-piece{ position:fixed; width:9px; height:9px; top:-10px; border-radius:2px; pointer-events:none; z-index:200; animation:cffall linear forwards; }
     @keyframes cffall{ to{ transform:translateY(105vh) rotate(720deg); opacity:0; } }
 
-    footer{ text-align:center; padding:1.25rem; font-size:.85rem; color:#aaa; font-weight:600; border-top:2px solid #FFE5C8; }
-    footer a{ color:#E67E22; text-decoration:none; }
-    footer a:hover{ text-decoration:underline; }
 
     @media(max-width:480px){
       .called-word{ font-size:2.2rem; }
@@ -166,10 +165,6 @@
     <button class="btn-play-again" id="btnPlayAgain">Play Again!</button>
   </div>
 </div>
-
-<footer>
-  <p>Part of <a href="https://firststepreading.netlify.app">First Step Reading</a> &nbsp;|&nbsp; Free learn-to-read games for kids &#128218;</p>
-</footer>
 
 <script>
   /* ── SPEECH STATE — declared at top to avoid TDZ errors ── */
@@ -319,7 +314,7 @@
     const headerRow = document.getElementById('bingoHeaderRow');
     const grid      = document.getElementById('bingoGrid');
     const colStyle  = `repeat(${gridSize}, 1fr)`;
-    const gridWidth = isSmall ? 'min(260px, 82vw)' : 'min(380px, 94vw)';
+    const gridWidth = isSmall ? 'min(230px, 80vw)' : 'min(300px, 90vw)';
     const cellFont  = isSmall ? 'clamp(0.95rem,3.5vw,1.25rem)' : 'clamp(0.78rem,2.3vw,1.0rem)';
 
     headerRow.style.gridTemplateColumns = colStyle;

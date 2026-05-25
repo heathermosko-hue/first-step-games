@@ -14,7 +14,8 @@
     body {
       font-family: 'Nunito', sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -91,6 +92,8 @@
 
     main {
       flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
       padding: 12px 10px 16px;
       display: flex;
       align-items: flex-start;
@@ -268,9 +271,10 @@
     .chall-icon { font-size: 2rem; margin-bottom: 4px; }
 
     .challenge-card h3 {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
       color: #2C3E50;
       font-size: 1.2rem;
+      font-weight: 700;
       margin-bottom: 10px;
     }
 
@@ -372,14 +376,6 @@
     }
     .btn-new:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(102,126,234,0.6); }
 
-    footer {
-      text-align: center;
-      padding: 10px;
-      color: rgba(255,255,255,0.6);
-      font-size: 0.8rem;
-    }
-    footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
-    footer a:hover { color: #fff; }
   </style>
 </head>
 <body>
@@ -436,10 +432,6 @@
     <button class="btn-new" id="btnPlayAgain">Play Again!</button>
   </div>
 </div>
-
-<footer>
-  <a href="hub.html">← Back to Games Hub</a> &nbsp;|&nbsp; First Step Reading
-</footer>
 
 <script>
 /* ─── SPEECH API ─── */

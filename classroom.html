@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Setup | First Step Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    :root {
+      --blue:   #3A8EF6;
+      --indigo: #6B48FF;
+      --coral:  #FF6B6B;
+      --green:  #6BCB77;
+      --gold:   #F5A623;
+      --bg:     #FFF8F0;
+      --text:   #2C3E50;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Nunito',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background:#fff;
+      box-shadow:0 2px 12px rgba(0,0,0,0.07);
+      padding:0 2rem;
+      height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .nav-logo {
+      font-family:'Fredoka One',cursive;
+      font-size:1.35rem;
+      color:var(--indigo);
+      text-decoration:none;
+      display:flex; align-items:center; gap:0.5rem;
+    }
+    .nav-logo span { color:var(--coral); }
+    .nav-links { display:flex; gap:0.8rem; align-items:center; }
+    .btn-nav {
+      padding:8px 18px;
+      border-radius:999px;
+      font-family:'Fredoka One',cursive;
+      font-size:0.9rem;
+      text-decoration:none;
+      transition:opacity 0.18s;
+    }
+    .btn-nav:hover { opacity:0.85; }
+    .btn-nav-dash { background:linear-gradient(135deg,var(--indigo),var(--blue)); color:#fff; }
+    .btn-nav-hub  { background:linear-gradient(135deg,var(--coral),#FF8E53);     color:#fff; }
+
+    /* ── HERO ── */
+    .hero {
+      background:linear-gradient(135deg,#6B48FF 0%,#3A8EF6 60%,#6BCB77 100%);
+      padding:2.5rem 1rem 3rem;
+      text-align:center;
+      position:relative; overflow:hidden;
+    }
+    .hero::before {
+      content:'📱 📸 🎮 🌟 📱 📸 🎮 🌟 📱 📸 🎮 🌟';
+      position:absolute; top:8px; left:0; right:0;
+      font-size:0.9rem; opacity:0.15; white-space:nowrap; overflow:hidden;
+    }
+    .hero h1 {
+      font-family:'Fredoka One',cursive;
+      font-size:clamp(2rem,5vw,3rem);
+      color:#fff;
+      text-shadow:0 3px 12px rgba(0,0,0,0.2);
+    }
+    .hero p { color:rgba(255,255,255,0.9); font-size:1.05rem; font-weight:700; margin-top:0.5rem; }
+
+    /* ── MAIN ── */
+    main { flex:1; padding:2.5rem 1.5rem 3rem; max-width:960px; width:100%; margin:0 auto; }
+
+    /* ══ FIRST-TIME SETUP SCREEN ══ */
+    #setup-screen {
+      display:none;
+      background:#fff;
+      border-radius:28px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.1);
+      padding:3rem 2.5rem;
+      text-align:center;
+      max-width:520px;
+      margin:0 auto;
+    }
+    #setup-screen .setup-icon { font-size:4rem; margin-bottom:1rem; display:block; }
+    #setup-screen h2 {
+      font-family:'Fredoka One',cursive;
+      font-size:1.8rem; color:var(--text); margin-bottom:0.5rem;
+    }
+    #setup-screen p {
+      font-weight:700; color:#888; font-size:0.95rem;
+      margin-bottom:0.4rem; line-height:1.6;
+    }
+    .permanent-badge {
+      display:inline-flex; align-items:center; gap:0.4rem;
+      background:#EDFBF0; color:#27AE60;
+      border:2px solid #6BCB77;
+      border-radius:999px; padding:6px 18px;
+      font-weight:800; font-size:0.85rem;
+      margin:1rem 0 1.5rem;
+    }
+    .btn-create {
+      width:100%; padding:18px;
+      background:linear-gradient(135deg,var(--indigo),var(--blue));
+      color:#fff; border:none; border-radius:18px;
+      font-family:'Fredoka One',cursive; font-size:1.3rem;
+      cursor:pointer; box-shadow:0 6px 24px rgba(107,72,255,0.35);
+      transition:transform 0.15s;
+    }
+    .btn-create:hover { transform:translateY(-2px); }
+
+    /* ══ CODE DISPLAY SCREEN ══ */
+    #code-screen {
+      display:none;
+      gap:2rem;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+    #code-screen.visible { display:flex; }
+
+    /* ── QR CARD (printable) ── */
+    #print-zone {
+      flex:0 0 auto;
+    }
+    .qr-card {
+      background:#fff;
+      border-radius:28px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.12);
+      padding:2rem;
+      text-align:center;
+      min-width:280px;
+    }
+    .qr-card-logo {
+      font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--indigo); margin-bottom:0.4rem;
+    }
+    .qr-card-logo span { color:var(--coral); }
+    .qr-card h3 {
+      font-family:'Fredoka One',cursive; font-size:1.35rem; color:var(--text); margin-bottom:0.2rem;
+    }
+    .scan-sub { font-size:0.85rem; font-weight:800; color:#888; margin-bottom:1.1rem; }
+
+    #qrcode-box {
+      display:inline-block; padding:12px;
+      background:#fff; border:4px solid #6B48FF;
+      border-radius:20px; margin-bottom:1.1rem;
+    }
+    #qrcode-box canvas, #qrcode-box img { display:block; border-radius:8px; }
+
+    .code-display {
+      font-family:'Fredoka One',cursive; font-size:1.5rem;
+      color:var(--indigo); letter-spacing:0.1em;
+      background:linear-gradient(135deg,#F8F4FF,#EEF6FF);
+      border:2px dashed #C5B3FF; border-radius:14px;
+      padding:9px 18px; margin-bottom:0.5rem;
+    }
+    .code-backup { font-size:0.78rem; font-weight:800; color:#bbb; margin-bottom:1rem; }
+
+    .valid-pill {
+      display:inline-flex; align-items:center; gap:0.4rem;
+      padding:5px 14px; background:#EDFBF0; color:#27AE60;
+      border:2px solid #6BCB77; border-radius:999px;
+      font-weight:800; font-size:0.78rem;
+    }
+    .valid-pill .dot {
+      width:7px; height:7px; background:#27AE60;
+      border-radius:50%; animation:blink 1.4s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel { flex:1; min-width:260px; display:flex; flex-direction:column; gap:1.2rem; }
+
+    .info-card {
+      background:#fff; border-radius:20px;
+      box-shadow:0 6px 24px rgba(0,0,0,0.08); padding:1.5rem;
+    }
+    .info-card h3 {
+      font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--text); margin-bottom:1rem;
+    }
+
+    /* Permanent callout */
+    .perm-banner {
+      background:linear-gradient(135deg,#EDFBF0,#D4F5DC);
+      border:2px solid #6BCB77;
+      border-radius:16px; padding:1.2rem;
+      display:flex; gap:0.8rem; align-items:flex-start;
+    }
+    .perm-banner .pb-icon { font-size:1.8rem; flex-shrink:0; }
+    .perm-banner h4 {
+      font-family:'Fredoka One',cursive; font-size:1rem; color:#27AE60; margin-bottom:0.2rem;
+    }
+    .perm-banner p { font-size:0.83rem; font-weight:700; color:#555; line-height:1.5; }
+
+    /* Steps */
+    .steps-list { list-style:none; display:flex; flex-direction:column; gap:0.7rem; }
+    .steps-list li {
+      display:flex; align-items:flex-start; gap:0.7rem;
+      font-weight:700; color:#555; font-size:0.92rem;
+    }
+    .step-circle {
+      width:28px; height:28px; min-width:28px; border-radius:50%;
+      background:linear-gradient(135deg,var(--indigo),var(--blue));
+      color:#fff; display:flex; align-items:center; justify-content:center;
+      font-family:'Fredoka One',cursive; font-size:0.82rem;
+    }
+
+    /* Action buttons */
+    .action-card {
+      background:#fff; border-radius:20px;
+      box-shadow:0 6px 24px rgba(0,0,0,0.08); padding:1.5rem;
+      display:flex; flex-direction:column; gap:0.75rem;
+    }
+    .btn-action {
+      padding:13px 18px; border:none; border-radius:14px;
+      font-family:'Fredoka One',cursive; font-size:1rem;
+      cursor:pointer; transition:opacity 0.18s, transform 0.15s;
+      text-align:center; text-decoration:none; display:block; color:#fff;
+    }
+    .btn-action:hover { opacity:0.88; transform:translateY(-1px); color:#fff; }
+    .btn-print  { background:linear-gradient(135deg,#6B48FF,#3A8EF6); }
+    .btn-copy   { background:linear-gradient(135deg,#6BCB77,#3A8EF6); }
+    .btn-hub    { background:linear-gradient(135deg,var(--coral),#FF8E53); }
+    .btn-change {
+      background:none; color:#bbb; border:2px solid #e8e8e8;
+      padding:10px; border-radius:12px;
+      font-family:'Nunito',sans-serif; font-weight:800; font-size:0.85rem;
+      cursor:pointer; transition:border-color 0.18s, color 0.18s;
+    }
+    .btn-change:hover { border-color:#FF6B6B; color:#FF6B6B; }
+
+    /* Change-code confirm dialog */
+    #change-confirm {
+      display:none;
+      background:#FFF8F0;
+      border:2px solid #FFD93D;
+      border-radius:14px; padding:1rem 1.2rem;
+      font-size:0.88rem; font-weight:700; color:#555;
+    }
+    #change-confirm p { margin-bottom:0.8rem; line-height:1.5; }
+    #change-confirm .confirm-btns { display:flex; gap:0.6rem; }
+    .btn-confirm-yes {
+      flex:1; padding:9px; background:linear-gradient(135deg,var(--coral),#FF8E53);
+      color:#fff; border:none; border-radius:10px;
+      font-family:'Fredoka One',cursive; font-size:0.9rem; cursor:pointer;
+    }
+    .btn-confirm-no {
+      flex:1; padding:9px; background:#F0F0F0; color:#666;
+      border:none; border-radius:10px;
+      font-family:'Fredoka One',cursive; font-size:0.9rem; cursor:pointer;
+    }
+
+    /* ── PRINT STYLES ── */
+    @media print {
+      body * { visibility:hidden; }
+      #print-zone, #print-zone * { visibility:visible; }
+      #print-zone {
+        position:fixed; top:0; left:0; width:100%; height:100%;
+        display:flex; align-items:center; justify-content:center; background:#fff;
+      }
+      .qr-card { box-shadow:none; border:3px solid #eee; padding:2.5rem; }
+    }
+
+    @media (max-width:600px) {
+      .qr-card { min-width:unset; width:100%; }
+      main { padding:1.5rem 1rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="hub.html" class="nav-logo">📚 <span>First</span>StepReading</a>
+  <div class="nav-links">
+    <a href="login.html" class="btn-nav btn-nav-dash">👩‍🏫 Dashboard</a>
+    <a href="hub.html"   class="btn-nav btn-nav-hub">🏠 Main Page</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Class Login 📱</h1>
+  <p>One code — works every school day, no need to change it!</p>
+</div>
+
+<main>
+
+  <!-- ══ FIRST-TIME SETUP ══ -->
+  <div id="setup-screen">
+    <span class="setup-icon">🎉</span>
+    <h2>Create Your Class Code</h2>
+    <p>You only need to do this <strong>once</strong>.</p>
+    <p>Your code will work every <strong>Monday–Friday, 9AM–4PM</strong> — forever.</p>
+    <div class="permanent-badge">✅ Permanent — no weekly updates needed!</div>
+    <button class="btn-create" onclick="createPermanentCode()">
+      ✨ Create My Class Code
+    </button>
+  </div>
+
+  <!-- ══ CODE + QR DISPLAY ══ -->
+  <div id="code-screen">
+
+    <!-- Printable QR card -->
+    <div id="print-zone">
+      <div class="qr-card">
+        <div class="qr-card-logo">📚 <span>First</span>StepReading</div>
+        <h3>Join the Class! 🎮</h3>
+        <p class="scan-sub">Point your camera here to play</p>
+        <div id="qrcode-box"><div id="qrcode"></div></div>
+        <div class="code-display" id="code-text"></div>
+        <p class="code-backup">Or type this at the student login page</p>
+        <div class="valid-pill">
+          <span class="dot"></span>
+          Mon–Fri, 9:00 AM – 4:00 PM
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="right-panel">
+
+      <!-- Permanent callout -->
+      <div class="perm-banner">
+        <span class="pb-icon">♻️</span>
+        <div>
+          <h4>This code never expires!</h4>
+          <p>It works every Monday–Friday, 9:00 AM – 4:00 PM.<br>
+          Print it once, post it in your classroom, and you're done — no updates ever needed.</p>
+        </div>
+      </div>
+
+      <!-- How students join -->
+      <div class="info-card">
+        <h3>📸 How Students Join</h3>
+        <ul class="steps-list">
+          <li><span class="step-circle">1</span><span>Open the <strong>camera app</strong> on phone or tablet</span></li>
+          <li><span class="step-circle">2</span><span>Point at the <strong>QR code</strong> on screen or printed sheet</span></li>
+          <li><span class="step-circle">3</span><span>Tap the <strong>link that pops up</strong> — no typing!</span></li>
+          <li><span class="step-circle">4</span><span>Games open <strong>automatically! 🎉</strong></span></li>
+        </ul>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-card">
+        <button class="btn-action btn-print" onclick="printCard()">🖨️ Print QR Code Card</button>
+        <button class="btn-action btn-copy"  id="copy-btn" onclick="copyCode()">📋 Copy Code</button>
+        <button class="btn-action btn-copy"  id="copy-link-btn" onclick="copyLink()" style="background:linear-gradient(135deg,#9B59B6,#3A8EF6)">🔗 Copy Join Link</button>
+        <a      class="btn-action btn-hub"   href="hub.html">🏠 Go to Main Page</a>
+
+        <!-- Change code (hidden until clicked) -->
+        <button class="btn-change" onclick="showChangeConfirm()">
+          🔄 Change class code…
+        </button>
+        <div id="change-confirm">
+          <p>⚠️ <strong>Are you sure?</strong><br>
+          Students won't be able to use the old code anymore. You'll need to share the new one with your class.</p>
+          <div class="confirm-btns">
+            <button class="btn-confirm-yes" onclick="createPermanentCode()">Yes, change it</button>
+            <button class="btn-confirm-no"  onclick="hideChangeConfirm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /code-screen -->
+
+</main>
+
+<script>
+  // ── AUTH CHECK ──
+  if (localStorage.getItem('fsr_teacher_logged_in') !== '1') {
+    window.location.href = 'login.html';
+  }
+
+  let currentCode = null;
+  let currentUrl  = null;
+
+  // ── CODE GENERATION ──
+  function genCode(prefix) {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let s = prefix + '-';
+    for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+    return s;
+  }
+
+  function buildJoinUrl(code) {
+    return window.location.origin + '/join.html?code=' + encodeURIComponent(code);
+  }
+
+  // ── CREATE / CHANGE PERMANENT CODE ──
+  function createPermanentCode() {
+    hideChangeConfirm();
+    const code = genCode('FSR');
+    const url  = buildJoinUrl(code);
+
+    // Save as the one permanent code
+    localStorage.setItem('fsr_primary_code',     code);
+    localStorage.setItem('fsr_primary_code_url', url);
+
+    // Also keep in history list (for login.html dashboard compatibility)
+    const history = JSON.parse(localStorage.getItem('fsr_code_history') || '[]');
+    history.unshift({ code, created: Date.now(), url });
+    localStorage.setItem('fsr_code_history', JSON.stringify(history.slice(0, 20)));
+
+    showCode(code, url);
+  }
+
+  // ── DISPLAY THE CODE + QR ──
+  function showCode(code, url) {
+    currentCode = code;
+    currentUrl  = url;
+
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('code-screen').classList.add('visible');
+
+    document.getElementById('code-text').textContent     = code;
+    document.getElementById('copy-btn').textContent      = '📋 Copy Code';
+    document.getElementById('copy-link-btn').textContent = '🔗 Copy Join Link';
+
+    renderQR(url);
+  }
+
+  // ── QR RENDERING ──
+  // Uses toDataURL so it works even if the container was hidden when called.
+  // Falls back to the QR Server API image if the library hasn't loaded yet.
+  function renderQR(url) {
+    const box = document.getElementById('qrcode');
+    box.innerHTML = '<div style="width:240px;height:56px;display:flex;align-items:center;justify-content:center;color:#bbb;font-family:Nunito,sans-serif;font-weight:700;font-size:0.85rem;">Generating…</div>';
+
+    if (typeof QRCode !== 'undefined' && typeof QRCode.toDataURL === 'function') {
+      QRCode.toDataURL(url, {
+        width:  260,
+        margin: 2,
+        color:  { dark: '#1A0070', light: '#ffffff' }
+      })
+      .then(dataUrl => {
+        box.innerHTML = `<img src="${dataUrl}" width="240" height="240" alt="QR Code" style="border-radius:8px;display:block;">`;
+      })
+      .catch(() => fallbackQR(box, url));
+    } else {
+      // Library not loaded yet — use free QR image API as fallback
+      fallbackQR(box, url);
+    }
+  }
+
+  function fallbackQR(box, url) {
+    const src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&color=1A0070&data=' + encodeURIComponent(url);
+    box.innerHTML = `<img src="${src}" width="240" height="240" alt="QR Code" style="border-radius:8px;display:block;" onerror="this.parentElement.innerHTML='<div style=\\'padding:1rem;color:#e74c3c;font-weight:700;font-size:0.85rem;font-family:Nunito,sans-serif;\\'>QR load failed — copy the link instead.</div>'">`;
+  }
+
+  // ── PRINT ──
+  function printCard() { window.print(); }
+
+  // ── COPY HELPERS ──
+  function copyCode() {
+    if (!currentCode) return;
+    navigator.clipboard.writeText(currentCode).then(() => {
+      const b = document.getElementById('copy-btn');
+      b.textContent = '✅ Copied!';
+      setTimeout(() => b.textContent = '📋 Copy Code', 2200);
+    });
+  }
+  function copyLink() {
+    if (!currentUrl) return;
+    navigator.clipboard.writeText(currentUrl).then(() => {
+      const b = document.getElementById('copy-link-btn');
+      b.textContent = '✅ Link Copied!';
+      setTimeout(() => b.textContent = '🔗 Copy Join Link', 2200);
+    });
+  }
+
+  // ── CHANGE CODE CONFIRM ──
+  function showChangeConfirm() {
+    document.getElementById('change-confirm').style.display = 'block';
+  }
+  function hideChangeConfirm() {
+    document.getElementById('change-confirm').style.display = 'none';
+  }
+
+  // ── INIT ──
+  (function init() {
+    const savedCode = localStorage.getItem('fsr_primary_code');
+    const savedUrl  = localStorage.getItem('fsr_primary_code_url');
+
+    if (savedCode) {
+      // Rebuild URL using current origin (works locally + in production)
+      const url = buildJoinUrl(savedCode);
+      showCode(savedCode, url);
+    } else {
+      document.getElementById('setup-screen').style.display = 'block';
+    }
+  })();
+</script>
+</body>
+</html>

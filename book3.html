@@ -26,19 +26,34 @@ h1{color:#60d0f0;font-size:1.3rem;text-align:center;margin-bottom:10px;text-shad
 .anim-exit-right{animation:exitRight .4s ease-in forwards}
 .anim-enter-right{animation:enterRight .42s ease-out forwards}
 .anim-enter-left{animation:enterLeft .42s ease-out forwards}
-.controls{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;justify-content:center}
+.book-layout{display:flex;align-items:center;gap:10px}
+.side-nav{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;flex-shrink:0}
+.controls{display:flex;align-items:center;margin-top:8px;gap:8px;flex-wrap:wrap;justify-content:center;max-width:98vw}
+.ctrl-mid{display:flex;gap:8px;align-items:center}
+.ctrl-extra{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-left:8px;border-left:2px solid rgba(255,255,255,0.25)}
 button{font-family:"Comic Sans MS",cursive;font-size:.85rem;padding:6px 13px;border:none;border-radius:24px;cursor:pointer;font-weight:bold;transition:transform .1s}
 button:active{transform:scale(.95)}
 button:disabled{opacity:.4;cursor:default}
-#btn-back{background:#1a6b9a;color:#fff}
-#btn-next{background:#60d0f0;color:#0a1a2e}
-#btn-read{background:#ff9d3a;color:#fff}
+#btn-back{background:#1a6b9a;color:#fff;width:54px;height:54px;border-radius:50%;font-size:1.5rem;padding:0;display:flex;align-items:center;justify-content:center}
+#btn-next{background:#60d0f0;color:#0a1a2e;width:64px;height:64px;border-radius:50%;font-size:2rem;padding:0;display:flex;align-items:center;justify-content:center}
+#btn-read{background:#ff9d3a;color:#fff;padding:10px 18px}
 #btn-flash{background:#e040fb;color:#fff;display:none}
 #btn-words{background:#26c6da;color:#003;display:none}
+#btn-hw{background:#e57373;color:#fff;display:none}
+#btn-online{background:#ff9800;color:#fff;display:none}
 #page-counter{color:#a0d5f5;font-size:.9rem;min-width:80px;text-align:center}
 #speaker-ring{width:28px;height:28px;border-radius:50%;border:3px solid #a0d5f5;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;flex-shrink:0}
 #speaker-ring.on{border-color:#ff9d3a;box-shadow:0 0 10px #ff9d3a}
 a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;opacity:.7}
+.ch-tab{position:fixed;right:0;top:14px;background:#1a6b9a;color:white;border:none;padding:13px 22px;border-radius:10px 0 0 10px;font-size:1.05rem;font-family:"Comic Sans MS",cursive;font-weight:bold;cursor:pointer;z-index:60;box-shadow:-2px 2px 8px rgba(0,0,0,.35);user-select:none;line-height:1}
+.ch-panel{position:fixed;right:-220px;top:0;height:100vh;width:215px;background:#0a2a3e;border-left:3px solid #60d0f0;z-index:65;display:flex;flex-direction:column;transition:right .3s ease}
+.ch-panel.open{right:0}
+.ch-panel-hdr{color:#a0d5f5;font-size:.8rem;font-weight:bold;padding:10px 10px 6px;border-bottom:1px solid rgba(160,213,245,.25);text-align:center;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.ch-close{background:none;border:none;color:#60d0f0;font-size:1rem;cursor:pointer;padding:0 4px}
+.ch-list{flex:1;overflow-y:auto;padding:5px;display:flex;flex-direction:column;gap:3px}
+.ch-btn{background:#1a6b9a;color:#a0d5f5;border:none;border-radius:7px;padding:7px 9px;text-align:left;font-family:"Comic Sans MS",cursive;font-size:.76rem;cursor:pointer;transition:background .15s;line-height:1.3;width:100%}
+.ch-btn:hover{background:#2a8bba}
+.ch-btn.active{background:#60d0f0;color:#001a30;font-weight:bold}
 #flash-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center}
 #flash-card{background:#0a2a3e;border:3px solid #60d0f0;border-radius:20px;padding:32px 44px;display:flex;flex-direction:column;align-items:center;gap:16px;min-width:280px;max-width:90vw}
 #flash-title{font-family:"Comic Sans MS",cursive;color:#a0d5f5;font-size:1rem;font-weight:bold}
@@ -53,25 +68,42 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 </head>
 <body>
 <h1>Book 3: Consonants &amp; Exceptions</h1>
-<div class="book-stage">
-  <div id="page-wrapper">
-    <div id="loading">Loading book&#8230; &#128218;</div>
-    <div id="canvas-container">
-      <canvas id="page-canvas"></canvas>
-      <div id="text-layer" class="textLayer"></div>
+<div class="book-layout">
+  <div class="side-nav">
+    <button id="btn-back">&#8592;</button>
+  </div>
+  <div class="book-stage">
+    <div id="page-wrapper">
+      <div id="loading">Loading book&#8230; &#128218;</div>
+      <div id="canvas-container">
+        <canvas id="page-canvas"></canvas>
+        <div id="text-layer" class="textLayer"></div>
+      </div>
     </div>
+  </div>
+  <div class="side-nav">
+    <button id="btn-read">Read Page</button>
+    <button id="btn-next">&#8594;</button>
   </div>
 </div>
 <div class="controls">
-  <button id="btn-back">&#9664; Back</button>
-  <div id="speaker-ring" title="Read page">&#128266;</div>
-  <span id="page-counter">1 / 84</span>
-  <button id="btn-read">Read Page</button>
-  <button id="btn-flash">&#128218; Sight Words</button>
-  <button id="btn-words">&#128214; Word Families</button>
-  <button id="btn-next">Next &#9654;</button>
+  <div class="ctrl-mid">
+    <div id="speaker-ring" title="Read page">&#128266;</div>
+    <span id="page-counter">1 / 84</span>
+  </div>
+  <div class="ctrl-extra">
+    <button id="btn-flash">&#128218; Sight Words</button>
+    <button id="btn-words">&#128214; Word Families</button>
+    <button id="btn-hw">&#128221; Homework</button>
+    <button id="btn-online">&#128187; Online HW</button>
+  </div>
 </div>
 <a href="hub.html" class="home-link">&#8592; Back to Hub</a>
+<button class="ch-tab" id="chTab" onclick="toggleChPanel()">📖 Chapters</button>
+<div class="ch-panel" id="chPanel">
+  <div class="ch-panel-hdr"><span>Chapters</span><button class="ch-close" onclick="toggleChPanel(false)">✕</button></div>
+  <div class="ch-list" id="chList"></div>
+</div>
 <div id="flash-modal">
   <div id="flash-card">
     <div id="flash-title">Sight Words</div>
@@ -229,6 +261,8 @@ const counter=document.getElementById('page-counter');
 const ring=document.getElementById('speaker-ring');
 const flashBtn=document.getElementById('btn-flash');
 const wordsBtn=document.getElementById('btn-words');
+const hwBtn=document.getElementById('btn-hw');
+const onlineBtn=document.getElementById('btn-online');
 let voices=[];
 function loadVoices(){voices=speechSynthesis.getVoices();if(!voices.length)speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};}
 loadVoices();
@@ -241,6 +275,8 @@ function openFlash(words,title){flashWords=words;flashIdx=0;document.getElementB
 function showCard(){const w=flashWords[flashIdx]||'';document.getElementById('flash-word').textContent=w.toLowerCase();document.getElementById('flash-counter').textContent=(flashIdx+1)+' / '+flashWords.length;document.getElementById('flash-prev').disabled=flashIdx===0;document.getElementById('flash-next').disabled=flashIdx>=flashWords.length-1;speak(w);}
 flashBtn.addEventListener('click',()=>openFlash(SIGHT_WORDS[currentPage]||[],'Sight Words'));
 wordsBtn.addEventListener('click',()=>openFlash(WORD_FAMILIES[currentPage]||[],'Word Families'));
+hwBtn.addEventListener('click',()=>{window.location.href='worksheets.html?book=3&ch='+currentPage;});
+onlineBtn.addEventListener('click',()=>{window.location.href='online-hw.html?book=3&ch='+currentPage;});
 document.getElementById('flash-speak').addEventListener('click',()=>speak(flashWords[flashIdx]||''));
 document.getElementById('flash-prev').addEventListener('click',()=>{if(flashIdx>0){flashIdx--;showCard();}});
 document.getElementById('flash-next').addEventListener('click',()=>{if(flashIdx<flashWords.length-1){flashIdx++;showCard();}});
@@ -272,12 +308,17 @@ async function renderPage(num,dir){
   const isHdr=HEADER_PAGES.has(num);
   flashBtn.style.display=(isHdr&&SIGHT_WORDS[num])?'inline-block':'none';
   wordsBtn.style.display=(isHdr&&WORD_FAMILIES[num])?'inline-block':'none';
+  hwBtn.style.display=isHdr?'inline-block':'none';
+  onlineBtn.style.display=isHdr?'inline-block':'none';
   animating=false;
 }
 document.getElementById('btn-next').addEventListener('click',()=>{if(currentPage<TOTAL)renderPage(currentPage+1,'fwd');});
 document.getElementById('btn-back').addEventListener('click',()=>{if(currentPage>1)renderPage(currentPage-1,'back');});
 document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')document.getElementById('btn-next').click();if(e.key==='ArrowLeft')document.getElementById('btn-back').click();if(e.key==='Escape'){speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';}});
-pdfjsLib.getDocument('book3.pdf').promise.then(doc=>{pdfDoc=doc;renderPage(1,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
+pdfjsLib.getDocument('book3.pdf').promise.then(doc=>{pdfDoc=doc;const startPg=Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('page'))||1,1),doc.numPages);renderPage(startPg,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
+function toggleChPanel(force){const p=document.getElementById('chPanel');const isOpen=p.classList.contains('open');if(force===false||isOpen){p.classList.remove('open');}else{p.classList.add('open');buildChList();}}
+function buildChList(){const list=document.getElementById('chList');list.innerHTML='';const pages=[...HEADER_PAGES].sort((a,b)=>a-b);pages.forEach(pg=>{const raw=PAGE_TEXT[pg]||'';let title=(raw.split(' Words:')[0]||'').replace(/Chapter \d+:\s*[^.]+\.\s*/g,'').replace(/\.$/, '').trim()||'Page '+pg;if(title.length>26)title=title.substring(0,26)+'…';const btn=document.createElement('button');btn.className='ch-btn'+(pg===currentPage?' active':'');btn.innerHTML='<span style="color:#60d0f0;font-size:.68rem">p.'+pg+'</span><br>'+title;btn.onclick=()=>{renderPage(pg,'fwd');toggleChPanel(false);};list.appendChild(btn);});}
+document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)){p.classList.remove('open');}});
 </script>
 </body>
 </html>

@@ -27,7 +27,8 @@
       font-family: 'Nunito', sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -106,6 +107,8 @@
     /* ── GAME AREA ── */
     .game-area {
       flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       max-width: 900px;

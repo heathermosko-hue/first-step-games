@@ -18,7 +18,7 @@
       --text:   #2C3E50;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     header { background:linear-gradient(135deg,#27AE60 0%,#6BCB77 100%); padding:.9rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem; }
     header h1 { font-family:'Fredoka One',cursive; font-size:1.6rem; color:white; text-shadow:0 2px 6px rgba(0,0,0,.2); }
@@ -39,7 +39,7 @@
     .progress-text { text-align:center; font-size:.8rem; font-weight:800; color:#888; margin-top:4px; }
 
     /* main */
-    main { flex:1; max-width:660px; margin:0 auto; width:100%; padding:1.2rem 1rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
+    main { flex:1; overflow-y:auto; overflow-x:hidden; max-width:660px; margin:0 auto; width:100%; padding:1.2rem 1rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
 
     .score-chip { background:white; border-radius:12px; padding:.4rem 1.2rem; font-family:'Fredoka One',cursive; font-size:1.05rem; color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
     .score-chip span { color:#27AE60; }
@@ -140,9 +140,9 @@ const CARD_DATA = {
   C:{pic:'🐱',word:'Cat'},      D:{pic:'🐶',word:'Dog'},
   E:{pic:'🐘',word:'Elephant'}, F:{pic:'🐸',word:'Frog'},
   G:{pic:'🦒',word:'Giraffe'},  H:{pic:'🐴',word:'Horse'},
-  I:{pic:'🍦',word:'Ice cream'},J:{pic:'🎃',word:'Jack-o-lantern'},
+  I:{pic:'🍦',word:'Ice cream'},J:{pic:'🫙',word:'Jar'},
   K:{pic:'🦘',word:'Kangaroo'}, L:{pic:'🦁',word:'Lion'},
-  M:{pic:'🐒',word:'Monkey'},   N:{pic:'🌙',word:'Night'},
+  M:{pic:'🐒',word:'Monkey'},   N:{pic:'🥜',word:'Nut'},
   O:{pic:'🐙',word:'Octopus'},  P:{pic:'🐧',word:'Penguin'},
   Q:{pic:'👸',word:'Queen'},    R:{pic:'🐰',word:'Rabbit'},
   S:{pic:'⭐',word:'Star'},      T:{pic:'🐯',word:'Tiger'},
@@ -221,7 +221,7 @@ function showQ() {
     const d = CARD_DATA[opt];
     const el = document.createElement('div');
     el.className = 'option-card';
-    el.innerHTML = `<span class="option-pic">${d.pic}</span>`;
+    el.innerHTML = `<span class="option-pic">${d.pic}</span><div class="option-word">${d.word}</div>`;
     el.addEventListener('click', () => pick(opt, el));
     grid.appendChild(el);
   });
