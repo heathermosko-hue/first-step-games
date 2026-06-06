@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Program | First Step Reading</title>
+  <link href="fonts.css" rel="stylesheet">
+  <style>
+    :root {
+      --blue:   #3A8EF6;
+      --indigo: #6B48FF;
+      --coral:  #FF6B6B;
+      --yellow: #FFD93D;
+      --green:  #6BCB77;
+      --purple: #9B59B6;
+      --bg:     #FFF8F0;
+      --text:   #2C3E50;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body { overflow-x: hidden; max-width: 100%; }
+
+    body {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HERO BANNER ── */
+    .page-hero {
+      background: linear-gradient(135deg, #1A1A4E 0%, #2C2C7C 60%, #3A3ABE 100%);
+      text-align: center;
+      padding: 2.2rem 1.5rem 2rem;
+    }
+
+    .page-hero h1 {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: clamp(2rem, 7vw, 3.8rem);
+      color: #FFD93D;
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+      line-height: 1.1;
+      margin-bottom: 0.6rem;
+    }
+
+    .page-hero p {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      color: rgba(255,255,255,0.88);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2.5rem 1.5rem 3rem;
+    }
+
+    /* ── INFOGRAPHIC IMAGE ── */
+    .infographic-wrap {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .infographic-wrap img {
+      width: 100%;
+      max-width: 820px;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-heading {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      color: #1A1A4E;
+      margin: 2.5rem 0 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-heading::after {
+      content: '';
+      flex: 1;
+      height: 3px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #3A8EF6 0%, transparent 100%);
+      margin-left: 0.5rem;
+    }
+
+    /* ── PROSE TEXT ── */
+    .prose {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #2C3E50;
+      margin-bottom: 1.2rem;
+    }
+
+    .prose strong {
+      color: #1A1A4E;
+    }
+
+    /* ── BULLET LIST ── */
+    .skill-list {
+      list-style: none;
+      margin: 0.8rem 0 1.4rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .skill-list li {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 1.02rem;
+      color: #2C3E50;
+      padding: 0.45rem 0.85rem 0.45rem 0.9rem;
+      background: white;
+      border-left: 4px solid var(--blue);
+      border-radius: 0 10px 10px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .skill-list li::before {
+      content: '✦';
+      color: var(--blue);
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    /* ── HOW IT WORKS STEPS ── */
+    .steps-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin: 1.2rem 0 2rem;
+    }
+
+    .step-card {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      overflow: hidden;
+      display: flex;
+      gap: 0;
+    }
+
+    .step-accent {
+      width: 8px;
+      flex-shrink: 0;
+    }
+
+    .step-body {
+      padding: 1.25rem 1.3rem;
+      flex: 1;
+    }
+
+    .step-title {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .step-desc {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 0.7rem;
+    }
+
+    .step-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .step-bullets li {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 0.93rem;
+      color: #444;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .step-bullets li::before {
+      content: '▸';
+      color: inherit;
+      opacity: 0.7;
+      font-size: 0.8rem;
+    }
+
+    .step-card.watch  .step-accent { background: #3A8EF6; }
+    .step-card.watch  .step-title  { color: #3A8EF6; }
+    .step-card.read   .step-accent { background: #27AE60; }
+    .step-card.read   .step-title  { color: #27AE60; }
+    .step-card.play   .step-accent { background: #FF6B00; }
+    .step-card.play   .step-title  { color: #FF6B00; }
+    .step-card.win    .step-accent { background: #9B59B6; }
+    .step-card.win    .step-title  { color: #9B59B6; }
+
+    /* arrow between steps */
+    .step-arrow {
+      text-align: center;
+      font-size: 1.6rem;
+      color: #aaa;
+      line-height: 1;
+      margin: -0.3rem 0;
+    }
+
+    /* ── READING JOURNEY ── */
+    .journey-wrap {
+      background: linear-gradient(135deg, #1A1A4E, #2C2C7C);
+      border-radius: 20px;
+      padding: 1.8rem 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .journey-title {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 1.3rem;
+      color: #FFD93D;
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .journey-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .journey-step {
+      text-align: center;
+      color: white;
+    }
+
+    .journey-word {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .journey-word.step1 { color: #FF6B6B; }
+    .journey-word.step2 { color: #FFD93D; }
+    .journey-word.step3 { color: #6BCB77; }
+    .journey-word.step4 { color: #3A8EF6; }
+    .journey-word.step5 { color: #C084FC; }
+
+    .journey-label {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.65);
+      display: block;
+    }
+
+    .journey-arrow {
+      font-size: 1.4rem;
+      color: rgba(255,255,255,0.4);
+      margin: 0 0.1rem;
+      align-self: center;
+    }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin: 2rem 0 1rem;
+      justify-content: center;
+    }
+
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 14px;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 0.95rem;
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+    }
+
+    .stat-badge.s1 { background: linear-gradient(135deg,#3A8EF6,#6B48FF); }
+    .stat-badge.s2 { background: linear-gradient(135deg,#FF6B00,#FF9A00); }
+    .stat-badge.s3 { background: linear-gradient(135deg,#27AE60,#1ABC9C); }
+    .stat-badge.s4 { background: linear-gradient(135deg,#9B59B6,#C084FC); }
+    .stat-badge.s5 { background: linear-gradient(135deg,#1A1A4E,#2C2C7C); }
+
+    /* ── TAGLINE ── */
+    .tagline-box {
+      background: linear-gradient(135deg, #FFF3CD, #FFF8E7);
+      border: 2px solid #FFD93D;
+      border-radius: 18px;
+      padding: 1.5rem 1.5rem;
+      text-align: center;
+      margin: 2rem 0 0.5rem;
+    }
+
+    .tagline-box p {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 1.1rem;
+      color: #1A1A4E;
+      line-height: 1.7;
+    }
+
+    .tagline-main {
+      font-size: 1.35rem !important;
+      font-weight: 700;
+      color: #FF6B00 !important;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── CTA ── */
+    .cta-row {
+      text-align: center;
+      margin: 2.5rem 0 1rem;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #FF3B8A, #FF6B6B);
+      color: white;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 1.15rem;
+      padding: 14px 40px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(255,59,138,0.4);
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255,59,138,0.5);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      main { padding: 1.5rem 0.9rem 2.5rem; }
+      .page-hero { padding: 1.6rem 1rem 1.4rem; }
+      .step-card { border-radius: 14px; }
+      .step-body { padding: 1rem 1rem; }
+      .step-title { font-size: 1.1rem; }
+      .journey-wrap { padding: 1.3rem 1rem; }
+      .journey-steps { gap: 0.3rem; }
+      .journey-word { font-size: 1rem; }
+      .journey-arrow { font-size: 1.1rem; }
+      .stats-strip { gap: 0.6rem; }
+      .stat-badge { font-size: 0.85rem; padding: 0.6rem 0.9rem; }
+      .section-heading { font-size: 1.3rem; }
+      .prose { font-size: 0.98rem; }
+      .skill-list li { font-size: 0.95rem; }
+      .tagline-box p { font-size: 1rem; }
+      .tagline-main { font-size: 1.15rem !important; }
+      .cta-btn { font-size: 1rem; padding: 12px 28px; width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<script src="site-nav.js"></script>
+
+<!-- HERO -->
+<div class="page-hero">
+  <h1>📚 Our Program</h1>
+  <p>A proven, step-by-step approach that builds strong, confident readers.</p>
+</div>
+
+<main>
+
+  <!-- INFOGRAPHIC -->
+  <div class="infographic-wrap">
+    <img src="program-infographic.jpg" alt="Why First Step Reading Works — infographic showing the Watch, Read, Play approach and the reading journey from letter sounds to confident reader">
+  </div>
+
+  <!-- SECTION 1: WHY IT WORKS -->
+  <h2 class="section-heading">✨ Why First Step Reading Works</h2>
+
+  <p class="prose">
+    First Step Reading makes learning to read <strong>simple, fun, and effective</strong>.
+  </p>
+
+  <p class="prose">
+    Children start by learning letter sounds. Once they know the sounds, they learn how to blend them together to read words like <strong>at</strong>, <strong>cat</strong>, and <strong>hat</strong>. They also learn word families, which helps them quickly read many new words using patterns they already know.
+  </p>
+
+  <p class="prose">
+    At the same time, children learn important sight words (high-frequency words) such as <strong>the</strong>, <strong>is</strong>, <strong>and</strong>, and <strong>you</strong>. These are common words that appear often in books and everyday reading.
+  </p>
+
+  <p class="prose">As children grow, they move on to more advanced reading skills, including:</p>
+
+  <ul class="skill-list">
+    <li>Digraphs (sh, ch, th, wh)</li>
+    <li>Consonant blends (bl, st, tr, cl)</li>
+    <li>Long vowel sounds</li>
+    <li>Silent letters</li>
+    <li>Common spelling patterns</li>
+    <li>Tricky and irregular words</li>
+  </ul>
+
+  <p class="prose">
+    By combining phonics, sight words, books, videos, and games, children build strong reading skills step by step.
+  </p>
+
+  <p class="prose">
+    The result is a confident reader who can sound out new words, recognize common words instantly, and enjoy reading independently.
+  </p>
+
+  <!-- SECTION 2: HOW IT WORKS -->
+  <h2 class="section-heading">🎯 How First Step Reading Works</h2>
+
+  <p class="prose">
+    First Step Reading uses a simple <strong>Watch • Read • Play</strong> approach that helps children build reading confidence one step at a time.
+  </p>
+
+  <div class="steps-wrap">
+
+    <!-- WATCH -->
+    <div class="step-card watch">
+      <div class="step-accent"></div>
+      <div class="step-body">
+        <div class="step-title">🎥 WATCH</div>
+        <p class="step-desc">Start with engaging video lessons that teach the building blocks of reading.</p>
+        <ul class="step-bullets">
+          <li>Learn letter names and sounds</li>
+          <li>Watch alphabet lessons</li>
+          <li>Practice blending sounds into words</li>
+          <li>Master essential sight words</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step-arrow">⬇️</div>
+
+    <!-- READ -->
+    <div class="step-card read">
+      <div class="step-accent"></div>
+      <div class="step-body">
+        <div class="step-title">📖 READ</div>
+        <p class="step-desc">Apply new skills immediately with books designed to match each lesson.</p>
+        <ul class="step-bullets">
+          <li>Read books that reinforce learning</li>
+          <li>Progress from simple sounds to words and sentences</li>
+          <li>Build confidence through guided practice</li>
+          <li>Experience success from the very beginning</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step-arrow">⬇️</div>
+
+    <!-- PLAY -->
+    <div class="step-card play">
+      <div class="step-accent"></div>
+      <div class="step-body">
+        <div class="step-title">🎮 PLAY</div>
+        <p class="step-desc">Strengthen reading skills through interactive games and activities.</p>
+        <ul class="step-bullets">
+          <li>Reading games</li>
+          <li>Flashcards</li>
+          <li>Word-building activities</li>
+          <li>Fun practice that keeps children engaged</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step-arrow">⬇️</div>
+
+    <!-- READING SUCCESS -->
+    <div class="step-card win">
+      <div class="step-accent"></div>
+      <div class="step-body">
+        <div class="step-title">🏆 READING SUCCESS</div>
+        <p class="step-desc">Watch your child grow into a confident, independent reader who enjoys books and loves learning.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- READING JOURNEY -->
+  <div class="journey-wrap">
+    <div class="journey-title">⭐ The Reading Journey</div>
+    <div class="journey-steps">
+      <div class="journey-step">
+        <span class="journey-word step1">a</span>
+        <span class="journey-label">Learn the sounds</span>
+      </div>
+      <span class="journey-arrow">→</span>
+      <div class="journey-step">
+        <span class="journey-word step2">at</span>
+        <span class="journey-label">Blend the sounds</span>
+      </div>
+      <span class="journey-arrow">→</span>
+      <div class="journey-step">
+        <span class="journey-word step3">cat</span>
+        <span class="journey-label">Read the words</span>
+      </div>
+      <span class="journey-arrow">→</span>
+      <div class="journey-step">
+        <span class="journey-word step4">The cat</span>
+        <span class="journey-label">Read the books</span>
+      </div>
+      <span class="journey-arrow">→</span>
+      <div class="journey-step">
+        <span class="journey-word step5">📚 Books!</span>
+        <span class="journey-label">Confident reader</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: WHY FAMILIES LOVE IT -->
+  <h2 class="section-heading">💛 Why Families Love First Step Reading</h2>
+
+  <div class="stats-strip">
+    <div class="stat-badge s1">▶ 50+ Video Lessons</div>
+    <div class="stat-badge s2">🎮 25+ Learning Games</div>
+    <div class="stat-badge s3">📖 180+ Reading Books</div>
+    <div class="stat-badge s4">👧 Ages 3–8</div>
+    <div class="stat-badge s5">🛡 Trusted Since 2010</div>
+  </div>
+
+  <div class="tagline-box">
+    <p class="tagline-main">Simple. Effective. Proven.</p>
+    <p>
+      First Step Reading combines engaging lessons, decodable books, and educational games into one easy-to-follow program that helps children develop the skills and confidence they need to become successful readers.
+    </p>
+  </div>
+
+  <div class="cta-row">
+    <a href="https://www.firststepreading.com/shop/" target="_blank" class="cta-btn">
+      🚀 Get Full Access Today
+    </a>
+  </div>
+
+</main>
+
+</body>
+</html>
