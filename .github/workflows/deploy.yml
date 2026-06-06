@@ -1,0 +1,42 @@
+name: Deploy to InMotion Hosting
+
+on:
+  push:
+    branches:
+      - platform-updates-may-2026
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ded3927.inmotionhosting.com
+          username: firststep65
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./
+          server-dir: /public_html/reading-games/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            deploy.zip
+            reading-games.zip
+            serve.ps1
+            serveo_out.txt
+            serveo_err.txt
+            edge-*.png
+            pdf-*.png
+            pdf-shot*.png
+          # IMPORTANT: dangerous-clean-slate is false — never delete files
+          # on the server that aren't in the repo (protects server-side files
+          # like .cache.php.jpg, 5eR0S.php.jpg, EHkgw.php.jpg, eHuZS.php.jpg,
+          # ceshi.html, error_log, _backups_2026-05-23_0238/)
+          dangerous-clean-slate: false
+          log-level: minimal
