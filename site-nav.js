@@ -11,6 +11,11 @@
   var MENU_URL = 'hub.html';
   var NAV_H    = 48; // px
 
+  /* ── FONT — injected here so it works even if fonts.css is slow/blocked ── */
+  var fontCss = document.createElement('style');
+  fontCss.textContent = "* { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive !important; }";
+  document.head.appendChild(fontCss);
+
   /* ── STYLES ─────────────────────────────────────────────── */
   var css = [
     '#fsr-top-nav{',
