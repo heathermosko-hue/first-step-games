@@ -1,8 +1,39 @@
-/* Comic Neue — Google Fonts CDN for reliable Comic Sans on all mobile devices.
-   display=block: text waits for Comic Neue (brief invisible period on very first
-   load only). After first visit the font is browser-cached — instant, zero swap,
-   zero change on every subsequent visit. */
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&display=block');
+/* Comic Neue — self-hosted on this server.
+   No external requests, no Google Fonts dependency.
+   Works on every mobile device (iOS, Android) every time. */
 
-/* Universal Comic Sans / Comic Neue — applies to every element on every page */
+@font-face {
+  font-family: 'Comic Neue';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('fonts/comic-neue-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Comic Neue';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('fonts/comic-neue-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Comic Neue';
+  font-style: italic;
+  font-weight: 400;
+  font-display: block;
+  src: url('fonts/comic-neue-400i.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Comic Neue';
+  font-style: italic;
+  font-weight: 700;
+  font-display: block;
+  src: url('fonts/comic-neue-700i.woff2') format('woff2');
+}
+
+/* Universal Comic Sans / Comic Neue — applies to every element on every page.
+   Comic Sans MS = Windows/Android. Comic Neue = iOS & everything else. */
 * { font-family: 'Comic Sans MS', 'Comic Neue', cursive !important; }
