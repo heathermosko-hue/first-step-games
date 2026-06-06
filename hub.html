@@ -1117,10 +1117,11 @@
   <div class="sample-lesson-section">
     <h2>🎬 Watch a Free Sample Lesson</h2>
     <p>See exactly how our step-by-step video lessons teach phonics and sight words in a way kids actually love.</p>
-    <button class="sample-see-btn" id="sampleSeeBtn" onclick="showSampleVideo()">
-      <span class="play-triangle">▶</span> See It in Action
-    </button>
-    <div class="sample-video-wrapper" id="sampleVideoWrap" style="display:none;"></div>
+    <div class="sample-video-wrapper">
+      <iframe src="https://www.youtube-nocookie.com/embed/BbS7KfgZ30s?rel=0&modestbranding=1&color=white"
+        allowfullscreen allow="autoplay; encrypted-media"
+        title="3-Letter Blending — Short A"></iframe>
+    </div>
     <a href="https://www.firststepreading.com/shop/" target="_blank" class="sample-access-btn">
       🚀 Get Full Access
     </a>
@@ -1943,18 +1944,6 @@
     document.getElementById('gate-input').focus();
   }
 
-  // ── SAMPLE VIDEO REVEAL ──
-  function showSampleVideo() {
-    document.getElementById('sampleSeeBtn').style.display = 'none';
-    var w = document.getElementById('sampleVideoWrap');
-    w.style.display = 'block';
-    // Inject iframe here so autoplay triggers on user gesture
-    w.innerHTML =
-      '<iframe src="https://www.youtube-nocookie.com/embed/BbS7KfgZ30s' +
-      '?rel=0&modestbranding=1&color=white&autoplay=1"' +
-      ' allowfullscreen allow="autoplay; encrypted-media"' +
-      ' title="3-Letter Blending — Short A"></iframe>';
-  }
 
   function toggleCh(btn) {
     btn.classList.toggle('open');
@@ -1968,6 +1957,6 @@
 
   renderAccessBar();
 </script>
-  <script src="site-nav.js"></script>
+  <script src="site-nav.js?v=2"></script>
 </body>
 </html>
