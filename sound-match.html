@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Letter Sound Match | Learn to Read Games</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --green:  #6BCB77;
@@ -18,18 +15,18 @@
       --text:   #2C3E50;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     header { background:linear-gradient(135deg,#27AE60 0%,#6BCB77 100%); padding:.9rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem; }
-    header h1 { font-family:'Fredoka One',cursive; font-size:1.6rem; color:white; text-shadow:0 2px 6px rgba(0,0,0,.2); }
+    header h1 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.6rem; color:white; text-shadow:0 2px 6px rgba(0,0,0,.2); }
     .header-btns { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
-    .btn-header { background:rgba(255,255,255,.2); color:white; border:none; font-family:'Nunito',sans-serif; font-weight:700; font-size:.85rem; padding:6px 16px; border-radius:999px; cursor:pointer; transition:background .2s; text-decoration:none; display:inline-block; }
+    .btn-header { background:rgba(255,255,255,.2); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.85rem; padding:6px 16px; border-radius:999px; cursor:pointer; transition:background .2s; text-decoration:none; display:inline-block; }
     .btn-header:hover { background:rgba(255,255,255,.35); }
     .btn-mute { background:rgba(255,255,255,.2); color:white; border:none; font-size:1.15rem; width:34px; height:34px; border-radius:999px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; }
     .btn-mute:hover { background:rgba(255,255,255,.35); }
     .btn-mute.muted { background:rgba(255,100,100,.35); }
     .voice-group { display:flex; gap:4px; }
-    .btn-voice { background:rgba(255,255,255,.15); color:rgba(255,255,255,.8); border:2px solid rgba(255,255,255,.2); font-family:'Nunito',sans-serif; font-weight:700; font-size:.78rem; padding:4px 12px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
+    .btn-voice { background:rgba(255,255,255,.15); color:rgba(255,255,255,.8); border:2px solid rgba(255,255,255,.2); font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.78rem; padding:4px 12px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
     .btn-voice.active { background:rgba(255,255,255,.9); color:#27AE60; border-color:transparent; }
 
     /* progress */
@@ -41,7 +38,7 @@
     /* main */
     main { flex:1; overflow-y:auto; overflow-x:hidden; max-width:660px; margin:0 auto; width:100%; padding:1.2rem 1rem; display:flex; flex-direction:column; align-items:center; gap:1rem; }
 
-    .score-chip { background:white; border-radius:12px; padding:.4rem 1.2rem; font-family:'Fredoka One',cursive; font-size:1.05rem; color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
+    .score-chip { background:white; border-radius:12px; padding:.4rem 1.2rem; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.05rem; color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
     .score-chip span { color:#27AE60; }
 
     /* letter display */
@@ -52,14 +49,14 @@
     .btn-replay { background:rgba(255,255,255,.25); border:none; color:white; font-size:1.4rem; width:44px; height:44px; border-radius:999px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; margin-left:.25rem; }
     .btn-replay:hover { background:rgba(255,255,255,.4); }
 
-    .question-text { font-family:'Fredoka One',cursive; font-size:1.35rem; color:var(--text); text-align:center; }
+    .question-text { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.35rem; color:var(--text); text-align:center; }
 
     /* options */
     .options-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.9rem; width:100%; max-width:480px; }
     .option-card { background:white; border-radius:20px; padding:1.1rem .8rem; display:flex; flex-direction:column; align-items:center; gap:.4rem; cursor:pointer; border:3px solid transparent; box-shadow:0 4px 16px rgba(0,0,0,.07); transition:transform .15s,box-shadow .15s,border-color .15s; user-select:none; }
     .option-card:hover { transform:translateY(-5px); box-shadow:0 10px 24px rgba(0,0,0,.12); border-color:#27AE60; }
     .option-pic  { font-size:3.2rem; line-height:1.1; }
-    .option-word { font-family:'Fredoka One',cursive; font-size:.95rem; color:var(--text); text-align:center; }
+    .option-word { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:.95rem; color:var(--text); text-align:center; }
     .option-card.correct { border-color:#27AE60; background:#F0FFF4; animation:bounce .4s ease; }
     .option-card.wrong   { border-color:#FF6B6B; background:#FFF5F5; animation:shake  .4s ease; }
     .option-card.disabled { opacity:.45; pointer-events:none; }
@@ -67,7 +64,7 @@
     @keyframes bounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
     @keyframes shake  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
 
-    .feedback { font-family:'Fredoka One',cursive; font-size:1.15rem; text-align:center; min-height:1.6em; }
+    .feedback { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.15rem; text-align:center; min-height:1.6em; }
     .feedback.good { color:#27AE60; }
     .feedback.bad  { color:#FF6B6B; }
 
@@ -77,10 +74,10 @@
     .overlay-box { background:white; border-radius:24px; padding:2.5rem 2rem; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.3); animation:popIn .4s cubic-bezier(.175,.885,.32,1.275); }
     @keyframes popIn { from{transform:scale(.6);opacity:0} to{transform:scale(1);opacity:1} }
     .overlay-emoji { font-size:4rem; margin-bottom:.5rem; }
-    .overlay-title { font-family:'Fredoka One',cursive; font-size:2rem; color:#27AE60; margin-bottom:.4rem; }
+    .overlay-title { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:2rem; color:#27AE60; margin-bottom:.4rem; }
     .overlay-score { font-size:1.05rem; font-weight:700; color:#555; margin-bottom:1.4rem; }
     .overlay-score span { color:#27AE60; font-size:1.3rem; }
-    .btn-play-again { font-family:'Fredoka One',cursive; font-size:1.15rem; background:linear-gradient(135deg,#27AE60,#6BCB77); color:white; border:none; padding:13px 38px; border-radius:999px; cursor:pointer; box-shadow:0 6px 20px rgba(39,174,96,.4); transition:transform .15s; }
+    .btn-play-again { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.15rem; background:linear-gradient(135deg,#27AE60,#6BCB77); color:white; border:none; padding:13px 38px; border-radius:999px; cursor:pointer; box-shadow:0 6px 20px rgba(39,174,96,.4); transition:transform .15s; }
     .btn-play-again:hover { transform:scale(1.05); }
 
     .confetti-piece { position:fixed; border-radius:2px; animation:fall linear forwards; pointer-events:none; z-index:300; }
@@ -291,6 +288,7 @@ document.getElementById('btnMute').addEventListener('click', () => {
 
 startGame();
 </script>
+  <script src="site-nav.js"></script>
 </body>
 </html>
 

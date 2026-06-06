@@ -4,21 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Letter Memory Match | First Step Reading</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root { --bg:#F5F0FF; --text:#2C3E50; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
     header { background:linear-gradient(135deg,#8E44AD 0%,#6B48FF 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover { background:rgba(255,255,255,.35); }
-    header h1 { font-family:'Fredoka One',cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
+    header h1 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
     .header-btns { display:flex; gap:.45rem; align-items:center; }
-    .btn-header { background:rgba(255,255,255,.2); border:none; color:white; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; text-decoration:none; display:inline-block; white-space:nowrap; }
+    .btn-header { background:rgba(255,255,255,.2); border:none; color:white; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; text-decoration:none; display:inline-block; white-space:nowrap; }
     .btn-header:hover { background:rgba(255,255,255,.35); }
     .btn-header.muted { background:rgba(255,80,80,.45); }
 
@@ -27,7 +24,7 @@
     .settings-group { display:flex; align-items:center; gap:.45rem; flex-wrap:wrap; }
     .settings-label { font-size:.75rem; font-weight:800; color:#bbb; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
     .mode-btns { display:flex; gap:.3rem; flex-wrap:wrap; }
-    .btn-mode { background:#EDE0FF; color:#8E44AD; border:2px solid transparent; font-family:'Nunito',sans-serif; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .btn-mode { background:#EDE0FF; color:#8E44AD; border:2px solid transparent; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .btn-mode:hover { background:#DDD0FF; }
     .btn-mode.active { background:linear-gradient(135deg,#8E44AD,#6B48FF); color:white; }
 
@@ -35,7 +32,7 @@
     .stats-bar { background:white; padding:.5rem 1.5rem; display:flex; justify-content:center; gap:2.5rem; border-bottom:2px solid #EDE0FF; }
     .stat-block { text-align:center; }
     .stat-label { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:#aaa; }
-    .stat-value { font-family:'Fredoka One',cursive; font-size:1.6rem; color:#8E44AD; line-height:1.1; }
+    .stat-value { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.6rem; color:#8E44AD; line-height:1.1; }
 
     /* ── MAIN ── */
     main { flex:1; overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:.5rem .5rem .2rem; gap:.5rem; }
@@ -74,7 +71,7 @@
     }
     .card-back::after {
       content:'?';
-      font-family:'Fredoka One',cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size:clamp(1.5rem,5.5vw,2.2rem);
       color:rgba(255,255,255,.45);
     }
@@ -103,9 +100,9 @@
     .overlay.hidden { display:none; }
     .overlay-box { background:white; border-radius:24px; padding:2.5rem 3rem; text-align:center; max-width:340px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,.25); }
     .overlay-box .big-emoji { font-size:4.5rem; }
-    .overlay-box h2 { font-family:'Fredoka One',cursive; font-size:2.8rem; background:linear-gradient(135deg,#8E44AD,#6B48FF); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:.4rem 0; }
+    .overlay-box h2 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:2.8rem; background:linear-gradient(135deg,#8E44AD,#6B48FF); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:.4rem 0; }
     .overlay-box p { font-size:1rem; font-weight:700; color:#666; margin-bottom:1.5rem; }
-    .btn-play-again { background:linear-gradient(135deg,#8E44AD,#6B48FF); color:white; font-family:'Fredoka One',cursive; font-size:1.2rem; padding:12px 34px; border:none; border-radius:999px; cursor:pointer; box-shadow:0 4px 14px rgba(107,72,255,.3); transition:transform .15s; }
+    .btn-play-again { background:linear-gradient(135deg,#8E44AD,#6B48FF); color:white; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.2rem; padding:12px 34px; border:none; border-radius:999px; cursor:pointer; box-shadow:0 4px 14px rgba(107,72,255,.3); transition:transform .15s; }
     .btn-play-again:hover { transform:scale(1.04); }
 
     /* ── CONFETTI ── */
@@ -387,6 +384,7 @@ document.getElementById('btnPlayAgain').addEventListener('click', initGame);
 /* ── START ── */
 initGame();
 </script>
+  <script src="site-nav.js"></script>
 </body>
 </html>
 

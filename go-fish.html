@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Go Fish ABC! | Letter Learning Games</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --blue:    #3A8EF6;
@@ -24,7 +21,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
@@ -45,7 +42,7 @@
     }
 
     header h1 {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 1.6rem;
       color: white;
       text-shadow: 0 2px 6px rgba(0,0,0,0.2);
@@ -59,7 +56,7 @@
       background: rgba(255,255,255,0.2);
       color: white;
       border: none;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-weight: 700;
       font-size: 0.85rem;
       padding: 6px 16px;
@@ -94,7 +91,7 @@
     }
 
     .score-value {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 1.6rem;
       line-height: 1;
     }
@@ -155,8 +152,8 @@
       margin-bottom: 0.6rem;
     }
 
-    .computer-title { font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--coral); }
-    .player-title   { font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--blue); }
+    .computer-title { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size: 1rem; color: var(--coral); }
+    .player-title   { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size: 1rem; color: var(--blue); }
     .pairs-count-badge { font-size: 0.8rem; font-weight: 700; color: #888; }
 
     /* ── MIDDLE ROW ── */
@@ -206,12 +203,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 2.2rem;
       color: rgba(255,255,255,0.25);
     }
 
-    .deck-label { font-family: 'Fredoka One', cursive; font-size: 0.8rem; color: #777; text-align: center; }
+    .deck-label { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size: 0.8rem; color: #777; text-align: center; }
     .deck-hint  { font-size: 0.78rem; font-weight: 800; color: var(--blue); text-align: center; min-height: 1.1em; }
 
     .deck-area.active .deck-stack {
@@ -249,7 +246,7 @@
     }
 
     .drawn-name {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 0.75rem;
       color: #27AE60;
       white-space: nowrap;
@@ -306,7 +303,7 @@
     .message-text.respond   { color: #6B48FF; font-size: 1rem; }
 
     .btn-ask {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 1.05rem;
       background: linear-gradient(135deg, #FFD93D, #FF8E53);
       color: white;
@@ -325,7 +322,7 @@
     .btn-ask:disabled { opacity: 0.35; cursor: default; transform: none; }
 
     .btn-gofish {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 1.05rem;
       background: linear-gradient(135deg, #6BCB77, #27AE60);
       color: white;
@@ -374,7 +371,7 @@
       align-items: center;
       justify-content: center;
       gap: 1px;
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 2rem;
       user-select: none;
       position: relative;
@@ -384,7 +381,7 @@
 
     .card-pic    { font-size: 1.2rem; line-height: 1.15; }
     .card-letter { font-size: 1.6rem; line-height: 1; font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive; }
-    .card-word   { font-size: 0.46rem; font-family: 'Nunito', sans-serif; font-weight: 800;
+    .card-word   { font-size: 0.46rem; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight: 800;
                    opacity: 0.85; text-transform: uppercase; letter-spacing: 0.3px; }
 
     .card-upper {
@@ -409,7 +406,7 @@
 
     .card-back::after {
       content: '?';
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 2rem;
       color: rgba(255,255,255,0.45);
     }
@@ -423,7 +420,7 @@
       letter-spacing: 0.5px;
       text-transform: uppercase;
       opacity: 0.75;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
     }
 
     .card-playable { cursor: pointer; }
@@ -460,7 +457,7 @@
       border: 2px solid #3A8EF6;
       border-radius: 8px;
       padding: 3px 8px;
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 0.85rem;
       color: var(--blue);
       animation: chipPop 0.4s ease;
@@ -510,7 +507,7 @@
     .overlay-emoji  { font-size: 4rem; margin-bottom: 0.5rem; }
 
     .overlay-title {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 2rem;
       margin-bottom: 0.5rem;
     }
@@ -524,7 +521,7 @@
     .overlay-score span.comp { color: var(--coral); }
 
     .btn-play-again {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 1.2rem;
       background: linear-gradient(135deg, #3A8EF6, #6B48FF);
       color: white;
@@ -559,7 +556,7 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     }
 
-    .modal-box h2 { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--blue); margin-bottom: 1rem; }
+    .modal-box h2 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size: 1.6rem; color: var(--blue); margin-bottom: 1rem; }
 
     .modal-box ol { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
 
@@ -568,7 +565,7 @@
 
     .modal-close {
       margin-top: 1.5rem;
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size: 1.05rem;
       background: var(--blue);
       color: white;
@@ -611,7 +608,7 @@
       background: rgba(255,255,255,0.15);
       color: rgba(255,255,255,0.75);
       border: 2px solid rgba(255,255,255,0.2);
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-weight: 700;
       font-size: 0.78rem;
       padding: 4px 12px;
@@ -1483,6 +1480,7 @@ document.getElementById('howToPlayModal').addEventListener('click', e => {
 // ── START ─────────────────────────────────────────
 initGame();
 </script>
+  <script src="site-nav.js"></script>
 </body>
 </html>
 

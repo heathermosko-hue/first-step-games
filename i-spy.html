@@ -1,23 +1,20 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>I Spy Letters | First Step Reading</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root { --purple:#8E44AD; --purplelight:#9B59B6; --bg:#FDF5FF; --text:#2C3E50; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
     header { background:linear-gradient(135deg,#8E44AD 0%,#9B59B6 100%); padding:.9rem 1.2rem; display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.85rem; background:rgba(255,255,255,.2); padding:5px 13px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover { background:rgba(255,255,255,.35); }
-    header h1 { font-family:'Fredoka One',cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.7rem); flex:1; text-align:center; }
-    .score-box { background:rgba(255,255,255,.2); color:white; font-family:'Fredoka One',cursive; font-size:1rem; padding:5px 14px; border-radius:999px; white-space:nowrap; }
+    header h1 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.7rem); flex:1; text-align:center; }
+    .score-box { background:rgba(255,255,255,.2); color:white; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1rem; padding:5px 14px; border-radius:999px; white-space:nowrap; }
     .mute-btn { background:rgba(255,255,255,.2); border:none; color:white; font-size:1.25rem; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; flex-shrink:0; }
     .mute-btn:hover { background:rgba(255,255,255,.38); }
     .mute-btn.muted { background:rgba(255,80,80,.45); }
@@ -81,7 +78,7 @@
 
     /* ── FEEDBACK ── */
     .feedback {
-      font-family:'Fredoka One',cursive;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-size:clamp(1.2rem,4vw,1.7rem);
       min-height:2rem;
       text-align:center;
@@ -96,6 +93,7 @@
     /* ── CONFETTI ── */
     #confetti-canvas { position:fixed; inset:0; pointer-events:none; z-index:999; }
   </style>
+  <link href="fonts.css" rel="stylesheet">
 </head>
 <body>
 <canvas id="confetti-canvas"></canvas>
@@ -363,5 +361,6 @@ function launchConfetti() {
 /* ── START ── */
 initVoices(newRound);
 </script>
+  <script src="site-nav.js"></script>
 </body>
 </html>

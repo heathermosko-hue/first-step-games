@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -60,6 +60,7 @@ body{font-family:"Comic Sans MS","Comic Sans",cursive;background:#f0f4f8;color:#
   .sheet:last-child{page-break-after:auto}
 }
 </style>
+  <link href="fonts.css" rel="stylesheet">
 </head>
 <body>
 <div class="toolbar">
@@ -452,5 +453,6 @@ const key=initCh?(initBk+'-'+initCh):firstKey;
 if(initCh){const el=document.getElementById('sel-ch');el.value=key;if(!el.value&&firstKey)el.value=firstKey;}
 render(document.getElementById('sel-ch').value||firstKey);
 </script>
+  <script src="site-nav.js"></script>
 </body>
 </html>
