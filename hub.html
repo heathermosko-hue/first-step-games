@@ -35,6 +35,7 @@
       text-align: center;
       position: relative;
       overflow: hidden;
+      z-index: 600;
     }
 
     .hero::before {
@@ -507,7 +508,7 @@
       inset: 0;
       background: rgba(30,20,60,0.55);
       backdrop-filter: blur(3px);
-      z-index: 998;
+      z-index: 500;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -869,6 +870,8 @@
       box-shadow: 0 8px 30px rgba(255,59,138,0.28);
       text-align: center;
       color: white;
+      position: relative;
+      z-index: 600;
     }
     .sample-lesson-section h2 {
       font-family: 'Comic Sans MS', 'Comic Neue', cursive;
@@ -952,6 +955,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: relative;
+      z-index: 600;
       gap: 1.5rem;
       flex-wrap: wrap;
       box-shadow: 0 8px 28px rgba(17,153,142,0.3);
@@ -999,6 +1004,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 1.5rem;
+      position: relative;
+      z-index: 600;
       flex-wrap: wrap;
       margin-bottom: 0.5rem;
     }
@@ -1059,7 +1066,34 @@
 
 <!-- HERO -->
 <div class="hero">
-  <img src="banner.jpg" alt="Learn, Read and Play! Online Package with Online Games" style="width:100%;display:block;">
+  <div class="hero-inner">
+    <span class="hero-pkg-badge">⭐ Member Package</span>
+    <h1 class="hero-title">
+      <span class="title-learn">Learn</span><span class="title-and">, </span><span class="title-read">Read</span><span class="title-and"> &amp; </span><span class="title-play">Play!</span>
+    </h1>
+    <p class="hero-online-sub">The Complete Online Phonics Program</p>
+    <div class="hero-panels">
+      <div class="hero-panel">
+        <div class="hero-panel-header">🎬 Video Lessons</div>
+        <div class="hero-panel-body">Step-by-step phonics videos kids love to watch and rewatch</div>
+      </div>
+      <div class="hero-panel">
+        <div class="hero-panel-header">🎮 Learning Games</div>
+        <div class="hero-panel-body">25+ interactive games that make reading feel like play</div>
+      </div>
+      <div class="hero-panel">
+        <div class="hero-panel-header">📚 Reading Books</div>
+        <div class="hero-panel-body">180+ decodable books to build real reading confidence</div>
+      </div>
+    </div>
+    <div class="hero-bottom-bar">
+      <span class="hero-bottom-item">✅ Ages 3–8</span>
+      <span class="hero-bottom-item">✅ Parent-friendly</span>
+      <span class="hero-bottom-item">✅ Trusted since 2010</span>
+      <a href="our-program.html" class="hero-cta" style="background:linear-gradient(135deg,#fff,#f0f0ff);color:#6B48FF;box-shadow:0 4px 16px rgba(0,0,0,0.2);">📚 Our Program</a>
+      <a href="https://www.firststepreading.com/shop/" target="_blank" class="hero-cta">Get Full Access →</a>
+    </div>
+  </div>
 </div>
 
 <main>
