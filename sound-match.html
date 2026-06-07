@@ -55,7 +55,8 @@
     .options-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.9rem; width:100%; max-width:480px; }
     .option-card { background:white; border-radius:20px; padding:1.1rem .8rem; display:flex; flex-direction:column; align-items:center; gap:.4rem; cursor:pointer; border:3px solid transparent; box-shadow:0 4px 16px rgba(0,0,0,.07); transition:transform .15s,box-shadow .15s,border-color .15s; user-select:none; }
     .option-card:hover { transform:translateY(-5px); box-shadow:0 10px 24px rgba(0,0,0,.12); border-color:#27AE60; }
-    .option-pic  { font-size:3.2rem; line-height:1.1; }
+    .option-pic  { font-size:3.2rem; line-height:1.1; display:flex; align-items:center; justify-content:center; }
+    .option-pic img { width:3.2rem; height:3.2rem; object-fit:contain; border-radius:8px; }
     .option-word { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:.95rem; color:var(--text); text-align:center; }
     .option-card.correct { border-color:#27AE60; background:#F0FFF4; animation:bounce .4s ease; }
     .option-card.wrong   { border-color:#FF6B6B; background:#FFF5F5; animation:shake  .4s ease; }
@@ -84,7 +85,7 @@
     @keyframes fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
 
     @media(max-width:480px) {
-      .letter-upper{font-size:4rem} .letter-lower{font-size:3rem} .option-pic{font-size:2.6rem}
+      .letter-upper{font-size:4rem} .letter-lower{font-size:3rem} .option-pic{font-size:2.6rem} .option-pic img{width:2.6rem;height:2.6rem}
       header h1{font-size:1.25rem}
     }
   </style>
@@ -133,19 +134,19 @@
 <script>
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const CARD_DATA = {
-  A:{pic:'🍎',word:'Apple'},    B:{pic:'🐝',word:'Bee'},
-  C:{pic:'🐱',word:'Cat'},      D:{pic:'🐶',word:'Dog'},
-  E:{pic:'🐘',word:'Elephant'}, F:{pic:'🐸',word:'Frog'},
-  G:{pic:'🦒',word:'Giraffe'},  H:{pic:'🐴',word:'Horse'},
-  I:{pic:'🍦',word:'Ice cream'},J:{pic:'🫙',word:'Jar'},
-  K:{pic:'🦘',word:'Kangaroo'}, L:{pic:'🦁',word:'Lion'},
-  M:{pic:'🐒',word:'Monkey'},   N:{pic:'🥜',word:'Nut'},
-  O:{pic:'🐙',word:'Octopus'},  P:{pic:'🐧',word:'Penguin'},
-  Q:{pic:'👸',word:'Queen'},    R:{pic:'🐰',word:'Rabbit'},
-  S:{pic:'⭐',word:'Star'},      T:{pic:'🐯',word:'Tiger'},
-  U:{pic:'☂️',word:'Umbrella'}, V:{pic:'🎻',word:'Violin'},
-  W:{pic:'🐋',word:'Whale'},    X:{pic:'🩻',word:'X-ray'},
-  Y:{pic:'🪀',word:'Yo-yo'},    Z:{pic:'🦓',word:'Zebra'},
+  A:{pic:'icons/pic-a.png',word:'Apple'},    B:{pic:'icons/pic-b.png',word:'Ball'},
+  C:{pic:'icons/pic-c.png',word:'Cat'},      D:{pic:'icons/pic-d.png',word:'Dog'},
+  E:{pic:'icons/pic-e.png',word:'Elephant'}, F:{pic:'icons/pic-f.png',word:'Fish'},
+  G:{pic:'icons/pic-g.png',word:'Goat'},     H:{pic:'icons/pic-h.png',word:'Hat'},
+  I:{pic:'icons/pic-i.png',word:'Igloo'},    J:{pic:'icons/pic-j.png',word:'Jar'},
+  K:{pic:'icons/pic-k.png',word:'Kite'},     L:{pic:'icons/pic-l.png',word:'Lamp'},
+  M:{pic:'icons/pic-m.png',word:'Mug'},      N:{pic:'icons/pic-n.png',word:'Nest'},
+  O:{pic:'icons/pic-o.png',word:'Octopus'},  P:{pic:'icons/pic-p.png',word:'Pig'},
+  Q:{pic:'icons/pic-q.png',word:'Queen'},    R:{pic:'icons/pic-r.png',word:'Rainbow'},
+  S:{pic:'icons/pic-s.png',word:'Sun'},      T:{pic:'icons/pic-t.png',word:'Tree'},
+  U:{pic:'icons/pic-u.png',word:'Umbrella'}, V:{pic:'icons/pic-v.png',word:'Violin'},
+  W:{pic:'icons/pic-w.png',word:'Watch'},    X:{pic:'icons/pic-x.png',word:'Xylophone'},
+  Y:{pic:'icons/pic-y.png',word:'Yo-yo'},    Z:{pic:'icons/pic-z.png',word:'Zebra'},
 };
 
 // ── SPEECH ─────────────────────────────────────────
@@ -155,9 +156,8 @@ function loadVoices() {
   const all = window.speechSynthesis.getVoices();
   if (!all.length) return;
   const best = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
-             || all.find(v => /aria|jenny|guy\b|ana\b|davis/i.test(v.name))
+             || all.find(v => /aria|jenny|samantha|karen|moira|serena|victoria/i.test(v.name))
              || all.find(v => /google.*english/i.test(v.name))
-             || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
              || all.find(v => v.lang && /^en/i.test(v.lang))
              || all[0];
   _voices = [best];
@@ -218,7 +218,7 @@ function showQ() {
     const d = CARD_DATA[opt];
     const el = document.createElement('div');
     el.className = 'option-card';
-    el.innerHTML = `<span class="option-pic">${d.pic}</span><div class="option-word">${d.word}</div>`;
+    el.innerHTML = `<span class="option-pic"><img src="${d.pic}" alt="${d.word}"></span><div class="option-word">${d.word}</div>`;
     el.addEventListener('click', () => pick(opt, el));
     grid.appendChild(el);
   });

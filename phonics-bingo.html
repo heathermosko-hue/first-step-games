@@ -224,7 +224,7 @@ let _muted=false,_speaking=false,_pending=null,_queue=[],_voice=null;
 function _launch(msg){if(_muted)return;window.speechSynthesis.cancel();_queue=msg.split(' | ');_speaking=false;_advance();}
 function _advance(){if(!_queue.length){_speaking=false;if(_pending){const t=_pending;_pending=null;_launch(t);}return;}_speaking=true;const utt=new SpeechSynthesisUtterance(_queue.shift());if(_voice)utt.voice=_voice;utt.rate=0.92;utt.pitch=1.0;utt.onend=()=>{_speaking=false;setTimeout(_advance,300);};window.speechSynthesis.speak(utt);}
 function speak(msg){if(_muted)return;if(_speaking){_pending=msg;}else{_launch(msg);}}
-function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length)return;_voice=all.find(v=>v.name.includes('Natural')&&/^en/i.test(v.lang))||all.find(v=>/aria|jenny|guy\b|ana\b|davis/i.test(v.name))||all.find(v=>/google.*english/i.test(v.name))||all.find(v=>/\bdavid\b|\bzira\b/i.test(v.name))||all.find(v=>v.lang&&/^en/i.test(v.lang))||all[0];}
+function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length)return;_voice=all.find(v=>v.name.includes('Natural')&&/^en/i.test(v.lang))||all.find(v=>/aria|jenny|samantha|karen|moira|serena|victoria/i.test(v.name))||all.find(v=>/google.*english/i.test(v.name))||all.find(v=>v.lang&&/^en/i.test(v.lang))||all[0];}
 window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
 document.getElementById('btnMute').addEventListener('click',()=>{_muted=!_muted;const b=document.getElementById('btnMute');b.textContent=_muted?'🔇':'🔊';b.classList.toggle('muted',_muted);if(_muted)window.speechSynthesis.cancel();});
 
@@ -328,15 +328,15 @@ const BINGO_DATA = {
 ],
 
 'Letters': [
-  {word:'apple',emoji:'🍎'},{word:'ball',emoji:'⚽'},{word:'cat',emoji:'🐱'},
-  {word:'dog',emoji:'🐶'},{word:'egg',emoji:'🥚'},{word:'fish',emoji:'🐟'},
-  {word:'grapes',emoji:'🍇'},{word:'hat',emoji:'🎩'},{word:'insects',emoji:'🐜🐛🦗'},
-  {word:'jar',emoji:'🫙'},{word:'kite',emoji:'🪁'},{word:'lion',emoji:'🦁'},
-  {word:'moon',emoji:'🌙'},{word:'nut',emoji:'🥜'},{word:'octopus',emoji:'🐙'},
-  {word:'pizza',emoji:'🍕'},{word:'queen',emoji:'👑'},{word:'rainbow',emoji:'🌈'},
-  {word:'star',emoji:'⭐'},{word:'tree',emoji:'🌳'},{word:'umbrella',emoji:'☂️'},
-  {word:'violin',emoji:'🎻'},{word:'whale',emoji:'🐋'},{word:'x-ray',emoji:'🩻'},
-  {word:'yo-yo',emoji:'🪀'},{word:'zebra',emoji:'🦓'},
+  {word:'apple',emoji:'icons/pic-a.png'},{word:'ball',emoji:'icons/pic-b.png'},{word:'cat',emoji:'icons/pic-c.png'},
+  {word:'dog',emoji:'icons/pic-d.png'},{word:'elephant',emoji:'icons/pic-e.png'},{word:'fish',emoji:'icons/pic-f.png'},
+  {word:'goat',emoji:'icons/pic-g.png'},{word:'hat',emoji:'icons/pic-h.png'},{word:'igloo',emoji:'icons/pic-i.png'},
+  {word:'jar',emoji:'icons/pic-j.png'},{word:'kite',emoji:'icons/pic-k.png'},{word:'lamp',emoji:'icons/pic-l.png'},
+  {word:'mug',emoji:'icons/pic-m.png'},{word:'nest',emoji:'icons/pic-n.png'},{word:'octopus',emoji:'icons/pic-o.png'},
+  {word:'pig',emoji:'icons/pic-p.png'},{word:'queen',emoji:'icons/pic-q.png'},{word:'rainbow',emoji:'icons/pic-r.png'},
+  {word:'sun',emoji:'icons/pic-s.png'},{word:'tree',emoji:'icons/pic-t.png'},{word:'umbrella',emoji:'icons/pic-u.png'},
+  {word:'violin',emoji:'icons/pic-v.png'},{word:'watch',emoji:'icons/pic-w.png'},{word:'xylophone',emoji:'icons/pic-x.png'},
+  {word:'yo-yo',emoji:'icons/pic-y.png'},{word:'zebra',emoji:'icons/pic-z.png'},
 ],
 
 'End Blends': [
@@ -529,6 +529,8 @@ function showCall(){
   const callerPic=document.getElementById('callerPic');
   if(CUSTOM_PICS[item.word]){
     callerPic.innerHTML=CUSTOM_PICS[item.word];
+  } else if(item.emoji.includes('/')){
+    callerPic.innerHTML=`<img src="${item.emoji}" alt="${item.word}" style="width:3.5rem;height:3.5rem;object-fit:contain;border-radius:8px">`;
   } else {
     callerPic.textContent=item.emoji;
   }

@@ -37,7 +37,7 @@
       position:relative;
       width:100%;max-width:392px;
       margin-top:.6rem;
-      background:linear-gradient(180deg,#2a0050,#0d0018);
+      background:url('icons/bg-pinball.png') center/cover no-repeat, linear-gradient(180deg,#2a0050,#0d0018);
       border-radius:20px 20px 10px 10px;
       padding:6px 6px 4px;
       box-shadow:0 0 40px rgba(245,166,35,.4),0 0 80px rgba(180,92,255,.2),
@@ -153,7 +153,7 @@
 let _muted=false,_spk=false,_pend=null,_q=[],_voice=null;
 function _lv(){const a=window.speechSynthesis?.getVoices()||[];if(!a.length)return;
   _voice=a.find(v=>/natural/i.test(v.name)&&/^en/i.test(v.lang))
-  ||a.find(v=>/aria|jenny|guy\b|ana\b|emma|brian/i.test(v.name))
+  ||a.find(v=>/aria|jenny|samantha|karen|moira|serena|victoria|emma/i.test(v.name))
   ||a.find(v=>/google.*english/i.test(v.name))
   ||a.find(v=>/^en/i.test(v.lang))||a[0];}
 if(window.speechSynthesis){window.speechSynthesis.onvoiceschanged=_lv;_lv();}
@@ -515,41 +515,7 @@ function draw(){
   ctx.beginPath();ctx.moveTo(0,SCORE_H);ctx.lineTo(CW,SCORE_H);ctx.stroke();
   ctx.shadowBlur=0;
 
-  // === PLAY FIELD background ===
-  const fgGrad=ctx.createLinearGradient(0,FIELD_TOP,0,CH);
-  fgGrad.addColorStop(0,'#060018');fgGrad.addColorStop(1,'#0c0030');
-  ctx.fillStyle=fgGrad;ctx.fillRect(0,FIELD_TOP,CW,CH-FIELD_TOP);
-
-  // Dot grid
-  ctx.fillStyle='rgba(255,255,255,0.028)';
-  for(let x=15;x<CW;x+=22)for(let y=FIELD_TOP+12;y<CH-60;y+=22){
-    ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill();
-  }
-
-  // Side rails
-  const mkRail=(x,c1,c2)=>{
-    const g=ctx.createLinearGradient(0,FIELD_TOP,0,460);
-    g.addColorStop(0,c1);g.addColorStop(1,c2);
-    ctx.fillStyle=g;ctx.fillRect(x===0?0:CW-7,FIELD_TOP,7,460-FIELD_TOP);
-    ctx.strokeStyle='rgba(245,166,35,0.5)';ctx.lineWidth=1;
-    ctx.shadowColor='#F5A623';ctx.shadowBlur=8;
-    ctx.beginPath();ctx.moveTo(x===0?7:CW-7,FIELD_TOP);ctx.lineTo(x===0?7:CW-7,460);ctx.stroke();
-    ctx.shadowBlur=0;
-  };
-  mkRail(0,'rgba(245,166,35,0.7)','rgba(180,92,255,0.3)');
-  mkRail(1,'rgba(245,166,35,0.7)','rgba(58,142,246,0.3)');
-
-  // Rail decorative lights (small dots on sides)
-  [80,140,200,260,320,380].forEach(y=>{
-    if(y<FIELD_TOP||y>370)return;
-    const t=Date.now()/800+y*0.03;
-    const cols=['#FF6B6B','#F5A623','#6BCB77','#3A8EF6','#B45CFF','#FFD93D'];
-    const c=cols[Math.floor(y/60)%cols.length];
-    ctx.fillStyle=c;ctx.globalAlpha=0.5+Math.sin(t)*0.4;
-    ctx.beginPath();ctx.arc(6,y,3.5,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.arc(CW-6,y,3.5,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=1;
-  });
+  // Field background is the CSS bg-pinball.png image — canvas is transparent here
 
   // === DIAGONAL GUIDE WALLS ===
   ctx.lineCap='round';ctx.lineWidth=6;

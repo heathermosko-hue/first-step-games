@@ -68,7 +68,8 @@ header {
 .picture-card.shake  { animation: shake 0.4s ease; }
 @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 60%{transform:translateX(8px)} }
 
-.emoji-big { font-size: 9rem; line-height: 1.15; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; max-width: 210px; text-align: center; }
+.emoji-big { display: flex; justify-content: center; align-items: center; max-width: 210px; }
+.emoji-big img { width: 9rem; height: 9rem; object-fit: contain; border-radius: 12px; }
 .tap-hint {
   color: rgba(255,255,255,0.75);
   font-size: 0.8rem;
@@ -180,32 +181,32 @@ header {
 <script>
 /* ── WORD BANK ── one per letter, vowels = short vowel sounds ── */
 const BANK = {
-  a:{w:'apple',   e:'🍎'},
-  b:{w:'bear',    e:'🐻'},
-  c:{w:'cat',     e:'🐱'},
-  d:{w:'dog',     e:'🐶'},
-  e:{w:'elephant',e:'🐘'},
-  f:{w:'fish',    e:'🐟'},
-  g:{w:'grapes',  e:'🍇'},
-  h:{w:'hat',     e:'🎩'},
-  i:{w:'insects', e:'🐛🦗🪲'},
-  j:{w:'juice',   e:'🧃'},
-  k:{w:'kite',    e:'🪁'},
-  l:{w:'lion',    e:'🦁'},
-  m:{w:'moon',    e:'🌙'},
-  n:{w:'nest',    e:'🪺'},
-  o:{w:'octopus', e:'🐙'},
-  p:{w:'pig',     e:'🐷'},
-  q:{w:'queen',   e:'👸'},
-  r:{w:'rabbit',  e:'🐰'},
-  s:{w:'sun',     e:'☀️'},
-  t:{w:'tiger',   e:'🐯'},
-  u:{w:'umbrella',e:'☂️'},
-  v:{w:'van',     e:'🚐'},
-  w:{w:'whale',   e:'🐋'},
-  x:{w:'x-ray',   e:'🩻'},
-  y:{w:'yo-yo',   e:'🪀'},
-  z:{w:'zebra',   e:'🦓'},
+  a:{w:'apple',    e:'icons/pic-a.png'},
+  b:{w:'ball',     e:'icons/pic-b.png'},
+  c:{w:'cat',      e:'icons/pic-c.png'},
+  d:{w:'dog',      e:'icons/pic-d.png'},
+  e:{w:'elephant', e:'icons/pic-e.png'},
+  f:{w:'fish',     e:'icons/pic-f.png'},
+  g:{w:'goat',     e:'icons/pic-g.png'},
+  h:{w:'hat',      e:'icons/pic-h.png'},
+  i:{w:'igloo',    e:'icons/pic-i.png'},
+  j:{w:'jar',      e:'icons/pic-j.png'},
+  k:{w:'kite',     e:'icons/pic-k.png'},
+  l:{w:'lamp',     e:'icons/pic-l.png'},
+  m:{w:'mug',      e:'icons/pic-m.png'},
+  n:{w:'nest',     e:'icons/pic-n.png'},
+  o:{w:'octopus',  e:'icons/pic-o.png'},
+  p:{w:'pig',      e:'icons/pic-p.png'},
+  q:{w:'queen',    e:'icons/pic-q.png'},
+  r:{w:'rainbow',  e:'icons/pic-r.png'},
+  s:{w:'sun',      e:'icons/pic-s.png'},
+  t:{w:'tree',     e:'icons/pic-t.png'},
+  u:{w:'umbrella', e:'icons/pic-u.png'},
+  v:{w:'violin',   e:'icons/pic-v.png'},
+  w:{w:'watch',    e:'icons/pic-w.png'},
+  x:{w:'xylophone',e:'icons/pic-x.png'},
+  y:{w:'yo-yo',    e:'icons/pic-y.png'},
+  z:{w:'zebra',    e:'icons/pic-z.png'},
 };
 const ALL_LETTERS = Object.keys(BANK);
 
@@ -224,7 +225,7 @@ function getBestVoice() {
   const en = voices.filter(v => v.lang.startsWith('en'));
   return en.find(v => /natural/i.test(v.name))
       || en.find(v => /online|neural|premium|enhanced/i.test(v.name))
-      || ['Aria','Jenny','Guy','Samantha','Karen','Moira','Google US English'].reduce((f,n) => f || en.find(v => v.name.includes(n)), null)
+      || ['Aria','Jenny','Samantha','Karen','Moira','Serena','Victoria','Google US English'].reduce((f,n) => f || en.find(v => v.name.includes(n)), null)
       || en.find(v => v.lang === 'en-US') || en[0];
 }
 function speak(txt, delay = 130) {
@@ -291,10 +292,7 @@ function loadRound() {
 
   const entry = BANK[currentLetter];
   const emojiEl = document.getElementById('emoji-display');
-  emojiEl.textContent = entry.e;
-  // Scale down font size when multiple emojis are shown
-  const cnt = [...entry.e].filter(c => c.trim() !== '').length;
-  emojiEl.style.fontSize = cnt >= 3 ? '4.5rem' : cnt === 2 ? '6rem' : '9rem';
+  emojiEl.innerHTML = `<img src="${entry.e}" alt="${entry.w}">`;
   document.getElementById('prompt').textContent = 'What letter does this start with?';
   document.getElementById('next-btn').style.display = 'none';
 

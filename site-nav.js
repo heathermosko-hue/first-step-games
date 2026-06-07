@@ -46,7 +46,7 @@
     '.fsr-nav-btn:hover{transform:translateY(-1px);}',
     '.fsr-nav-menu{background:rgba(255,255,255,.18);}',
     '.fsr-nav-menu:hover{background:rgba(255,255,255,.30);}',
-    '.fsr-nav-menu::before{content:"";display:inline-block;width:14px;height:2px;background:currentColor;box-shadow:0 5px 0 currentColor,0 -5px 0 currentColor;margin-right:6px;vertical-align:middle;flex-shrink:0;}',
+    '.fsr-nav-menu-icon{display:inline-block;margin-right:5px;font-size:1.1rem;vertical-align:middle;line-height:1;}',
     '.fsr-nav-home{',
       'background:linear-gradient(135deg,#FF6B6B,#FF3B8A);',
       'box-shadow:0 3px 10px rgba(255,59,138,.4);',
@@ -67,7 +67,7 @@
       '📚 <span class="fsr-logo-text">First Step Reading</span>' +
     '</a>' +
     '<div id="fsr-nav-right">' +
-      '<a href="' + MENU_URL + '" class="fsr-nav-btn fsr-nav-menu">Menu</a>' +
+      '<a href="' + MENU_URL + '" class="fsr-nav-btn fsr-nav-menu"><span class="fsr-nav-menu-icon">&#9776;</span>Menu</a>' +
       '<a href="' + HOME_URL + '" class="fsr-nav-btn fsr-nav-home">🏠 Home</a>' +
     '</div>';
 

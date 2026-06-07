@@ -186,9 +186,8 @@ header {
       <div class="tap-hint">Tap to see lowercase ↓</div>
     </div>
     <div class="card-face card-back">
-      <div class="case-label">Lowercase</div>
-      <div class="letter-big" id="lower-ltr">a</div>
-      <div class="tap-hint">Tap to flip back ↑</div>
+      <img id="letter-pic" src="icons/letter-a.png" alt="A is for Apple" style="width:88%;height:88%;object-fit:contain;border-radius:16px;">
+      <div class="tap-hint" style="color:rgba(255,255,255,0.75)">Tap to flip back ↑</div>
     </div>
   </div>
 </div>
@@ -217,7 +216,7 @@ function getBestVoice() {
   const en = voices.filter(v => v.lang.startsWith('en'));
   return en.find(v => /natural/i.test(v.name))
       || en.find(v => /online|neural|premium|enhanced/i.test(v.name))
-      || ['Aria','Jenny','Guy','Samantha','Karen','Moira','Google US English'].reduce((f,n) => f || en.find(v => v.name.includes(n)), null)
+      || ['Aria','Jenny','Samantha','Karen','Moira','Serena','Victoria','Google US English'].reduce((f,n) => f || en.find(v => v.name.includes(n)), null)
       || en.find(v => v.lang === 'en-US') || en[0];
 }
 function speak(txt, delay = 130) {
@@ -247,10 +246,14 @@ function toggleMute() {
 }
 
 /* Card */
+const LETTER_WORDS = {A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G:'Goat',H:'Hat',I:'Igloo',J:'Jar',K:'Kite',L:'Lamp',M:'Mug',N:'Nest',O:'Octopus',P:'Pig',Q:'Queen',R:'Rainbow',S:'Sun',T:'Tree',U:'Umbrella',V:'Violin',W:'Watch',X:'Xylophone',Y:'Yo-yo',Z:'Zebra'};
+
 function showLetter() {
   const L = LETTERS[cur];
   document.getElementById('upper-ltr').textContent = L;
-  document.getElementById('lower-ltr').textContent = L.toLowerCase();
+  const pic = document.getElementById('letter-pic');
+  pic.src = 'icons/letter-' + L.toLowerCase() + '.png';
+  pic.alt = L + ' is for ' + LETTER_WORDS[L];
   document.getElementById('counter').textContent = (cur + 1) + ' / 26';
   document.getElementById('prev-btn').disabled = cur === 0;
   document.getElementById('next-btn').disabled = cur === 25;
@@ -267,7 +270,7 @@ function flipCard() {
   flipped = !flipped;
   document.getElementById('card').classList.toggle('flipped', flipped);
   const L = LETTERS[cur];
-  speak(flipped ? 'Lowercase ' + L.toLowerCase() : 'Capital ' + L);
+  speak(flipped ? L + ' is for ' + LETTER_WORDS[L] : 'Capital ' + L);
   const tb = document.getElementById('case-toggle-btn');
   tb.textContent = flipped ? '🔠 Switch to Uppercase' : '🔡 Switch to Lowercase';
   tb.classList.toggle('is-lower', flipped);

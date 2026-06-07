@@ -15,7 +15,7 @@
       --green:    #6BCB77;
       --yellow:   #FFD93D;
       --red:      #FF6B6B;
-      --bg:       #FFF8F0;
+      --bg:       #FCECD4;
       --text:     #2C3E50;
       --court-sky:#87CEEB;
       --court-floor: #C8860A;
@@ -243,7 +243,7 @@
 
     /* ── Court ── */
     .court {
-      background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 55%, #C8860A 55%, #A0660A 100%);
+      background: linear-gradient(180deg, #87CEEB 0%, #add8f0 25%, #87CEEB 50%, #D4922A 52%, #C8860A 60%, #A86000 100%);
       border-radius: 16px;
       padding: 1.2rem 1rem 1rem;
       min-height: 320px;
@@ -252,8 +252,23 @@
       align-items: center;
       justify-content: space-between;
       overflow: hidden;
-      box-shadow: 0 6px 24px rgba(0,0,0,.18);
+      box-shadow: 0 6px 24px rgba(0,0,0,.25);
       position: relative;
+      border: 3px solid rgba(255,255,255,.3);
+    }
+
+    /* Cloud detail in sky */
+    .court::before {
+      content: '';
+      position: absolute;
+      top: 12%;
+      left: 8%;
+      width: 60px;
+      height: 24px;
+      background: rgba(255,255,255,.55);
+      border-radius: 20px;
+      box-shadow: 80px 4px 0 rgba(255,255,255,.4), 160px -4px 0 rgba(255,255,255,.35);
+      pointer-events: none;
     }
 
     /* Court line detail on floor */
@@ -263,9 +278,9 @@
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 90px;
-      height: 45px;
-      border: 3px solid rgba(255,255,255,.25);
+      width: 100px;
+      height: 50px;
+      border: 3px solid rgba(255,255,255,.3);
       border-bottom: none;
       border-radius: 50% 50% 0 0;
       pointer-events: none;
@@ -650,7 +665,7 @@ let _muted=false,_speaking=false,_pending=null,_queue=[],_voice=null;
 function _launch(msg){if(_muted)return;window.speechSynthesis.cancel();_queue=msg.split(' | ');_speaking=false;_advance();}
 function _advance(){if(!_queue.length){_speaking=false;if(_pending){const t=_pending;_pending=null;_launch(t);}return;}_speaking=true;const utt=new SpeechSynthesisUtterance(_queue.shift());if(_voice)utt.voice=_voice;utt.rate=0.92;utt.pitch=1.0;utt.onend=()=>{_speaking=false;setTimeout(_advance,300);};window.speechSynthesis.speak(utt);}
 function speak(msg){if(_muted)return;if(_speaking){_pending=msg;}else{_launch(msg);}}
-function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length)return;_voice=all.find(v=>v.name.includes('Natural')&&/^en/i.test(v.lang))||all.find(v=>/aria|jenny|guy\b|ana\b|davis/i.test(v.name))||all.find(v=>/google.*english/i.test(v.name))||all.find(v=>/\bdavid\b|\bzira\b/i.test(v.name))||all.find(v=>v.lang&&/^en/i.test(v.lang))||all[0];}
+function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length)return;_voice=all.find(v=>v.name.includes('Natural')&&/^en/i.test(v.lang))||all.find(v=>/aria|jenny|samantha|karen|moira|serena|victoria/i.test(v.name))||all.find(v=>/google.*english/i.test(v.name))||all.find(v=>v.lang&&/^en/i.test(v.lang))||all[0];}
 window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
 
 /* ══════════════════════════════════════════
