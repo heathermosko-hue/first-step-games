@@ -555,6 +555,25 @@
       margin-right: auto;
     }
 
+    /* ── MATCH-CLAIM CARDS ── */
+    .card-match-ready {
+      animation: matchGlow 1s ease-in-out infinite !important;
+      cursor: pointer !important;
+      transform: translateY(-6px) !important;
+    }
+    .card-match-hint {
+      animation: matchPulse 0.4s ease-in-out infinite !important;
+      cursor: pointer !important;
+    }
+    @keyframes matchGlow {
+      0%, 100% { box-shadow: 0 0 0 3px #27AE60, 0 8px 20px rgba(39,174,96,0.45); }
+      50%       { box-shadow: 0 0 0 6px #6BCB77, 0 14px 30px rgba(107,203,119,0.7); }
+    }
+    @keyframes matchPulse {
+      0%, 100% { box-shadow: 0 0 0 4px #FFD93D, 0 10px 26px rgba(255,217,61,0.85); transform: translateY(-6px) scale(1.05) !important; }
+      50%       { box-shadow: 0 0 0 9px #FF8E53, 0 16px 34px rgba(255,142,83,0.95); transform: translateY(-12px) scale(1.1) !important; }
+    }
+
     /* ── CONFETTI ── */
     .confetti-piece {
       position: fixed;
@@ -747,6 +766,48 @@ function createDeck() {
   return cards;
 }
 
+// ── PAIR CLAIM MECHANIC ───────────────────────────
+function detectPlayerPair() {
+  for (let i = 0; i < state.playerHand.length; i++) {
+    for (let j = i + 1; j < state.playerHand.length; j++) {
+      if (state.playerHand[i].word === state.playerHand[j].word) {
+        return state.playerHand[i].word;
+      }
+    }
+  }
+  return null;
+}
+
+function maybeClaimPair(afterFn) {
+  const word = detectPlayerPair();
+  if (!word) { if (afterFn) afterFn(); return; }
+  state.selected = null;
+  state.claimPairHint = false;
+  state.pendingPair = { word, onClaimed: afterFn };
+  state.phase = 'claim-pair';
+  setMessage(`You have a match! Click the <b>"${word}"</b> pair to collect it!`, 'success');
+  speak(`You have a match! Click the pair to collect it!`);
+  if (state.claimPairTimer) { clearTimeout(state.claimPairTimer); state.claimPairTimer = null; }
+  state.claimPairTimer = setTimeout(() => { state.claimPairHint = true; renderHands(); }, 2000);
+  renderAll();
+}
+
+function claimPair(cardId) {
+  if (state.phase !== 'claim-pair' || !state.pendingPair) return;
+  const card = state.playerHand.find(c => c.id === cardId);
+  if (!card || card.word !== state.pendingPair.word) return;
+  if (state.claimPairTimer) { clearTimeout(state.claimPairTimer); state.claimPairTimer = null; }
+  state.claimPairHint = false;
+  const word = state.pendingPair.word;
+  const cb   = state.pendingPair.onClaimed;
+  state.pendingPair = null;
+  state.playerHand = state.playerHand.filter(c => c.word !== word);
+  state.playerPairs.push(word);
+  renderAll();
+  checkGameOver();
+  if (state.phase !== 'over' && cb) cb();
+}
+
 // ── RIGGED DRAWS (copy exactly as specified) ──────
 function drawForPlayer() {
   const want = new Set(state.playerHand.map(c => c.word));
@@ -782,6 +843,9 @@ function initGame() {
     // phases: 'player' | 'draw' | 'computer' | 'respond' | 'gofish-wait' | 'preview' | 'over'
     phase: 'player',
     pendingAsk: null,  // { word } — word computer is asking player for
+    pendingPair: null, // { word, onClaimed }
+    claimPairHint: false,
+    claimPairTimer: null,
   };
 
   // Deal cards (4 each for Book 2 which has only 20 total cards, 5 otherwise)
@@ -854,34 +918,30 @@ function playerAsk() {
     const compIdx = state.computerHand.findIndex(c => c.word === word);
 
     if (compIdx !== -1) {
-      // Computer has it — give the card, player makes a pair
+      // Computer has it — add matched card to hand, then require click-to-claim
       speak('Yes! Here you go!');
       state.computerHand.splice(compIdx, 1);
-      state.playerHand = state.playerHand.filter(c => c.id !== card.id);
-      state.playerPairs.push(word);
+      // Add a second copy of the card so player can see and click the pair
+      state.playerHand.push({ id: 'V_' + word + '_' + Date.now(), word, color: card.color });
 
       speakThen(() => {
-        speak(`You found ${word}! Great job!`);
-        setMessage(`🎉 The computer had <b>"${word}"</b>! You made a pair! Pick another word!`, 'success');
         busy = false;
-        renderAll();
-        checkGameOver();
-
-        if (state.phase !== 'over') {
-          // Refill if hand is empty
-          if (state.playerHand.length === 0 && state.deck.length > 0) {
-            const d = drawForPlayer();
-            if (d) {
-              state.playerHand.push(d);
-              checkPairs(state.playerHand, state.playerPairs);
-              renderAll();
-              checkGameOver();
-            }
-          }
+        maybeClaimPair(() => {
+          checkGameOver();
           if (state.phase !== 'over') {
+            if (state.playerHand.length === 0 && state.deck.length > 0) {
+              const d = drawForPlayer();
+              if (d) {
+                state.playerHand.push(d);
+                maybeClaimPair(() => { state.phase = 'player'; renderAll(); checkGameOver(); });
+                return;
+              }
+            }
+            state.phase = 'player';
             setMessage('🎉 You got a pair! Click on a word to keep playing!', 'success');
+            renderAll();
           }
-        }
+        });
       });
 
     } else {
@@ -960,21 +1020,22 @@ function drawFromDeck() {
   showDrawnCard(drawn, () => {
     state.playerHand.push(drawn);
 
-    const prevLen = state.playerPairs.length;
-    checkPairs(state.playerHand, state.playerPairs);
-    const gotPair = state.playerPairs.length > prevLen;
+    const goToComputer = () => {
+      state.phase = 'computer';
+      renderAll();
+      checkGameOver();
+      if (state.phase !== 'over') speakThen(runComputerTurn);
+    };
 
-    if (gotPair) {
-      speak(`You found ${drawn.word}! Great job!`);
-      setMessage(`"${drawn.word}" made a pair! 🎉 Computer's turn.`, 'success');
+    if (detectPlayerPair()) {
+      maybeClaimPair(() => {
+        setMessage(`"${drawn.word}" made a pair! 🎉 Computer's turn.`, 'success');
+        goToComputer();
+      });
     } else {
       setMessage(`"${drawn.word}" goes into your hand. Computer's turn!`, 'normal');
+      goToComputer();
     }
-
-    state.phase = 'computer';
-    renderAll();
-    checkGameOver();
-    if (state.phase !== 'over') speakThen(runComputerTurn);
   });
 }
 
@@ -1157,10 +1218,9 @@ function setMessage(html, type) {
 function loadVoices() {
   const all = window.speechSynthesis.getVoices();
   if (all.length === 0) return;
-  const best = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
-             || all.find(v => /aria|jenny|guy\b|ana\b|davis/i.test(v.name))
+  const best = all.find(v => /aria|jenny|samantha|karen|moira|serena|victoria/i.test(v.name) && /^en/i.test(v.lang))
              || all.find(v => /google.*english/i.test(v.name))
-             || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
+             || all.find(v => /microsoft.*online/i.test(v.name) && /^en/i.test(v.lang))
              || all.find(v => v.lang && /^en/i.test(v.lang))
              || all[0];
   _voices = [best];
@@ -1248,21 +1308,31 @@ function renderAll() {
 }
 
 function renderHands() {
-  const isRespond = state.phase === 'respond';
+  const isRespond   = state.phase === 'respond';
+  const isClaimPair = state.phase === 'claim-pair' && state.pendingPair;
 
   // Player hand
   const ph = document.getElementById('playerHand');
   ph.innerHTML = '';
-  document.getElementById('playerZone').classList.toggle('respond-mode', isRespond);
+  document.getElementById('playerZone').classList.toggle('respond-mode', isRespond || isClaimPair);
 
   for (const card of state.playerHand) {
-    const isWanted = isRespond && state.pendingAsk && card.word === state.pendingAsk.word;
-    const el = buildWordCard(card, isWanted || state.phase === 'player');
+    const isWanted    = isRespond && state.pendingAsk && card.word === state.pendingAsk.word;
+    const isMatchCard = isClaimPair && card.word === state.pendingPair.word;
+    const el = buildWordCard(card, isWanted || isMatchCard || state.phase === 'player');
 
     if (isRespond) {
       if (isWanted) {
         el.classList.add('card-wanted');
         el.addEventListener('click', () => playerRespond(card.id));
+      } else {
+        el.classList.add('card-dimmed');
+      }
+    }
+    if (isClaimPair) {
+      if (isMatchCard) {
+        el.classList.add(state.claimPairHint ? 'card-match-hint' : 'card-match-ready');
+        el.addEventListener('click', () => claimPair(card.id));
       } else {
         el.classList.add('card-dimmed');
       }
@@ -1297,6 +1367,7 @@ function renderHands() {
   const btnGoFish = document.getElementById('btnGoFish');
   btnAsk.style.display    = (state.phase === 'player' || state.phase === 'draw') ? '' : 'none';
   btnGoFish.style.display = state.phase === 'gofish-wait' ? '' : 'none';
+  if (state.phase === 'claim-pair') { btnAsk.style.display = 'none'; btnGoFish.style.display = 'none'; }
   if (state.phase === 'player' && !state.selected) {
     btnAsk.disabled = true;
   }
