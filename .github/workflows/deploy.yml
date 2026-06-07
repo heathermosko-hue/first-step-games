@@ -18,8 +18,8 @@ jobs:
           server: ded3927.inmotionhosting.com
           username: firststep65
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          port: 21
+          protocol: sftp
+          port: 22
           local-dir: ./
           server-dir: /public_html/reading-games/
           exclude: |
