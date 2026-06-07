@@ -1829,13 +1829,20 @@
     return null;
   }
 
+  function trialDaysLeft() {
+    if (localStorage.getItem('fsr_access_type') !== 'trial') return -1;
+    const exp = parseInt(localStorage.getItem('fsr_trial_expires') || '0');
+    const ms  = exp - Date.now();
+    return ms > 0 ? Math.ceil(ms / 86400000) : -1;
+  }
+
   function hubAccessGranted() {
     if (hubIsFreeHours()) return true;
     const type = sessionStorage.getItem('fsr_access_type');
-    if (type === 'member') return true;                        // 24/7
+    if (type === 'member') return true;
     if (type === 'class' && hubIsClassCodeHours()) return true;
-    // legacy fallback
     if (sessionStorage.getItem('fsr_code_valid') === '1' && hubIsClassCodeHours()) return true;
+    if (trialDaysLeft() >= 0) return true;
     return false;
   }
 
@@ -1844,6 +1851,7 @@
     if (hubIsFreeHours())  return 'free';
     if (type === 'member') return 'member';
     if ((type === 'class' || sessionStorage.getItem('fsr_code_valid') === '1') && hubIsClassCodeHours()) return 'class';
+    if (trialDaysLeft() >= 0) return 'trial';
     return null;
   }
 
@@ -1874,6 +1882,13 @@
         <span>✅ <strong>Class Code Accepted</strong> — Enjoy the games!</span>
         <button class="access-bar-link" onclick="hubLogout()" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">🚪 Log Out</button>
         <a href="login.html" class="access-bar-link">Teacher Login</a>`;
+    } else if (label === 'trial') {
+      const days = trialDaysLeft();
+      bar.className = 'code-granted';
+      bar.innerHTML = `
+        <span class="access-dot"></span>
+        <span>🎁 <strong>Free Trial</strong> — ${days} day${days !== 1 ? 's' : ''} left! Enjoying the games?</span>
+        <a href="https://www.firststepreading.com" class="access-bar-link" style="background:linear-gradient(135deg,#FFD93D,#FF8E53);color:white;border-radius:999px;padding:4px 14px;">⭐ Upgrade</a>`;
     } else {
       bar.className = 'needs-code';
       bar.innerHTML = `
@@ -1909,6 +1924,8 @@
   function hubLogout() {
     sessionStorage.removeItem('fsr_code_valid');
     sessionStorage.removeItem('fsr_access_type');
+    localStorage.removeItem('fsr_trial_expires');
+    localStorage.removeItem('fsr_access_type');
     location.reload();
   }
 
