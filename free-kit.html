@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Free Reading Starter Kit | First Step Reading</title>
+  <style>
+    :root {
+      --blue:   #3A8EF6;
+      --indigo: #6B48FF;
+      --coral:  #FF6B6B;
+      --yellow: #FFD93D;
+      --green:  #6BCB77;
+      --bg:     #F0F7FF;
+      --text:   #2C3E50;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #3A8EF6 0%, #6B48FF 100%);
+      padding: 2.5rem 1rem 3rem;
+      text-align: center;
+    }
+    header h1 { font-size: clamp(1.8rem, 6vw, 3rem); color: white; text-shadow: 0 3px 12px rgba(0,0,0,0.2); }
+    header p { color: rgba(255,255,255,0.9); font-size: 1.1rem; margin-top: 0.5rem; }
+
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .thank-you {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      margin-bottom: 2rem;
+      border: 3px solid #6BCB77;
+    }
+    .thank-you .checkmark { font-size: 3.5rem; margin-bottom: 0.5rem; }
+    .thank-you h2 { font-size: 1.8rem; color: var(--text); margin-bottom: 0.5rem; }
+    .thank-you p { color: #666; font-size: 1rem; font-weight: 600; line-height: 1.5; }
+
+    .tips-section {
+      background: linear-gradient(135deg, #fff9e6, #fff0f0);
+      border: 3px solid var(--yellow);
+      border-radius: 20px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+    }
+    .tips-section h3 { font-size: 1.4rem; margin-bottom: 1.2rem; }
+    .tip { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+    .tip-num {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: linear-gradient(135deg, #FFD93D, #FF8E53);
+      color: white; font-weight: 700; font-size: 1.1rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tip-text { font-size: 0.95rem; font-weight: 600; color: #444; line-height: 1.6; padding-top: 4px; }
+    .tip-text strong { color: var(--text); }
+
+    .worksheets-section h3 { font-size: 1.4rem; margin-bottom: 1.2rem; }
+
+    .worksheet-card {
+      background: white;
+      border-radius: 18px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .ws-icon { font-size: 2.8rem; flex-shrink: 0; }
+    .ws-body { flex: 1; }
+    .ws-body h4 { font-size: 1.1rem; margin-bottom: 0.2rem; }
+    .ws-body p { font-size: 0.88rem; color: #666; font-weight: 600; }
+    .ws-btn {
+      display: inline-block;
+      padding: 10px 22px;
+      background: linear-gradient(135deg, #3A8EF6, #6B48FF);
+      color: white;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 999px;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(58,142,246,0.3);
+      transition: opacity 0.2s;
+    }
+    .ws-btn:hover { opacity: 0.85; }
+
+    .play-cta {
+      text-align: center;
+      margin-top: 2.5rem;
+      background: white;
+      border-radius: 20px;
+      padding: 1.75rem;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.06);
+    }
+    .play-cta p { font-size: 1rem; color: #666; font-weight: 600; margin-bottom: 1rem; }
+    .play-cta a {
+      display: inline-block;
+      padding: 12px 32px;
+      background: linear-gradient(135deg, #6BCB77, #3A8EF6);
+      color: white;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(107,203,119,0.3);
+      transition: opacity 0.2s;
+    }
+    .play-cta a:hover { opacity: 0.85; }
+
+    @media (max-width: 520px) {
+      .worksheet-card { flex-direction: column; text-align: center; }
+      .ws-btn { width: 100%; text-align: center; }
+    }
+  </style>
+  <link href="fonts.css?v=3" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <h1>🎉 Your Free Kit is Ready!</h1>
+  <p>First Step Reading — Free Reading Starter Kit</p>
+</header>
+
+<main>
+
+  <div class="thank-you">
+    <div class="checkmark">✅</div>
+    <h2>You're all set!</h2>
+    <p>Your Free Reading Starter Kit is below. Print the worksheets and use the tips to give your child a head start on reading!</p>
+  </div>
+
+  <div class="tips-section">
+    <h3>📌 3 Tips to Kickstart Your Child's Reading</h3>
+    <div class="tip">
+      <div class="tip-num">1</div>
+      <div class="tip-text"><strong>Start with letter sounds, not letter names.</strong> Knowing that "B says buh" is more useful for reading than knowing its name. Teach sounds first — names will follow naturally.</div>
+    </div>
+    <div class="tip">
+      <div class="tip-num">2</div>
+      <div class="tip-text"><strong>Keep sessions short and playful.</strong> 5–10 minutes of focused, fun practice beats 30 minutes of drilling. Stop while they're still enjoying it so they always want more.</div>
+    </div>
+    <div class="tip">
+      <div class="tip-num">3</div>
+      <div class="tip-text"><strong>Read aloud together every day.</strong> Even after your child starts reading on their own, shared reading builds vocabulary, comprehension, and a love of books that lasts a lifetime.</div>
+    </div>
+  </div>
+
+  <div class="worksheets-section">
+    <h3>🖨️ Your Printable Worksheets</h3>
+    <p style="color:#666;font-weight:600;font-size:0.9rem;margin-bottom:1rem;">Click each worksheet to open it, then use your browser's Print button (Ctrl+P / Cmd+P).</p>
+
+    <div class="worksheet-card">
+      <div class="ws-icon">🔤</div>
+      <div class="ws-body">
+        <h4>Worksheet 1 — Alphabet Match</h4>
+        <p>Match uppercase and lowercase letters. Great for beginners learning letter recognition.</p>
+      </div>
+      <a href="kit-worksheet-1.html" target="_blank" class="ws-btn">🖨️ Print</a>
+    </div>
+
+    <div class="worksheet-card">
+      <div class="ws-icon">🔊</div>
+      <div class="ws-body">
+        <h4>Worksheet 2 — Beginning Sounds</h4>
+        <p>Look at each picture and write the letter it starts with. Builds phonics awareness.</p>
+      </div>
+      <a href="kit-worksheet-2.html" target="_blank" class="ws-btn">🖨️ Print</a>
+    </div>
+
+    <div class="worksheet-card">
+      <div class="ws-icon">👁️</div>
+      <div class="ws-body">
+        <h4>Worksheet 3 — Sight Words</h4>
+        <p>Trace and write the 20 most common sight words. Essential for early fluency.</p>
+      </div>
+      <a href="kit-worksheet-3.html" target="_blank" class="ws-btn">🖨️ Print</a>
+    </div>
+  </div>
+
+  <div class="play-cta">
+    <p>Want more practice? Try our free online reading games!</p>
+    <a href="index.html">🎮 Play Free Games</a>
+  </div>
+
+</main>
+
+<script src="site-nav.js?v=3"></script>
+</body>
+</html>

@@ -371,6 +371,97 @@
       .game-card.featured .featured-body { align-items: center; }
       .new-badge { align-self: center; }
     }
+
+    /* ── FREE KIT OPT-IN ── */
+    .kit-optin {
+      margin-top: 3rem;
+      background: linear-gradient(135deg, #fff9e6 0%, #fff0f0 100%);
+      border: 3px solid #FFD93D;
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 6px 24px rgba(255,217,61,0.18);
+    }
+
+    .kit-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #FFD93D, #FF8E53);
+      color: white;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 18px;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    .kit-optin h2 {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .kit-optin > p {
+      color: #555;
+      font-size: 1rem;
+      font-weight: 600;
+      max-width: 480px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.5;
+    }
+
+    .kit-form { max-width: 420px; margin: 0 auto; }
+
+    .kit-form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .kit-input {
+      width: 100%;
+      padding: 13px 18px;
+      border: 2px solid #FFD93D;
+      border-radius: 999px;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 1rem;
+      color: var(--text);
+      background: white;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .kit-input:focus {
+      border-color: #3A8EF6;
+      box-shadow: 0 0 0 3px rgba(58,142,246,0.15);
+    }
+    .kit-input::placeholder { color: #aaa; }
+
+    .kit-btn {
+      width: 100%;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+      color: white;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(255,107,107,0.35);
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .kit-btn:hover { opacity: 0.88; transform: translateY(-2px); }
+    .kit-btn:active { transform: translateY(0); }
+
+    .kit-fine {
+      margin-top: 0.85rem;
+      font-size: 0.82rem;
+      color: #aaa;
+      font-weight: 600;
+    }
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
 <body>
@@ -500,6 +591,26 @@
     </a>
 
   </div>
+
+  <!-- FREE READING STARTER KIT OPT-IN -->
+  <!-- To activate: visit web3forms.com, enter support@firststepreading.com, paste the key you receive below -->
+  <section class="kit-optin">
+    <div class="kit-badge">🎁 FREE GIFT</div>
+    <h2>Free Reading Starter Kit!</h2>
+    <p>Get our free printable worksheets + 3 bonus tips to kickstart your child's reading journey.</p>
+    <form action="https://api.web3forms.com/submit" method="POST" class="kit-form">
+      <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+      <input type="hidden" name="subject" value="New Free Kit Signup — First Step Reading">
+      <input type="hidden" name="redirect" value="https://games.firststepreading.com/free-kit.html">
+      <input type="hidden" name="from_name" value="First Step Reading">
+      <div class="kit-form-fields">
+        <input type="text" name="child_name" placeholder="Child's first name (optional)" class="kit-input">
+        <input type="email" name="email" placeholder="Your email address" required class="kit-input">
+      </div>
+      <button type="submit" class="kit-btn">📥 Send My Free Kit!</button>
+    </form>
+    <p class="kit-fine">No spam, ever. Unsubscribe anytime.</p>
+  </section>
 
   <div class="alpha-strip">
     <h3>Tap a letter to hear its name &amp; sound!</h3>
