@@ -16,7 +16,7 @@
       font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       background: url('icons/bg-race.png') center/cover no-repeat fixed, #87CEEB;
       color: var(--text);
-      height: 100vh;
+      height: 100vh;`n      height: 100dvh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -25,7 +25,7 @@
     /* ── HEADER ── */
     header {
       background: linear-gradient(135deg, #FF4040, #FF8C00);
-      padding: 1rem 1.5rem;
+      padding: .5rem 1rem;
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -68,7 +68,7 @@
     .level-bar {
       background: rgba(255,255,255,0.85);
       border-bottom: 2px solid #FFE0B0;
-      padding: .6rem 1.5rem;
+      padding: .3rem .8rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -99,12 +99,13 @@
     /* ── MAIN ── */
     main {
       flex: 1;
-      overflow-y: auto;
+      min-height: 0;
+      overflow: hidden;
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1.5rem 1rem 2rem;
+      padding: .7rem .8rem .8rem;
       background: transparent;
     }
 
@@ -699,3 +700,4 @@ document.getElementById('lanesWrap').addEventListener('click', e => {
   <script src="site-nav.js?v=3"></script>
 </body>
 </html>
+

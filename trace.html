@@ -7,10 +7,10 @@
   <style>
     :root { --bg:#F0FFF8; --text:#2C3E50; --green:#27AE60; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
-    header { background:linear-gradient(135deg,#27AE60 0%,#2ECC71 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    header { background:linear-gradient(135deg,#27AE60 0%,#2ECC71 100%); padding:.5rem 1rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover { background:rgba(255,255,255,.35); }
     header h1 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
@@ -459,5 +459,6 @@ window.addEventListener('load', () => {
   <script src="site-nav.js?v=3"></script>
 </body>
 </html>
+
 
 

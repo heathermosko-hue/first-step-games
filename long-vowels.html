@@ -7,9 +7,9 @@
   <style>
     :root { --bg:#F0F7FF; --text:#2C3E50; --blue:#2980B9; --sky:#3498DB; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
 
-    header { background:linear-gradient(135deg,#2980B9 0%,#3498DB 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    header { background:linear-gradient(135deg,#2980B9 0%,#3498DB 100%); padding:.5rem 1rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover { background:rgba(255,255,255,.35); }
     header h1 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
@@ -18,14 +18,14 @@
     .btn-header:hover { background:rgba(255,255,255,.35); }
     .btn-header.muted { background:rgba(255,80,80,.45); }
 
-    .settings-bar { background:white; border-bottom:2px solid #D0E8FF; padding:.6rem 1.5rem; display:flex; align-items:center; gap:.75rem 1.25rem; flex-wrap:wrap; justify-content:center; }
+    .settings-bar { background:white; border-bottom:2px solid #D0E8FF; padding:.3rem .8rem; display:flex; align-items:center; gap:.75rem 1.25rem; flex-wrap:wrap; justify-content:center; }
     .settings-label { font-size:.75rem; font-weight:800; color:#bbb; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
     .cat-btns { display:flex; gap:.3rem; flex-wrap:wrap; justify-content:center; }
     .btn-cat { background:#D0E8FF; color:#2980B9; border:2px solid transparent; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .btn-cat:hover { background:#A8D4F5; }
     .btn-cat.active { background:#2980B9; color:white; border-color:#2980B9; }
 
-    main { flex:1; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:1.5rem 1rem 2rem; gap:1rem; }
+    main { flex:1; min-height:0; overflow:hidden; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:.7rem .8rem .8rem; gap:.55rem; }
 
     .score-row { display:flex; gap:1.5rem; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1rem; color:#bbb; }
     .score-row span { color:#2980B9; font-size:1.2rem; }
@@ -34,17 +34,17 @@
     .progress-fill { height:100%; background:linear-gradient(90deg,#2980B9,#3498DB); border-radius:999px; transition:width .4s; }
 
     .game-card {
-      background:white; border-radius:24px; padding:1.75rem 2rem;
+      background:white; border-radius:24px; padding:.75rem 1rem;
       box-shadow:0 4px 24px rgba(41,128,185,.12); border:3px solid #D0E8FF;
-      display:flex; flex-direction:column; align-items:center; gap:.9rem;
+      display:flex; flex-direction:column; align-items:center; gap:.5rem;
       width:100%; max-width:460px;
     }
 
-    .emoji-display { font-size:clamp(4rem,16vw,7rem); line-height:1; filter:drop-shadow(0 3px 6px rgba(0,0,0,.1)); }
+    .emoji-display { font-size:clamp(2.8rem,11vw,5rem); line-height:1; filter:drop-shadow(0 3px 6px rgba(0,0,0,.1)); }
 
     .word-show {
       font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
-      font-size:clamp(2.4rem,10vw,4.5rem); line-height:1;
+      font-size:clamp(1.8rem,7vw,3.5rem); line-height:1;
       display:flex; align-items:baseline; gap:0;
     }
     .word-part { color:#2980B9; }
@@ -414,5 +414,6 @@ startGame('Long A');
   <script src="site-nav.js?v=3"></script>
 </body>
 </html>
+
 
 

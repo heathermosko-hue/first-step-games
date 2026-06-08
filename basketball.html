@@ -26,6 +26,7 @@
       background: url('icons/bg-basketball.png') center/cover no-repeat fixed, var(--bg);
       color: var(--text);
       height: 100vh;
+      height: 100dvh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -112,12 +113,13 @@
     /* ── Main content area ── */
     main {
       flex: 1;
-      overflow-y: auto;
+      min-height: 0;
+      overflow: hidden;
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1rem;
+      padding: .5rem .8rem .8rem;
     }
 
     .game-wrap {
@@ -905,4 +907,5 @@ hoopsRow.addEventListener('keydown', e => {
   <script src="site-nav.js?v=3"></script>
 </body>
 </html>
+
 
