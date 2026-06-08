@@ -1952,6 +1952,9 @@
     if (document.getElementById('trial-login-overlay')) return;
     const overlay = document.createElement('div');
     overlay.id = 'trial-login-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Free trial login');
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;';
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:20px;padding:2rem 1.8rem;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.35);text-align:center;font-family:'Comic Sans MS','Comic Neue',cursive;">
@@ -2085,6 +2088,9 @@
     if (document.getElementById('gate-overlay')) return;
     const overlay = document.createElement('div');
     overlay.id = 'gate-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Access code required');
     const now = new Date();
     const d   = now.getDay();
     const h   = now.getHours();
@@ -2130,6 +2136,9 @@
     if (document.getElementById('member-login-overlay')) return;
     const overlay = document.createElement('div');
     overlay.id = 'member-login-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Member login');
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;';
     overlay.innerHTML = `
       <div style="background:#fff;border-radius:20px;padding:2rem 1.8rem;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.35);text-align:center;font-family:'Comic Sans MS','Comic Neue',cursive;">
