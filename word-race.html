@@ -106,16 +106,18 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: .7rem .8rem .8rem;
+      padding: .3rem .8rem .3rem;
       background: transparent;
     }
 
     .game-wrap {
       width: 100%;
       max-width: 480px;
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.6rem;
     }
 
     /* ── START SCREEN ── */
@@ -164,7 +166,9 @@
     #gameArea {
       display: none;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.6rem;
+      flex: 1;
+      min-height: 0;
     }
 
     /* Top bar */
@@ -239,7 +243,7 @@
       position: relative;
       display: flex;
       align-items: center;
-      height: 72px;
+      height: clamp(52px, 10vh, 72px);
       border-radius: 14px;
       overflow: hidden;
       cursor: pointer;

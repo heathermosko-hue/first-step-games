@@ -40,8 +40,8 @@
 
     /* ── MACHINE CABINET ── */
     /* Narrower than viewport so arcade bg always shows on sides */
-    .machine-wrap{width:92%; max-width:400px; flex:1; display:flex; flex-direction:column;
-                  align-items:center; padding:0 0 .2rem; overflow:hidden; position:relative; z-index:1;}
+    .machine-wrap{width:92%; max-width:400px; flex:1; min-height:0; display:flex; flex-direction:column;
+                  align-items:center; padding:0 0 .1rem; overflow:hidden; position:relative; z-index:1;}
     /* Scale down the entire machine cabinet on short screens */
     @media (max-height: 680px) {
       .machine-outer { transform: scale(0.88); transform-origin: top center; margin-top:.2rem; }
@@ -118,8 +118,7 @@
     .cf{position:fixed;border-radius:2px;pointer-events:none;z-index:200;animation:cfall linear forwards;}
     @keyframes cfall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 
-    footer{width:100%;max-width:420px;text-align:center;padding:1rem;
-           font-size:.82rem;color:#555588;font-weight:600;border-top:1px solid #1e1e40;margin-top:.5rem;}
+    footer{display:none;}
     footer a{color:#F5A623;text-decoration:none;}
   </style>
 </head>

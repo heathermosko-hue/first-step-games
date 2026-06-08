@@ -119,15 +119,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: .5rem .8rem .8rem;
+      padding: .3rem .8rem .4rem;
     }
 
     .game-wrap {
       max-width: 500px;
       width: 100%;
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.5rem;
     }
 
     /* ── Start screen ── */
@@ -185,8 +187,10 @@
     #gameArea {
       display: none;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.5rem;
       width: 100%;
+      flex: 1;
+      min-height: 0;
     }
 
     /* Score + timer */
@@ -247,8 +251,9 @@
     .court {
       background: linear-gradient(180deg, #87CEEB 0%, #add8f0 25%, #87CEEB 50%, #D4922A 52%, #C8860A 60%, #A86000 100%);
       border-radius: 16px;
-      padding: 1.2rem 1rem 1rem;
-      min-height: 320px;
+      padding: 0.6rem 1rem 0.6rem;
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       align-items: center;

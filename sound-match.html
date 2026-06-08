@@ -36,13 +36,13 @@
     .progress-text { text-align:center; font-size:.8rem; font-weight:800; color:#888; margin-top:4px; }
 
     /* main */
-    main { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; max-width:660px; margin:0 auto; width:100%; padding:.5rem 1rem; display:flex; flex-direction:column; align-items:center; gap:.7rem; }
+    main { flex:1; min-height:0; overflow:hidden; max-width:660px; margin:0 auto; width:100%; padding:.3rem 1rem; display:flex; flex-direction:column; align-items:center; gap:.5rem; }
 
     .score-chip { background:white; border-radius:12px; padding:.4rem 1.2rem; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.05rem; color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
     .score-chip span { color:#27AE60; }
 
     /* letter display */
-    .letter-card { background:linear-gradient(135deg,#27AE60,#6BCB77); border-radius:24px; padding:1.2rem 2rem; display:flex; align-items:center; gap:1rem; box-shadow:0 8px 30px rgba(39,174,96,.35); }
+    .letter-card { background:linear-gradient(135deg,#27AE60,#6BCB77); border-radius:24px; padding:.6rem 1.5rem; display:flex; align-items:center; gap:1rem; box-shadow:0 8px 30px rgba(39,174,96,.35); }
     .letter-upper { font-family:'Comic Sans MS','Comic Neue','Comic Sans',cursive; font-size:5rem; color:white; line-height:1; text-shadow:0 3px 10px rgba(0,0,0,.2); }
     .letter-divider { width:3px; height:56px; background:rgba(255,255,255,.35); border-radius:2px; }
     .letter-lower { font-family:'Comic Sans MS','Comic Neue','Comic Sans',cursive; font-size:3.5rem; color:rgba(255,255,255,.8); line-height:1; }
@@ -53,7 +53,7 @@
 
     /* options */
     .options-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.9rem; width:100%; max-width:480px; }
-    .option-card { background:white; border-radius:20px; padding:1.1rem .8rem; display:flex; flex-direction:column; align-items:center; gap:.4rem; cursor:pointer; border:3px solid transparent; box-shadow:0 4px 16px rgba(0,0,0,.07); transition:transform .15s,box-shadow .15s,border-color .15s; user-select:none; }
+    .option-card { background:white; border-radius:20px; padding:.5rem .5rem; display:flex; flex-direction:column; align-items:center; gap:.3rem; cursor:pointer; border:3px solid transparent; box-shadow:0 4px 16px rgba(0,0,0,.07); transition:transform .15s,box-shadow .15s,border-color .15s; user-select:none; }
     .option-card:hover { transform:translateY(-5px); box-shadow:0 10px 24px rgba(0,0,0,.12); border-color:#27AE60; }
     .option-pic  { font-size:3.2rem; line-height:1.1; display:flex; align-items:center; justify-content:center; }
     .option-pic img { width:7rem; height:7rem; object-fit:contain; border-radius:8px; }
