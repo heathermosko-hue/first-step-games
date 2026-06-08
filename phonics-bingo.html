@@ -8,10 +8,10 @@
   <style>
     :root { --gold:#F5A623; --gold2:#E8960F; --bg:#FFFBF0; --text:#2C3E50; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* HEADER */
-    header { background:linear-gradient(135deg,#F5A623 0%,#E8960F 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    header { background:linear-gradient(135deg,#F5A623 0%,#E8960F 100%); padding:.4rem .8rem; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover { background:rgba(255,255,255,.35); }
     header h1 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; color:white; font-size:clamp(1.2rem,4vw,2rem); flex:1; text-align:center; }
@@ -19,7 +19,7 @@
     .btn-mute.muted { background:rgba(255,80,80,.45); }
 
     /* CATEGORY BAR */
-    .cat-bar { background:white; border-bottom:3px solid #FDE8B0; padding:.55rem 1rem; display:flex; gap:.4rem; flex-wrap:wrap; justify-content:center; }
+    .cat-bar { background:white; border-bottom:3px solid #FDE8B0; padding:.2rem .5rem; display:flex; gap:.4rem; flex-wrap:wrap; justify-content:center; }
     .btn-cat { border:2px solid #FDE8B0; background:white; color:#aaa; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.78rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .btn-cat:hover { border-color:#F5A623; color:#F5A623; }
     .btn-cat.active { background:#F5A623; border-color:#F5A623; color:white; }

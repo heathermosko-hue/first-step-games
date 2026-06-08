@@ -7,10 +7,10 @@
   <style>
     :root { --purple:#8E44AD; --purplelight:#9B59B6; --bg:#FDF5FF; --text:#2C3E50; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
-    header { background:linear-gradient(135deg,#8E44AD 0%,#9B59B6 100%); padding:.9rem 1.2rem; display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
+    header { background:linear-gradient(135deg,#8E44AD 0%,#9B59B6 100%); padding:.4rem .8rem; display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.85rem; background:rgba(255,255,255,.2); padding:5px 13px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover { background:rgba(255,255,255,.35); }
     header h1 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.7rem); flex:1; text-align:center; }
@@ -20,7 +20,7 @@
     .mute-btn.muted { background:rgba(255,80,80,.45); }
 
     /* ── MAIN ── */
-    main { flex:1; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:.5rem .8rem .8rem; gap:.7rem; }
+    main { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:.5rem .8rem .4rem; gap:.5rem; }
 
     /* ── INSTRUCTION ── */
     .find-text { font-size:clamp(.95rem,2.8vw,1.25rem); font-weight:800; color:#666; text-align:center; }
