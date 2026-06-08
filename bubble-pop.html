@@ -437,25 +437,13 @@ function loadBestVoice(){
   const voices = speechSynthesis.getVoices();
   if(!voices.length) return;
   voiceReady = true;
-  const priority = [
-    v => v.name === 'Google US English',
-    v => v.name.includes('Aria') && v.name.includes('Natural'),
-    v => v.name.includes('Jenny') && v.name.includes('Natural'),
-    v => v.name.includes('Microsoft') && v.name.includes('Online') && v.lang==='en-US',
-    v => v.name === 'Samantha',
-    v => v.name === 'Karen',
-    v => v.name === 'Victoria',
-    v => v.name === 'Moira',
-    v => v.name === 'Serena',
-    v => v.name.includes('Google') && v.lang.startsWith('en'),
-    v => v.lang === 'en-US',
-    v => v.lang.startsWith('en'),
-  ];
-  for(const test of priority){
-    const found = voices.find(test);
-    if(found){ bestVoice = found; return; }
-  }
-  bestVoice = voices[0] || null;
+  const en=voices.filter(v=>/^en/i.test(v.lang));
+  bestVoice=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))
+    ||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))
+    ||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))
+    ||en.find(v=>/natural|online|neural/i.test(v.name))
+    ||en.find(v=>/google.*english/i.test(v.name))
+    ||en[0]||voices[0]||null;
 }
 
 speechSynthesis.addEventListener('voiceschanged', loadBestVoice);

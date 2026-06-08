@@ -221,13 +221,7 @@ function loadVoices() { voices = speechSynthesis.getVoices(); }
 speechSynthesis.onvoiceschanged = loadVoices;
 loadVoices();
 
-function getBestVoice() {
-  const en = voices.filter(v => v.lang.startsWith('en'));
-  return en.find(v => /natural/i.test(v.name))
-      || en.find(v => /online|neural|premium|enhanced/i.test(v.name))
-      || ['Aria','Jenny','Samantha','Karen','Moira','Serena','Victoria','Google US English'].reduce((f,n) => f || en.find(v => v.name.includes(n)), null)
-      || en.find(v => v.lang === 'en-US') || en[0];
-}
+function getBestVoice(){const en=voices.filter(v=>/^en/i.test(v.lang));return en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))||en.find(v=>/natural|online|neural/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||voices[0];}
 function speak(txt, delay = 130) {
   if (!window.speechSynthesis || muted) return;
   if (!userInteracted) { pendingSpeech = txt; return; }

@@ -651,8 +651,8 @@ let _av = null;
 function loadAlphaVoice() {
   const all = window.speechSynthesis.getVoices();
   if (!all.length) return;
-  _av = all.find(v => v.name.toLowerCase().includes('richard'))
-      || all.find(v => v.lang && v.lang.startsWith('en')) || all[0];
+  const en=all.filter(v=>/^en/i.test(v.lang));
+  _av=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))||en.find(v=>/natural|online|neural/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||all[0];
 }
 window.speechSynthesis.onvoiceschanged = loadAlphaVoice;
 loadAlphaVoice();

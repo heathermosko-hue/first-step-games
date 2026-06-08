@@ -94,7 +94,7 @@
   <h1>Irregular Sound Combinations</h1>
   <div class="header-btns">
     <button class="btn-header" id="btnMute">&#128266;</button>
-    <button class="btn-header" id="btnVoice">&#128104; Voice</button>
+    <button class="btn-header" id="btnVoice">&#128105; Voice</button>
   </div>
 </header>
 
@@ -148,12 +148,13 @@ function speak(msg) { if(_muted)return; if(_speaking){_pending=msg;}else{_launch
 function loadVoices() {
   const all = window.speechSynthesis.getVoices();
   if (!all.length) return;
-  _voice = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
-          || all.find(v => /aria|jenny|guy\b|ana\b|davis/i.test(v.name))
-          || all.find(v => /google.*english/i.test(v.name))
-          || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
-          || all.find(v => v.lang && /^en/i.test(v.lang))
-          || all[0];
+  const en=all.filter(v=>/^en/i.test(v.lang));
+  _voice=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))
+       ||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))
+       ||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))
+       ||en.find(v=>/natural|online|neural/i.test(v.name))
+       ||en.find(v=>/google.*english/i.test(v.name))
+       ||en[0]||all[0];
 }
 window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices();
 document.getElementById('btnMute').addEventListener('click', () => {
@@ -163,11 +164,8 @@ document.getElementById('btnMute').addEventListener('click', () => {
   if (_muted) window.speechSynthesis.cancel();
 });
 document.getElementById('btnVoice').addEventListener('click', () => {
-  const voices = window.speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.startsWith('en'));
-  if (!voices.length) return;
-  const idx = voices.indexOf(_voice);
-  _voice = voices[(idx+1) % voices.length];
-  speak(`Hello! My name is ${_voice.name.split(' ')[0]}!`);
+  const name = _voice ? _voice.name.replace(/Microsoft|Natural|Online|\(|\)/g,'').trim().split(' ')[0] : 'my voice';
+  speak(`Hi, I am ${name}!`);
 });
 
 /* ── GAME DATA ── */

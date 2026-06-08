@@ -615,7 +615,7 @@
   <h1>Sight Word Go Fish!</h1>
   <div class="header-btns">
     <button class="btn-mute" id="btnMute" title="Toggle sound">🔊</button>
-    <button class="btn-header" id="btnVoice">👨 Voice</button>
+    <button class="btn-header" id="btnVoice">👩 Voice</button>
     <button class="btn-header" id="btnHow">? How to Play</button>
     <button class="btn-header" id="btnNew">New Game</button>
   </div>
@@ -1219,11 +1219,13 @@ function setMessage(html, type) {
 function loadVoices() {
   const all = window.speechSynthesis.getVoices();
   if (all.length === 0) return;
-  const best = all.find(v => /aria|jenny|samantha|karen|moira|serena|victoria/i.test(v.name) && /^en/i.test(v.lang))
-             || all.find(v => /google.*english/i.test(v.name))
-             || all.find(v => /microsoft.*online/i.test(v.name) && /^en/i.test(v.lang))
-             || all.find(v => v.lang && /^en/i.test(v.lang))
-             || all[0];
+  const en=all.filter(v=>/^en/i.test(v.lang));
+  const best=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))
+    ||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))
+    ||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))
+    ||en.find(v=>/natural|online|neural/i.test(v.name))
+    ||en.find(v=>/google.*english/i.test(v.name))
+    ||en[0]||all[0];
   _voices = [best];
 }
 

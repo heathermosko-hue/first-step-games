@@ -91,7 +91,7 @@
   <h1>Word Family Builder</h1>
   <div class="header-btns">
     <button class="btn-header" id="btnMute">&#128266;</button>
-    <button class="btn-header" id="btnVoice">&#128104; Voice</button>
+    <button class="btn-header" id="btnVoice">&#128105; Voice</button>
   </div>
 </header>
 
@@ -146,13 +146,7 @@ function speak(msg) { if (_muted) return; if (_speaking){_pending=msg;} else {_l
 function loadVoice(){
   const all=window.speechSynthesis.getVoices();
   if(!all.length)return;
-  _voice=all.find(v=>/aria/i.test(v.name)&&v.name.includes('Natural')&&/^en/i.test(v.lang))
-        ||all.find(v=>/jenny/i.test(v.name)&&v.name.includes('Natural')&&/^en/i.test(v.lang))
-        ||all.find(v=>/aria|jenny/i.test(v.name)&&/^en/i.test(v.lang))
-        ||all.find(v=>v.name==='Google US English')
-        ||all.find(v=>/\bzira\b/i.test(v.name))
-        ||all.find(v=>v.lang&&/^en/i.test(v.lang))
-        ||all[0];
+  const en=all.filter(v=>/^en/i.test(v.lang));_voice=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))||en.find(v=>/natural|online|neural/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||all[0];
 }
 window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
 

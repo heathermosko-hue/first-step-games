@@ -96,7 +96,7 @@
   <h1>🖼️ Letter Sound Match</h1>
   <div class="header-btns">
     <button class="btn-mute" id="btnMute">🔊</button>
-    <button class="btn-voice" id="btnVoice0">👨 Voice</button>
+    <button class="btn-voice" id="btnVoice0">👩 Voice</button>
     <button class="btn-header" id="btnNew">New Game</button>
     <a href="hub.html" class="btn-header">← Games</a>
   </div>
@@ -155,11 +155,13 @@ let _muted=false, _speaking=false, _pending=null, _queue=[], _voices=[], _voiceI
 function loadVoices() {
   const all = window.speechSynthesis.getVoices();
   if (!all.length) return;
-  const best = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
-             || all.find(v => /aria|jenny|samantha|karen|moira|serena|victoria/i.test(v.name))
-             || all.find(v => /google.*english/i.test(v.name))
-             || all.find(v => v.lang && /^en/i.test(v.lang))
-             || all[0];
+  const en=all.filter(v=>/^en/i.test(v.lang));
+  const best=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))
+    ||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))
+    ||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))
+    ||en.find(v=>/natural|online|neural/i.test(v.name))
+    ||en.find(v=>/google.*english/i.test(v.name))
+    ||en[0]||all[0];
   _voices = [best];
 }
 if (window.speechSynthesis) { window.speechSynthesis.onvoiceschanged=loadVoices; loadVoices(); }

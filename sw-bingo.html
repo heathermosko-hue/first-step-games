@@ -111,7 +111,7 @@
   <h1>Sight Word Bingo!</h1>
   <div class="controls">
     <button class="btn-mute" id="btnMute" title="Toggle sound">&#128266;</button>
-    <button class="btn-voice" id="btnVoice">&#128104; Voice</button>
+    <button class="btn-voice" id="btnVoice">&#128105; Voice</button>
   </div>
 </header>
 
@@ -272,12 +272,13 @@
   function loadVoices() {
     const all = window.speechSynthesis.getVoices();
     if (all.length === 0) return;
-    _voice = all.find(v => v.name.includes('Natural') && /^en/i.test(v.lang))
-            || all.find(v => /aria|jenny|guy\b|ana\b|davis/i.test(v.name))
-            || all.find(v => /google.*english/i.test(v.name))
-            || all.find(v => /\bdavid\b|\bzira\b/i.test(v.name))
-            || all.find(v => v.lang && /^en/i.test(v.lang))
-            || all[0];
+    const en=all.filter(v=>/^en/i.test(v.lang));
+    _voice=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))
+         ||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))
+         ||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))
+         ||en.find(v=>/natural|online|neural/i.test(v.name))
+         ||en.find(v=>/google.*english/i.test(v.name))
+         ||en[0]||all[0];
   }
   window.speechSynthesis.onvoiceschanged = loadVoices;
   loadVoices();
