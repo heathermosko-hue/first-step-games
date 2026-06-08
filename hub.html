@@ -1155,7 +1155,7 @@
     </div>
     <div class="school-login-btns">
       <a href="#" onclick="event.preventDefault();showMemberLoginOverlay();" class="school-btn member">⭐ Member Login</a>
-      <a href="auth/teacher-login.php" class="school-btn teacher">🏫 Teacher / Student Login</a>
+      <a href="auth/login-choice.html" class="school-btn teacher">🏫 Teacher / Student Login</a>
     </div>
   </div>
 
@@ -1945,7 +1945,7 @@
         <span class="access-dot"></span>
         <span>🟢 <strong>School Hours</strong> — All games are free! (Mon–Fri 7AM–4PM)</span>
         <span class="access-countdown" id="hub-countdown"></span>
-        <a href="login.html" class="access-bar-link">Teacher Login</a>`;
+        <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
       updateCountdown();
     } else if (label === 'member') {
       bar.className = 'code-granted';
@@ -1953,14 +1953,14 @@
         <span class="access-dot"></span>
         <span>⭐ <strong>Member Access</strong> — Welcome! Enjoy the games anytime!</span>
         <button class="access-bar-link" onclick="hubLogout()" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">🚪 Log Out</button>
-        <a href="login.html" class="access-bar-link">Teacher Login</a>`;
+        <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
     } else if (label === 'class') {
       bar.className = 'code-granted';
       bar.innerHTML = `
         <span class="access-dot"></span>
         <span>✅ <strong>Class Code Accepted</strong> — Enjoy the games!</span>
         <button class="access-bar-link" onclick="hubLogout()" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">🚪 Log Out</button>
-        <a href="login.html" class="access-bar-link">Teacher Login</a>`;
+        <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
     } else if (label === 'trial') {
       const days = trialDaysLeft();
       bar.className = 'code-granted';
@@ -1980,7 +1980,7 @@
           <button id="hub-code-btn" onclick="hubSubmitCode()">→ Play!</button>
         </div>
         <a href="students.html" class="access-bar-link">Student Page</a>
-        <a href="login.html" class="access-bar-link">Teacher Login</a>`;
+        <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
       if (!skipGate) showGateOverlay();
     }
   }

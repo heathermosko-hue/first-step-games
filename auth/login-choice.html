@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | First Step Reading</title>
+  <link href="../fonts.css?v=3" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #5BB8F5 0%, #87CEEB 50%, #B8E4F9 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.18);
+      padding: 2.5rem 2rem 2.2rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo { font-size: 3rem; margin-bottom: 0.4rem; }
+
+    h1 {
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: clamp(1.5rem, 6vw, 2rem);
+      color: #2C3E50;
+      margin-bottom: 0.3rem;
+    }
+
+    .sub {
+      font-size: 0.9rem;
+      color: #888;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .choice-btn {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      padding: 1.1rem 1.4rem;
+      border-radius: 18px;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      transition: transform 0.18s, box-shadow 0.18s;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+    }
+    .choice-btn:last-of-type { margin-bottom: 0; }
+    .choice-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.18); }
+    .choice-btn:active { transform: translateY(-1px); }
+
+    .choice-btn.member {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #333;
+    }
+    .choice-btn.teacher {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+    .choice-btn.student {
+      background: linear-gradient(135deg, #27AE60, #6BCB77);
+      color: white;
+    }
+
+    .btn-icon {
+      width: 50px; height: 50px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .btn-text { text-align: left; flex: 1; }
+    .btn-title { font-size: 1.1rem; display: block; font-weight: 700; }
+    .btn-desc  { font-size: 0.78rem; opacity: 0.82; display: block; margin-top: 2px; }
+
+    .btn-arrow { font-size: 1.2rem; opacity: 0.7; flex-shrink: 0; }
+
+    .back-link {
+      display: block;
+      margin-top: 1.5rem;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: color 0.18s;
+    }
+    .back-link:hover { color: white; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">📚</div>
+  <h1>First Step Reading</h1>
+  <p class="sub">Choose how you'd like to sign in</p>
+
+  <a href="javascript:void(0)" onclick="showMemberLogin()" class="choice-btn member">
+    <div class="btn-icon">⭐</div>
+    <div class="btn-text">
+      <span class="btn-title">Member Login</span>
+      <span class="btn-desc">24/7 access — email &amp; password</span>
+    </div>
+    <span class="btn-arrow">›</span>
+  </a>
+
+  <a href="teacher-login.php" class="choice-btn teacher">
+    <div class="btn-icon">🍎</div>
+    <div class="btn-text">
+      <span class="btn-title">Teacher Login</span>
+      <span class="btn-desc">Manage classes &amp; track students</span>
+    </div>
+    <span class="btn-arrow">›</span>
+  </a>
+
+  <a href="student-login.php" class="choice-btn student">
+    <div class="btn-icon">🎮</div>
+    <div class="btn-text">
+      <span class="btn-title">Student Login</span>
+      <span class="btn-desc">Enter your class code or scan QR</span>
+    </div>
+    <span class="btn-arrow">›</span>
+  </a>
+</div>
+
+<a href="../hub.html" class="back-link">← Back to Games</a>
+
+<script>
+  function showMemberLogin() {
+    if (document.getElementById('mbr-overlay')) return;
+    var overlay = document.createElement('div');
+    overlay.id = 'mbr-overlay';
+    overlay.setAttribute('role','dialog');
+    overlay.setAttribute('aria-modal','true');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    overlay.innerHTML = `
+      <div style="background:#fff;border-radius:20px;padding:2rem 1.8rem;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.35);text-align:center;font-family:'Comic Sans MS','Comic Neue',cursive;">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">⭐</div>
+        <h2 style="font-size:1.5rem;color:#2C3E50;margin-bottom:0.3rem;">Member Login</h2>
+        <p style="color:#666;font-size:0.9rem;margin-bottom:1.3rem;">Enter your First Step Reading email and password</p>
+        <input id="mbr-email" type="email" placeholder="Email address"
+          style="width:100%;padding:0.7rem 1rem;border:2px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:1rem;margin-bottom:0.7rem;outline:none;box-sizing:border-box;"
+          onkeydown="if(event.key==='Enter')mbrSubmit()"
+          onfocus="this.style.borderColor='#6B48FF'" onblur="this.style.borderColor='#e0e0e0'">
+        <input id="mbr-password" type="password" placeholder="Password"
+          style="width:100%;padding:0.7rem 1rem;border:2px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:1rem;margin-bottom:0.3rem;outline:none;box-sizing:border-box;"
+          onkeydown="if(event.key==='Enter')mbrSubmit()"
+          onfocus="this.style.borderColor='#6B48FF'" onblur="this.style.borderColor='#e0e0e0'">
+        <div id="mbr-error" style="color:#e74c3c;font-size:0.85rem;min-height:1.2rem;margin-bottom:0.7rem;"></div>
+        <button id="mbr-btn" onclick="mbrSubmit()"
+          style="width:100%;padding:0.8rem;background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:1.05rem;cursor:pointer;margin-bottom:0.8rem;">
+          🔐 Sign In
+        </button>
+        <a href="https://www.firststepreading.com/my-account/lost-password/" target="_blank"
+          style="display:block;font-size:0.82rem;color:#888;margin-bottom:0.8rem;text-decoration:none;">
+          Forgot your password?
+        </a>
+        <button onclick="document.getElementById('mbr-overlay').remove();"
+          style="background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer;font-family:inherit;">
+          ✕ Close
+        </button>
+      </div>`;
+    document.body.appendChild(overlay);
+    document.getElementById('mbr-email').focus();
+  }
+
+  async function mbrSubmit() {
+    var email    = document.getElementById('mbr-email').value.trim();
+    var password = document.getElementById('mbr-password').value;
+    var errEl    = document.getElementById('mbr-error');
+    var btn      = document.getElementById('mbr-btn');
+    errEl.innerHTML = '';
+    if (!email || !password) { errEl.textContent = 'Please enter your email and password.'; return; }
+    btn.textContent = '⏳ Signing in…';
+    btn.disabled = true;
+    try {
+      var fd = new FormData();
+      fd.append('email', email);
+      fd.append('password', password);
+      var res  = await fetch('member-login.php', { method: 'POST', body: fd });
+      var data = await res.json();
+      if (data.success) {
+        sessionStorage.setItem('fsr_access_type', 'member');
+        sessionStorage.setItem('fsr_member_name', data.name || 'Member');
+        window.location.href = '../hub.html';
+      } else {
+        errEl.innerHTML = data.error || 'Incorrect email or password.';
+        btn.textContent = '🔐 Sign In';
+        btn.disabled = false;
+      }
+    } catch(e) {
+      errEl.textContent = 'Connection error. Please try again.';
+      btn.textContent = '🔐 Sign In';
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>

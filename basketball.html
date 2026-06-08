@@ -82,22 +82,23 @@
     .level-bar {
       background: #fff;
       border-bottom: 2px solid #f0e0cc;
-      padding: .2rem .5rem;
+      padding: .08rem .5rem;
       display: flex;
-      gap: .5rem;
+      gap: .4rem;
       justify-content: center;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
     .lvl-btn {
       font-family: 'Comic Sans MS', 'Comic Neue', cursive;
       font-weight: 800;
-      font-size: .9rem;
-      border: 2.5px solid #ccc;
+      font-size: clamp(0.68rem, 2vw, 0.82rem);
+      border: 2px solid #ccc;
       color: #888;
       background: #fff;
       border-radius: 20px;
-      padding: .4rem 1rem;
+      padding: .25rem .8rem;
+      white-space: nowrap;
       cursor: pointer;
       transition: all .2s;
       white-space: nowrap;
@@ -628,7 +629,7 @@ let _muted=false,_speaking=false,_pending=null,_queue=[],_voice=null;
 function _launch(msg){if(_muted)return;window.speechSynthesis.cancel();_queue=msg.split(' | ');_speaking=false;_advance();}
 function _advance(){if(!_queue.length){_speaking=false;if(_pending){const t=_pending;_pending=null;_launch(t);}return;}_speaking=true;const utt=new SpeechSynthesisUtterance(_queue.shift());if(_voice)utt.voice=_voice;utt.rate=0.92;utt.pitch=1.0;utt.onend=()=>{_speaking=false;setTimeout(_advance,300);};window.speechSynthesis.speak(utt);}
 function speak(msg){if(_muted)return;if(_speaking){_pending=msg;}else{_launch(msg);}}
-function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length)return;const en=all.filter(v=>/^en/i.test(v.lang));_voice=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))||en.find(v=>/natural|online|neural/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||all[0];}
+function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length){setTimeout(loadVoice,250);return;}const en=all.filter(v=>/^en/i.test(v.lang));_voice=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))||en.find(v=>/natural|online|neural/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||all[0];}
 window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
 
 /* ══════════════════════════════════════════

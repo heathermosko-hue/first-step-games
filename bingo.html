@@ -243,7 +243,7 @@
 
   function loadVoices() {
     const all = window.speechSynthesis.getVoices();
-    if (all.length === 0) return;
+    if(all.length===0){setTimeout(loadVoices,250);return;}
     const en=all.filter(v=>/^en/i.test(v.lang));
     const best=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))
       ||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))
