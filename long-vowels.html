@@ -397,7 +397,7 @@ function showGameOver() {
   document.getElementById('feedback').className = 'feedback ok';
   const btn = document.createElement('button');
   btn.className = 'btn-choice';
-  btn.style.cssText = 'grid-column:1/-1;font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-size:1.1rem;';
+  btn.style.cssText = "grid-column:1/-1;font-family:'Comic Sans MS','Comic Neue',cursive;font-size:1.1rem;";
   btn.textContent = 'Play Again! 🔄';
   btn.addEventListener('click', () => startGame(currentCat));
   const choicesEl = document.getElementById('choices');
