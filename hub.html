@@ -190,31 +190,79 @@
       padding: 2.5rem 1.5rem;
     }
 
-    /* ── SECTION LABEL ── */
-    .section-label {
-      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
-      font-size: 1.35rem;
-      margin: 2.5rem 0 1.1rem;
+    /* ── ACCORDION HEADERS ── */
+    .acc-header {
+      width: 100%;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.9rem;
+      padding: 1rem 1.3rem;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      text-align: left;
+      margin-bottom: 0;
+      transition: filter 0.18s, box-shadow 0.18s;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+      color: white;
     }
+    .acc-header:hover { filter: brightness(1.07); box-shadow: 0 6px 18px rgba(0,0,0,0.16); }
 
-    .section-label::after {
-      content: '';
+    .acc-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.22);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .acc-title {
       flex: 1;
-      height: 3px;
-      border-radius: 3px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+    .acc-count {
+      background: rgba(255,255,255,0.28);
+      border-radius: 999px;
+      padding: 3px 11px;
+      font-size: 0.78rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .acc-arrow {
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      opacity: 0.85;
+    }
+    .acc-header.open .acc-arrow { transform: rotate(180deg); }
+
+    /* per-category gradients */
+    .acc-header.books   { background: linear-gradient(135deg, #7C3AED, #EC4899); }
+    .acc-header.letters { background: linear-gradient(135deg, #3A8EF6, #6B48FF); }
+    .acc-header.sight   { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+    .acc-header.wf      { background: linear-gradient(135deg, #9B59B6, #6C3483); }
+    .acc-header.sp      { background: linear-gradient(135deg, #7C3AED, #4F46E5); }
+    .acc-header.lv      { background: linear-gradient(135deg, #16A085, #1ABC9C); }
+    .acc-header.ir      { background: linear-gradient(135deg, #E67E22, #D35400); }
+    .acc-header.db      { background: linear-gradient(135deg, #C0392B, #E74C3C); }
+    .acc-header.rc      { background: linear-gradient(135deg, #2471A3, #3498DB); }
+
+    /* ── ACCORDION BODY ── */
+    .acc-body {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.45s ease, padding 0.3s ease;
+      padding: 0 0.2rem;
+    }
+    .acc-body.open {
+      max-height: 9999px;
+      padding: 1rem 0.2rem 0.5rem;
     }
 
-    .section-label.letters { color: #3A8EF6; }
-    .section-label.letters::after { background: linear-gradient(90deg, #3A8EF6 0%, transparent 100%); }
-
-    .section-label.sight { color: #FF6B6B; }
-    .section-label.sight::after { background: linear-gradient(90deg, #FF6B6B 0%, transparent 100%); }
-
-    .section-label.phonics { color: #6BCB77; }
-    .section-label.phonics::after { background: linear-gradient(90deg, #6BCB77 0%, transparent 100%); }
+    /* ── CAT SECTION spacing ── */
+    .cat-section { margin-bottom: 0.7rem; }
 
     /* ── GRID ── */
     .games-grid {
@@ -1051,53 +1099,10 @@
       .school-pkg-btn { width: 100%; justify-content: center; }
     }
 
-    /* ── CATEGORY TABS ── */
-    .cat-tabs {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      padding: 0.5rem 0 0.8rem;
-      margin-bottom: 0.5rem;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      position: sticky;
-      top: 48px; /* sits just below the access bar */
-      z-index: 900;
-      background: var(--bg);
-      /* right-fade hint that more tabs exist */
-      -webkit-mask-image: linear-gradient(to right, black calc(100% - 36px), transparent 100%);
-      mask-image: linear-gradient(to right, black calc(100% - 36px), transparent 100%);
-    }
-    .cat-tabs::-webkit-scrollbar { display: none; }
-
-    .cat-tab {
-      flex-shrink: 0;
-      padding: 8px 18px;
-      border-radius: 999px;
-      border: 2.5px solid transparent;
-      background: #f4f4f8;
-      color: #666;
-      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
-      font-size: 0.88rem;
-      cursor: pointer;
-      transition: background 0.18s, color 0.18s, border-color 0.18s, box-shadow 0.18s;
-      white-space: nowrap;
-    }
-    .cat-tab:hover { background: #e8e8f0; color: #333; }
-
-    .cat-tab[data-cat="all"].active    { background: #2C3E50; color: #fff; border-color: #2C3E50; box-shadow: 0 3px 10px rgba(44,62,80,.25); }
-    .cat-tab[data-cat="books"].active  { background: linear-gradient(135deg,#7C3AED,#EC4899); color: #fff; border-color: #7C3AED; box-shadow: 0 3px 10px rgba(124,58,237,.28); }
-    .cat-tab[data-cat="letters"].active{ background: linear-gradient(135deg,#3A8EF6,#6B48FF); color: #fff; border-color: #3A8EF6; box-shadow: 0 3px 10px rgba(58,142,246,.28); }
-    .cat-tab[data-cat="sight"].active  { background: linear-gradient(135deg,#FF6B6B,#FF8E53); color: #fff; border-color: #FF6B6B; box-shadow: 0 3px 10px rgba(255,107,107,.28); }
-    .cat-tab[data-cat="wf"].active     { background: linear-gradient(135deg,#9B59B6,#6C3483); color: #fff; border-color: #9B59B6; box-shadow: 0 3px 10px rgba(155,89,182,.28); }
-    .cat-tab[data-cat="sp"].active     { background: linear-gradient(135deg,#7C3AED,#4F46E5); color: #fff; border-color: #7C3AED; box-shadow: 0 3px 10px rgba(124,58,237,.28); }
-    .cat-tab[data-cat="lv"].active     { background: linear-gradient(135deg,#16A085,#1ABC9C); color: #fff; border-color: #16A085; box-shadow: 0 3px 10px rgba(22,160,133,.28); }
-    .cat-tab[data-cat="ir"].active     { background: linear-gradient(135deg,#E67E22,#D35400); color: #fff; border-color: #E67E22; box-shadow: 0 3px 10px rgba(230,126,34,.28); }
-    .cat-tab[data-cat="db"].active     { background: linear-gradient(135deg,#C0392B,#E74C3C); color: #fff; border-color: #C0392B; box-shadow: 0 3px 10px rgba(192,57,43,.28); }
-    .cat-tab[data-cat="rc"].active     { background: linear-gradient(135deg,#2471A3,#3498DB); color: #fff; border-color: #2471A3; box-shadow: 0 3px 10px rgba(36,113,163,.28); }
-
     @media(max-width:600px) {
-      .cat-tab { font-size: 0.8rem; padding: 7px 13px; }
+      .acc-header { padding: 0.85rem 1rem; }
+      .acc-icon { width: 38px; height: 38px; font-size: 1.2rem; }
+      .acc-title { font-size: 0.95rem; }
     }
   </style>
 </head>
@@ -1179,23 +1184,15 @@
     <span class="free-worksheets-btn">Get Free Worksheets Now →</span>
   </a>
 
-  <!-- ══ CATEGORY TABS ══ -->
-  <div class="cat-tabs">
-    <button class="cat-tab active" data-cat="all"     onclick="filterCat('all')">🎮 All Games</button>
-    <button class="cat-tab"        data-cat="books"   onclick="filterCat('books')">📚 Books</button>
-    <button class="cat-tab"        data-cat="letters" onclick="filterCat('letters')">🔤 Letters</button>
-    <button class="cat-tab"        data-cat="sight"   onclick="filterCat('sight')">👁️ Sight Words</button>
-    <button class="cat-tab"        data-cat="wf"      onclick="filterCat('wf')">🧩 Word Families</button>
-    <button class="cat-tab"        data-cat="sp"      onclick="filterCat('sp')">✏️ Spelling</button>
-    <button class="cat-tab"        data-cat="lv"      onclick="filterCat('lv')">🗣️ Long Vowels</button>
-    <button class="cat-tab"        data-cat="ir"      onclick="filterCat('ir')">🌊 Irregular</button>
-    <button class="cat-tab"        data-cat="db"      onclick="filterCat('db')">🌸 Digraphs &amp; Blends</button>
-    <button class="cat-tab"        data-cat="rc"      onclick="filterCat('rc')">⭐ R-Controlled</button>
-  </div>
-
   <!-- ══ READING BOOKS ══ -->
   <div class="cat-section" data-cat="books">
-  <div class="section-label books">📚 Reading Books</div>
+  <button class="acc-header books" onclick="toggleAcc(this)" aria-expanded="false">
+    <span class="acc-icon">📚</span>
+    <span class="acc-title">Reading Books</span>
+    <span class="acc-count">3 books</span>
+    <span class="acc-arrow">▼</span>
+  </button>
+  <div class="acc-body">
   <div class="games-grid">
 
     <!-- ── BOOK 1 ── -->
@@ -1333,11 +1330,18 @@
 
   </div>
 
+  </div><!-- /acc-body books -->
   </div><!-- /cat-section books -->
 
   <!-- ══ LETTER GAMES ══ -->
   <div class="cat-section" data-cat="letters">
-  <div class="section-label letters">🔤 Letter Games</div>
+  <button class="acc-header letters" onclick="toggleAcc(this)" aria-expanded="false">
+    <span class="acc-icon">🔤</span>
+    <span class="acc-title">Letter Games</span>
+    <span class="acc-count">12 games</span>
+    <span class="acc-arrow">▼</span>
+  </button>
+  <div class="acc-body">
   <div class="games-grid">
 
     <a href="go-fish.html" class="card letters wide">
@@ -1446,11 +1450,18 @@
     </div>
   </div>
 
+  </div><!-- /acc-body letters -->
   </div><!-- /cat-section letters -->
 
   <!-- ══ SIGHT WORD GAMES ══ -->
   <div class="cat-section" data-cat="sight">
-  <div class="section-label sight">📖 Sight Word Games</div>
+  <button class="acc-header sight" onclick="toggleAcc(this)" aria-expanded="false">
+    <span class="acc-icon">👁️</span>
+    <span class="acc-title">Sight Word Games</span>
+    <span class="acc-count">6 games</span>
+    <span class="acc-arrow">▼</span>
+  </button>
+  <div class="acc-body">
   <div class="games-grid">
 
     <a href="sw-go-fish.html" class="card sight wide">
@@ -1511,11 +1522,18 @@
     </div>
   </div>
 
+  </div><!-- /acc-body sight -->
   </div><!-- /cat-section sight -->
 
   <!-- ══ WORD FAMILY GAMES ══ -->
   <div class="cat-section" data-cat="wf">
-  <div class="section-label wf">🧩 Word Family Games</div>
+  <button class="acc-header wf" onclick="toggleAcc(this)" aria-expanded="false">
+    <span class="acc-icon">🧩</span>
+    <span class="acc-title">Word Family Games</span>
+    <span class="acc-count">3 games</span>
+    <span class="acc-arrow">▼</span>
+  </button>
+  <div class="acc-body">
   <div class="games-grid">
 
     <a href="phonics-bingo.html?cat=wordbuilding" class="card wf">
@@ -1558,11 +1576,18 @@
     </div>
   </div>
 
+  </div><!-- /acc-body wf -->
   </div><!-- /cat-section wf -->
 
   <!-- ══ SPELLING GAMES ══ -->
   <div class="cat-section" data-cat="sp">
-  <div class="section-label sp">✏️ Spelling Games</div>
+  <button class="acc-header sp" onclick="toggleAcc(this)" aria-expanded="false">
+    <span class="acc-icon">✏️</span>
+    <span class="acc-title">Spelling Games</span>
+    <span class="acc-count">3 games</span>
+    <span class="acc-arrow">▼</span>
+  </button>
+  <div class="acc-body">
   <div class="games-grid">
 
     <a href="spell-it.html" class="card sp wide">
@@ -1593,11 +1618,18 @@
   </div>
 
 
+  </div><!-- /acc-body sp -->
   </div><!-- /cat-section sp -->
 
   <!-- ══ LONG VOWEL GAMES ══ -->
   <div class="cat-section" data-cat="lv">
-  <div class="section-label lv">🗣️ Long Vowel Games</div>
+  <button class="acc-header lv" onclick="toggleAcc(this)" aria-expanded="false">
+    <span class="acc-icon">🗣️</span>
+    <span class="acc-title">Long Vowel Games</span>
+    <span class="acc-count">6 games</span>
+    <span class="acc-arrow">▼</span>
+  </button>
+  <div class="acc-body">
   <div class="games-grid">
 
     <a href="long-vowels.html" class="card lv">
@@ -1660,11 +1692,18 @@
     </div>
   </div>
 
+  </div><!-- /acc-body lv -->
   </div><!-- /cat-section lv -->
 
   <!-- ══ IRREGULAR SOUND GAMES ══ -->
   <div class="cat-section" data-cat="ir">
-  <div class="section-label ir">🌊 Irregular Letter Sound Games</div>
+  <button class="acc-header ir" onclick="toggleAcc(this)" aria-expanded="false">
+    <span class="acc-icon">🌊</span>
+    <span class="acc-title">Irregular Sound Games</span>
+    <span class="acc-count">4 games</span>
+    <span class="acc-arrow">▼</span>
+  </button>
+  <div class="acc-body">
   <div class="games-grid">
 
     <a href="irregular-sounds.html" class="card ir">
@@ -1707,11 +1746,18 @@
     </div>
   </div>
 
+  </div><!-- /acc-body ir -->
   </div><!-- /cat-section ir -->
 
   <!-- ══ DIGRAPH & BLEND GAMES ══ -->
   <div class="cat-section" data-cat="db">
-  <div class="section-label db">🌸 Digraph &amp; Blend Games</div>
+  <button class="acc-header db" onclick="toggleAcc(this)" aria-expanded="false">
+    <span class="acc-icon">🌸</span>
+    <span class="acc-title">Digraph &amp; Blend Games</span>
+    <span class="acc-count">7 games</span>
+    <span class="acc-arrow">▼</span>
+  </button>
+  <div class="acc-body">
   <div class="games-grid">
 
     <a href="digraphs.html" class="card db">
@@ -1776,11 +1822,18 @@
     </div>
   </div>
 
+  </div><!-- /acc-body db -->
   </div><!-- /cat-section db -->
 
   <!-- ══ CONTROLLED R GAMES ══ -->
   <div class="cat-section" data-cat="rc">
-  <div class="section-label rc">⭐ Controlled R Games</div>
+  <button class="acc-header rc" onclick="toggleAcc(this)" aria-expanded="false">
+    <span class="acc-icon">⭐</span>
+    <span class="acc-title">R-Controlled Games</span>
+    <span class="acc-count">4 games</span>
+    <span class="acc-arrow">▼</span>
+  </button>
+  <div class="acc-body">
   <div class="games-grid">
 
     <a href="r-controlled.html" class="card rc">
@@ -1820,6 +1873,7 @@
       <div class="vid-item"><iframe src="https://www.youtube-nocookie.com/embed/MbCnt0JCz4Y" loading="lazy" allowfullscreen title="Blends, Digraphs & Controlled R (Bossy R)"></iframe><p>Blends, Digraphs &amp; Controlled R</p></div>
     </div>
   </div>
+  </div><!-- /acc-body rc -->
   </div><!-- /cat-section rc -->
 
 </main>
@@ -2218,21 +2272,35 @@
   }
 
 
-  // ── CATEGORY TAB FILTER ──
-  function filterCat(cat) {
-    document.querySelectorAll('.cat-section').forEach(function(s) {
-      s.style.display = (cat === 'all' || s.dataset.cat === cat) ? '' : 'none';
-    });
-    document.querySelectorAll('.cat-tab').forEach(function(t) {
-      t.classList.toggle('active', t.dataset.cat === cat);
-    });
-    try { sessionStorage.setItem('hub_cat', cat); } catch(e) {}
+  // ── ACCORDION TOGGLE ──
+  function toggleAcc(btn) {
+    var body = btn.nextElementSibling;
+    var isOpen = btn.classList.contains('open');
+    btn.classList.toggle('open', !isOpen);
+    btn.setAttribute('aria-expanded', !isOpen);
+    body.classList.toggle('open', !isOpen);
+    // Save open state
+    try {
+      var cat = btn.closest('.cat-section').dataset.cat;
+      var saved = JSON.parse(sessionStorage.getItem('hub_open') || '{}');
+      saved[cat] = !isOpen;
+      sessionStorage.setItem('hub_open', JSON.stringify(saved));
+    } catch(e) {}
   }
 
-  // Restore last selected category on page load
+  // Restore open accordions on back-navigation
   (function() {
-    var saved = sessionStorage.getItem('hub_cat');
-    if (saved && saved !== 'all') filterCat(saved);
+    try {
+      var saved = JSON.parse(sessionStorage.getItem('hub_open') || '{}');
+      Object.keys(saved).forEach(function(cat) {
+        if (!saved[cat]) return;
+        var section = document.querySelector('.cat-section[data-cat="' + cat + '"]');
+        if (!section) return;
+        var btn  = section.querySelector('.acc-header');
+        var body = section.querySelector('.acc-body');
+        if (btn && body) { btn.classList.add('open'); btn.setAttribute('aria-expanded','true'); body.classList.add('open'); }
+      });
+    } catch(e) {}
   })();
 
   function toggleCh(btn) {
