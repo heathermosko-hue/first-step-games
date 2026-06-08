@@ -1057,6 +1057,13 @@
       margin-bottom: 0.5rem;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      position: sticky;
+      top: 48px; /* sits just below the access bar */
+      z-index: 900;
+      background: var(--bg);
+      /* right-fade hint that more tabs exist */
+      -webkit-mask-image: linear-gradient(to right, black calc(100% - 36px), transparent 100%);
+      mask-image: linear-gradient(to right, black calc(100% - 36px), transparent 100%);
     }
     .cat-tabs::-webkit-scrollbar { display: none; }
 
