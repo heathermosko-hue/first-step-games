@@ -41,10 +41,11 @@
     .called-display-col{ display:flex; flex-direction:column; align-items:center; flex:1; }
 
     /* ── BINGO GRID ── */
-    .bingo-wrap{ display:flex; flex-direction:column; gap:4px; flex:1; width:min(360px,96vw); max-height:calc(100vh - 260px); }
-    .bingo-header-row,.bingo-grid{ display:grid; gap:4px; width:100%; }
+    .bingo-wrap{ display:flex; flex-direction:column; gap:4px; flex:1; min-height:0; width:min(360px,96vw); }
+    .bingo-header-row{ display:grid; gap:4px; width:100%; }
     .bingo-header-cell{ font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.3rem; color:white; background:linear-gradient(135deg,#E67E22,#F39C12); border-radius:7px; display:flex; align-items:center; justify-content:center; height:32px; }
-    .bingo-cell{ background:white; border:2.5px solid #FFE0B2; border-radius:9px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:default; transition:transform .12s,box-shadow .15s,background .2s,border-color .2s; aspect-ratio:1; font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; user-select:none; text-align:center; padding:3px; }
+    .bingo-grid{ flex:1; min-height:0; display:grid; gap:4px; width:100%; }
+    .bingo-cell{ background:white; border:2.5px solid #FFE0B2; border-radius:9px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:default; transition:transform .12s,box-shadow .15s,background .2s,border-color .2s; font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; user-select:none; text-align:center; padding:3px; overflow:hidden; }
     .bingo-cell.free-cell{ background:linear-gradient(135deg,#FFD93D,#FF8E53); border-color:transparent; color:white; font-size:1.2rem; line-height:1.25; }
     .bingo-cell.marked-cell{ background:linear-gradient(135deg,#6BCB77,#27AE60); border-color:transparent; color:white; }
     .bingo-cell.glow-cell{ border-color:#FFD93D; box-shadow:0 0 0 2px #FFD93D,0 3px 14px rgba(255,217,61,.55); cursor:pointer; animation:pulse-cell .75s ease-in-out infinite alternate; }
@@ -95,12 +96,11 @@
     @keyframes cffall{ to{ transform:translateY(105vh) rotate(720deg); opacity:0; } }
 
 
-    .bingo-cell{ font-size:clamp(.7rem,3vw,1.1rem); }
+    .bingo-cell{ font-size:clamp(.65rem,2.5vw,1.1rem); }
     @media(max-width:480px){
       .called-word{ font-size:2.2rem; }
       header h1{ font-size:1.1rem; }
       .btn-call{ font-size:1.05rem; padding:11px 28px; }
-      .bingo-wrap{ max-height:calc(100vh - 230px); }
     }
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
@@ -321,6 +321,7 @@
     headerRow.style.gridTemplateColumns = colStyle;
     headerRow.style.width               = gridWidth;
     grid.style.gridTemplateColumns      = colStyle;
+    grid.style.gridTemplateRows         = `repeat(${gridSize}, 1fr)`;
     grid.style.width                    = gridWidth;
 
     const headerLabels = isSmall ? ['W','I','N'] : ['B','I','N','G','O'];
