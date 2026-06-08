@@ -111,32 +111,38 @@
       width: 100%;
       max-width: 560px;
       margin: 0 auto;
+    }
+
+    .board-img {
+      width: 100%;
+      display: block;
       border-radius: 12px;
-      border: 4px solid #2C3E50;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,.35);
     }
 
     .board-grid {
+      position: absolute;
+      top: 19%;
+      left: 5.5%;
+      width: 89%;
+      height: 62%;
       display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      grid-template-rows: repeat(5, 1fr);
-      width: 100%;
-      aspect-ratio: 8/5;
-      background: url('icons/bg-snakes.png') center/cover no-repeat;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 0;
     }
 
     .cell {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border: 1.5px solid rgba(0,0,0,0.12);
       position: relative;
       cursor: default;
       user-select: none;
-      gap: 1px;
+      border: none;
+      background: transparent !important;
     }
+
+    .cell-num { display: none; }
+    .cell-label { display: none; }
+
+    .board-svg { display: none; }
 
     .cell-num {
       font-family: 'Comic Sans MS', 'Comic Neue', cursive;
@@ -394,9 +400,10 @@
   <div class="game-wrap">
 
     <div class="board-container" id="boardContainer">
-      <div class="board-grid" id="boardGrid"></div>
-      <svg class="board-svg" id="boardSvg" viewBox="0 0 800 500" preserveAspectRatio="none"></svg>
-      <div class="player-token" id="playerToken">🐱</div>
+      <img src="icons/bg-snakes.png" class="board-img" alt="Snakes and Ladders Board">
+      <div class="board-grid" id="boardGrid">
+        <div class="player-token" id="playerToken">🐱</div>
+      </div>
     </div>
 
     <div class="controls-card">
@@ -448,8 +455,8 @@ const WORDS = {
 };
 
 /* ─── BOARD DATA ─── */
-const SNAKES  = { 38:9, 30:11, 22:4, 16:2 };
-const LADDERS = { 3:17, 8:25, 13:28, 20:34 };
+const SNAKES  = { 36:16, 33:13, 27:7, 19:2 };
+const LADDERS = { 3:22, 17:24, 5:15, 29:32 };
 
 const PALETTE = ['#FF9AA2','#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA','#FFCBA4','#D4EDDA'];
 
@@ -476,10 +483,10 @@ const btnMute         = document.getElementById('btnMute');
 
 /* ─── GRID MATH ─── */
 function squareToGrid(n) {
-  const rowFromBottom = Math.floor((n - 1) / 8);
-  const posInRow = (n - 1) % 8;
-  const col = rowFromBottom % 2 === 0 ? posInRow : 7 - posInRow;
-  const row = 4 - rowFromBottom;
+  const rowFromBottom = Math.floor((n - 1) / 10);
+  const posInRow = (n - 1) % 10;
+  const col = rowFromBottom % 2 === 0 ? posInRow : 9 - posInRow;
+  const row = 3 - rowFromBottom;
   return { col, row };
 }
 
@@ -589,56 +596,22 @@ function buildSnakesAndLadders() {
 function buildBoard() {
   boardGrid.innerHTML = '';
   for (const [k] of Object.entries(cellMap)) delete cellMap[k];
-
   for (let n = 1; n <= 40; n++) {
     const { col, row } = squareToGrid(n);
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.style.gridColumn = col + 1;
     cell.style.gridRow    = row + 1;
-
-    // Background color (semi-transparent so board image shows through)
-    let bg = PALETTE[(n - 1) % 8];
-    if (n === 1)  bg = 'rgba(255,215,0,0.6)';
-    else if (n === 40) bg = 'rgba(255,140,0,0.6)';
-    else if (SNAKES[n]  !== undefined) bg = 'rgba(255,107,107,0.6)';
-    else if (LADDERS[n] !== undefined) bg = 'rgba(152,251,152,0.6)';
-    else bg = bg.replace(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i,
-      (_, r, g, b) => `rgba(${parseInt(r,16)},${parseInt(g,16)},${parseInt(b,16)},0.55)`);
-    cell.style.background = bg;
-
-    // Number
-    const numEl = document.createElement('div');
-    numEl.className = 'cell-num';
-    numEl.textContent = n;
-    cell.appendChild(numEl);
-
-    // Label
-    let label = '';
-    if (n === 1)  label = 'START 🏁';
-    if (n === 40) label = 'GOAL! 🏆';
-    if (SNAKES[n]  !== undefined) label = '🐍';
-    if (LADDERS[n] !== undefined) label = '🪜';
-
-    if (label) {
-      const labelEl = document.createElement('div');
-      labelEl.className = 'cell-label';
-      labelEl.textContent = label;
-      cell.appendChild(labelEl);
-    }
-
     boardGrid.appendChild(cell);
     cellMap[n] = cell;
   }
-
-  buildSnakesAndLadders();
 }
 
 /* ─── TOKEN POSITIONING ─── */
 function positionToken(n) {
   const { col, row } = squareToGrid(n);
-  playerToken.style.left = ((col + 0.5) * 12.5) + '%';
-  playerToken.style.top  = ((row + 0.5) * 20) + '%';
+  playerToken.style.left = ((col + 0.5) * 10) + '%';
+  playerToken.style.top  = ((row + 0.5) * 25) + '%';
   // Update highlight
   for (let i = 1; i <= 40; i++) {
     if (cellMap[i]) cellMap[i].classList.remove('player-here');
