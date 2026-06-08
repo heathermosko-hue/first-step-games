@@ -1047,6 +1047,48 @@
       .school-pkg-banner p { font-size: 0.8rem; }
       .school-pkg-btn { width: 100%; justify-content: center; }
     }
+
+    /* ── CATEGORY TABS ── */
+    .cat-tabs {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding: 0.5rem 0 0.8rem;
+      margin-bottom: 0.5rem;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .cat-tabs::-webkit-scrollbar { display: none; }
+
+    .cat-tab {
+      flex-shrink: 0;
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 2.5px solid transparent;
+      background: #f4f4f8;
+      color: #666;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, border-color 0.18s, box-shadow 0.18s;
+      white-space: nowrap;
+    }
+    .cat-tab:hover { background: #e8e8f0; color: #333; }
+
+    .cat-tab[data-cat="all"].active    { background: #2C3E50; color: #fff; border-color: #2C3E50; box-shadow: 0 3px 10px rgba(44,62,80,.25); }
+    .cat-tab[data-cat="books"].active  { background: linear-gradient(135deg,#7C3AED,#EC4899); color: #fff; border-color: #7C3AED; box-shadow: 0 3px 10px rgba(124,58,237,.28); }
+    .cat-tab[data-cat="letters"].active{ background: linear-gradient(135deg,#3A8EF6,#6B48FF); color: #fff; border-color: #3A8EF6; box-shadow: 0 3px 10px rgba(58,142,246,.28); }
+    .cat-tab[data-cat="sight"].active  { background: linear-gradient(135deg,#FF6B6B,#FF8E53); color: #fff; border-color: #FF6B6B; box-shadow: 0 3px 10px rgba(255,107,107,.28); }
+    .cat-tab[data-cat="wf"].active     { background: linear-gradient(135deg,#9B59B6,#6C3483); color: #fff; border-color: #9B59B6; box-shadow: 0 3px 10px rgba(155,89,182,.28); }
+    .cat-tab[data-cat="sp"].active     { background: linear-gradient(135deg,#7C3AED,#4F46E5); color: #fff; border-color: #7C3AED; box-shadow: 0 3px 10px rgba(124,58,237,.28); }
+    .cat-tab[data-cat="lv"].active     { background: linear-gradient(135deg,#16A085,#1ABC9C); color: #fff; border-color: #16A085; box-shadow: 0 3px 10px rgba(22,160,133,.28); }
+    .cat-tab[data-cat="ir"].active     { background: linear-gradient(135deg,#E67E22,#D35400); color: #fff; border-color: #E67E22; box-shadow: 0 3px 10px rgba(230,126,34,.28); }
+    .cat-tab[data-cat="db"].active     { background: linear-gradient(135deg,#C0392B,#E74C3C); color: #fff; border-color: #C0392B; box-shadow: 0 3px 10px rgba(192,57,43,.28); }
+    .cat-tab[data-cat="rc"].active     { background: linear-gradient(135deg,#2471A3,#3498DB); color: #fff; border-color: #2471A3; box-shadow: 0 3px 10px rgba(36,113,163,.28); }
+
+    @media(max-width:600px) {
+      .cat-tab { font-size: 0.8rem; padding: 7px 13px; }
+    }
   </style>
 </head>
 <body>
@@ -1129,7 +1171,22 @@
     <span class="free-worksheets-btn">Get Free Worksheets Now →</span>
   </a>
 
+  <!-- ══ CATEGORY TABS ══ -->
+  <div class="cat-tabs">
+    <button class="cat-tab active" data-cat="all"     onclick="filterCat('all')">🎮 All Games</button>
+    <button class="cat-tab"        data-cat="books"   onclick="filterCat('books')">📚 Books</button>
+    <button class="cat-tab"        data-cat="letters" onclick="filterCat('letters')">🔤 Letters</button>
+    <button class="cat-tab"        data-cat="sight"   onclick="filterCat('sight')">👁️ Sight Words</button>
+    <button class="cat-tab"        data-cat="wf"      onclick="filterCat('wf')">🧩 Word Families</button>
+    <button class="cat-tab"        data-cat="sp"      onclick="filterCat('sp')">✏️ Spelling</button>
+    <button class="cat-tab"        data-cat="lv"      onclick="filterCat('lv')">🗣️ Long Vowels</button>
+    <button class="cat-tab"        data-cat="ir"      onclick="filterCat('ir')">🌊 Irregular</button>
+    <button class="cat-tab"        data-cat="db"      onclick="filterCat('db')">🌸 Digraphs &amp; Blends</button>
+    <button class="cat-tab"        data-cat="rc"      onclick="filterCat('rc')">⭐ R-Controlled</button>
+  </div>
+
   <!-- ══ READING BOOKS ══ -->
+  <div class="cat-section" data-cat="books">
   <div class="section-label books">📚 Reading Books</div>
   <div class="games-grid">
 
@@ -1268,7 +1325,10 @@
 
   </div>
 
+  </div><!-- /cat-section books -->
+
   <!-- ══ LETTER GAMES ══ -->
+  <div class="cat-section" data-cat="letters">
   <div class="section-label letters">🔤 Letter Games</div>
   <div class="games-grid">
 
@@ -1378,7 +1438,10 @@
     </div>
   </div>
 
+  </div><!-- /cat-section letters -->
+
   <!-- ══ SIGHT WORD GAMES ══ -->
+  <div class="cat-section" data-cat="sight">
   <div class="section-label sight">📖 Sight Word Games</div>
   <div class="games-grid">
 
@@ -1440,7 +1503,10 @@
     </div>
   </div>
 
+  </div><!-- /cat-section sight -->
+
   <!-- ══ WORD FAMILY GAMES ══ -->
+  <div class="cat-section" data-cat="wf">
   <div class="section-label wf">🧩 Word Family Games</div>
   <div class="games-grid">
 
@@ -1484,7 +1550,10 @@
     </div>
   </div>
 
+  </div><!-- /cat-section wf -->
+
   <!-- ══ SPELLING GAMES ══ -->
+  <div class="cat-section" data-cat="sp">
   <div class="section-label sp">✏️ Spelling Games</div>
   <div class="games-grid">
 
@@ -1516,7 +1585,10 @@
   </div>
 
 
+  </div><!-- /cat-section sp -->
+
   <!-- ══ LONG VOWEL GAMES ══ -->
+  <div class="cat-section" data-cat="lv">
   <div class="section-label lv">🗣️ Long Vowel Games</div>
   <div class="games-grid">
 
@@ -1580,7 +1652,10 @@
     </div>
   </div>
 
+  </div><!-- /cat-section lv -->
+
   <!-- ══ IRREGULAR SOUND GAMES ══ -->
+  <div class="cat-section" data-cat="ir">
   <div class="section-label ir">🌊 Irregular Letter Sound Games</div>
   <div class="games-grid">
 
@@ -1624,7 +1699,10 @@
     </div>
   </div>
 
+  </div><!-- /cat-section ir -->
+
   <!-- ══ DIGRAPH & BLEND GAMES ══ -->
+  <div class="cat-section" data-cat="db">
   <div class="section-label db">🌸 Digraph &amp; Blend Games</div>
   <div class="games-grid">
 
@@ -1690,7 +1768,10 @@
     </div>
   </div>
 
+  </div><!-- /cat-section db -->
+
   <!-- ══ CONTROLLED R GAMES ══ -->
+  <div class="cat-section" data-cat="rc">
   <div class="section-label rc">⭐ Controlled R Games</div>
   <div class="games-grid">
 
@@ -1731,6 +1812,7 @@
       <div class="vid-item"><iframe src="https://www.youtube-nocookie.com/embed/MbCnt0JCz4Y" loading="lazy" allowfullscreen title="Blends, Digraphs & Controlled R (Bossy R)"></iframe><p>Blends, Digraphs &amp; Controlled R</p></div>
     </div>
   </div>
+  </div><!-- /cat-section rc -->
 
 </main>
 
@@ -2108,6 +2190,16 @@
     }
   }
 
+
+  // ── CATEGORY TAB FILTER ──
+  function filterCat(cat) {
+    document.querySelectorAll('.cat-section').forEach(function(s) {
+      s.style.display = (cat === 'all' || s.dataset.cat === cat) ? '' : 'none';
+    });
+    document.querySelectorAll('.cat-tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.cat === cat);
+    });
+  }
 
   function toggleCh(btn) {
     btn.classList.toggle('open');
