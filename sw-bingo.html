@@ -377,7 +377,7 @@
 
       if (cell.free) {
         div.classList.add('free-cell');
-        div.innerHTML = '&#11088;<br><span style="font-family:'Comic Sans MS','Comic Neue',cursive;font-size:.55em;letter-spacing:1px;font-weight:800;">FREE</span>';
+        div.innerHTML = `&#11088;<br><span style="font-family:'Comic Sans MS','Comic Neue',cursive;font-size:.55em;letter-spacing:1px;font-weight:800;">FREE</span>`;
       } else if (winPattern && winPattern.includes(i)) {
         div.classList.add('win-cell');
         div.textContent = cell.word;

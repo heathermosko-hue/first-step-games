@@ -176,11 +176,11 @@
     .player-token {
       position: absolute;
       transform: translate(-50%, -50%);
-      font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
       pointer-events: none;
       z-index: 10;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,.5));
-      transition: left .4s ease, top .4s ease;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,.7));
+      transition: left .5s cubic-bezier(.4,0,.2,1), top .5s cubic-bezier(.4,0,.2,1);
       display: none;
     }
 
@@ -400,18 +400,18 @@
 <main>
   <div class="game-wrap">
 
-    <div class="board-container" id="boardContainer">
-      <img src="icons/bg-snakes.png" class="board-img" alt="Snakes and Ladders Board">
-      <div class="board-grid" id="boardGrid">
-        <div class="player-token" id="playerToken">🐱</div>
-      </div>
-    </div>
-
     <div class="controls-card">
       <div id="statusText" class="status-text">Pick a book level above to start!</div>
       <div class="dice-row">
         <div id="diceDisplay" class="dice-face" style="visibility:hidden">⚀</div>
         <button id="btnRoll" class="btn-roll" disabled>🎲 Roll the Dice!</button>
+      </div>
+    </div>
+
+    <div class="board-container" id="boardContainer">
+      <img src="icons/bg-snakes.png" class="board-img" alt="Snakes and Ladders Board">
+      <div class="board-grid" id="boardGrid">
+        <div class="player-token" id="playerToken">🐱</div>
       </div>
     </div>
 
@@ -771,13 +771,13 @@ function showWin() {
 
 /* ─── START GAME ─── */
 function startGame() {
-  pos   = 0;
+  pos   = 1;
   busy  = false;
   diceDisplay.style.visibility = 'hidden';
-  playerToken.style.display = 'none';
   buildBoard();
+  positionToken(1);
   btnRoll.disabled = false;
-  statusText.textContent = 'Roll the dice to start your adventure!';
+  statusText.textContent = '🎲 Roll the dice to start!';
   winOverlay.classList.remove('show');
   challengeOverlay.classList.remove('show');
 }
