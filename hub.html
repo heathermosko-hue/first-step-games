@@ -2059,14 +2059,21 @@
 
   // ── SUBMIT CODE FROM GATE ──
   function gateSubmit() {
-    const input = document.getElementById('gate-input');
-    const err   = document.getElementById('gate-error');
-    const val   = input.value.trim().toUpperCase();
-    const type  = detectCodeType(val);
+    const input    = document.getElementById('gate-input');
+    const err      = document.getElementById('gate-error');
+    const val      = input.value.trim().toUpperCase();
+    const type     = detectCodeType(val);
+    const remember = document.getElementById('gate-remember') && document.getElementById('gate-remember').checked;
 
     if (type === 'member' || (type === 'class' && hubIsClassCodeHours())) {
       sessionStorage.setItem('fsr_code_valid', '1');
       sessionStorage.setItem('fsr_access_type', type);
+      if (remember) {
+        // Store until end of today
+        const midnight = new Date(); midnight.setHours(23,59,59,999);
+        localStorage.setItem('fsr_day_code_type', type);
+        localStorage.setItem('fsr_day_code_exp',  midnight.getTime());
+      }
       document.getElementById('gate-overlay').remove();
       renderAccessBar();
     } else {
@@ -2119,6 +2126,9 @@
           <button id="gate-submit" onclick="gateSubmit()">→</button>
         </div>
         <div class="gate-error" id="gate-error">❌ Code not recognized. Ask your teacher!</div>
+        <label style="display:flex;align-items:center;gap:0.5rem;font-family:'Comic Sans MS','Comic Neue',cursive;font-size:0.82rem;color:#888;margin-bottom:0.7rem;cursor:pointer;">
+          <input type="checkbox" id="gate-remember" style="width:16px;height:16px;cursor:pointer;"> Remember my code today
+        </label>
         <a href="students.html" style="display:block;margin-bottom:0.3rem;font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-size:1rem;color:#6B48FF;">
           📅 Student class code page →
         </a>
@@ -2236,6 +2246,21 @@
     btn.classList.toggle('open');
     btn.nextElementSibling.classList.toggle('open');
   }
+
+  // ── CHECK "REMEMBER TODAY" DAY-CODE ──
+  (function() {
+    try {
+      const exp  = parseInt(localStorage.getItem('fsr_day_code_exp') || '0');
+      const type = localStorage.getItem('fsr_day_code_type');
+      if (type && exp > Date.now()) {
+        sessionStorage.setItem('fsr_code_valid', '1');
+        sessionStorage.setItem('fsr_access_type', type);
+      } else {
+        localStorage.removeItem('fsr_day_code_type');
+        localStorage.removeItem('fsr_day_code_exp');
+      }
+    } catch(e) {}
+  })();
 
   // ── CHECK fsr_access COOKIE (set by member-sso.php) ──
   function getCookie(name) {
