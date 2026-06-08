@@ -341,6 +341,19 @@
       min-height: calc(var(--card-h) + 4px);
       align-items: flex-start;
     }
+    @media (max-height: 750px) {
+      .hand { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; padding-bottom: 4px; }
+      .hand::-webkit-scrollbar { height: 4px; }
+      .hand::-webkit-scrollbar-thumb { background: #D0E8FF; border-radius: 4px; }
+    }
+    @media (max-height: 600px) {
+      :root { --card-w: 42px; --card-h: 60px; }
+      .game-area { gap: 0.15rem; padding: .1rem .3rem; }
+      .computer-zone, .player-zone { padding: 0.15rem 0.4rem; }
+      .zone-header { margin-bottom: 0.15rem; }
+      .middle-row { padding: 0.2rem 0.4rem; }
+      header h1 { font-size: 1rem; }
+    }
 
     /* ── PLAYER ZONE ── */
     .player-zone {

@@ -13,7 +13,7 @@
     #fsr-bar .fsr-name{font-weight:700}
     #fsr-bar .fsr-class{opacity:.75;margin-left:.2rem}
     #fsr-bar a{color:rgba(255,255,255,.8);text-decoration:none;border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:.2rem .65rem;font-size:.78rem}
-    body{padding-top:2.2rem!important}
+    body.fsr-bar-visible{padding-top:2.2rem!important}
   `;
   document.head.appendChild(style);
 
@@ -34,6 +34,7 @@
         <a href="auth/student-games.php">← My Games</a>
       `;
       document.body.insertAdjacentElement('afterbegin', bar);
+      document.body.classList.add('fsr-bar-visible');
     })
     .catch(() => {}); // fail silently if not on server
 
