@@ -53,7 +53,7 @@
     .cell {
       background:white; border:2px solid #FDE8B0; border-radius:8px;
       padding:.2rem .1rem; text-align:center; cursor:pointer;
-      font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive;
+      font-family:'Comic Sans MS','Comic Neue','Comic Sans',cursive;
       font-size:clamp(.55rem,2.1vw,.82rem); font-weight:700; color:#2C3E50;
       min-height:clamp(42px,9vw,58px); display:flex; align-items:center; justify-content:center;
       transition:background .12s, transform .12s; line-height:1.15; word-break:break-word;
@@ -507,7 +507,7 @@ function renderBoard(){
     } else if (state.cat === 'Letters') {
       cell.textContent = item.word[0].toLowerCase();
       cell.style.fontSize = 'clamp(1.5rem,5.5vw,2.2rem)';
-      cell.style.fontFamily = "'Comic Neue','Comic Sans MS','Comic Sans',cursive";
+      cell.style.fontFamily = "'Comic Sans MS','Comic Neue','Comic Sans',cursive";
     } else {
       cell.textContent = item.word;
     }
