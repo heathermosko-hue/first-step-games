@@ -701,15 +701,10 @@
     <div class="legend-item"><div class="legend-dot lower"></div><span>Lowercase (a b c)</span></div>
   </div>
 
-  <!-- COMPUTER ZONE -->
-  <div class="computer-zone">
-    <div class="zone-header">
-      <div class="computer-title">🤖 Computer's Hand</div>
-      <div class="pairs-count-badge" id="compPairsDisplay"></div>
-    </div>
-    <div class="hand" id="computerHand"></div>
-    <div class="pairs-row" id="compPairsRow"></div>
-  </div>
+  <!-- COMPUTER INFO (compact) -->
+  <div id="compCardCount" style="text-align:center;font-size:0.82rem;font-weight:700;color:#888;padding:0.15rem 0;letter-spacing:0.3px;"></div>
+  <div style="display:none" id="computerHand"></div>
+  <div style="display:none" id="compPairsRow"></div>
 
   <!-- MIDDLE ROW: deck + message -->
   <div class="middle-row">
@@ -1455,19 +1450,11 @@ function renderHands() {
     ph.appendChild(msg);
   }
 
-  // ── Computer hand (face-down) ──
-  const ch = document.getElementById('computerHand');
-  ch.innerHTML = '';
-  for (let i = 0; i < state.computerHand.length; i++) {
-    const el = document.createElement('div');
-    el.className = 'card card-back';
-    ch.appendChild(el);
-  }
-  if (state.computerHand.length === 0) {
-    const msg = document.createElement('span');
-    msg.style.cssText = 'color:#aaa; font-weight:700; font-size:0.9rem; padding:6px 0;';
-    msg.textContent = 'No cards';
-    ch.appendChild(msg);
+  // ── Computer info (compact badge) ──
+  const cc = document.getElementById('compCardCount');
+  if (cc) {
+    const n = state.computerHand.length;
+    cc.textContent = `🤖 Computer: ${n} card${n !== 1 ? 's' : ''}`;
   }
 
   // Show/hide Ask button and Go Fish button
@@ -1506,8 +1493,7 @@ function renderScores() {
   document.getElementById('compScore').textContent   = state.computerPairs.length;
   document.getElementById('playerPairsDisplay').textContent =
     state.playerPairs.length ? `${state.playerPairs.length} pair${state.playerPairs.length !== 1 ? 's' : ''}` : '';
-  document.getElementById('compPairsDisplay').textContent =
-    state.computerPairs.length ? `${state.computerPairs.length} pair${state.computerPairs.length !== 1 ? 's' : ''}` : '';
+  // compPairsDisplay is now hidden; score shown via compScore in scoreboard
 }
 
 function renderPairs() {
