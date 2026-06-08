@@ -64,6 +64,26 @@ a.home-link{color:#c9a0f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 #flash-prev:disabled,#flash-next:disabled{opacity:.3;cursor:default}
 #flash-close{font-family:"Comic Sans MS",cursive;background:#c62828;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
 #flash-speak{font-family:"Comic Sans MS",cursive;background:#ff6b9d;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+#mobile-toolbar{display:none;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;width:100%;max-width:98vw;padding:0 4px}
+#btn-hub-mobile{background:#2e7d32;color:#fff;border:none;border-radius:20px;padding:7px 16px;font-family:"Comic Sans MS",cursive;font-size:.85rem;font-weight:bold;text-decoration:none;cursor:pointer;transition:background .2s}
+#btn-menu-mobile{background:#6b3fa0;color:#fff;border:none;border-radius:20px;padding:7px 16px;font-family:"Comic Sans MS",cursive;font-size:.85rem;font-weight:bold;cursor:pointer;transition:background .2s}
+#mobile-menu-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:flex-end;justify-content:center;padding-bottom:0}
+#mobile-menu-overlay.show{display:flex}
+#mobile-menu-panel{background:#1b0a30;border-radius:22px 22px 0 0;padding:1rem 1rem 1.4rem;width:100%;max-width:420px;display:flex;flex-direction:column;gap:10px}
+.mm-btn{width:100%;padding:13px 18px;border:none;border-radius:14px;font-family:"Comic Sans MS",cursive;font-size:1rem;font-weight:bold;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px}
+.mm-btn.flash{background:#e040fb;color:#fff}
+.mm-btn.words{background:#26c6da;color:#003}
+.mm-btn.hw{background:#e57373;color:#fff}
+.mm-btn.online{background:#ff9800;color:#fff}
+.mm-close{background:rgba(255,255,255,.15);color:#c9a0f5;border:none;border-radius:14px;padding:11px;font-family:"Comic Sans MS",cursive;font-size:.9rem;cursor:pointer;margin-top:2px;font-weight:bold}
+@media(max-width:600px){
+  h1{font-size:.95rem;margin-bottom:4px}
+  .book-stage{width:calc(100vw - 88px);height:auto;perspective:none}
+  #page-canvas{max-width:calc(100vw - 88px);max-height:calc(100dvh - 136px)}
+  .ctrl-extra{display:none!important}
+  a.home-link{display:none!important}
+  #mobile-toolbar{display:flex}
+}
 </style>
   <link href="fonts.css?v=3" rel="stylesheet">
 </head>
@@ -100,6 +120,20 @@ a.home-link{color:#c9a0f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
   </div>
 </div>
 <a href="hub.html" class="home-link">&#8592; Back to Hub</a>
+<div id="mobile-toolbar">
+  <a href="hub.html" id="btn-hub-mobile">🏠 Hub</a>
+  <button id="btn-menu-mobile" onclick="openMobileMenu()">☰ Menu</button>
+</div>
+<div id="mobile-menu-overlay" onclick="closeMobileMenu()">
+  <div id="mobile-menu-panel" onclick="event.stopPropagation()">
+    <h3 style="color:#c9a0f5;font-family:'Comic Sans MS',cursive;font-size:1.1rem">📖 Book Options</h3>
+    <button class="mm-btn flash" id="mm-flash" onclick="document.getElementById('btn-flash').click();closeMobileMenu()">📚 Sight Words</button>
+    <button class="mm-btn words" id="mm-words" onclick="document.getElementById('btn-words').click();closeMobileMenu()">📖 Word Families</button>
+    <button class="mm-btn hw" id="mm-hw" onclick="document.getElementById('btn-hw').click();closeMobileMenu()">📝 Homework PDF</button>
+    <button class="mm-btn online" id="mm-online" onclick="document.getElementById('btn-online').click();closeMobileMenu()">💻 Online Homework</button>
+    <button class="mm-close" onclick="closeMobileMenu()">✕ Close</button>
+  </div>
+</div>
 <button class="ch-tab" id="chTab" onclick="toggleChPanel()">📖 Chapters</button>
 <div class="ch-panel" id="chPanel">
   <div class="ch-panel-hdr"><span>Chapters</span><button class="ch-close" onclick="toggleChPanel(false)">✕</button></div>
@@ -246,6 +280,17 @@ pdfjsLib.getDocument('book2.pdf').promise.then(doc=>{pdfDoc=doc;const startPg=Ma
 function toggleChPanel(force){const p=document.getElementById('chPanel');const isOpen=p.classList.contains('open');if(force===false||isOpen){p.classList.remove('open');}else{p.classList.add('open');buildChList();}}
 function buildChList(){const list=document.getElementById('chList');list.innerHTML='';const pages=[...HEADER_PAGES].sort((a,b)=>a-b);pages.forEach(pg=>{const raw=PAGE_TEXT[pg]||'';let title=(raw.split(' Words:')[0]||'').replace(/Chapter \d+:\s*[^.]+\.\s*/g,'').replace(/\.$/, '').trim()||'Page '+pg;if(title.length>26)title=title.substring(0,26)+'…';const btn=document.createElement('button');btn.className='ch-btn'+(pg===currentPage?' active':'');btn.innerHTML='<span style="color:#c9a0f5;font-size:.68rem">p.'+pg+'</span><br>'+title;btn.onclick=()=>{renderPage(pg,'fwd');toggleChPanel(false);};list.appendChild(btn);});}
 document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)){p.classList.remove('open');}});
+function openMobileMenu(){
+  ['flash','words','hw','online'].forEach(function(id){
+    var desk=document.getElementById('btn-'+id);
+    var mob=document.getElementById('mm-'+id);
+    var visible=desk&&desk.style.display!=='none'&&getComputedStyle(desk).display!=='none';
+    mob.disabled=!visible;
+    mob.style.opacity=visible?'1':'0.35';
+  });
+  document.getElementById('mobile-menu-overlay').classList.add('show');
+}
+function closeMobileMenu(){document.getElementById('mobile-menu-overlay').classList.remove('show');}
 </script>
   <script src="site-nav.js?v=3"></script>
 </body>
