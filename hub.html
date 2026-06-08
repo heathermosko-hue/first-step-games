@@ -1097,6 +1097,7 @@
       <p>Teachers: create classes, assign games &amp; track student progress.<br>Students: enter your class code or scan the QR code your teacher gave you!</p>
     </div>
     <div class="school-login-btns">
+      <a href="#" onclick="event.preventDefault();showTrialLoginOverlay();" class="school-btn" style="background:linear-gradient(135deg,#FFD93D,#FF8E53);color:white;">🎁 Free Trial Login</a>
       <a href="#" onclick="event.preventDefault();showMemberLoginOverlay();" class="school-btn member">⭐ Member Login</a>
       <a href="auth/teacher-login.php" class="school-btn teacher">🍎 Teacher Login</a>
       <a href="auth/student-login.php" class="school-btn student">🎮 Student Login</a>
@@ -1853,6 +1854,85 @@
     el.textContent = h > 0 ? `(${h}h ${m}m left)` : `(${m} min left)`;
   }
   setInterval(updateCountdown, 30000);
+
+  // ── TRIAL LOGIN OVERLAY ──
+  function showTrialLoginOverlay() {
+    if (document.getElementById('trial-login-overlay')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'trial-login-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    overlay.innerHTML = `
+      <div style="background:#fff;border-radius:20px;padding:2rem 1.8rem;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.35);text-align:center;font-family:'Comic Sans MS','Comic Neue',cursive;">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">🎁</div>
+        <h2 style="font-size:1.5rem;color:#2C3E50;margin-bottom:0.3rem;">Free Trial Login</h2>
+        <p style="color:#666;font-size:0.88rem;margin-bottom:1.3rem;">Enter the email and trial code from your welcome email to activate your <strong>2 weeks free!</strong></p>
+        <input id="trial-email" type="email" placeholder="Your email address"
+          style="width:100%;padding:0.7rem 1rem;border:2px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:1rem;margin-bottom:0.7rem;outline:none;box-sizing:border-box;"
+          onkeydown="if(event.key==='Enter')trialLoginSubmit()"
+          onfocus="this.style.borderColor='#FFD93D'" onblur="this.style.borderColor='#e0e0e0'">
+        <input id="trial-code" type="text" placeholder="Trial code (e.g. FSR-A1B2C3D4)"
+          style="width:100%;padding:0.7rem 1rem;border:2px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:1rem;margin-bottom:0.3rem;outline:none;box-sizing:border-box;text-transform:uppercase;letter-spacing:1px;"
+          onkeydown="if(event.key==='Enter')trialLoginSubmit()"
+          onfocus="this.style.borderColor='#FFD93D'" onblur="this.style.borderColor='#e0e0e0'">
+        <div id="trial-error" style="color:#e74c3c;font-size:0.85rem;min-height:1.2rem;margin-bottom:0.7rem;"></div>
+        <button id="trial-btn" onclick="trialLoginSubmit()"
+          style="width:100%;padding:0.8rem;background:linear-gradient(135deg,#FFD93D,#FF8E53);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:1.05rem;font-weight:800;cursor:pointer;margin-bottom:0.8rem;">
+          🎮 Start My Free Trial!
+        </button>
+        <p style="font-size:0.8rem;color:#aaa;margin-bottom:0.8rem;">No credit card needed. 2 weeks completely free!</p>
+        <a href="https://games.firststepreading.com/free-kit.html" target="_blank"
+          style="display:block;font-size:0.82rem;color:#FF8E53;margin-bottom:0.8rem;text-decoration:none;">
+          Don't have a code? Get your free kit →
+        </a>
+        <button onclick="document.getElementById('trial-login-overlay').remove();"
+          style="background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer;font-family:inherit;">
+          ✕ Close
+        </button>
+      </div>`;
+    document.body.appendChild(overlay);
+    document.getElementById('trial-email').focus();
+  }
+
+  async function trialLoginSubmit() {
+    const email   = document.getElementById('trial-email').value.trim();
+    const code    = document.getElementById('trial-code').value.trim().toUpperCase();
+    const errEl   = document.getElementById('trial-error');
+    const btn     = document.getElementById('trial-btn');
+
+    errEl.textContent = '';
+    if (!email || !code) { errEl.textContent = 'Please enter your email and trial code.'; return; }
+
+    btn.textContent = '⏳ Checking…';
+    btn.disabled = true;
+
+    try {
+      const fd = new FormData();
+      fd.append('email', email);
+      fd.append('code', code);
+      const res  = await fetch('check-trial.php', { method: 'POST', body: fd });
+      const data = await res.json();
+
+      if (data.valid) {
+        localStorage.setItem('fsr_access_type', 'trial');
+        localStorage.setItem('fsr_trial_expires', Date.now() + data.days_left * 86400000);
+        document.getElementById('trial-login-overlay').remove();
+        const gate = document.getElementById('gate-overlay');
+        if (gate) gate.remove();
+        renderAccessBar();
+      } else {
+        const msg = data.error === 'Trial expired'
+          ? '⏰ Your trial has expired. Visit our site to get full access!'
+          : '❌ Email or code not found. Check your welcome email and try again.';
+        errEl.textContent = msg;
+        btn.textContent = '🎮 Start My Free Trial!';
+        btn.disabled = false;
+      }
+    } catch(e) {
+      errEl.textContent = 'Connection error. Please try again.';
+      btn.textContent = '🎮 Start My Free Trial!';
+      btn.disabled = false;
+    }
+  }
 
   // ── LOG OUT (clear code session) ──
   function hubLogout() {
