@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Lessons | First Step Reading</title>
+<link href="fonts.css?v=3" rel="stylesheet">
+<style>
+:root {
+  --blue:#3A8EF6; --indigo:#6B48FF; --coral:#FF6B6B;
+  --yellow:#FFD93D; --green:#6BCB77; --purple:#9B59B6;
+  --bg:#FFF8F0; --text:#2C3E50;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Comic Sans MS','Comic Neue',cursive;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+
+/* ── HEADER ── */
+header{background:linear-gradient(135deg,#FF6B00,#FF3B8A);padding:.8rem 1.4rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;box-shadow:0 3px 14px rgba(255,59,138,.35);}
+.back-link{color:white;text-decoration:none;font-weight:800;font-size:.9rem;background:rgba(255,255,255,.22);padding:7px 16px;border-radius:999px;white-space:nowrap;transition:background .2s;flex-shrink:0;}
+.back-link:hover{background:rgba(255,255,255,.38);}
+header h1{color:white;font-size:clamp(1.1rem,4vw,1.7rem);flex:1;text-align:center;}
+
+/* ── MAIN ── */
+main{flex:1;max-width:1100px;margin:0 auto;width:100%;padding:1.4rem 1rem 3rem;}
+
+/* ── INTRO ── */
+.intro{text-align:center;margin-bottom:2rem;}
+.intro h2{font-size:clamp(1.3rem,4vw,2rem);color:#FF6B00;margin-bottom:.4rem;}
+.intro p{color:#666;font-size:.95rem;max-width:600px;margin:0 auto;}
+
+/* ── SECTION ── */
+.section{margin-bottom:2.8rem;}
+.section-header{display:flex;align-items:center;gap:.7rem;margin-bottom:1.1rem;padding-bottom:.5rem;border-bottom:3px solid;}
+.section-header h2{font-size:clamp(1.1rem,3.5vw,1.5rem);}
+.section-count{font-size:.8rem;background:rgba(0,0,0,.08);padding:3px 10px;border-radius:999px;font-weight:800;white-space:nowrap;}
+
+/* Section colours */
+.sec-letters .section-header{border-color:#3A8EF6;color:#3A8EF6;}
+.sec-sight .section-header{border-color:#E67E22;color:#E67E22;}
+.sec-blending .section-header{border-color:#6BCB77;color:#27AE60;}
+.sec-longvowel .section-header{border-color:#9B59B6;color:#9B59B6;}
+.sec-irregular .section-header{border-color:#E74C3C;color:#E74C3C;}
+.sec-digraphs .section-header{border-color:#E91E8C;color:#E91E8C;}
+.sec-rcontrolled .section-header{border-color:#8E44AD;color:#8E44AD;}
+
+/* ── VIDEO GRID ── */
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.1rem;}
+
+/* ── VIDEO CARD ── */
+.vid-card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.1);cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.vid-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.16);}
+.vid-thumb{position:relative;width:100%;padding-bottom:56.25%;background:#111;overflow:hidden;}
+.vid-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.vid-play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);transition:background .2s;}
+.vid-card:hover .vid-play-btn{background:rgba(0,0,0,.1);}
+.vid-play-icon{width:54px;height:54px;background:rgba(255,59,138,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4);}
+.vid-play-icon::after{content:'';display:block;width:0;height:0;border-top:12px solid transparent;border-bottom:12px solid transparent;border-left:20px solid white;margin-left:4px;}
+.vid-label{padding:.65rem .9rem;font-size:.9rem;font-weight:700;line-height:1.3;color:var(--text);}
+
+/* ── LIGHTBOX ── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:1000;align-items:center;justify-content:center;padding:1rem;}
+.lightbox.open{display:flex;}
+.lb-inner{width:100%;max-width:860px;position:relative;}
+.lb-close{position:absolute;top:-42px;right:0;background:none;border:none;color:white;font-size:2rem;cursor:pointer;line-height:1;opacity:.8;transition:opacity .2s;}
+.lb-close:hover{opacity:1;}
+.lb-frame{position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;background:#000;}
+.lb-frame iframe{position:absolute;inset:0;width:100%;height:100%;}
+.lb-title{color:white;text-align:center;margin-top:.9rem;font-size:1.1rem;font-weight:700;}
+
+/* ── QUICK NAV ── */
+.quick-nav{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem;justify-content:center;}
+.qnav-btn{background:white;border:2px solid #ddd;border-radius:999px;padding:6px 16px;font-family:'Comic Sans MS','Comic Neue',cursive;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;color:var(--text);}
+.qnav-btn:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.12);}
+.qnav-letters{border-color:#3A8EF6;color:#3A8EF6;}
+.qnav-sight{border-color:#E67E22;color:#E67E22;}
+.qnav-blending{border-color:#27AE60;color:#27AE60;}
+.qnav-longvowel{border-color:#9B59B6;color:#9B59B6;}
+.qnav-irregular{border-color:#E74C3C;color:#E74C3C;}
+.qnav-digraphs{border-color:#E91E8C;color:#E91E8C;}
+.qnav-rcontrolled{border-color:#8E44AD;color:#8E44AD;}
+
+@media(max-width:500px){
+  .vid-grid{grid-template-columns:1fr 1fr;}
+  .vid-label{font-size:.78rem;padding:.5rem .6rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="hub.html" class="back-link">← Games</a>
+  <h1>🎬 Video Lessons</h1>
+  <div style="width:80px;flex-shrink:0"></div>
+</header>
+
+<main>
+
+  <div class="intro">
+    <h2>Step-by-Step Phonics Video Lessons</h2>
+    <p>Watch in order from Letters all the way through Controlled R — every lesson builds on the last!</p>
+  </div>
+
+  <!-- QUICK NAV -->
+  <div class="quick-nav">
+    <a href="#sec-letters" class="qnav-btn qnav-letters">🔤 Letters &amp; Sounds</a>
+    <a href="#sec-sight" class="qnav-btn qnav-sight">📖 Sight Words</a>
+    <a href="#sec-blending" class="qnav-btn qnav-blending">🧩 Blending (CVC)</a>
+    <a href="#sec-longvowel" class="qnav-btn qnav-longvowel">🗣️ Long Vowels</a>
+    <a href="#sec-irregular" class="qnav-btn qnav-irregular">🌊 Irregular Sounds</a>
+    <a href="#sec-digraphs" class="qnav-btn qnav-digraphs">🌸 Digraphs &amp; Blends</a>
+    <a href="#sec-rcontrolled" class="qnav-btn qnav-rcontrolled">⭐ Controlled R</a>
+  </div>
+
+  <!-- ══ LETTERS & SOUNDS ══ -->
+  <div class="section sec-letters" id="sec-letters">
+    <div class="section-header">
+      <h2>🔤 Letters &amp; Sounds</h2>
+      <span class="section-count">9 videos</span>
+    </div>
+    <div class="vid-grid">
+      <div class="vid-card" onclick="openLB('-1zVuCDc7Bc','Uppercase Alphabet Song')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/-1zVuCDc7Bc/mqdefault.jpg" alt="Uppercase Alphabet Song"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Uppercase Alphabet Song</div>
+      </div>
+      <div class="vid-card" onclick="openLB('eY6JOnqxpyo','Lowercase Alphabet Song')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/eY6JOnqxpyo/mqdefault.jpg" alt="Lowercase Alphabet Song"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Lowercase Alphabet Song</div>
+      </div>
+      <div class="vid-card" onclick="openLB('D2jsXmqS83E','Letter Sounds — Uppercase')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/D2jsXmqS83E/mqdefault.jpg" alt="Letter Sounds Uppercase"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Letter Sounds — Uppercase</div>
+      </div>
+      <div class="vid-card" onclick="openLB('0Zbt_CRkJEg','Letter Sounds — Lowercase')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/0Zbt_CRkJEg/mqdefault.jpg" alt="Letter Sounds Lowercase"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Letter Sounds — Lowercase</div>
+      </div>
+      <div class="vid-card" onclick="openLB('413z_9DUShY','Letter Sound Song A–E')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/413z_9DUShY/mqdefault.jpg" alt="Letter Sound Song A-E"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Letter Sound Song A–E</div>
+      </div>
+      <div class="vid-card" onclick="openLB('UALbZQ0RWnU','Letter Sound Song F–J')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/UALbZQ0RWnU/mqdefault.jpg" alt="Letter Sound Song F-J"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Letter Sound Song F–J</div>
+      </div>
+      <div class="vid-card" onclick="openLB('WjnrqGmdBDw','Letter Sound Song K–O')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/WjnrqGmdBDw/mqdefault.jpg" alt="Letter Sound Song K-O"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Letter Sound Song K–O</div>
+      </div>
+      <div class="vid-card" onclick="openLB('bGCHhK-CzZE','Letter Sound Song P–T')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/bGCHhK-CzZE/mqdefault.jpg" alt="Letter Sound Song P-T"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Letter Sound Song P–T</div>
+      </div>
+      <div class="vid-card" onclick="openLB('0Gzd7np01J8','Letter Sound Song U–Z')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/0Gzd7np01J8/mqdefault.jpg" alt="Letter Sound Song U-Z"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Letter Sound Song U–Z</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SIGHT WORDS ══ -->
+  <div class="section sec-sight" id="sec-sight">
+    <div class="section-header">
+      <h2>📖 Sight Words</h2>
+      <span class="section-count">4 videos</span>
+    </div>
+    <div class="vid-grid">
+      <div class="vid-card" onclick="openLB('fJ1n-1sGvPY','Sight Words — Video 1')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/fJ1n-1sGvPY/mqdefault.jpg" alt="Sight Words Video 1"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Sight Words — Video 1</div>
+      </div>
+      <div class="vid-card" onclick="openLB('M2Y_wJCRKUI','Sight Words — Video 2')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/M2Y_wJCRKUI/mqdefault.jpg" alt="Sight Words Video 2"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Sight Words — Video 2</div>
+      </div>
+      <div class="vid-card" onclick="openLB('RItNyA5VCrA','Sight Words — Video 3')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/RItNyA5VCrA/mqdefault.jpg" alt="Sight Words Video 3"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Sight Words — Video 3</div>
+      </div>
+      <div class="vid-card" onclick="openLB('YoZ4S9lPEag','Sight Words — Video 4')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/YoZ4S9lPEag/mqdefault.jpg" alt="Sight Words Video 4"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Sight Words — Video 4</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BLENDING / CVC ══ -->
+  <div class="section sec-blending" id="sec-blending">
+    <div class="section-header">
+      <h2>🧩 Blending — Short Vowels (CVC Words)</h2>
+      <span class="section-count">10 videos</span>
+    </div>
+    <div class="vid-grid">
+      <div class="vid-card" onclick="openLB('M44-G207b3A','2-Letter Blending — Short A')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/M44-G207b3A/mqdefault.jpg" alt="2-Letter Blending Short A"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">2-Letter Blending — Short A</div>
+      </div>
+      <div class="vid-card" onclick="openLB('qjG3wzobJfs','2-Letter Blending — Short E')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/qjG3wzobJfs/mqdefault.jpg" alt="2-Letter Blending Short E"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">2-Letter Blending — Short E</div>
+      </div>
+      <div class="vid-card" onclick="openLB('q1rfujCgOMI','2-Letter Blending — Short I')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/q1rfujCgOMI/mqdefault.jpg" alt="2-Letter Blending Short I"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">2-Letter Blending — Short I</div>
+      </div>
+      <div class="vid-card" onclick="openLB('QdX0cZLTZB4','2-Letter Blending — Short O')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/QdX0cZLTZB4/mqdefault.jpg" alt="2-Letter Blending Short O"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">2-Letter Blending — Short O</div>
+      </div>
+      <div class="vid-card" onclick="openLB('rBZRVzqKgwI','2-Letter Blending — Short U')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/rBZRVzqKgwI/mqdefault.jpg" alt="2-Letter Blending Short U"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">2-Letter Blending — Short U</div>
+      </div>
+      <div class="vid-card" onclick="openLB('BbS7KfgZ30s','3-Letter Blending — Short A')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/BbS7KfgZ30s/mqdefault.jpg" alt="3-Letter Blending Short A"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">3-Letter Blending — Short A</div>
+      </div>
+      <div class="vid-card" onclick="openLB('1uKb_ApuLaU','3-Letter Blending — Short E')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/1uKb_ApuLaU/mqdefault.jpg" alt="3-Letter Blending Short E"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">3-Letter Blending — Short E</div>
+      </div>
+      <div class="vid-card" onclick="openLB('GWrOPsJZHj4','3-Letter Blending — Short I')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/GWrOPsJZHj4/mqdefault.jpg" alt="3-Letter Blending Short I"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">3-Letter Blending — Short I</div>
+      </div>
+      <div class="vid-card" onclick="openLB('a3Te_xuZcw8','3-Letter Blending — Short O')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/a3Te_xuZcw8/mqdefault.jpg" alt="3-Letter Blending Short O"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">3-Letter Blending — Short O</div>
+      </div>
+      <div class="vid-card" onclick="openLB('45_DdNrVR2k','3-Letter Blending — Short U')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/45_DdNrVR2k/mqdefault.jpg" alt="3-Letter Blending Short U"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">3-Letter Blending — Short U</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LONG VOWELS ══ -->
+  <div class="section sec-longvowel" id="sec-longvowel">
+    <div class="section-header">
+      <h2>🗣️ Long Vowels</h2>
+      <span class="section-count">9 videos</span>
+    </div>
+    <div class="vid-grid">
+      <div class="vid-card" onclick="openLB('UjARVU_qV1M','Vowels Song')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/UjARVU_qV1M/mqdefault.jpg" alt="Vowels Song"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Vowels Song</div>
+      </div>
+      <div class="vid-card" onclick="openLB('6vB_YQ-xirQ','All Long Vowels A E I O U')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/6vB_YQ-xirQ/mqdefault.jpg" alt="All Long Vowels"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">All Long Vowels A E I O U</div>
+      </div>
+      <div class="vid-card" onclick="openLB('e4x6iSWpF5I','Long Vowel A (VCV)')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/e4x6iSWpF5I/mqdefault.jpg" alt="Long Vowel A VCV"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Long Vowel A — Silent E</div>
+      </div>
+      <div class="vid-card" onclick="openLB('ZzIoKNAEFUk','Long Vowel A (Vowel Team)')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/ZzIoKNAEFUk/mqdefault.jpg" alt="Long Vowel A Vowel Team"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Long Vowel A — Vowel Team</div>
+      </div>
+      <div class="vid-card" onclick="openLB('ItwLPmWxYco','Long Vowel E (Vowel Team)')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/ItwLPmWxYco/mqdefault.jpg" alt="Long Vowel E Vowel Team"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Long Vowel E — Vowel Team</div>
+      </div>
+      <div class="vid-card" onclick="openLB('tlW_FP-8Q58','Long Vowel I (VCV)')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/tlW_FP-8Q58/mqdefault.jpg" alt="Long Vowel I VCV"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Long Vowel I — Silent E</div>
+      </div>
+      <div class="vid-card" onclick="openLB('HiWh7hruC6o','Long Vowel O (VCV)')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/HiWh7hruC6o/mqdefault.jpg" alt="Long Vowel O VCV"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Long Vowel O — Silent E</div>
+      </div>
+      <div class="vid-card" onclick="openLB('fiuXcj8Wg_Q','Long Vowel O (Vowel Team)')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/fiuXcj8Wg_Q/mqdefault.jpg" alt="Long Vowel O Vowel Team"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Long Vowel O — Vowel Team</div>
+      </div>
+      <div class="vid-card" onclick="openLB('jhZx7VsCKE8','Long Vowel U (VCV)')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/jhZx7VsCKE8/mqdefault.jpg" alt="Long Vowel U VCV"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Long Vowel U — Silent E</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ IRREGULAR SOUNDS ══ -->
+  <div class="section sec-irregular" id="sec-irregular">
+    <div class="section-header">
+      <h2>🌊 Irregular Sound Combinations</h2>
+      <span class="section-count">3 videos</span>
+    </div>
+    <div class="vid-grid">
+      <div class="vid-card" onclick="openLB('5u7KzaDIaco','Irregular Sounds Ay / Ank')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/5u7KzaDIaco/mqdefault.jpg" alt="Irregular Sounds Ay Ank"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Irregular Sounds — Ay / Ank</div>
+      </div>
+      <div class="vid-card" onclick="openLB('NeboQS5gwcc','Irregular Sound Ight')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/NeboQS5gwcc/mqdefault.jpg" alt="Irregular Sound Ight"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Irregular Sound — Ight</div>
+      </div>
+      <div class="vid-card" onclick="openLB('8crRhGGLdAY','Irregular Ook / Ool Sounds')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/8crRhGGLdAY/mqdefault.jpg" alt="Irregular Ook Ool Sounds"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Irregular Sounds — Ook / Ool</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DIGRAPHS & BLENDS ══ -->
+  <div class="section sec-digraphs" id="sec-digraphs">
+    <div class="section-header">
+      <h2>🌸 Digraphs &amp; Consonant Blends</h2>
+      <span class="section-count">4 videos</span>
+    </div>
+    <div class="vid-grid">
+      <div class="vid-card" onclick="openLB('kGV8KyeNNhQ','Beginning Consonant Blends')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/kGV8KyeNNhQ/mqdefault.jpg" alt="Beginning Consonant Blends"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Beginning Consonant Blends</div>
+      </div>
+      <div class="vid-card" onclick="openLB('mUKjbmfBFFQ','Ending Consonant Blends')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/mUKjbmfBFFQ/mqdefault.jpg" alt="Ending Consonant Blends"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Ending Consonant Blends</div>
+      </div>
+      <div class="vid-card" onclick="openLB('68_Tf8r6dvY','Silent Blends &amp; Digraphs')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/68_Tf8r6dvY/mqdefault.jpg" alt="Silent Blends Digraphs"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Silent Blends &amp; Digraphs</div>
+      </div>
+      <div class="vid-card" onclick="openLB('2ejc27XSHYQ','Vowels, Digraphs &amp; Blends Overview')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/2ejc27XSHYQ/mqdefault.jpg" alt="Vowels Digraphs Blends"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Vowels, Digraphs &amp; Blends</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONTROLLED R ══ -->
+  <div class="section sec-rcontrolled" id="sec-rcontrolled">
+    <div class="section-header">
+      <h2>⭐ R-Controlled Vowels (Bossy R)</h2>
+      <span class="section-count">1 video</span>
+    </div>
+    <div class="vid-grid">
+      <div class="vid-card" onclick="openLB('MbCnt0JCz4Y','Blends, Digraphs &amp; Controlled R')">
+        <div class="vid-thumb"><img src="https://img.youtube.com/vi/MbCnt0JCz4Y/mqdefault.jpg" alt="Controlled R"><div class="vid-play-btn"><div class="vid-play-icon"></div></div></div>
+        <div class="vid-label">Blends, Digraphs &amp; Controlled R</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLB(event)">
+  <div class="lb-inner">
+    <button class="lb-close" onclick="closeLB()">✕</button>
+    <div class="lb-frame">
+      <iframe id="lbFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+    <div class="lb-title" id="lbTitle"></div>
+  </div>
+</div>
+
+<script>
+function openLB(id, title) {
+  document.getElementById('lbFrame').src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+  document.getElementById('lbTitle').textContent = title;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLB(e) {
+  if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lb-close')) return;
+  document.getElementById('lbFrame').src = '';
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+</script>
+<script src="site-nav.js?v=3"></script>
+</body>
+</html>
