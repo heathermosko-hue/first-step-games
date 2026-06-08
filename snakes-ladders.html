@@ -90,9 +90,9 @@
 
     main {
       flex: 1;
-      overflow: hidden; min-height: 0;
-      overflow-x: hidden;
-      padding: 6px 8px 8px;
+      min-height: 0;
+      overflow: hidden;
+      padding: 4px 8px 6px;
       display: flex;
       align-items: flex-start;
       justify-content: center;
@@ -103,7 +103,7 @@
       max-width: 600px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
     /* ── BOARD ── */
@@ -116,6 +116,9 @@
 
     .board-img {
       width: 100%;
+      height: auto;
+      max-height: calc(100dvh - 158px);
+      object-fit: contain;
       display: block;
       border-radius: 12px;
     }
