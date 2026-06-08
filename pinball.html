@@ -41,7 +41,7 @@
     /* ── MACHINE CABINET ── */
     /* Narrower than viewport so arcade bg always shows on sides */
     .machine-wrap{width:92%; max-width:400px; flex:1; min-height:0; display:flex; flex-direction:column;
-                  align-items:center; padding:0 0 .1rem; overflow:hidden; position:relative; z-index:1;}
+                  align-items:center; padding:0 0 .1rem; overflow:hidden; position:relative; z-index:1; justify-content:flex-start;}
     /* Scale down the entire machine cabinet on short screens */
     @media (max-height: 680px) {
       .machine-outer { transform: scale(0.88); transform-origin: top center; margin-top:.2rem; }

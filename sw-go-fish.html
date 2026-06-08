@@ -605,6 +605,17 @@
       .card-word-text { font-size: clamp(0.78rem, 2.8vw, 1.1rem); }
       header h1 { font-size: 1.25rem; }
     }
+    @media (max-height: 700px) {
+      :root { --card-w: 52px; --card-h: 66px; }
+      .scoreboard { padding: .05rem .6rem; }
+      .score-value { font-size: 1.2rem; }
+      .game-area { gap: 0.2rem; padding: .2rem .4rem; }
+      .computer-zone, .player-zone { padding: 0.25rem 0.5rem; }
+      .zone-header { margin-bottom: 0.3rem; }
+      .middle-row { padding: 0.3rem 0.5rem; }
+      .settings-bar { padding: .15rem .5rem; }
+      header h1 { font-size: 1.2rem; }
+    }
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
 <body>

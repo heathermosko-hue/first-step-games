@@ -25,7 +25,7 @@
     .btn-cat:hover { background:#7FDFD4; }
     .btn-cat.active { background:#16A085; color:white; border-color:#16A085; }
 
-    main { flex:1; min-height:0; overflow:hidden; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:.7rem .8rem .8rem; gap:.55rem; }
+    main { flex:1; min-height:0; overflow:hidden; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:.3rem .6rem .4rem; gap:.35rem; }
 
     .score-row { display:flex; gap:1.5rem; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1rem; color:#bbb; }
     .score-row span { color:#16A085; font-size:1.2rem; }
@@ -85,6 +85,11 @@
       0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)}
     }
 
+    @media(max-height:680px){
+      .game-card{padding:.4rem .7rem;gap:.3rem}
+      .emoji-display{font-size:clamp(2rem,8vw,3.5rem)}
+      .feedback{min-height:1.2rem;font-size:1.1rem}
+    }
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
 <body>
