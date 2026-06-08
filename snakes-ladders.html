@@ -410,9 +410,8 @@
 
     <div class="board-container" id="boardContainer">
       <img src="icons/bg-snakes.png" class="board-img" alt="Snakes and Ladders Board">
-      <div class="board-grid" id="boardGrid">
-        <div class="player-token" id="playerToken">🐱</div>
-      </div>
+      <div class="board-grid" id="boardGrid"></div>
+      <div class="player-token" id="playerToken">🐱</div>
     </div>
 
   </div>
@@ -611,8 +610,12 @@ function buildBoard() {
 /* ─── TOKEN POSITIONING ─── */
 function positionToken(n) {
   const { col, row } = squareToGrid(n);
-  playerToken.style.left = ((col + 0.5) * 10) + '%';
-  playerToken.style.top  = ((row + 0.5) * 25) + '%';
+  // boardGrid sits at left=5.5%, top=19%, width=89%, height=62% inside boardContainer
+  // Token is now a direct child of boardContainer, so use those offsets
+  const x = 5.5 + (col + 0.5) / 10 * 89;
+  const y = 19  + (row + 0.5) / 4  * 62;
+  playerToken.style.left = x + '%';
+  playerToken.style.top  = y + '%';
   // Update highlight
   for (let i = 1; i <= 40; i++) {
     if (cellMap[i]) cellMap[i].classList.remove('player-here');
