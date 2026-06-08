@@ -2209,7 +2209,14 @@
     document.querySelectorAll('.cat-tab').forEach(function(t) {
       t.classList.toggle('active', t.dataset.cat === cat);
     });
+    try { sessionStorage.setItem('hub_cat', cat); } catch(e) {}
   }
+
+  // Restore last selected category on page load
+  (function() {
+    var saved = sessionStorage.getItem('hub_cat');
+    if (saved && saved !== 'all') filterCat(saved);
+  })();
 
   function toggleCh(btn) {
     btn.classList.toggle('open');
