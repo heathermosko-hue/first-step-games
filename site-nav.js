@@ -52,6 +52,21 @@
       'box-shadow:0 3px 10px rgba(255,59,138,.4);',
     '}',
     '.fsr-nav-home:hover{background:linear-gradient(135deg,#ff8080,#ff5599);}',
+    /* ── MOBILE: shrink the top bar and all game page headers ── */
+    '@media(max-width:600px){',
+      '#fsr-top-nav{height:34px!important;padding:0 .5rem;}',
+      '#fsr-nav-logo{font-size:.8rem;gap:.25rem;}',
+      '.fsr-nav-btn{padding:2px 8px;font-size:.72rem;gap:.15rem;}',
+      '.fsr-nav-menu-icon{font-size:.9rem;margin-right:3px;}',
+      /* game page <header> */
+      'body>header{padding:.18rem .55rem!important;gap:.35rem!important;}',
+      'body>header h1{font-size:clamp(.78rem,4vw,.92rem)!important;line-height:1.15!important;}',
+      'body>header .back-link,body>header a.back-link{padding:.18rem .55rem!important;font-size:.72rem!important;}',
+      'body>header #muteBtn,body>header button{padding:.18rem .45rem!important;font-size:.95rem!important;}',
+      /* level/mode bars */
+      '.level-bar,.mode-bar{padding:.04rem .35rem!important;gap:.3rem!important;}',
+      '.lvl-btn,.btn-level,.btn-mode{font-size:clamp(.62rem,2vw,.76rem)!important;padding:2px 7px!important;}',
+    '}',
   ].join('');
 
   var style = document.createElement('style');
