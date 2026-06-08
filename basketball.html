@@ -23,7 +23,7 @@
 
     body {
       font-family: 'Comic Sans MS', 'Comic Neue', cursive;
-      background: var(--bg);
+      background: url('icons/bg-basketball.png') center/cover no-repeat fixed, var(--bg);
       color: var(--text);
       height: 100vh;
       overflow: hidden;
@@ -348,60 +348,16 @@
     .hoop:hover { transform: scale(1.05); background: rgba(255,255,255,.25); }
     .hoop:active { transform: scale(.97); }
 
-    /* CSS hoop art */
+    /* Hoop image */
     .hoop-art {
-      width: 50px;
-      height: 28px;
-      position: relative;
+      width: 60px;
+      height: auto;
       margin: 0 auto .15rem;
       flex-shrink: 0;
+      display: block;
     }
 
-    .hoop-art::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 44px;
-      height: 22px;
-      border: 5px solid #FF8C00;
-      border-bottom: none;
-      border-radius: 22px 22px 0 0;
-      background: transparent;
-    }
-
-    .hoop-art::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 28px;
-      height: 14px;
-      border-left: 3px solid #FF8C00;
-      border-right: 3px solid #FF8C00;
-      border-bottom: 3px solid #FF8C00;
-      background: transparent;
-    }
-
-    /* Net lines inside hoop art */
-    .hoop-net {
-      position: absolute;
-      bottom: 1px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 22px;
-      height: 12px;
-      background: repeating-linear-gradient(
-        to right,
-        rgba(255,140,0,.6) 0px,
-        rgba(255,140,0,.6) 2px,
-        transparent 2px,
-        transparent 6px
-      );
-      pointer-events: none;
-    }
+    .hoop-net { display: none; }
 
     .hoop-word {
       font-family: 'Comic Neue', 'Comic Sans MS', cursive;
@@ -621,15 +577,15 @@
         <!-- Three hoops -->
         <div class="hoops-row" id="hoopsRow">
           <button class="hoop" data-idx="0" aria-label="Hoop 1">
-            <div class="hoop-art"><div class="hoop-net"></div></div>
+            <img src="icons/hoop.png" class="hoop-art" alt="hoop">
             <span class="hoop-word" id="hoop0">?</span>
           </button>
           <button class="hoop" data-idx="1" aria-label="Hoop 2">
-            <div class="hoop-art"><div class="hoop-net"></div></div>
+            <img src="icons/hoop.png" class="hoop-art" alt="hoop">
             <span class="hoop-word" id="hoop1">?</span>
           </button>
           <button class="hoop" data-idx="2" aria-label="Hoop 3">
-            <div class="hoop-art"><div class="hoop-net"></div></div>
+            <img src="icons/hoop.png" class="hoop-art" alt="hoop">
             <span class="hoop-word" id="hoop2">?</span>
           </button>
         </div>
@@ -949,3 +905,4 @@ hoopsRow.addEventListener('keydown', e => {
   <script src="site-nav.js?v=3"></script>
 </body>
 </html>
+

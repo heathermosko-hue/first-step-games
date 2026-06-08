@@ -123,6 +123,7 @@
       grid-template-rows: repeat(5, 1fr);
       width: 100%;
       aspect-ratio: 8/5;
+      background: url('icons/bg-snakes.png') center/cover no-repeat;
     }
 
     .cell {
@@ -596,12 +597,14 @@ function buildBoard() {
     cell.style.gridColumn = col + 1;
     cell.style.gridRow    = row + 1;
 
-    // Background color
+    // Background color (semi-transparent so board image shows through)
     let bg = PALETTE[(n - 1) % 8];
-    if (n === 1)  bg = '#FFD700';
-    if (n === 40) bg = '#FF8C00';
-    if (SNAKES[n]  !== undefined) bg = '#FF6B6B';
-    if (LADDERS[n] !== undefined) bg = '#98FB98';
+    if (n === 1)  bg = 'rgba(255,215,0,0.6)';
+    else if (n === 40) bg = 'rgba(255,140,0,0.6)';
+    else if (SNAKES[n]  !== undefined) bg = 'rgba(255,107,107,0.6)';
+    else if (LADDERS[n] !== undefined) bg = 'rgba(152,251,152,0.6)';
+    else bg = bg.replace(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i,
+      (_, r, g, b) => `rgba(${parseInt(r,16)},${parseInt(g,16)},${parseInt(b,16)},0.55)`);
     cell.style.background = bg;
 
     // Number
