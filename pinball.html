@@ -7,33 +7,41 @@
   <link href="fonts.css?v=3" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family: 'Comic Sans MS', 'Comic Neue', cursive;background:url('icons/bg-pinball-arcade.png') center/cover no-repeat fixed,#0d0018;color:#eee;
-         height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;background:rgba(0,0,10,0.45);pointer-events:none;z-index:0;}
+    body{font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+         background:url('icons/bg-pinball-arcade.png') center/cover no-repeat fixed, #0d0018;
+         color:#eee; height:100vh; height:100dvh; overflow:hidden;
+         display:flex; flex-direction:column; align-items:center;}
 
-    header{width:100%;max-width:420px;background:linear-gradient(135deg,#F5A623,#E8960F);
+    /* Full-width header — shows arcade bg on sides */
+    header{width:100%; background:rgba(0,0,0,0.55);
            padding:.5rem 1rem;display:flex;align-items:center;gap:.6rem;
-           box-shadow:0 3px 14px rgba(245,166,35,.4);position:relative;z-index:1;}
+           box-shadow:0 3px 14px rgba(0,0,0,.5); position:relative; z-index:2;
+           backdrop-filter:blur(6px);}
     .back-link{color:white;text-decoration:none;font-weight:800;font-size:.85rem;
-               background:rgba(255,255,255,.22);padding:5px 13px;border-radius:999px;
+               background:rgba(255,166,35,.7);padding:5px 13px;border-radius:999px;
                white-space:nowrap;flex-shrink:0;}
     header h1{font-family: 'Comic Sans MS', 'Comic Neue', cursive;color:white;
-              font-size:clamp(1.1rem,4vw,1.6rem);flex:1;text-align:center;}
-    .btn-mute{background:rgba(255,255,255,.22);border:none;color:white;
+              font-size:clamp(1.1rem,4vw,1.6rem);flex:1;text-align:center;
+              text-shadow:0 0 20px rgba(245,166,35,.8);}
+    .btn-mute{background:rgba(255,166,35,.5);border:none;color:white;
               font-size:1.05rem;padding:5px 11px;border-radius:999px;cursor:pointer;flex-shrink:0;}
-    .btn-mute.muted{background:rgba(255,80,80,.45);}
+    .btn-mute.muted{background:rgba(255,80,80,.55);}
 
-    .cat-bar{width:100%;max-width:420px;background:rgba(10,10,30,0.75);border-bottom:2px solid #2a2a4a;
-             padding:.2rem .4rem;display:flex;gap:.25rem;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;position:relative;z-index:1;}
+    /* Full-width cat-bar — shows arcade bg on sides */
+    .cat-bar{width:100%; background:rgba(0,0,0,0.45);
+             padding:.25rem .6rem;display:flex;gap:.25rem;flex-wrap:nowrap;overflow-x:auto;
+             justify-content:center; position:relative; z-index:2;
+             backdrop-filter:blur(4px);}
     .btn-cat{font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-weight:700;font-size:.82rem;
-             border:2px solid #3a3a6a;background:#1a1a3a;color:#8888cc;
+             border:2px solid rgba(245,166,35,0.5);background:rgba(20,20,60,0.7);color:#ccccff;
              padding:5px 13px;border-radius:999px;cursor:pointer;transition:all .2s;white-space:nowrap;}
     .btn-cat:hover{border-color:#F5A623;color:#F5A623;}
     .btn-cat.active{background:#F5A623;border-color:#F5A623;color:white;}
 
     /* ── MACHINE CABINET ── */
-    .machine-wrap{width:100%;max-width:420px;flex:1;display:flex;flex-direction:column;
-                  align-items:center;padding:0 .4rem .2rem;overflow:hidden;position:relative;z-index:1;}
+    /* Narrower than viewport so arcade bg always shows on sides */
+    .machine-wrap{width:92%; max-width:400px; flex:1; display:flex; flex-direction:column;
+                  align-items:center; padding:0 0 .2rem; overflow:hidden; position:relative; z-index:1;}
     /* Scale down the entire machine cabinet on short screens */
     @media (max-height: 680px) {
       .machine-outer { transform: scale(0.88); transform-origin: top center; margin-top:.2rem; }
@@ -43,13 +51,13 @@
     }
     .machine-outer{
       position:relative;
-      width:100%;max-width:392px;
-      margin-top:.6rem;
-      background:linear-gradient(180deg,rgba(42,0,80,0.82),rgba(13,0,24,0.88));
+      width:100%; max-width:392px;
+      margin-top:.5rem;
+      background:rgba(10,0,30,0.78);
       border-radius:20px 20px 10px 10px;
       padding:6px 6px 4px;
-      box-shadow:0 0 40px rgba(245,166,35,.4),0 0 80px rgba(180,92,255,.2),
-                 inset 0 0 30px rgba(0,0,0,.5);
+      box-shadow:0 0 40px rgba(245,166,35,.5),0 0 90px rgba(180,92,255,.3),
+                 inset 0 0 30px rgba(0,0,0,.6);
     }
     /* Neon trim border */
     .machine-outer::before{
