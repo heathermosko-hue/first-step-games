@@ -5,7 +5,7 @@
  * Home  → https://www.firststepreading.com (main website / shop)
  */
 (function () {
-  'use strict';
+  try {
 
   var HOME_URL = 'https://www.firststepreading.com';
   var MENU_URL = 'hub.html';
@@ -92,4 +92,5 @@
   var ab = document.getElementById('access-bar');
   if (ab) ab.style.top = NAV_H + 'px';
 
+  } catch(e) { /* fail silently — nav is non-critical */ }
 })();
