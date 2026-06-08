@@ -347,7 +347,7 @@
       align-items: flex-start;
     }
     @media (max-height: 750px) {
-      .hand { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; padding-bottom: 4px; }
+      .hand { flex-wrap: nowrap; overflow-x: auto; overflow-y: visible; padding-bottom: 6px; }
       .hand::-webkit-scrollbar { height: 4px; }
       .hand::-webkit-scrollbar-thumb { background: #D0E8FF; border-radius: 4px; }
     }
@@ -689,6 +689,21 @@
     }
     .btn-mute:hover { background: rgba(255,255,255,0.35); }
     .btn-mute.muted { background: rgba(255,100,100,0.35); }
+/* ── MOBILE height fixes ── */
+@media (max-height: 700px) {
+  .legend { display: none; }
+  .game-area { gap: 0.18rem; }
+}
+@media (max-height: 580px) {
+  :root { --card-w: 42px; --card-h: 60px; }
+  .scoreboard { padding: .03rem .4rem; }
+  .score-value { font-size: 1rem; }
+  .game-area { gap: 0.1rem; padding: .08rem .3rem; }
+  .middle-row { padding: 0.12rem 0.35rem; }
+  .message-text { font-size: .82rem; }
+  header h1 { font-size: 1rem; }
+  header { padding: .22rem .6rem; }
+}
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
 <body>

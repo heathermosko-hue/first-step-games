@@ -99,6 +99,20 @@
     .btn-launch:hover{animation:none;transform:scale(1.07);}
     @keyframes launch-bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
     .hidden{display:none !important;}
+    .flipper-btns{
+      display:flex;gap:.5rem;margin-top:.3rem;
+      width:100%;max-width:392px;
+    }
+    .btn-flip{
+      flex:1;font-family:'Comic Sans MS','Comic Neue',cursive;font-size:1rem;font-weight:800;
+      background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.5);color:#F5A623;
+      padding:12px 0;border-radius:14px;cursor:pointer;
+      user-select:none;-webkit-user-select:none;touch-action:none;
+      transition:background .1s,color .1s,border-color .1s;letter-spacing:.5px;
+    }
+    .btn-flip.pressed{background:rgba(245,166,35,0.5);color:white;border-color:#F5A623;
+      box-shadow:0 0 12px rgba(245,166,35,.4);}
+    .btn-flip:disabled{opacity:0.28;cursor:default;}
 
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);
              display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem;}
@@ -148,6 +162,10 @@
     <div class="neon-left"></div>
     <div class="neon-right"></div>
     <canvas id="gc" width="380" height="440"></canvas>
+  </div>
+  <div class="flipper-btns" id="flipperBtns" style="display:none">
+    <button class="btn-flip" id="btnFlipL" disabled>◀ LEFT FLIPPER</button>
+    <button class="btn-flip" id="btnFlipR" disabled>RIGHT FLIPPER ▶</button>
   </div>
   <button class="btn-launch hidden" id="btnLaunch">🚀 Launch Ball!</button>
 </div>
@@ -342,6 +360,9 @@ function startGame(){
   document.getElementById('qDisplay').classList.add('hidden');
   document.getElementById('gameOverlay').classList.add('hidden');
   document.getElementById('btnLaunch').classList.remove('hidden');
+  const _fb=document.getElementById('flipperBtns');
+  _fb.style.display='flex';
+  _fb.querySelectorAll('.btn-flip').forEach(b=>b.disabled=false);
   if(!raf)raf=requestAnimationFrame(loop);
 }
 
@@ -435,6 +456,7 @@ function doGameOver(){
   _overFired=true;phase='over';
   document.getElementById('qDisplay').classList.add('hidden');
   document.getElementById('btnLaunch').classList.add('hidden');
+  document.getElementById('flipperBtns').querySelectorAll('.btn-flip').forEach(b=>b.disabled=true);
   speak(`Game over! | You scored ${score} points!`);
   const emoji=score>=500?'🏆':score>=200?'⭐':'😅';
   document.getElementById('ovEmoji').textContent=emoji;
@@ -450,6 +472,7 @@ function doWin(){
   if(phase==='over')return;phase='over';
   document.getElementById('qDisplay').classList.add('hidden');
   document.getElementById('btnLaunch').classList.add('hidden');
+  document.getElementById('flipperBtns').querySelectorAll('.btn-flip').forEach(b=>b.disabled=true);
   speak(`You win! | Amazing! | You scored ${score} points!`);
   launchConfetti();
   document.getElementById('ovEmoji').textContent='🏆';
@@ -809,6 +832,26 @@ document.addEventListener('keyup',e=>{
   if(e.key==='z'||e.key==='Z'||e.key==='ArrowLeft')flipL=false;
   else if(e.key==='x'||e.key==='X'||e.key==='ArrowRight')flipR=false;
 });
+
+/* ── FLIPPER BUTTONS ── */
+(function(){
+  const bl=document.getElementById('btnFlipL');
+  const br=document.getElementById('btnFlipR');
+  function setL(v){flipL=v;bl.classList.toggle('pressed',v);}
+  function setR(v){flipR=v;br.classList.toggle('pressed',v);}
+  bl.addEventListener('mousedown',()=>setL(true));
+  bl.addEventListener('mouseup',()=>setL(false));
+  bl.addEventListener('mouseleave',()=>setL(false));
+  br.addEventListener('mousedown',()=>setR(true));
+  br.addEventListener('mouseup',()=>setR(false));
+  br.addEventListener('mouseleave',()=>setR(false));
+  bl.addEventListener('touchstart',e=>{e.preventDefault();setL(true);},{passive:false});
+  bl.addEventListener('touchend',e=>{e.preventDefault();setL(false);},{passive:false});
+  bl.addEventListener('touchcancel',e=>{e.preventDefault();setL(false);},{passive:false});
+  br.addEventListener('touchstart',e=>{e.preventDefault();setR(true);},{passive:false});
+  br.addEventListener('touchend',e=>{e.preventDefault();setR(false);},{passive:false});
+  br.addEventListener('touchcancel',e=>{e.preventDefault();setR(false);},{passive:false});
+})();
 
 /* ── BUTTONS ── */
 document.getElementById('btnLaunch').addEventListener('click',launch);

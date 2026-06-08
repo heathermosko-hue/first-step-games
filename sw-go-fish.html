@@ -342,9 +342,9 @@
       align-items: flex-start;
     }
     @media (max-height: 750px) {
-      .hand { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; padding-bottom: 4px; }
+      .hand { flex-wrap: nowrap; overflow-x: auto; overflow-y: visible; padding-bottom: 6px; }
       .hand::-webkit-scrollbar { height: 4px; }
-      .hand::-webkit-scrollbar-thumb { background: #D0E8FF; border-radius: 4px; }
+      .hand::-webkit-scrollbar-thumb { background: #B2EAE0; border-radius: 4px; }
     }
     @media (max-height: 600px) {
       :root { --card-w: 42px; --card-h: 60px; }
@@ -629,6 +629,26 @@
       .settings-bar { padding: .15rem .5rem; }
       header h1 { font-size: 1.2rem; }
     }
+/* ── MOBILE: compact computer zone ── */
+@media (max-height: 680px) {
+  .computer-zone .hand { display: none !important; }
+  .computer-zone .pairs-row { display: none !important; }
+  .computer-zone { padding: .12rem .5rem; border-radius: 10px; }
+  .computer-zone .zone-header { margin-bottom: 0; }
+  .computer-title { font-size: .85rem; }
+  .game-area { gap: 0.18rem; }
+}
+@media (max-height: 580px) {
+  :root { --card-w: 44px; --card-h: 62px; }
+  .settings-bar { padding: .08rem .4rem; }
+  .scoreboard { padding: .03rem .4rem; }
+  .score-value { font-size: 1rem; }
+  .game-area { gap: 0.1rem; padding: .08rem .3rem; }
+  .middle-row { padding: 0.12rem 0.35rem; }
+  .message-text { font-size: .82rem; }
+  header { padding: .22rem .6rem; }
+  header h1 { font-size: 1rem; }
+}
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
 <body>
