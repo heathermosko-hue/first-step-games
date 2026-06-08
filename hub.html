@@ -253,11 +253,11 @@
     .acc-body {
       overflow: hidden;
       max-height: 0;
-      transition: max-height 0.45s ease, padding 0.3s ease;
+      transition: max-height 0.35s ease, padding 0.3s ease;
       padding: 0 0.2rem;
     }
     .acc-body.open {
-      max-height: 9999px;
+      max-height: 2400px;
       padding: 1rem 0.2rem 0.5rem;
     }
 
@@ -558,8 +558,7 @@
     #gate-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(30,20,60,0.55);
-      backdrop-filter: blur(3px);
+      background: rgba(30,20,60,0.72);
       z-index: 500;
       display: flex;
       align-items: center;
@@ -2219,6 +2218,11 @@
     var isOpen = btn.classList.contains('open');
     btn.classList.toggle('open', !isOpen);
     btn.setAttribute('aria-expanded', !isOpen);
+    if (!isOpen) {
+      body.style.maxHeight = body.scrollHeight + 'px';
+    } else {
+      body.style.maxHeight = '0';
+    }
     body.classList.toggle('open', !isOpen);
     // Save open state
     try {
