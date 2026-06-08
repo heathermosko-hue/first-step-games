@@ -9,10 +9,11 @@
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family: 'Comic Sans MS', 'Comic Neue', cursive;background:url('icons/bg-pinball-arcade.png') center/cover no-repeat fixed,#0d0018;color:#eee;
          height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background:rgba(0,0,10,0.45);pointer-events:none;z-index:0;}
 
     header{width:100%;max-width:420px;background:linear-gradient(135deg,#F5A623,#E8960F);
            padding:.5rem 1rem;display:flex;align-items:center;gap:.6rem;
-           box-shadow:0 3px 14px rgba(245,166,35,.4);}
+           box-shadow:0 3px 14px rgba(245,166,35,.4);position:relative;z-index:1;}
     .back-link{color:white;text-decoration:none;font-weight:800;font-size:.85rem;
                background:rgba(255,255,255,.22);padding:5px 13px;border-radius:999px;
                white-space:nowrap;flex-shrink:0;}
@@ -22,8 +23,8 @@
               font-size:1.05rem;padding:5px 11px;border-radius:999px;cursor:pointer;flex-shrink:0;}
     .btn-mute.muted{background:rgba(255,80,80,.45);}
 
-    .cat-bar{width:100%;max-width:420px;background:#111128;border-bottom:2px solid #2a2a4a;
-             padding:.2rem .4rem;display:flex;gap:.25rem;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;}
+    .cat-bar{width:100%;max-width:420px;background:rgba(10,10,30,0.75);border-bottom:2px solid #2a2a4a;
+             padding:.2rem .4rem;display:flex;gap:.25rem;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;position:relative;z-index:1;}
     .btn-cat{font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-weight:700;font-size:.82rem;
              border:2px solid #3a3a6a;background:#1a1a3a;color:#8888cc;
              padding:5px 13px;border-radius:999px;cursor:pointer;transition:all .2s;white-space:nowrap;}
@@ -32,7 +33,7 @@
 
     /* ── MACHINE CABINET ── */
     .machine-wrap{width:100%;max-width:420px;flex:1;display:flex;flex-direction:column;
-                  align-items:center;padding:0 .4rem .2rem;overflow:hidden;}
+                  align-items:center;padding:0 .4rem .2rem;overflow:hidden;position:relative;z-index:1;}
     /* Scale down the entire machine cabinet on short screens */
     @media (max-height: 680px) {
       .machine-outer { transform: scale(0.88); transform-origin: top center; margin-top:.2rem; }
@@ -44,7 +45,7 @@
       position:relative;
       width:100%;max-width:392px;
       margin-top:.6rem;
-      background:url('icons/bg-pinball.png') center/cover no-repeat, linear-gradient(180deg,#2a0050,#0d0018);
+      background:linear-gradient(180deg,rgba(42,0,80,0.82),rgba(13,0,24,0.88));
       border-radius:20px 20px 10px 10px;
       padding:6px 6px 4px;
       box-shadow:0 0 40px rgba(245,166,35,.4),0 0 80px rgba(180,92,255,.2),
