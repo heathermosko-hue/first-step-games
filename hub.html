@@ -1856,7 +1856,7 @@
   }
 
   // ── ACCESS BAR ──
-  function renderAccessBar() {
+  function renderAccessBar(skipGate) {
     const bar   = document.getElementById('access-bar');
     const label = hubAccessLabel();
 
@@ -1902,7 +1902,7 @@
         </div>
         <a href="students.html" class="access-bar-link">Student Page</a>
         <a href="login.html" class="access-bar-link">Teacher Login</a>`;
-      showGateOverlay();
+      if (!skipGate) showGateOverlay();
     }
   }
 
@@ -2079,6 +2079,8 @@
         sessionStorage.setItem('fsr_access_type', 'member');
         sessionStorage.setItem('fsr_member_name', data.name || 'Member');
         document.getElementById('member-login-overlay').remove();
+        const gate = document.getElementById('gate-overlay');
+        if (gate) gate.remove();
         renderAccessBar();
       } else {
         errEl.innerHTML = data.error || 'Incorrect email or password.';
@@ -2112,15 +2114,19 @@
     sessionStorage.setItem('fsr_access_type', 'member');
   }
 
-  renderAccessBar();
-
   // ── HANDLE ?sso=member IN URL ──
-  if (new URLSearchParams(location.search).get('sso') === 'member') {
-    if (!hubAccessGranted()) {
-      showMemberLoginOverlay();
-    }
-    // Clean URL without reloading
+  const _ssoParam = new URLSearchParams(location.search).get('sso');
+  if (_ssoParam === 'member') {
     history.replaceState(null, '', location.pathname);
+    if (!hubAccessGranted()) {
+      // Render bar but skip gate overlay — show member login directly
+      renderAccessBar(true);
+      showMemberLoginOverlay();
+    } else {
+      renderAccessBar();
+    }
+  } else {
+    renderAccessBar();
   }
 </script>
   <script src="site-nav.js?v=3"></script>
