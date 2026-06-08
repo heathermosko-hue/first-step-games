@@ -69,11 +69,11 @@
 
     canvas{display:block;width:100%;border-radius:14px 14px 6px 6px;cursor:crosshair;}
 
-    /* Question display below machine */
+    /* Question display above machine */
     .q-display{
       width:100%;max-width:392px;
-      background:#16163a;border:2px solid #2a2a5a;border-top:none;
-      border-radius:0 0 14px 14px;
+      background:#16163a;border:2px solid #2a2a5a;border-bottom:none;
+      border-radius:14px 14px 0 0;
       padding:.4rem .8rem;display:flex;align-items:center;justify-content:center;gap:.8rem;
       min-height:60px;
     }
@@ -132,14 +132,14 @@
 </div>
 
 <div class="machine-wrap">
+  <div class="q-display hidden" id="qDisplay">
+    <div class="q-pic" id="qPic"></div>
+    <div class="q-label" id="qLabel">Which word matches?</div>
+  </div>
   <div class="machine-outer">
     <div class="neon-left"></div>
     <div class="neon-right"></div>
     <canvas id="gc" width="380" height="440"></canvas>
-  </div>
-  <div class="q-display hidden" id="qDisplay">
-    <div class="q-pic" id="qPic"></div>
-    <div class="q-label" id="qLabel">Which word matches?</div>
   </div>
   <button class="btn-launch hidden" id="btnLaunch">🚀 Launch Ball!</button>
 </div>
