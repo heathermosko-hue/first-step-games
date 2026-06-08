@@ -7,13 +7,13 @@
   <style>
     :root { --bg:#F5F0FF; --text:#2C3E50; }
     *{ margin:0; padding:0; box-sizing:border-box; }
-    body{ font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:var(--bg); color:var(--text); height:100vh; height:100dvh; overflow:hidden; display:flex; flex-direction:column; }
+    body{ font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:var(--bg); color:var(--text); height:100vh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
-    header{ background:linear-gradient(135deg,#8E44AD 0%,#6B48FF 100%); padding:.4rem .8rem; display:flex; align-items:center; gap:.5rem; flex-wrap:nowrap; flex-shrink:0; min-height:0; }
-    .back-link{ color:white; text-decoration:none; font-weight:700; font-size:.82rem; background:rgba(255,255,255,.2); padding:5px 11px; border-radius:999px; white-space:nowrap; transition:background .2s; flex-shrink:0; }
+    header{ background:linear-gradient(135deg,#8E44AD 0%,#6B48FF 100%); padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    .back-link{ color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover{ background:rgba(255,255,255,.35); }
-    header h1{ font-family: 'Comic Sans MS', 'Comic Neue', cursive; color:white; font-size:clamp(.9rem,3.5vw,1.5rem); flex:1; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    header h1{ font-family: 'Comic Sans MS', 'Comic Neue', cursive; color:white; font-size:clamp(1.2rem,3.8vw,1.85rem); flex:1; text-align:center; }
     .controls{ display:flex; gap:.45rem; align-items:center; }
     .btn-mute,.btn-voice{ background:rgba(255,255,255,.2); border:none; color:white; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; }
     .btn-mute:hover,.btn-voice:hover{ background:rgba(255,255,255,.35); }
@@ -21,14 +21,14 @@
     .btn-mute.muted{ background:rgba(255,80,80,.45); }
 
     /* ── MAIN ── */
-    main{ flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:.3rem .5rem .2rem; gap:.3rem; }
+    main{ flex:1; overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:.3rem .5rem .2rem; gap:.3rem; }
 
     /* ── CALLED AREA (top bar: button left, display right) ── */
-    .called-area{ background:white; border-radius:16px; padding:.4rem .8rem; box-shadow:0 4px 20px rgba(107,72,255,.1); width:min(340px,96vw); display:flex; flex-direction:row; align-items:center; gap:.8rem; flex-shrink:0; }
+    .called-area{ background:white; border-radius:16px; padding:.5rem 1rem; box-shadow:0 4px 20px rgba(107,72,255,.1); width:min(340px,96vw); display:flex; flex-direction:row; align-items:center; gap:.8rem; }
     .called-label{ font-size:.7rem; font-weight:700; color:#bbb; text-transform:uppercase; letter-spacing:1.2px; }
     .called-letters-row{ display:flex; align-items:baseline; justify-content:center; gap:.4rem; flex:1; }
-    .called-upper{ font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; font-size:1.9rem; color:#6B48FF; line-height:1; }
-    .called-lower{ font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; font-size:1.9rem; color:#8E44AD; line-height:1; }
+    .called-upper{ font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; font-size:2.2rem; color:#6B48FF; line-height:1; }
+    .called-lower{ font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; font-size:2.2rem; color:#8E44AD; line-height:1; }
     .called-sep{ font-size:1.4rem; color:#ddd; line-height:1; }
     .called-info{ font-size:.82rem; color:#888; white-space:nowrap; }
     .called-placeholder{ font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:2.4rem; color:#ddd; }
@@ -36,7 +36,7 @@
 
     /* ── BINGO GRID ── */
     .bingo-wrap{ display:flex; flex-direction:column; gap:4px; flex:1; min-height:0; width:min(340px,96vw); }
-    .bingo-header-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:4px; width:100%; flex-shrink:0; }
+    .bingo-header-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:4px; width:100%; }
     .bingo-header-cell{ font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.3rem; color:white; background:linear-gradient(135deg,#8E44AD,#6B48FF); border-radius:7px; display:flex; align-items:center; justify-content:center; height:32px; }
     .bingo-grid{ flex:1; min-height:0; display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(5,1fr); gap:4px; width:100%; }
     .bingo-cell{ background:white; border:2px solid #E0D0FF; border-radius:7px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:default; transition:transform .12s,box-shadow .15s,background .2s,border-color .2s; font-family:'Comic Neue','Comic Sans MS','Comic Sans',cursive; font-size:clamp(.7rem,3vw,1.4rem); user-select:none; overflow:hidden; }
@@ -49,7 +49,7 @@
     @keyframes win-bounce{ from{ transform:scale(1); } to{ transform:scale(1.06); } }
 
     /* ── CALL BUTTON ── */
-    .btn-call{ background:linear-gradient(135deg,#8E44AD,#6B48FF); color:white; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1rem; padding:8px 22px; border:none; border-radius:999px; cursor:pointer; box-shadow:0 5px 18px rgba(107,72,255,.35); transition:transform .15s,opacity .2s; white-space:nowrap; flex-shrink:0; }
+    .btn-call{ background:linear-gradient(135deg,#8E44AD,#6B48FF); color:white; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.1rem; padding:9px 30px; border:none; border-radius:999px; cursor:pointer; box-shadow:0 5px 18px rgba(107,72,255,.35); transition:transform .15s,opacity .2s; }
     .progress-area{ display:none !important; }
     .called-chips{ display:none !important; }
     .btn-call:hover:not(:disabled){ transform:translateY(-2px); }
@@ -81,23 +81,20 @@
 
 
     /* ── SETTINGS BAR ── */
-    .settings-bar{ background:white; border-bottom:2px solid #EDE0FF; padding:.25rem .5rem; display:flex; align-items:center; gap:.35rem; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; flex-shrink:0; scrollbar-width:none; }
-    .settings-bar::-webkit-scrollbar{ display:none; }
-    .settings-group{ display:flex; align-items:center; gap:.3rem; flex-wrap:nowrap; flex-shrink:0; }
-    .settings-label{ font-size:.7rem; font-weight:800; color:#bbb; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
-    .mode-btns{ display:flex; gap:.25rem; flex-wrap:nowrap; }
-    .btn-mode{ background:#F0E8FF; color:#8E44AD; border:2px solid transparent; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.75rem; padding:4px 10px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; flex-shrink:0; }
+    .settings-bar{ background:white; border-bottom:2px solid #EDE0FF; padding:.6rem 1.5rem; display:flex; align-items:center; gap:.75rem 1.25rem; flex-wrap:wrap; justify-content:center; }
+    .settings-group{ display:flex; align-items:center; gap:.45rem; flex-wrap:wrap; }
+    .settings-label{ font-size:.75rem; font-weight:800; color:#bbb; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+    .mode-btns{ display:flex; gap:.3rem; }
+    .btn-mode{ background:#F0E8FF; color:#8E44AD; border:2px solid transparent; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .btn-mode:hover{ background:#E0D0FF; }
     .btn-mode.active{ background:linear-gradient(135deg,#8E44AD,#6B48FF); color:white; }
-    .btn-glow{ background:#FFF8E0; color:#AA7700; border:2px solid #FFD93D; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.75rem; padding:4px 10px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; flex-shrink:0; }
+    .btn-glow{ background:#FFF8E0; color:#AA7700; border:2px solid #FFD93D; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .btn-glow.on{ background:linear-gradient(135deg,#FFD93D,#FF8E53); color:white; border-color:transparent; }
 
     @media(max-width:480px){
-      header h1{ font-size:.88rem; }
-      .called-upper,.called-lower{ font-size:1.6rem; }
-      .btn-call{ font-size:.9rem; padding:7px 14px; }
-      .called-area{ padding:.3rem .6rem; }
-      main{ padding:.2rem .4rem .15rem; gap:.2rem; }
+      header h1{ font-size:1.05rem; }
+      .called-upper,.called-lower{ font-size:1.9rem; }
+      .btn-call{ font-size:.92rem; padding:8px 16px; }
     }
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
