@@ -18,6 +18,7 @@ jobs:
           host: 192.145.235.207
           username: firststep
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 2222
           source: "*.html,fonts.css,site-nav.js,icons/"
           target: /public_html/reading-games/
           overwrite: true
