@@ -12,7 +12,7 @@
       --orange:  #FF8E53;
       --yellow:  #FFD93D;
       --green:   #6BCB77;
-      --bg:      #E8F4FF;
+      --bg:      #E8F4FF; /* overridden by body bg-image below */
       --text:    #2C3E50;
       --card-w:  62px;
       --card-h:  90px;
@@ -22,7 +22,7 @@
 
     body {
       font-family: 'Comic Sans MS', 'Comic Neue', cursive;
-      background: var(--bg);
+      background: url('icons/bg-gofish.png') center/cover no-repeat fixed, var(--bg);
       color: var(--text);
       height: 100vh;
       overflow: hidden;

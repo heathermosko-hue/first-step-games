@@ -65,8 +65,8 @@
     }
     .pic-card:hover { transform:scale(1.07); border-color:var(--purplelight); box-shadow:0 4px 16px rgba(155,89,182,.25); }
     .pic-card:active { transform:scale(.96); }
-    .pic-card .emoji { font-size:clamp(1.7rem,5.5vw,2.6rem); line-height:1.15; }
-    .pic-card .word { font-size:clamp(.58rem,1.6vw,.78rem); font-weight:800; color:#777; margin-top:.15rem; text-align:center; line-height:1.1; }
+    .pic-card img { width:clamp(4rem,16vw,7.5rem); height:clamp(4rem,16vw,7.5rem); object-fit:contain; border-radius:8px; display:block; }
+    .pic-card .word { display:none; }
 
     /* states */
     .pic-card.correct { border-color:#27AE60 !important; background:#EAFAF1 !important; pointer-events:none; animation:popBounce .4s ease forwards; }
@@ -117,34 +117,34 @@
 </main>
 
 <script>
-/* ── WORD BANK ── only clear, obvious pictures for 4-year-olds ── */
+/* ── WORD BANK ── ChatGPT letter-sound images only ── */
 const WORDS = {
-  A:[{w:'apple',e:'icons/pic-a.png'}],
-  B:[{w:'ball',e:'icons/pic-b.png'},{w:'bear',e:'🐻'},{w:'bus',e:'🚌'},{w:'banana',e:'🍌'},{w:'bee',e:'🐝'},{w:'bird',e:'🐦'},{w:'butterfly',e:'🦋'}],
-  C:[{w:'cat',e:'icons/pic-c.png'},{w:'car',e:'🚗'},{w:'cake',e:'🎂'},{w:'cow',e:'🐄'},{w:'cloud',e:'☁️'},{w:'cookie',e:'🍪'}],
-  D:[{w:'dog',e:'icons/pic-d.png'},{w:'duck',e:'🦆'},{w:'drum',e:'🥁'},{w:'donut',e:'🍩'},{w:'deer',e:'🦌'}],
+  A:[{w:'apple',   e:'icons/pic-a.png'}],
+  B:[{w:'ball',    e:'icons/pic-b.png'}],
+  C:[{w:'cat',     e:'icons/pic-c.png'}],
+  D:[{w:'dog',     e:'icons/pic-d.png'}],
   E:[{w:'elephant',e:'icons/pic-e.png'}],
-  F:[{w:'fish',e:'icons/pic-f.png'},{w:'frog',e:'🐸'},{w:'fire',e:'🔥'},{w:'fox',e:'🦊'},{w:'flower',e:'🌸'}],
-  G:[{w:'goat',e:'icons/pic-g.png'},{w:'giraffe',e:'🦒'},{w:'ghost',e:'👻'}],
-  H:[{w:'hat',e:'icons/pic-h.png'},{w:'horse',e:'🐴'},{w:'house',e:'🏠'},{w:'heart',e:'❤️'},{w:'hippo',e:'🦛'}],
-  I:[{w:'igloo',e:'icons/pic-i.png'}],
-  J:[{w:'jar',e:'icons/pic-j.png'},{w:'jellyfish',e:'🪼'}],
-  K:[{w:'kite',e:'icons/pic-k.png'},{w:'key',e:'🔑'},{w:'kangaroo',e:'🦘'}],
-  L:[{w:'lamp',e:'icons/pic-l.png'},{w:'leaf',e:'🍃'},{w:'lemon',e:'🍋'},{w:'ladybug',e:'🐞'}],
-  M:[{w:'mug',e:'icons/pic-m.png'},{w:'mouse',e:'🐭'},{w:'monkey',e:'🐒'},{w:'milk',e:'🥛'}],
-  N:[{w:'nest',e:'icons/pic-n.png'},{w:'nose',e:'👃'},{w:'noodles',e:'🍜'}],
-  O:[{w:'octopus',e:'icons/pic-o.png'}],
-  P:[{w:'pig',e:'icons/pic-p.png'},{w:'pizza',e:'🍕'},{w:'penguin',e:'🐧'},{w:'pumpkin',e:'🎃'},{w:'popcorn',e:'🍿'}],
-  Q:[{w:'queen',e:'icons/pic-q.png'}],
-  R:[{w:'rainbow',e:'icons/pic-r.png'},{w:'rabbit',e:'🐰'},{w:'rocket',e:'🚀'},{w:'rose',e:'🌹'}],
-  S:[{w:'sun',e:'icons/pic-s.png'},{w:'star',e:'⭐'},{w:'snake',e:'🐍'},{w:'sheep',e:'🐑'},{w:'strawberry',e:'🍓'}],
-  T:[{w:'tree',e:'icons/pic-t.png'},{w:'tiger',e:'🐯'},{w:'turtle',e:'🐢'},{w:'train',e:'🚂'}],
+  F:[{w:'fish',    e:'icons/pic-f.png'}],
+  G:[{w:'goat',    e:'icons/pic-g.png'}],
+  H:[{w:'hat',     e:'icons/pic-h.png'}],
+  I:[{w:'igloo',   e:'icons/pic-i.png'}],
+  J:[{w:'jar',     e:'icons/pic-j.png'}],
+  K:[{w:'kite',    e:'icons/pic-k.png'}],
+  L:[{w:'lamp',    e:'icons/pic-l.png'}],
+  M:[{w:'mug',     e:'icons/pic-m.png'}],
+  N:[{w:'nest',    e:'icons/pic-n.png'}],
+  O:[{w:'octopus', e:'icons/pic-o.png'}],
+  P:[{w:'pig',     e:'icons/pic-p.png'}],
+  Q:[{w:'queen',   e:'icons/pic-q.png'}],
+  R:[{w:'rainbow', e:'icons/pic-r.png'}],
+  S:[{w:'sun',     e:'icons/pic-s.png'}],
+  T:[{w:'tree',    e:'icons/pic-t.png'}],
   U:[{w:'umbrella',e:'icons/pic-u.png'}],
-  V:[{w:'violin',e:'icons/pic-v.png'},{w:'volcano',e:'🌋'}],
-  W:[{w:'watch',e:'icons/pic-w.png'},{w:'watermelon',e:'🍉'},{w:'worm',e:'🪱'},{w:'wolf',e:'🐺'}],
+  V:[{w:'violin',  e:'icons/pic-v.png'}],
+  W:[{w:'watch',   e:'icons/pic-w.png'}],
   X:[{w:'xylophone',e:'icons/pic-x.png'}],
-  Y:[{w:'yo-yo',e:'icons/pic-y.png'},{w:'yarn',e:'🧶'}],
-  Z:[{w:'zebra',e:'icons/pic-z.png'}],
+  Y:[{w:'yo-yo',   e:'icons/pic-y.png'}],
+  Z:[{w:'zebra',   e:'icons/pic-z.png'}],
 };
 
 const LETTERS = Object.keys(WORDS);
@@ -280,7 +280,7 @@ function newRound() {
   for (const item of items) {
     const el = document.createElement('div');
     el.className = 'pic-card';
-    el.innerHTML = item.e.includes('/') ? `<img src="${item.e}" alt="${item.w}" style="width:4rem;height:4rem;object-fit:contain;border-radius:8px">` : `<span class="emoji">${item.e}</span>`;
+    el.innerHTML = `<img src="${item.e}" alt="${item.w}">`;
     el.addEventListener('click', () => { onFirstInteraction(); handleClick(el, item.isCorrect); });
     grid.appendChild(el);
   }
