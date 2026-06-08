@@ -231,49 +231,40 @@
     .lanes-wrap {
       display: flex;
       flex-direction: column;
-      gap: .5rem;
+      gap: .55rem;
     }
     .lane {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: .6rem 1.2rem;
+      height: 72px;
       border-radius: 14px;
-      border: 2px solid rgba(0,0,0,.06);
+      overflow: hidden;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,.06);
-      transition: transform .1s;
       user-select: none;
+      box-shadow: 0 3px 12px rgba(0,0,0,.18);
+      transition: transform .1s, box-shadow .1s;
+      background: url('icons/lane-car.png') center/cover no-repeat;
+      border: 2.5px solid rgba(255,255,255,0.5);
     }
-    .lane:hover:not(.busy) { transform: scale(1.02); }
-    .lane:nth-child(1) { background: rgba(255,235,235,0.88); }
-    .lane:nth-child(2) { background: rgba(235,245,255,0.88); }
-    .lane:nth-child(3) { background: rgba(235,255,240,0.88); }
-    .lane:nth-child(4) { background: rgba(255,251,230,0.88); }
+    .lane:hover:not(.busy) { transform: scale(1.025); box-shadow: 0 6px 18px rgba(0,0,0,.22); }
 
-    .lane-car {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      flex-shrink: 0;
-      transform: scaleX(-1);
-    }
-    .lane:nth-child(1) .lane-car { background: #FF6B6B; }
-    .lane:nth-child(2) .lane-car { background: #3A8EF6; }
-    .lane:nth-child(3) .lane-car { background: #6BCB77; }
-    .lane:nth-child(4) .lane-car { background: #FFD93D; }
-
+    /* word sits in the light center area of the car image */
     .lane-word {
+      position: absolute;
+      left: 0;
+      right: 18%;   /* leave space for car on right */
+      text-align: center;
       font-family: 'Comic Neue', 'Comic Sans MS', 'Comic Sans', cursive;
-      font-size: clamp(1.3rem, 5.5vw, 2rem);
-      font-weight: 700;
-      color: #2C3E50;
-      flex: 1;
+      font-size: clamp(1.4rem, 5.5vw, 2.1rem);
+      font-weight: 800;
+      color: #1A3A6B;
+      text-shadow: 0 1px 3px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.7);
+      pointer-events: none;
     }
+
+    /* hide old emoji car circles */
+    .lane-car { display: none; }
 
     /* Say It button */
     .btn-say {
@@ -293,8 +284,9 @@
 
     /* ── ANIMATIONS ── */
     @keyframes zoom {
-      0%   { transform: translateX(0); opacity: 1; }
-      100% { transform: translateX(-115%); opacity: 0; }
+      0%   { transform: translateX(0) scale(1); opacity: 1; }
+      30%  { transform: translateX(-20px) scale(1.04); opacity: 1; }
+      100% { transform: translateX(-130%) scale(1.08); opacity: 0; }
     }
     @keyframes shake {
       0%,100% { transform: translateX(0); }
@@ -306,7 +298,7 @@
       to   { transform: scale(1);  opacity: 1; }
     }
 
-    .lane.correct { animation: zoom .55s ease-in forwards; pointer-events: none; }
+    .lane.correct { animation: zoom .65s cubic-bezier(.4,0,.2,1) forwards; pointer-events: none; }
     .lane.shake   { animation: shake .35s; }
 
     /* ── GAME OVER ── */
@@ -468,6 +460,49 @@ window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
 document.getElementById('btnMute').addEventListener('click',()=>{_muted=!_muted;const b=document.getElementById('btnMute');b.textContent=_muted?'🔇':'🔊';b.classList.toggle('muted',_muted);if(_muted)window.speechSynthesis.cancel();});
 
 /* ═══════════════════════════════════════
+   ZOOM SOUND (Web Audio)
+═══════════════════════════════════════ */
+let _audioCtx = null;
+function playZoom() {
+  if (_muted) return;
+  try {
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = _audioCtx;
+    // Engine rev: start low, ramp up fast, then fade
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const dist = ctx.createWaveShaper();
+
+    // Distortion for engine growl
+    const curve = new Float32Array(256);
+    for (let i = 0; i < 256; i++) {
+      const x = (i * 2) / 256 - 1;
+      curve[i] = (Math.PI + 200) * x / (Math.PI + 200 * Math.abs(x));
+    }
+    dist.curve = curve;
+
+    osc.connect(dist);
+    dist.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.type = 'sawtooth';
+    const t = ctx.currentTime;
+    osc.frequency.setValueAtTime(80, t);
+    osc.frequency.linearRampToValueAtTime(320, t + 0.18);
+    osc.frequency.linearRampToValueAtTime(600, t + 0.45);
+    osc.frequency.linearRampToValueAtTime(200, t + 0.65);
+
+    gain.gain.setValueAtTime(0.35, t);
+    gain.gain.linearRampToValueAtTime(0.5, t + 0.18);
+    gain.gain.linearRampToValueAtTime(0.15, t + 0.65);
+    gain.gain.linearRampToValueAtTime(0, t + 0.7);
+
+    osc.start(t);
+    osc.stop(t + 0.72);
+  } catch(e) {}
+}
+
+/* ═══════════════════════════════════════
    WORD DATA
 ═══════════════════════════════════════ */
 const WORDS = {
@@ -564,6 +599,7 @@ function handleLaneClick(idx) {
   if (idx === correctLane) {
     score++;
     updateScore();
+    playZoom();
     lane.classList.add('correct');
     speak(currentTarget + ' | Great job!');
     setTimeout(() => {
