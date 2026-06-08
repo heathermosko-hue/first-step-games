@@ -635,23 +635,58 @@ function printHW(){
       <div style="font-weight:700;font-size:13pt;margin-bottom:5px;">${i+1}. ${q.replace('_____','<span style="display:inline-block;width:80px;border-bottom:2px solid #000;vertical-align:bottom;">&nbsp;</span>')}</div>
     </div>`).join('');
 
-  // ── Page 2: Flashcard grid (all words, cut-out layout) ──
-  const allWords=[...new Set([...d.sw,...d.w])];
-  // Pad to multiple of 3 for clean 3-column grid
-  while(allWords.length%3!==0) allWords.push('');
-  const cardCells=allWords.map(w=>w
-    ? `<td style="width:33.3%;padding:0;border:none;">
-         <div style="border:2px dashed #aaa;border-radius:8px;margin:4px;padding:12px 6px;text-align:center;min-height:70px;display:flex;align-items:center;justify-content:center;">
-           <span style="font-size:20pt;font-weight:900;font-family:'Comic Sans MS',cursive;">${w}</span>
-         </div>
-       </td>`
-    : `<td style="width:33.3%;padding:0;border:none;"><div style="margin:4px;min-height:70px;"></div></td>`
-  );
-  const rows=[];
-  for(let i=0;i<cardCells.length;i+=3){
-    rows.push(`<tr>${cardCells.slice(i,i+3).join('')}</tr>`);
+  // ── Last Page: Flashcards (sight words + word family, cut-out layout) ──
+  function makeCardRow(words, color, label) {
+    // Pad to multiple of 3
+    const padded = [...words];
+    while(padded.length % 3 !== 0) padded.push('');
+    const rows = [];
+    for(let i = 0; i < padded.length; i += 3) {
+      const cells = padded.slice(i, i+3).map(w => w
+        ? `<td style="width:33.3%;padding:0;border:none;">
+             <div style="
+               border:3px dashed ${color};
+               border-radius:12px;
+               margin:5px;
+               padding:18px 8px 12px;
+               text-align:center;
+               min-height:90px;
+               display:flex;flex-direction:column;
+               align-items:center;justify-content:center;
+               background:#fff;
+               box-shadow:1px 1px 4px rgba(0,0,0,.06);
+             ">
+               <span style="font-size:7pt;font-weight:700;color:${color};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">${label}</span>
+               <span style="font-size:22pt;font-weight:900;font-family:'Comic Sans MS',cursive;color:#1a1a2e;">${w}</span>
+             </div>
+           </td>`
+        : `<td style="width:33.3%;padding:0;border:none;"><div style="margin:5px;min-height:90px;"></div></td>`
+      ).join('');
+      rows.push(`<tr>${cells}</tr>`);
+      // scissors cut-line between rows (not after last)
+      if(i + 3 < padded.length) {
+        rows.push(`<tr><td colspan="3" style="border:none;padding:0;">
+          <div style="border-top:1.5px dashed #ccc;margin:0 5px;text-align:right;">
+            <span style="font-size:8pt;color:#bbb;padding-right:4px;">✂</span>
+          </div></td></tr>`);
+      }
+    }
+    return rows.join('');
   }
-  const cardTable=`<table style="width:100%;border-collapse:collapse;border:none;">${rows.join('')}</table>`;
+
+  const swSection = d.sw && d.sw.length
+    ? `<div style="margin-bottom:6px;">
+         <div style="font-size:11pt;font-weight:800;color:#1565c0;margin-bottom:4px;padding-left:4px;">💙 Sight Words</div>
+         <table style="width:100%;border-collapse:collapse;border:none;">${makeCardRow(d.sw,'#1976d2','Sight Word')}</table>
+       </div>` : '';
+
+  const wfSection = d.w && d.w.length
+    ? `<div style="margin-bottom:6px;">
+         <div style="font-size:11pt;font-weight:800;color:#2e7d32;margin-bottom:4px;padding-left:4px;">💚 Word Family</div>
+         <table style="width:100%;border-collapse:collapse;border:none;">${makeCardRow(d.w,'#388e3c','Word Family')}</table>
+       </div>` : '';
+
+  const cardTable = swSection + wfSection;
 
   const win=window.open('','_blank','width=850,height=1100');
   win.document.write(`<!DOCTYPE html><html><head>
@@ -699,9 +734,11 @@ function printHW(){
 </div>
 
 <div class="page">
-  <h2 style="text-align:center;margin-bottom:4px;font-size:15pt;">✂️ Flashcards – ${d.t}</h2>
-  <p style="text-align:center;font-size:10pt;color:#666;margin-bottom:8px;">Cut out each card. Practice reading the words!</p>
-  <div class="scissors-line">- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</div>
+  <div style="text-align:center;margin-bottom:12px;border-bottom:2px solid #eee;padding-bottom:10px;">
+    <h2 style="font-size:16pt;margin-bottom:3px;">✂️ Cut-Out Flashcards</h2>
+    <p style="font-size:10pt;color:#555;">${d.t} &bull; ${d.ch}</p>
+    <p style="font-size:9pt;color:#888;margin-top:3px;">Cut out each card along the dashed lines. Practice reading every word!</p>
+  </div>
   ${cardTable}
 </div>
 
