@@ -7,14 +7,14 @@
   <style>
     :root { --purple:#8E44AD; --purplelight:#9B59B6; --bg:#FDF5FF; --text:#2C3E50; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
     header { background:linear-gradient(135deg,#8E44AD 0%,#9B59B6 100%); padding:.4rem .8rem; display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.85rem; background:rgba(255,255,255,.2); padding:5px 13px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover { background:rgba(255,255,255,.35); }
-    header h1 { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; color:white; font-size:clamp(1.1rem,3.5vw,1.7rem); flex:1; text-align:center; }
-    .score-box { background:rgba(255,255,255,.2); color:white; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1rem; padding:5px 14px; border-radius:999px; white-space:nowrap; }
+    header h1 { font-family: 'Comic Sans MS', 'Comic Neue'; color:white; font-size:clamp(1.1rem,3.5vw,1.7rem); flex:1; text-align:center; }
+    .score-box { background:rgba(255,255,255,.2); color:white; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:1rem; padding:5px 14px; border-radius:999px; white-space:nowrap; }
     .mute-btn { background:rgba(255,255,255,.2); border:none; color:white; font-size:1.25rem; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; flex-shrink:0; }
     .mute-btn:hover { background:rgba(255,255,255,.38); }
     .mute-btn.muted { background:rgba(255,80,80,.45); }
@@ -29,7 +29,7 @@
     .letter-card {
       display:flex; align-items:center; justify-content:center; gap:.2em;
       background:linear-gradient(135deg,#8E44AD,#C0392B);
-      color:white; font-family:'Comic Sans MS','Comic Neue','Comic Sans',sans-serif;
+      color:white; font-family:'Comic Sans MS','Comic Neue','Comic Sans';
       border-radius:22px; box-shadow:0 8px 28px rgba(142,68,173,.45);
       padding:.2em .7em;
       user-select:none;
@@ -78,7 +78,7 @@
 
     /* ── FEEDBACK ── */
     .feedback {
-      font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;
+      font-family: 'Comic Sans MS', 'Comic Neue';
       font-size:clamp(1.2rem,4vw,1.7rem);
       min-height:2rem;
       text-align:center;

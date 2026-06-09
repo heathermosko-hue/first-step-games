@@ -14,7 +14,7 @@
 
   /* ── FONT — injected here so it works even if fonts.css is slow/blocked ── */
   var fontCss = document.createElement('style');
-  fontCss.textContent = "* { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important; }";
+  fontCss.textContent = "* { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue' !important; }";
   document.head.appendChild(fontCss);
 
   /* ── STYLES ─────────────────────────────────────────────── */
@@ -29,7 +29,7 @@
     '}',
     '#fsr-nav-logo{',
       'display:flex;align-items:center;gap:.4rem;',
-      "font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;font-size:.98rem;",
+      "font-family: 'Comic Sans MS', 'Comic Neue';font-size:.98rem;",
       'color:#fff;text-decoration:none;white-space:nowrap;',
       'transition:opacity .2s;',
     '}',
@@ -40,7 +40,7 @@
     '.fsr-nav-btn{',
       'display:inline-flex;align-items:center;gap:.3rem;',
       'padding:5px 13px;border-radius:999px;',
-      "font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;font-size:.85rem;",
+      "font-family: 'Comic Sans MS', 'Comic Neue';font-size:.85rem;",
       'color:#fff;text-decoration:none;white-space:nowrap;',
       'transition:transform .15s,background .2s;',
     '}',

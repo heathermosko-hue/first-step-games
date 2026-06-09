@@ -8,19 +8,19 @@
   <style>
     :root { --gold:#F5A623; --gold2:#E8960F; --bg:#FFFBF0; --text:#2C3E50; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
 
     /* HEADER */
     header { background:linear-gradient(135deg,#F5A623 0%,#E8960F 100%); padding:.4rem .8rem; display:flex; align-items:center; gap:.5rem; flex-wrap:nowrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover { background:rgba(255,255,255,.35); }
-    header h1 { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; color:white; font-size:clamp(1.2rem,4vw,2rem); flex:1; text-align:center; }
+    header h1 { font-family: 'Comic Sans MS', 'Comic Neue'; color:white; font-size:clamp(1.2rem,4vw,2rem); flex:1; text-align:center; }
     .btn-mute { background:rgba(255,255,255,.2); border:none; color:white; font-size:1.1rem; padding:6px 12px; border-radius:999px; cursor:pointer; }
     .btn-mute.muted { background:rgba(255,80,80,.45); }
 
     /* CATEGORY BAR */
     .cat-bar { background:white; border-bottom:3px solid #FDE8B0; padding:.15rem .5rem; display:flex; gap:.3rem; flex-wrap:nowrap; justify-content:flex-start; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
-    .btn-cat { border:2px solid #FDE8B0; background:white; color:#aaa; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-weight:700; font-size:.78rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .btn-cat { border:2px solid #FDE8B0; background:white; color:#aaa; font-family: 'Comic Sans MS', 'Comic Neue'; font-weight:700; font-size:.78rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .btn-cat:hover { border-color:#F5A623; color:#F5A623; }
     .btn-cat.active { background:#F5A623; border-color:#F5A623; color:white; }
 
@@ -29,38 +29,38 @@
 
     /* START SCREEN */
     .start-screen { display:flex; flex-direction:column; align-items:center; gap:1rem; padding:2rem 1rem; text-align:center; }
-    .start-screen h2 { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:2.2rem; color:#F5A623; }
+    .start-screen h2 { font-family: 'Comic Sans MS', 'Comic Neue'; font-size:2.2rem; color:#F5A623; }
     .start-screen p { color:#999; font-size:1rem; font-weight:600; }
 
     /* CALLER CARD */
     .caller-card { background:white; border-radius:16px; padding:.5rem 1rem .4rem; box-shadow:0 4px 22px rgba(245,166,35,.15); border:3px solid #FDE8B0; display:flex; flex-direction:column; align-items:center; gap:.3rem; width:100%; }
     .caller-pic { font-size:clamp(3rem,10vw,4.5rem); line-height:1; min-height:0; display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 3px 6px rgba(0,0,0,.1)); }
     .caller-pic svg { width:clamp(3rem,10vw,4.5rem) !important; height:clamp(3rem,10vw,4.5rem) !important; }
-    .caller-hint { background:#FDE8B0; color:#E8960F; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:.85rem; padding:3px 14px; border-radius:999px; }
+    .caller-hint { background:#FDE8B0; color:#E8960F; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:.85rem; padding:3px 14px; border-radius:999px; }
     .not-on-board { color:#ccc; font-size:.85rem; font-weight:700; min-height:1.2rem; }
     .caller-btns { display:flex; gap:.6rem; align-items:center; }
-    .btn-say { background:#FDE8B0; color:#E8960F; border:none; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:.95rem; padding:7px 18px; border-radius:999px; cursor:pointer; transition:background .2s; }
+    .btn-say { background:#FDE8B0; color:#E8960F; border:none; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:.95rem; padding:7px 18px; border-radius:999px; cursor:pointer; transition:background .2s; }
     .btn-say:hover { background:#F9CF7A; }
-    .btn-next { background:linear-gradient(135deg,#F5A623,#E8960F); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1rem; padding:9px 24px; border-radius:999px; cursor:pointer; box-shadow:0 3px 10px rgba(245,166,35,.4); transition:opacity .2s; }
+    .btn-next { background:linear-gradient(135deg,#F5A623,#E8960F); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:1rem; padding:9px 24px; border-radius:999px; cursor:pointer; box-shadow:0 3px 10px rgba(245,166,35,.4); transition:opacity .2s; }
     .btn-next:hover { opacity:.85; }
-    .caller-prog { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; color:#ccc; font-size:.85rem; }
+    .caller-prog { font-family: 'Comic Sans MS', 'Comic Neue'; color:#ccc; font-size:.85rem; }
 
     /* BOARD */
     .board-wrap { width:100%; }
     .board-letters { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; margin-bottom:4px; }
-    .bl { background:#F5A623; color:white; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:clamp(1rem,4vw,1.6rem); text-align:center; padding:.35rem 0; border-radius:8px; }
+    .bl { background:#F5A623; color:white; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:clamp(1rem,4vw,1.6rem); text-align:center; padding:.35rem 0; border-radius:8px; }
     .board { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; }
     .cell {
       background:white; border:2px solid #FDE8B0; border-radius:8px;
       padding:.2rem .1rem; text-align:center; cursor:pointer;
-      font-family:'Comic Sans MS','Comic Neue','Comic Sans',sans-serif;
+      font-family:'Comic Sans MS','Comic Neue','Comic Sans';
       font-size:clamp(.55rem,2.1vw,.82rem); font-weight:700; color:#2C3E50;
       min-height:clamp(42px,9vw,58px); display:flex; align-items:center; justify-content:center;
       transition:background .12s, transform .12s; line-height:1.15; word-break:break-word;
       box-shadow:0 2px 6px rgba(0,0,0,.04); position:relative;
     }
     .cell:hover:not(.marked):not(.free):not(.bingo-cell) { background:#FEF3D0; transform:scale(1.05); }
-    .cell.free { background:linear-gradient(135deg,#F5A623,#E8960F); color:white; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:clamp(.7rem,2.6vw,.95rem); cursor:default; border-color:#F5A623; }
+    .cell.free { background:linear-gradient(135deg,#F5A623,#E8960F); color:white; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:clamp(.7rem,2.6vw,.95rem); cursor:default; border-color:#F5A623; }
     .cell.marked { background:linear-gradient(135deg,#27AE60,#2ECC71); color:white; border-color:#27AE60; cursor:default; }
     .cell.marked::after { content:'✓'; font-size:1.3em; line-height:1; }
     .cell.bingo-cell { background:linear-gradient(135deg,#FF6B6B,#F5A623); color:white; border-color:#FF6B6B; animation:pulse .6s ease infinite alternate; }
@@ -69,7 +69,7 @@
     @keyframes pulse { from{transform:scale(1)} to{transform:scale(1.06)} }
     .cell.hint { border-color:#F5A623!important; background:linear-gradient(135deg,#FFF8D0,#FFE57A)!important; box-shadow:0 0 0 3px rgba(245,166,35,.35),0 4px 16px rgba(245,166,35,.4)!important; animation:hintPulse .85s ease-in-out infinite alternate; cursor:pointer!important; }
     @keyframes hintPulse { from{box-shadow:0 0 0 3px rgba(245,166,35,.3),0 3px 12px rgba(245,166,35,.35);} to{box-shadow:0 0 0 5px rgba(245,166,35,.6),0 5px 20px rgba(245,166,35,.65);} }
-    .btn-back { background:#e0e0e0; color:#666; border:none; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:.95rem; padding:9px 18px; border-radius:999px; cursor:pointer; transition:background .2s,opacity .2s; }
+    .btn-back { background:#e0e0e0; color:#666; border:none; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:.95rem; padding:9px 18px; border-radius:999px; cursor:pointer; transition:background .2s,opacity .2s; }
     .btn-back:hover:not(:disabled) { background:#d0d0d0; }
     .btn-back:disabled { opacity:.35; cursor:default; }
     /* svg size overridden in .caller-pic rule above */
@@ -102,12 +102,12 @@
     }
 
     /* HINT TOGGLE */
-    .btn-hint-toggle { background:#FFF8E0; color:#AA7700; border:2px solid #FFD93D; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .btn-hint-toggle { background:#FFF8E0; color:#AA7700; border:2px solid #FFD93D; font-family: 'Comic Sans MS', 'Comic Neue'; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .btn-hint-toggle.on { background:linear-gradient(135deg,#FFD93D,#FF8E53); color:white; border-color:transparent; }
 
     /* CONTROLS */
     .controls { display:flex; gap:.75rem; justify-content:center; }
-    .btn-new { background:linear-gradient(135deg,#3A8EF6,#6B48FF); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1rem; padding:10px 28px; border-radius:999px; cursor:pointer; box-shadow:0 4px 14px rgba(58,142,246,.3); transition:opacity .2s; }
+    .btn-new { background:linear-gradient(135deg,#3A8EF6,#6B48FF); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:1rem; padding:10px 28px; border-radius:999px; cursor:pointer; box-shadow:0 4px 14px rgba(58,142,246,.3); transition:opacity .2s; }
     .btn-new:hover { opacity:.85; }
 
     /* WIN OVERLAY */
@@ -116,9 +116,9 @@
     .win-card { background:white; border-radius:28px; padding:2.5rem 2rem; text-align:center; max-width:360px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,.3); animation:popIn .4s; }
     @keyframes popIn { from{transform:scale(.7);opacity:0} to{transform:scale(1);opacity:1} }
     .win-emoji { font-size:4rem; }
-    .win-card h2 { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:3.5rem; color:#F5A623; margin:.3rem 0; }
+    .win-card h2 { font-family: 'Comic Sans MS', 'Comic Neue'; font-size:3.5rem; color:#F5A623; margin:.3rem 0; }
     .win-card p { font-size:1rem; font-weight:700; color:#888; margin-bottom:1.5rem; }
-    .btn-again { background:linear-gradient(135deg,#F5A623,#E8960F); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1.1rem; padding:12px 32px; border-radius:999px; cursor:pointer; box-shadow:0 4px 14px rgba(245,166,35,.4); }
+    .btn-again { background:linear-gradient(135deg,#F5A623,#E8960F); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:1.1rem; padding:12px 32px; border-radius:999px; cursor:pointer; box-shadow:0 4px 14px rgba(245,166,35,.4); }
 
   </style>
 </head>
@@ -534,7 +534,7 @@ function renderBoard(){
     } else if (state.cat === 'Letters') {
       cell.textContent = item.word[0].toLowerCase();
       cell.style.fontSize = 'clamp(1.5rem,5.5vw,2.2rem)';
-      cell.style.fontFamily = "'Comic Sans MS','Comic Neue','Comic Sans',sans-serif";
+      cell.style.fontFamily = "'Comic Sans MS','Comic Neue','Comic Sans'";
     } else {
       cell.textContent = item.word;
     }
