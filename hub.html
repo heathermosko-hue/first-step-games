@@ -1121,18 +1121,16 @@
 </head>
 <body>
 <script>
-/* Hide marketing banners on mobile immediately — before render */
+/* Hero & school-login-banner are hidden by default (inline style="display:none").
+   Show them only on desktop (>600px). This way mobile NEVER sees them
+   regardless of CSS caching. */
 (function(){
-  if(window.innerWidth > 600) return;
-  var style = document.createElement('style');
-  style.textContent = '.hero,.hero-panels,.hero-bottom-bar,.school-login-banner{display:none!important}';
-  document.head.appendChild(style);
-  // Also apply inline after DOM ready as belt-and-suspenders
+  if(window.innerWidth <= 600) return;
   document.addEventListener('DOMContentLoaded', function(){
-    ['.hero','.hero-panels','.hero-bottom-bar','.school-login-banner'].forEach(function(sel){
-      var el = document.querySelector(sel);
-      if(el) el.style.setProperty('display','none','important');
-    });
+    var hero = document.querySelector('.hero');
+    var banner = document.querySelector('.school-login-banner');
+    if(hero) hero.style.display = '';
+    if(banner) banner.style.display = '';
   });
 })();
 </script>
@@ -1142,8 +1140,8 @@
 
 <!-- GATE OVERLAY (injected by JS when needed) -->
 
-<!-- HERO -->
-<div class="hero">
+<!-- HERO — hidden by default, shown on desktop by JS below -->
+<div class="hero" style="display:none">
   <div class="hero-inner">
     <span class="hero-pkg-badge">⭐ Member Package</span>
     <h1 class="hero-title">
@@ -1176,8 +1174,8 @@
 
 <main>
 
-  <!-- ══ SCHOOL LOGIN ══ -->
-  <div class="school-login-banner">
+  <!-- ══ SCHOOL LOGIN ══ — hidden by default, shown on desktop by JS below -->
+  <div class="school-login-banner" style="display:none">
     <div>
       <h2>⭐ Member Access</h2>
       <p>Members get unlimited 24/7 access to all games, books &amp; videos!</p>
