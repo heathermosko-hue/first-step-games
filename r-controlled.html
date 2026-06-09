@@ -93,6 +93,18 @@
       .emoji-display{font-size:clamp(2rem,8vw,3.5rem)}
       .feedback{min-height:1.2rem;font-size:1.1rem}
     }
+  @media (max-height: 680px) {
+  .word-show { font-size: clamp(1.4rem,5.5vw,2.4rem) !important; }
+  .choices { gap: .3rem !important; }
+  .btn-choice { font-size: clamp(.85rem,3.2vw,1.2rem) !important; padding: .35rem .15rem !important; }
+  .settings-bar { padding: .12rem .6rem; }
+}
+@media (max-height: 560px) {
+  .word-show { font-size: clamp(1.2rem,5vw,1.8rem) !important; }
+  .emoji-display { font-size: clamp(1.5rem,6vw,2.2rem) !important; }
+  header { padding: .2rem .6rem; }
+  main { gap: .15rem; }
+}
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
 <body>

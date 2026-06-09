@@ -111,6 +111,23 @@
 
 
     @media(max-width:360px) { .card-grid { gap:6px; } }
+
+/* ── MOBILE height fixes ── */
+@media (max-height: 720px) {
+  /* Compact settings: buttons in a row instead of column */
+  .settings-bar { flex-direction: row !important; flex-wrap: wrap; justify-content: center;
+                  gap: .3rem; padding: .2rem .5rem; }
+  /* Make each button smaller */
+  .btn-mode { padding: 5px 14px !important; font-size: .82rem !important; }
+  /* Compact stats */
+  .stats-bar { padding: .1rem .5rem; gap: .8rem; }
+  .stat-label { font-size: .65rem; }
+  .stat-value { font-size: 1.1rem; }
+}
+@media (max-height: 580px) {
+  .btn-mode { padding: 4px 10px !important; font-size: .75rem !important; }
+  .stats-bar { padding: .05rem .5rem; }
+}
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
 <body>

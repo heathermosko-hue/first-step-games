@@ -109,11 +109,23 @@
       .called-word{ font-size:clamp(1rem,3.5vw,1.5rem); }
       .bingo-header-cell{ height:20px; font-size:.9rem; }
       main{ padding:.15rem .5rem .1rem; gap:.18rem; }
+      .bingo-wrap{ width:min(300px,92vw); }
+      .bingo-cell{ font-size:clamp(.55rem,2.3vw,1rem); }
+      .bingo-grid{ gap:3px; }
     }
     @media(max-height:580px){
       .called-word{ font-size:1rem; }
       .btn-call{ font-size:.82rem; padding:5px 12px; }
       .called-area{ padding:.15rem .5rem; }
+      .bingo-wrap{ width:min(265px,90vw); }
+      .bingo-cell{ font-size:clamp(.5rem,2vw,.85rem); }
+      .bingo-header-cell{ height:16px; font-size:.7rem; }
+    }
+    @media(max-height:480px){
+      .bingo-wrap{ width:min(230px,88vw); }
+      .bingo-cell{ font-size:.55rem; }
+      .bingo-header-cell{ height:14px; font-size:.62rem; }
+      .called-area{ padding:.1rem .4rem; }
     }
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
