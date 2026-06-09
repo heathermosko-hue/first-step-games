@@ -124,8 +124,9 @@
       box-shadow:0 4px 14px rgba(39,174,96,.32);
       transition:transform .15s;
     }
-    .btn-nav:hover { transform:translateY(-2px); }
-    .btn-nav:active { transform:scale(.96); }
+    .btn-nav:hover:not(:disabled) { transform:translateY(-2px); }
+    .btn-nav:active:not(:disabled) { transform:scale(.96); }
+    .btn-nav:disabled { opacity:0.28; cursor:default; box-shadow:none; }
 
     .letter-progress {
       font-family: 'Comic Sans MS', 'Comic Neue';
