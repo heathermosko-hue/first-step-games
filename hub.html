@@ -1120,6 +1120,22 @@
   </style>
 </head>
 <body>
+<script>
+/* Hide marketing banners on mobile immediately — before render */
+(function(){
+  if(window.innerWidth > 600) return;
+  var style = document.createElement('style');
+  style.textContent = '.hero,.hero-panels,.hero-bottom-bar,.school-login-banner{display:none!important}';
+  document.head.appendChild(style);
+  // Also apply inline after DOM ready as belt-and-suspenders
+  document.addEventListener('DOMContentLoaded', function(){
+    ['.hero','.hero-panels','.hero-bottom-bar','.school-login-banner'].forEach(function(sel){
+      var el = document.querySelector(sel);
+      if(el) el.style.setProperty('display','none','important');
+    });
+  });
+})();
+</script>
 
 <!-- ACCESS BAR -->
 <div id="access-bar"></div>
