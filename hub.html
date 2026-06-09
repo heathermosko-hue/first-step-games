@@ -1195,10 +1195,10 @@
   <!-- ══ SCHOOL PACKAGE ══ -->
   <div class="school-pkg-banner">
     <div>
-      <h2>🏫 Using This in a Classroom or School?</h2>
-      <p>We have a special package for teachers, schools, and districts with class management tools built in.</p>
+      <h2>🍎 Teacher &amp; Student Logins</h2>
+      <p>Free Mon–Fri 9AM–4PM · Create a class with a QR code or class code · Easy animal picture logins for students · Class data stays active for 1 year</p>
     </div>
-    <a href="https://www.firststepreading.com/product/school-district-package/" target="_blank" class="school-pkg-btn">🏫 See School Package →</a>
+    <a href="auth/login-choice.html" class="school-pkg-btn">🍎 Teacher / Student Login →</a>
   </div>
 
   <!-- ══ ALL VIDEO LESSONS BAR ══ -->
@@ -1940,7 +1940,7 @@
 
 <script>
   // ── CONFIG ──
-  const HUB_FREE_START  = 7;   // 7 AM  — free for everyone (Mon–Fri)
+  const HUB_FREE_START  = 9;   // 9 AM  — free for everyone (Mon–Fri)
   const HUB_FREE_END    = 16;  // 4 PM
   const HUB_CODE_START  = 9;   // 9 AM  — class codes become valid (Mon–Fri)
   const HUB_CODE_END    = 16;  // 4 PM
@@ -1999,7 +1999,7 @@
       bar.className = 'school-hours';
       bar.innerHTML = `
         <span class="access-dot"></span>
-        <span>🟢 <strong>School Hours</strong> — All games are free! (Mon–Fri 7AM–4PM)</span>
+        <span>🟢 <strong>Free School Hours</strong> — All games are free right now! (Mon–Fri 9AM–4PM)</span>
         <span class="access-countdown" id="hub-countdown"></span>
         <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
       updateCountdown();
@@ -2213,18 +2213,18 @@
 
     let timeMsg;
     if (isWeekend) {
-      timeMsg = `Free access runs <strong>Monday–Friday, 7:00 AM – 4:00 PM</strong>`;
+      timeMsg = `Free school hours are <strong>Monday–Friday, 9:00 AM – 4:00 PM</strong>`;
     } else if (h < HUB_FREE_START) {
-      timeMsg = `School hours start at <strong>7:00 AM</strong> today`;
+      timeMsg = `Free school hours start at <strong>9:00 AM</strong> today (Mon–Fri)`;
     } else {
-      timeMsg = `School hours are <strong>Mon–Fri, 7:00 AM – 4:00 PM</strong>`;
+      timeMsg = `Free school hours are <strong>Mon–Fri, 9:00 AM – 4:00 PM</strong>`;
     }
 
     overlay.innerHTML = `
       <div class="gate-box">
-        <span class="gate-icon">🔒</span>
-        <h2>Code Required</h2>
-        <p>It's outside school hours.<br>Enter your class code or member code!</p>
+        <span class="gate-icon">🎮</span>
+        <h2>Sign In to Play!</h2>
+        <p>Games are available <strong>anytime</strong> — they're just free during school hours.<br>Sign in with your class code, teacher, or member login!</p>
         <div class="gate-code-row">
           <input id="gate-input" type="text" maxlength="12" placeholder="FSR- or MBR-XXXXXX"
             autocomplete="off" autocorrect="off" spellcheck="false"
@@ -2237,13 +2237,13 @@
         <label style="display:flex;align-items:center;gap:0.5rem;font-family:'Comic Sans MS','Comic Neue';font-size:0.82rem;color:#888;margin-bottom:0.7rem;cursor:pointer;">
           <input type="checkbox" id="gate-remember" style="width:16px;height:16px;cursor:pointer;"> Remember my code today
         </label>
-        <a href="students.html" style="display:block;margin-bottom:0.3rem;font-family: 'Comic Sans MS', 'Comic Neue';font-size:1rem;color:#6B48FF;">
-          📅 Student class code page →
+        <a href="auth/login-choice.html" style="display:block;margin-bottom:0.3rem;font-family:'Comic Sans MS','Comic Neue';font-size:1rem;color:#6B48FF;">
+          🍎 Teacher &amp; Student Login →
         </a>
         <a href="#" onclick="event.preventDefault();document.getElementById('gate-overlay').remove();showMemberLoginOverlay();" style="display:block;margin-bottom:0.6rem;font-family: 'Comic Sans MS', 'Comic Neue';font-size:1rem;color:#C07000;">
           ⭐ Member login (24/7 access) →
         </a>
-        <div class="gate-hours">💡 ${timeMsg} — free for everyone!</div>
+        <div class="gate-hours">🟢 ${timeMsg} — free for everyone!</div>
       </div>`;
     document.body.appendChild(overlay);
     document.getElementById('gate-input').focus();
