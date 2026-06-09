@@ -76,6 +76,26 @@
       '.lvl-btn,.btn-level,.btn-mode,.btn-cat,.cat-btn{font-size:clamp(.62rem,2vw,.76rem)!important;padding:2px 7px!important;white-space:nowrap!important;flex-shrink:0!important;}',
       /* ── settings label: shrink/hide on very narrow screens ── */
       '.settings-label,.settings-title{font-size:.6rem!important;white-space:nowrap!important;flex-shrink:0!important;}',
+      /* ── SCROLL FIX: allow content to scroll instead of clip ── */
+      /* Unlock body from 100dvh so pages can scroll vertically */
+      'body{overflow-y:auto!important;height:auto!important;min-height:100dvh!important;}',
+      /* Allow main content area to scroll */
+      'main{overflow-y:auto!important;}',
+      /* Allow game containers to scroll */
+      '.game-area,.game-wrap{overflow-y:auto!important;}',
+      /* Bingo boards: guarantee minimum cell height so board never squishes below usable size */
+      '.bingo-grid{grid-template-rows:repeat(5,minmax(40px,1fr))!important;}',
+      '.bingo-wrap{flex:none!important;}',
+      /* phonics-bingo uses .board / .cell instead of .bingo-grid */
+      '.board{grid-template-rows:unset!important;grid-auto-rows:minmax(40px,1fr)!important;}',
+      '.cell{min-height:40px!important;}',
+      /* Memory card grid: allow natural sizing and scroll */
+      '.card-grid{flex:none!important;width:100%!important;}',
+      /* Scoreboard / stats bar: shrink on mobile */
+      '.scoreboard,.stats-bar{padding:.06rem .4rem!important;gap:.4rem!important;}',
+      '.score-value,.stat-value{font-size:1rem!important;line-height:1!important;}',
+      '.score-label,.stat-label{font-size:.55rem!important;}',
+      '.score-divider{height:22px!important;}',
     '}',
   ].join('');
 

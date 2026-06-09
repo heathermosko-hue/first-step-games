@@ -371,6 +371,20 @@
       .game-card.featured .featured-body { align-items: center; }
       .new-badge { align-self: center; }
     }
+    /* ── MOBILE: compact header + 2-column game grid ── */
+    @media (max-width: 600px) {
+      header { padding: .6rem 1rem .8rem !important; }
+      header h2 { font-size: 1.2rem !important; }
+      header p  { font-size: .82rem !important; }
+      main { padding: .8rem .6rem !important; }
+      .section-head { margin-bottom: .8rem !important; }
+      .section-head h2 { font-size: 1.1rem !important; }
+      .games-grid { grid-template-columns: repeat(2, 1fr) !important; gap: .65rem !important; }
+      .game-card { padding: .85rem .6rem .75rem !important; border-radius: 14px !important; }
+      .game-card .game-icon { font-size: 1.8rem !important; }
+      .game-card h3 { font-size: .78rem !important; }
+      .game-card p  { font-size: .68rem !important; }
+    }
 
     /* ── FREE KIT OPT-IN ── */
     .kit-optin {
