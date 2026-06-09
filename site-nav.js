@@ -70,11 +70,13 @@
       'body>header .header-btns,body>header .controls,body>header .header-right{gap:.18rem!important;flex-wrap:nowrap!important;flex-shrink:0!important;}',
       /* back-btn variant used in some games */
       'body>header .back-btn{padding:.1rem .32rem!important;font-size:.62rem!important;white-space:nowrap!important;flex-shrink:0!important;}',
-      /* ── settings / category / level bars: horizontally scrollable, never wrap ── */
-      '.settings-bar,.cat-bar,.level-bar,.mode-bar,.difficulty-bar{padding:.06rem .4rem!important;gap:.3rem!important;overflow-x:auto!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch!important;}',
+      /* ── settings / category / level bars: single scrollable row, never wrap ── */
+      '.settings-bar,.cat-bar,.level-bar,.mode-bar,.difficulty-bar{padding:.06rem .4rem!important;gap:.3rem!important;overflow-x:auto!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch!important;align-items:center!important;}',
+      /* inner button groups must also be nowrap so they don't stack vertically */
+      '.cat-btns,.settings-group,.mode-btns,.btn-group{display:flex!important;flex-wrap:nowrap!important;gap:.3rem!important;align-items:center!important;flex-shrink:0!important;}',
       '.lvl-btn,.btn-level,.btn-mode,.btn-cat,.cat-btn{font-size:clamp(.62rem,2vw,.76rem)!important;padding:2px 7px!important;white-space:nowrap!important;flex-shrink:0!important;}',
-      /* ── bottom safe-area buffer so game content never clips at screen edge ── */
-      'body>main,body>.game-wrap,body>.game-area,body>.main-content{padding-bottom:max(10px,env(safe-area-inset-bottom,10px))!important;}',
+      /* ── settings label: shrink/hide on very narrow screens ── */
+      '.settings-label,.settings-title{font-size:.6rem!important;white-space:nowrap!important;flex-shrink:0!important;}',
     '}',
   ].join('');
 
