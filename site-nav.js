@@ -9,11 +9,12 @@
 
   var HOME_URL = 'https://www.firststepreading.com';
   var MENU_URL = 'hub.html';
-  var NAV_H    = 48; // px
+  var NAV_H    = 48; // px (desktop)
+  var NAV_H_M  = 28; // px (mobile ≤600px)
 
   /* ── FONT — injected here so it works even if fonts.css is slow/blocked ── */
   var fontCss = document.createElement('style');
-  fontCss.textContent = "* { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive !important; }";
+  fontCss.textContent = "* { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important; }";
   document.head.appendChild(fontCss);
 
   /* ── STYLES ─────────────────────────────────────────────── */
@@ -28,7 +29,7 @@
     '}',
     '#fsr-nav-logo{',
       'display:flex;align-items:center;gap:.4rem;',
-      "font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-size:.98rem;",
+      "font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;font-size:.98rem;",
       'color:#fff;text-decoration:none;white-space:nowrap;',
       'transition:opacity .2s;',
     '}',
@@ -39,7 +40,7 @@
     '.fsr-nav-btn{',
       'display:inline-flex;align-items:center;gap:.3rem;',
       'padding:5px 13px;border-radius:999px;',
-      "font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-size:.85rem;",
+      "font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;font-size:.85rem;",
       'color:#fff;text-decoration:none;white-space:nowrap;',
       'transition:transform .15s,background .2s;',
     '}',
@@ -54,21 +55,26 @@
     '.fsr-nav-home:hover{background:linear-gradient(135deg,#ff8080,#ff5599);}',
     /* ── MOBILE: shrink the top bar and all game page headers ── */
     '@media(max-width:600px){',
-      '#fsr-top-nav{height:34px!important;padding:0 .5rem;}',
-      '#fsr-nav-logo{font-size:.8rem;gap:.25rem;}',
-      '.fsr-nav-btn{padding:2px 8px;font-size:.72rem;gap:.15rem;}',
-      '.fsr-nav-menu-icon{font-size:.9rem;margin-right:3px;}',
-      /* game page <header> */
-      'body>header{padding:.18rem .55rem!important;gap:.28rem!important;flex-wrap:wrap!important;}',
-      'body>header h1{font-size:clamp(.78rem,4vw,.92rem)!important;line-height:1.15!important;}',
-      'body>header .back-link,body>header a.back-link{padding:.15rem .5rem!important;font-size:.68rem!important;white-space:nowrap!important;}',
-      'body>header button,body>header a.btn-header,body>header .btn-header{padding:.15rem .5rem!important;font-size:.68rem!important;white-space:nowrap!important;}',
-      'body>header .btn-voice{padding:.15rem .5rem!important;font-size:.68rem!important;white-space:nowrap!important;}',
-      'body>header .btn-mute,body>header #muteBtn{padding:.15rem .42rem!important;font-size:.85rem!important;white-space:nowrap!important;}',
-      'body>header .header-btns{gap:.22rem!important;flex-wrap:wrap!important;}',
-      /* level/mode bars */
-      '.level-bar,.mode-bar{padding:.04rem .35rem!important;gap:.3rem!important;}',
-      '.lvl-btn,.btn-level,.btn-mode{font-size:clamp(.62rem,2vw,.76rem)!important;padding:2px 7px!important;}',
+      /* ── global nav bar ── */
+      '#fsr-top-nav{height:28px!important;padding:0 .4rem;}',
+      '#fsr-nav-logo{font-size:.72rem;gap:.2rem;}',
+      '.fsr-nav-btn{padding:1px 7px;font-size:.65rem;gap:.12rem;}',
+      '.fsr-nav-menu-icon{font-size:.8rem;margin-right:2px;}',
+      /* ── game page <header>: FORCE single row, tightest possible ── */
+      'body>header{padding:.1rem .4rem!important;gap:.22rem!important;flex-wrap:nowrap!important;min-height:0!important;}',
+      'body>header h1{font-size:clamp(.72rem,3.8vw,.86rem)!important;line-height:1.1!important;flex:1!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;}',
+      'body>header .back-link,body>header a.back-link{padding:.1rem .32rem!important;font-size:.62rem!important;white-space:nowrap!important;flex-shrink:0!important;}',
+      'body>header button,body>header a.btn-header,body>header .btn-header{padding:.1rem .32rem!important;font-size:.62rem!important;white-space:nowrap!important;flex-shrink:0!important;}',
+      'body>header .btn-voice{padding:.1rem .32rem!important;font-size:.62rem!important;white-space:nowrap!important;flex-shrink:0!important;}',
+      'body>header .btn-mute,body>header #muteBtn,body>header #btnMute{padding:.1rem .3rem!important;font-size:.82rem!important;white-space:nowrap!important;flex-shrink:0!important;}',
+      'body>header .header-btns,body>header .controls,body>header .header-right{gap:.18rem!important;flex-wrap:nowrap!important;flex-shrink:0!important;}',
+      /* back-btn variant used in some games */
+      'body>header .back-btn{padding:.1rem .32rem!important;font-size:.62rem!important;white-space:nowrap!important;flex-shrink:0!important;}',
+      /* ── settings / category / level bars: horizontally scrollable, never wrap ── */
+      '.settings-bar,.cat-bar,.level-bar,.mode-bar,.difficulty-bar{padding:.06rem .4rem!important;gap:.3rem!important;overflow-x:auto!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch!important;}',
+      '.lvl-btn,.btn-level,.btn-mode,.btn-cat,.cat-btn{font-size:clamp(.62rem,2vw,.76rem)!important;padding:2px 7px!important;white-space:nowrap!important;flex-shrink:0!important;}',
+      /* ── bottom safe-area buffer so game content never clips at screen edge ── */
+      'body>main,body>.game-wrap,body>.game-area,body>.main-content{padding-bottom:max(10px,env(safe-area-inset-bottom,10px))!important;}',
     '}',
   ].join('');
 
@@ -93,7 +99,7 @@
 
   /* ── Shift hub's access-bar so it sticks BELOW our nav ── */
   var ab = document.getElementById('access-bar');
-  if (ab) ab.style.top = NAV_H + 'px';
+  if (ab) ab.style.top = (window.innerWidth <= 600 ? NAV_H_M : NAV_H) + 'px';
 
   } catch(e) { /* fail silently — nav is non-critical */ }
 })();

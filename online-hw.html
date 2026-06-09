@@ -6,10 +6,10 @@
 <title>Online Homework</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"Comic Sans MS","Comic Sans",cursive;background:linear-gradient(160deg,#e8f5e9 0%,#e3f2fd 100%);min-height:100vh;color:#000}
+body{font-family:"Comic Sans MS","Comic Sans",sans-serif;background:linear-gradient(160deg,#e8f5e9 0%,#e3f2fd 100%);min-height:100vh;color:#000}
 .nav{background:#1a237e;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:10}
 .nav label{font-size:.85rem;font-weight:bold}
-.nav select{font-family:"Comic Sans MS",cursive;font-size:.85rem;padding:4px 8px;border-radius:6px;border:none;cursor:pointer;max-width:230px}
+.nav select{font-family:"Comic Sans MS",sans-serif;font-size:.85rem;padding:4px 8px;border-radius:6px;border:none;cursor:pointer;max-width:230px}
 .nav a{color:#aacfff;font-size:.85rem;margin-left:auto;text-decoration:none}
 #content{max-width:640px;margin:0 auto;padding:14px 12px 40px}
 /* Chapter header */
@@ -32,7 +32,7 @@ body{font-family:"Comic Sans MS","Comic Sans",cursive;background:linear-gradient
 .q-text{font-size:1rem;line-height:1.5;margin-bottom:9px}
 .blank{display:inline-block;min-width:65px;border-bottom:2.5px solid #000;vertical-align:bottom;height:18px}
 .choices{display:flex;gap:9px;flex-wrap:wrap}
-.cbtn{font-family:"Comic Sans MS",cursive;font-size:1.05rem;font-weight:900;padding:9px 22px;border:3px solid #444;border-radius:30px;cursor:pointer;background:#fff;transition:all .18s;min-width:76px}
+.cbtn{font-family:"Comic Sans MS",sans-serif;font-size:1.05rem;font-weight:900;padding:9px 22px;border:3px solid #444;border-radius:30px;cursor:pointer;background:#fff;transition:all .18s;min-width:76px}
 .cbtn:hover:not([disabled]){background:#f5f5f5;transform:scale(1.05)}
 .cbtn.correct{background:#c8e6c9!important;border-color:#2e7d32!important;color:#1b5e20}
 .cbtn.wrong{background:#ffcdd2!important;border-color:#c62828!important;color:#b71c1c}
@@ -46,11 +46,11 @@ body{font-family:"Comic Sans MS","Comic Sans",cursive;background:linear-gradient
 .wf-card .card-hdr{color:#01579b}
 .flash-word{font-size:3.8rem;font-weight:900;text-align:center;padding:20px 12px 14px;letter-spacing:.04em;min-height:90px;display:flex;align-items:center;justify-content:center}
 .flash-ctrl{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
-.farr{font-family:"Comic Sans MS",cursive;font-size:1.3rem;width:46px;height:46px;border-radius:50%;border:2.5px solid #000;background:#fff;cursor:pointer;font-weight:900;transition:transform .1s;display:flex;align-items:center;justify-content:center}
+.farr{font-family:"Comic Sans MS",sans-serif;font-size:1.3rem;width:46px;height:46px;border-radius:50%;border:2.5px solid #000;background:#fff;cursor:pointer;font-weight:900;transition:transform .1s;display:flex;align-items:center;justify-content:center}
 .farr:active{transform:scale(.88)}
 .farr:disabled{opacity:.3;cursor:default}
 .fctr{font-size:.9rem;font-weight:bold;color:#666;min-width:60px;text-align:center}
-.fsay{font-family:"Comic Sans MS",cursive;font-size:.95rem;font-weight:900;padding:8px 22px;border:2.5px solid #000;border-radius:24px;cursor:pointer;display:block;margin:0 auto;transition:transform .1s}
+.fsay{font-family:"Comic Sans MS",sans-serif;font-size:.95rem;font-weight:900;padding:8px 22px;border:2.5px solid #000;border-radius:24px;cursor:pointer;display:block;margin:0 auto;transition:transform .1s}
 .fsay:active{transform:scale(.95)}
 .sw-card .fsay{background:#ede7f6}
 .wf-card .fsay{background:#e1f5fe}
@@ -61,7 +61,7 @@ body{font-family:"Comic Sans MS","Comic Sans",cursive;background:linear-gradient
 .key-bub{border:2.5px solid #000;border-radius:14px;padding:2px 10px;font-size:.87rem;font-weight:900;background:#fff8e1}
 .find-score{font-size:.92rem;font-weight:900;margin-bottom:10px;color:#bf360c}
 .find-grid{display:flex;flex-wrap:wrap;gap:8px}
-.fbub{min-width:70px;height:44px;padding:0 10px;border:2.5px solid #000;border-radius:25px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.92rem;cursor:pointer;user-select:none;transition:all .2s;background:#fff;font-family:"Comic Sans MS",cursive}
+.fbub{min-width:70px;height:44px;padding:0 10px;border:2.5px solid #000;border-radius:25px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.92rem;cursor:pointer;user-select:none;transition:all .2s;background:#fff;font-family:"Comic Sans MS",sans-serif}
 .fbub:hover:not(.found){background:#fff9c4;transform:scale(1.04)}
 .fbub.found{background:#c8e6c9;border-color:#2e7d32;color:#1b5e20;transform:scale(1.06)}
 .fbub.nope{animation:shake .32s}
@@ -69,7 +69,7 @@ body{font-family:"Comic Sans MS","Comic Sans",cursive;background:linear-gradient
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}60%{transform:translateX(6px)}}
 /* Finish button */
 .finish-wrap{text-align:center;margin:4px 0 24px}
-.finish-btn{font-family:"Comic Sans MS",cursive;font-size:1.35rem;font-weight:900;padding:16px 0;border-radius:30px;border:3px solid #bbb;background:#e0e0e0;color:#aaa;cursor:default;transition:all .35s;width:100%;letter-spacing:.02em}
+.finish-btn{font-family:"Comic Sans MS",sans-serif;font-size:1.35rem;font-weight:900;padding:16px 0;border-radius:30px;border:3px solid #bbb;background:#e0e0e0;color:#aaa;cursor:default;transition:all .35s;width:100%;letter-spacing:.02em}
 .finish-btn.ready{background:#66bb6a;border-color:#2e7d32;color:#fff;cursor:pointer;animation:glow 1.4s ease-in-out infinite alternate}
 @keyframes glow{from{box-shadow:0 0 8px rgba(102,187,106,.5)}to{box-shadow:0 0 28px rgba(102,187,106,1),0 0 48px rgba(102,187,106,.35)}}
 .finish-msg{margin-top:14px;font-size:.97rem;font-weight:bold;min-height:24px}
@@ -89,7 +89,7 @@ body{font-family:"Comic Sans MS","Comic Sans",cursive;background:linear-gradient
   <label>Chapter:</label>
   <select id="sel-ch" onchange="onChChange()"></select>
   <a href="hub.html" id="back-link">&#8592; Back</a>
-  <button onclick="printHW()" style="font-family:'Comic Sans MS',cursive;font-size:.82rem;font-weight:700;padding:5px 14px;border-radius:999px;border:2px solid #fff;background:rgba(255,255,255,.22);color:#fff;cursor:pointer;white-space:nowrap;flex-shrink:0;">🖨️ Print HW</button>
+  <button onclick="printHW()" style="font-family:'Comic Sans MS',sans-serif;font-size:.82rem;font-weight:700;padding:5px 14px;border-radius:999px;border:2px solid #fff;background:rgba(255,255,255,.22);color:#fff;cursor:pointer;white-space:nowrap;flex-shrink:0;">🖨️ Print HW</button>
   <script>(function(){var p=new URLSearchParams(location.search),b=p.get('book'),c=p.get('ch');if(b&&c){var el=document.getElementById('back-link');el.href='book'+b+'.html?page='+c;el.textContent='← Back to Book '+b;}})()</script>
 </div>
 <div id="content"></div>
@@ -657,7 +657,7 @@ function printHW(){
                box-shadow:1px 1px 4px rgba(0,0,0,.06);
              ">
                <span style="font-size:7pt;font-weight:700;color:${color};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">${label}</span>
-               <span style="font-size:22pt;font-weight:900;font-family:'Comic Sans MS',cursive;color:#1a1a2e;">${w}</span>
+               <span style="font-size:22pt;font-weight:900;font-family:'Comic Sans MS',sans-serif;color:#1a1a2e;">${w}</span>
              </div>
            </td>`
         : `<td style="width:33.3%;padding:0;border:none;"><div style="margin:5px;min-height:90px;"></div></td>`
@@ -695,7 +695,7 @@ function printHW(){
 <style>
   @import url('fonts.css');
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Comic Sans MS','Comic Sans',cursive;color:#000;background:#fff;}
+  body{font-family:'Comic Sans MS','Comic Sans',sans-serif;color:#000;background:#fff;}
   .page{width:8.5in;min-height:11in;padding:.6in .7in;page-break-after:always;}
   .page:last-child{page-break-after:auto;}
   h1{font-size:18pt;margin-bottom:4px;}
@@ -743,7 +743,7 @@ function printHW(){
 </div>
 
 <div class="no-print" style="position:fixed;bottom:20px;right:20px;">
-  <button onclick="window.print()" style="font-size:14pt;padding:12px 28px;border-radius:30px;background:#1a237e;color:#fff;border:none;cursor:pointer;font-family:'Comic Sans MS',cursive;">🖨️ Print / Save as PDF</button>
+  <button onclick="window.print()" style="font-size:14pt;padding:12px 28px;border-radius:30px;background:#1a237e;color:#fff;border:none;cursor:pointer;font-family:'Comic Sans MS',sans-serif;">🖨️ Print / Save as PDF</button>
 </div>
 </body></html>`);
   win.document.close();

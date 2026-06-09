@@ -7,27 +7,27 @@
   <style>
     :root { --bg:#FFF8F0; --text:#2C3E50; --orange:#E67E22; --amber:#F39C12; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
 
     header { background:linear-gradient(135deg,#E67E22 0%,#F39C12 100%); padding:.5rem 1rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
     .back-link { color:white; text-decoration:none; font-weight:700; font-size:.9rem; background:rgba(255,255,255,.2); padding:6px 14px; border-radius:999px; white-space:nowrap; transition:background .2s; }
     .back-link:hover { background:rgba(255,255,255,.35); }
-    header h1 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
+    header h1 { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; color:white; font-size:clamp(1.1rem,3.5vw,1.8rem); flex:1; text-align:center; }
     .header-btns { display:flex; gap:.45rem; align-items:center; }
-    .btn-header { background:rgba(255,255,255,.2); border:none; color:white; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
+    .btn-header { background:rgba(255,255,255,.2); border:none; color:white; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-weight:700; font-size:.82rem; padding:5px 11px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
     .btn-header:hover { background:rgba(255,255,255,.35); }
     .btn-header.muted { background:rgba(255,80,80,.45); }
 
-    .settings-bar { background:white; border-bottom:2px solid #FFE5C8; padding:.3rem .8rem; display:flex; align-items:center; gap:.75rem 1.25rem; flex-wrap:wrap; justify-content:center; }
+    .settings-bar { background:white; border-bottom:2px solid #FFE5C8; padding:.3rem .8rem; display:flex; align-items:center; gap:.75rem 1.25rem; flex-wrap:nowrap; justify-content:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
     .settings-label { font-size:.75rem; font-weight:800; color:#bbb; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
     .cat-btns { display:flex; gap:.3rem; flex-wrap:wrap; justify-content:center; }
-    .btn-cat { background:#FFF0DC; color:#E67E22; border:2px solid transparent; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+    .btn-cat { background:#FFF0DC; color:#E67E22; border:2px solid transparent; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .btn-cat:hover { background:#FFD9A8; }
     .btn-cat.active { background:#E67E22; color:white; border-color:#E67E22; }
 
     main { flex:1; min-height:0; overflow:hidden; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:.3rem .6rem .4rem; gap:.35rem; }
 
-    .score-row { display:flex; gap:1.5rem; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1rem; color:#bbb; }
+    .score-row { display:flex; gap:1.5rem; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1rem; color:#bbb; }
     .score-row span { color:#E67E22; font-size:1.2rem; }
 
     .progress-bar { width:100%; max-width:480px; height:8px; background:#FFE5C8; border-radius:999px; overflow:hidden; }
@@ -43,7 +43,7 @@
     .emoji-display { font-size:clamp(2.8rem,11vw,5rem); line-height:1; filter:drop-shadow(0 3px 6px rgba(0,0,0,.1)); }
 
     .word-show {
-      font-family:'Comic Sans MS','Comic Neue','Comic Sans',cursive;
+      font-family:'Comic Sans MS','Comic Neue','Comic Sans',sans-serif;
       font-size:clamp(3rem,12vw,5.5rem); line-height:1;
       display:flex; align-items:baseline;
     }
@@ -55,12 +55,12 @@
     .word-end-part { color:#E67E22; }
 
     .family-tag {
-      background:#FFF0DC; color:#E67E22; font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+      background:#FFF0DC; color:#E67E22; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;
       font-size:.9rem; padding:3px 14px; border-radius:999px;
     }
 
     .feedback {
-      font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.3rem; min-height:1.7rem; text-align:center;
+      font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1.3rem; min-height:1.7rem; text-align:center;
     }
     .feedback.ok { color:#27AE60; }
     .feedback.err { color:#E74C3C; }
@@ -68,7 +68,7 @@
     .choices { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; width:100%; max-width:340px; }
     .btn-choice {
       background:white; border:3px solid #FFE5C8; color:#E67E22;
-      font-family:'Comic Sans MS','Comic Neue','Comic Sans',cursive;
+      font-family:'Comic Sans MS','Comic Neue','Comic Sans',sans-serif;
       font-size:clamp(2rem,8vw,3rem); padding:.6rem; border-radius:16px;
       cursor:pointer; transition:all .15s;
       box-shadow:0 3px 10px rgba(230,126,34,.1);
@@ -386,7 +386,7 @@ function showGameOver() {
   document.getElementById('feedback').className = 'feedback ok';
   const btn = document.createElement('button');
   btn.className = 'btn-choice';
-  btn.style.cssText = "grid-column:1/-1;font-family:'Comic Sans MS','Comic Neue',cursive;font-size:1.1rem;";
+  btn.style.cssText = "grid-column:1/-1;font-family:'Comic Sans MS','Comic Neue',sans-serif;font-size:1.1rem;";
   btn.textContent = 'Play Again! 🔄';
   btn.addEventListener('click', () => startGame(currentCat));
   const choicesEl = document.getElementById('choices');

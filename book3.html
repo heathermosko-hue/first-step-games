@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0a1a2e;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Comic Sans MS","Comic Sans",cursive;overflow:hidden}
+body{background:#0a1a2e;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:"Comic Sans MS","Comic Sans",sans-serif;overflow:hidden}
 h1{color:#60d0f0;font-size:1.3rem;text-align:center;margin-bottom:10px;text-shadow:0 2px 8px #000}
 .book-stage{position:relative;width:520px;height:580px;perspective:1200px}
 #page-wrapper{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
@@ -31,7 +31,7 @@ h1{color:#60d0f0;font-size:1.3rem;text-align:center;margin-bottom:10px;text-shad
 .controls{display:flex;align-items:center;margin-top:8px;gap:8px;flex-wrap:wrap;justify-content:center;max-width:98vw}
 .ctrl-mid{display:flex;gap:8px;align-items:center}
 .ctrl-extra{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-left:8px;border-left:2px solid rgba(255,255,255,0.25)}
-button{font-family:"Comic Sans MS",cursive;font-size:.85rem;padding:6px 13px;border:none;border-radius:24px;cursor:pointer;font-weight:bold;transition:transform .1s}
+button{font-family:"Comic Sans MS",sans-serif;font-size:.85rem;padding:6px 13px;border:none;border-radius:24px;cursor:pointer;font-weight:bold;transition:transform .1s}
 button:active{transform:scale(.95)}
 button:disabled{opacity:.4;cursor:default}
 #btn-back{background:#1a6b9a;color:#fff;width:54px;height:54px;border-radius:50%;font-size:1.5rem;padding:0;display:flex;align-items:center;justify-content:center}
@@ -45,32 +45,32 @@ button:disabled{opacity:.4;cursor:default}
 #speaker-ring{width:28px;height:28px;border-radius:50%;border:3px solid #a0d5f5;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;flex-shrink:0}
 #speaker-ring.on{border-color:#ff9d3a;box-shadow:0 0 10px #ff9d3a}
 a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;opacity:.7}
-.ch-tab{position:fixed;right:0;top:14px;background:#1a6b9a;color:white;border:none;padding:13px 22px;border-radius:10px 0 0 10px;font-size:1.05rem;font-family:"Comic Sans MS",cursive;font-weight:bold;cursor:pointer;z-index:60;box-shadow:-2px 2px 8px rgba(0,0,0,.35);user-select:none;line-height:1}
+.ch-tab{position:fixed;right:0;top:14px;background:#1a6b9a;color:white;border:none;padding:13px 22px;border-radius:10px 0 0 10px;font-size:1.05rem;font-family:"Comic Sans MS",sans-serif;font-weight:bold;cursor:pointer;z-index:60;box-shadow:-2px 2px 8px rgba(0,0,0,.35);user-select:none;line-height:1}
 .ch-panel{position:fixed;right:-220px;top:0;height:100vh;width:215px;background:#0a2a3e;border-left:3px solid #60d0f0;z-index:65;display:flex;flex-direction:column;transition:right .3s ease}
 .ch-panel.open{right:0}
 .ch-panel-hdr{color:#a0d5f5;font-size:.8rem;font-weight:bold;padding:10px 10px 6px;border-bottom:1px solid rgba(160,213,245,.25);text-align:center;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
 .ch-close{background:none;border:none;color:#60d0f0;font-size:1rem;cursor:pointer;padding:0 4px}
 .ch-list{flex:1;overflow-y:auto;padding:5px;display:flex;flex-direction:column;gap:3px}
-.ch-btn{background:#1a6b9a;color:#a0d5f5;border:none;border-radius:7px;padding:7px 9px;text-align:left;font-family:"Comic Sans MS",cursive;font-size:.76rem;cursor:pointer;transition:background .15s;line-height:1.3;width:100%}
+.ch-btn{background:#1a6b9a;color:#a0d5f5;border:none;border-radius:7px;padding:7px 9px;text-align:left;font-family:"Comic Sans MS",sans-serif;font-size:.76rem;cursor:pointer;transition:background .15s;line-height:1.3;width:100%}
 .ch-btn:hover{background:#2a8bba}
 .ch-btn.active{background:#60d0f0;color:#001a30;font-weight:bold}
 #flash-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center}
 #flash-card{background:#0a2a3e;border:3px solid #60d0f0;border-radius:20px;padding:32px 44px;display:flex;flex-direction:column;align-items:center;gap:16px;min-width:280px;max-width:90vw}
-#flash-title{font-family:"Comic Sans MS",cursive;color:#a0d5f5;font-size:1rem;font-weight:bold}
-#flash-word{font-family:"Comic Sans MS",cursive;font-size:3.2rem;font-weight:bold;color:#60d0f0;text-align:center;min-width:180px}
+#flash-title{font-family:"Comic Sans MS",sans-serif;color:#a0d5f5;font-size:1rem;font-weight:bold}
+#flash-word{font-family:"Comic Sans MS",sans-serif;font-size:3.2rem;font-weight:bold;color:#60d0f0;text-align:center;min-width:180px}
 #flash-counter{color:#a0d5f5;font-size:.85rem}
 #flash-btns{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
-#flash-prev,#flash-next{font-family:"Comic Sans MS",cursive;background:#1a6b9a;color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;font-weight:bold}
+#flash-prev,#flash-next{font-family:"Comic Sans MS",sans-serif;background:#1a6b9a;color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;font-weight:bold}
 #flash-prev:disabled,#flash-next:disabled{opacity:.3;cursor:default}
-#flash-close{font-family:"Comic Sans MS",cursive;background:#c62828;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
-#flash-speak{font-family:"Comic Sans MS",cursive;background:#ff9d3a;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+#flash-close{font-family:"Comic Sans MS",sans-serif;background:#c62828;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+#flash-speak{font-family:"Comic Sans MS",sans-serif;background:#ff9d3a;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
 #top-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px;min-height:36px}
 #mobile-toolbar{display:none;align-items:center;justify-content:center;gap:8px;margin-top:6px;width:100%;max-width:98vw;padding:0 4px}
-#btn-hub-mobile{background:#2e7d32;color:#fff;border:none;border-radius:20px;padding:7px 16px;font-family:"Comic Sans MS",cursive;font-size:.85rem;font-weight:bold;text-decoration:none;cursor:pointer;transition:background .2s}
-#btn-menu-mobile{background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-family:"Comic Sans MS",cursive;font-size:.82rem;font-weight:bold;cursor:pointer;display:none}
+#btn-hub-mobile{background:#2e7d32;color:#fff;border:none;border-radius:20px;padding:7px 16px;font-family:"Comic Sans MS",sans-serif;font-size:.85rem;font-weight:bold;text-decoration:none;cursor:pointer;transition:background .2s}
+#btn-menu-mobile{background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-family:"Comic Sans MS",sans-serif;font-size:.82rem;font-weight:bold;cursor:pointer}
 #mobile-menu{display:none;position:fixed;bottom:44px;left:0;right:0;background:#0a2a3e;border-top:2px solid #60d0f0;padding:10px 12px;gap:8px;flex-wrap:wrap;justify-content:center;z-index:200;box-shadow:0 -4px 16px rgba(0,0,0,.4)}
 #mobile-menu.open{display:flex}
-#mobile-menu button{background:#1a6b9a;color:#fff;border:none;border-radius:20px;padding:9px 16px;font-family:"Comic Sans MS",cursive;font-size:.84rem;font-weight:bold;cursor:pointer}
+#mobile-menu button{background:#1a6b9a;color:#fff;border:none;border-radius:20px;padding:9px 16px;font-family:"Comic Sans MS",sans-serif;font-size:.84rem;font-weight:bold;cursor:pointer}
 @media(max-width:600px){
   #top-bar{display:none!important}
   h1{font-size:.95rem;margin-bottom:4px}
@@ -124,8 +124,8 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 <div id="mobile-menu">
   <button id="mbtn-flash" onclick="flashBtn.click()">📚 Sight Words</button>
   <button id="mbtn-words" onclick="wordsBtn.click()">📖 Word Families</button>
-  <button onclick="hwBtn.click()">📝 Homework</button>
-  <button onclick="onlineBtn.click()">💻 Online HW</button>
+  <button id="mbtn-hw" onclick="hwBtn.click()">📝 Homework</button>
+  <button id="mbtn-online" onclick="onlineBtn.click()">💻 Online HW</button>
 </div>
 <button class="ch-tab" id="chTab" onclick="toggleChPanel()">📖 Chapters</button>
 <div class="ch-panel" id="chPanel">
@@ -338,12 +338,14 @@ async function renderPage(num,dir){
   wordsBtn.style.display=(isHdr&&WORD_FAMILIES[num])?'inline-block':'none';
   hwBtn.style.display=isHdr?'inline-block':'none';
   onlineBtn.style.display=isHdr?'inline-block':'none';
-  const menuMobileBtn=document.getElementById('btn-menu-mobile');
-  if(menuMobileBtn)menuMobileBtn.style.display=isHdr?'inline-block':'none';
   const mbtnFlash=document.getElementById('mbtn-flash');
   const mbtnWords=document.getElementById('mbtn-words');
-  if(mbtnFlash)mbtnFlash.style.display=(isHdr&&SIGHT_WORDS[num])?'':'none';
-  if(mbtnWords)mbtnWords.style.display=(isHdr&&WORD_FAMILIES[num])?'':'none';
+  const mbtnHw=document.getElementById('mbtn-hw');
+  const mbtnOnline=document.getElementById('mbtn-online');
+  if(mbtnFlash){mbtnFlash.disabled=!(isHdr&&SIGHT_WORDS[num]);mbtnFlash.style.opacity=(isHdr&&SIGHT_WORDS[num])?'1':'.35';}
+  if(mbtnWords){mbtnWords.disabled=!(isHdr&&WORD_FAMILIES[num]);mbtnWords.style.opacity=(isHdr&&WORD_FAMILIES[num])?'1':'.35';}
+  if(mbtnHw){mbtnHw.disabled=!isHdr;mbtnHw.style.opacity=isHdr?'1':'.35';}
+  if(mbtnOnline){mbtnOnline.disabled=!isHdr;mbtnOnline.style.opacity=isHdr?'1':'.35';}
   animating=false;
 }
 document.getElementById('btn-next').addEventListener('click',()=>{if(currentPage<TOTAL)renderPage(currentPage+1,'fwd');});

@@ -15,18 +15,18 @@
       --text:   #2C3E50;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue', cursive; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
 
-    header { background:linear-gradient(135deg,#27AE60 0%,#6BCB77 100%); padding:.4rem .8rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem; }
-    header h1 { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.6rem; color:white; text-shadow:0 2px 6px rgba(0,0,0,.2); }
-    .header-btns { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
-    .btn-header { background:rgba(255,255,255,.2); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.85rem; padding:6px 16px; border-radius:999px; cursor:pointer; transition:background .2s; text-decoration:none; display:inline-block; }
+    header { background:linear-gradient(135deg,#27AE60 0%,#6BCB77 100%); padding:.4rem .8rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:nowrap; gap:.5rem; }
+    header h1 { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1.6rem; color:white; text-shadow:0 2px 6px rgba(0,0,0,.2); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .header-btns { display:flex; gap:.5rem; align-items:center; flex-wrap:nowrap; flex-shrink:0; }
+    .btn-header { background:rgba(255,255,255,.2); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-weight:700; font-size:.85rem; padding:6px 16px; border-radius:999px; cursor:pointer; transition:background .2s; text-decoration:none; display:inline-block; }
     .btn-header:hover { background:rgba(255,255,255,.35); }
     .btn-mute { background:rgba(255,255,255,.2); color:white; border:none; font-size:1.15rem; width:34px; height:34px; border-radius:999px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; }
     .btn-mute:hover { background:rgba(255,255,255,.35); }
     .btn-mute.muted { background:rgba(255,100,100,.35); }
     .voice-group { display:flex; gap:4px; }
-    .btn-voice { background:rgba(255,255,255,.15); color:rgba(255,255,255,.8); border:2px solid rgba(255,255,255,.2); font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.78rem; padding:4px 12px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
+    .btn-voice { background:rgba(255,255,255,.15); color:rgba(255,255,255,.8); border:2px solid rgba(255,255,255,.2); font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-weight:700; font-size:.78rem; padding:4px 12px; border-radius:999px; cursor:pointer; transition:background .2s; white-space:nowrap; }
     .btn-voice.active { background:rgba(255,255,255,.9); color:#27AE60; border-color:transparent; }
 
     /* progress */
@@ -38,18 +38,18 @@
     /* main */
     main { flex:1; min-height:0; overflow:hidden; max-width:660px; margin:0 auto; width:100%; padding:.3rem 1rem; display:flex; flex-direction:column; align-items:center; gap:.5rem; }
 
-    .score-chip { background:white; border-radius:12px; padding:.4rem 1.2rem; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.05rem; color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
+    .score-chip { background:white; border-radius:12px; padding:.4rem 1.2rem; font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1.05rem; color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
     .score-chip span { color:#27AE60; }
 
     /* letter display */
     .letter-card { background:linear-gradient(135deg,#27AE60,#6BCB77); border-radius:24px; padding:.6rem 1.5rem; display:flex; align-items:center; gap:1rem; box-shadow:0 8px 30px rgba(39,174,96,.35); }
-    .letter-upper { font-family:'Comic Sans MS','Comic Neue','Comic Sans',cursive; font-size:5rem; color:white; line-height:1; text-shadow:0 3px 10px rgba(0,0,0,.2); }
+    .letter-upper { font-family:'Comic Sans MS','Comic Neue','Comic Sans',sans-serif; font-size:5rem; color:white; line-height:1; text-shadow:0 3px 10px rgba(0,0,0,.2); }
     .letter-divider { width:3px; height:56px; background:rgba(255,255,255,.35); border-radius:2px; }
-    .letter-lower { font-family:'Comic Sans MS','Comic Neue','Comic Sans',cursive; font-size:3.5rem; color:rgba(255,255,255,.8); line-height:1; }
+    .letter-lower { font-family:'Comic Sans MS','Comic Neue','Comic Sans',sans-serif; font-size:3.5rem; color:rgba(255,255,255,.8); line-height:1; }
     .btn-replay { background:rgba(255,255,255,.25); border:none; color:white; font-size:1.4rem; width:44px; height:44px; border-radius:999px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s; margin-left:.25rem; }
     .btn-replay:hover { background:rgba(255,255,255,.4); }
 
-    .question-text { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.35rem; color:var(--text); text-align:center; }
+    .question-text { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1.35rem; color:var(--text); text-align:center; }
 
     /* options */
     .options-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:.9rem; width:100%; max-width:480px; }
@@ -65,7 +65,7 @@
     @keyframes bounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
     @keyframes shake  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
 
-    .feedback { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.15rem; text-align:center; min-height:1.6em; }
+    .feedback { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1.15rem; text-align:center; min-height:1.6em; }
     .feedback.good { color:#27AE60; }
     .feedback.bad  { color:#FF6B6B; }
 
@@ -75,10 +75,10 @@
     .overlay-box { background:white; border-radius:24px; padding:2.5rem 2rem; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.3); animation:popIn .4s cubic-bezier(.175,.885,.32,1.275); }
     @keyframes popIn { from{transform:scale(.6);opacity:0} to{transform:scale(1);opacity:1} }
     .overlay-emoji { font-size:4rem; margin-bottom:.5rem; }
-    .overlay-title { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:2rem; color:#27AE60; margin-bottom:.4rem; }
+    .overlay-title { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:2rem; color:#27AE60; margin-bottom:.4rem; }
     .overlay-score { font-size:1.05rem; font-weight:700; color:#555; margin-bottom:1.4rem; }
     .overlay-score span { color:#27AE60; font-size:1.3rem; }
-    .btn-play-again { font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-size:1.15rem; background:linear-gradient(135deg,#27AE60,#6BCB77); color:white; border:none; padding:13px 38px; border-radius:999px; cursor:pointer; box-shadow:0 6px 20px rgba(39,174,96,.4); transition:transform .15s; }
+    .btn-play-again { font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; font-size:1.15rem; background:linear-gradient(135deg,#27AE60,#6BCB77); color:white; border:none; padding:13px 38px; border-radius:999px; cursor:pointer; box-shadow:0 6px 20px rgba(39,174,96,.4); transition:transform .15s; }
     .btn-play-again:hover { transform:scale(1.05); }
 
     .confetti-piece { position:fixed; border-radius:2px; animation:fall linear forwards; pointer-events:none; z-index:300; }

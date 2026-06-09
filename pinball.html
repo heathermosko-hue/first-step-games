@@ -7,7 +7,7 @@
   <link href="fonts.css?v=3" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+    body{font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;
          background:url('icons/bg-pinball-arcade.png?v=2') center/cover no-repeat fixed, #0d0018;
          color:#eee; height:100vh; height:100dvh; overflow:hidden;
          display:flex; flex-direction:column; align-items:center;}
@@ -20,7 +20,7 @@
     .back-link{color:white;text-decoration:none;font-weight:700;font-size:.85rem;
                background:rgba(255,166,35,.7);padding:5px 13px;border-radius:999px;
                white-space:nowrap;flex-shrink:0;}
-    header h1{font-family: 'Comic Sans MS', 'Comic Neue', cursive;color:white;
+    header h1{font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;color:white;
               font-size:clamp(1.1rem,4vw,1.6rem);flex:1;text-align:center;
               text-shadow:0 0 20px rgba(245,166,35,.8);}
     .btn-mute{background:rgba(255,166,35,.5);border:none;color:white;
@@ -32,7 +32,7 @@
              padding:.25rem .6rem;display:flex;gap:.25rem;flex-wrap:nowrap;overflow-x:auto;
              justify-content:center; position:relative; z-index:2;
              backdrop-filter:blur(4px);}
-    .btn-cat{font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-weight:700;font-size:.82rem;
+    .btn-cat{font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;font-weight:700;font-size:.82rem;
              border:2px solid rgba(245,166,35,0.5);background:rgba(20,20,60,0.7);color:#ccccff;
              padding:5px 13px;border-radius:999px;cursor:pointer;transition:all .2s;white-space:nowrap;}
     .btn-cat:hover{border-color:#F5A623;color:#F5A623;}
@@ -88,10 +88,10 @@
     }
     .q-display.hidden{display:none;}
     .q-pic{font-size:2.8rem;line-height:1;}
-    .q-pic.letter-pic{font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-size:3.5rem;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7),0 0 16px rgba(245,166,35,.6);line-height:1;}
+    .q-pic.letter-pic{font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;font-size:3.5rem;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7),0 0 16px rgba(245,166,35,.6);line-height:1;}
     .q-label{font-size:.9rem;font-weight:700;color:#aaaacc;line-height:1.4;text-align:center;}
 
-    .btn-launch{font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-size:1.3rem;
+    .btn-launch{font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;font-size:1.3rem;
                 background:linear-gradient(135deg,#F5A623,#E8960F);color:white;
                 border:none;padding:13px 40px;border-radius:999px;cursor:pointer;
                 box-shadow:0 5px 18px rgba(245,166,35,.45);margin-top:.7rem;
@@ -104,7 +104,7 @@
       width:100%;max-width:392px;
     }
     .btn-flip{
-      flex:1;font-family:'Comic Sans MS','Comic Neue',cursive;font-size:1rem;font-weight:700;
+      flex:1;font-family:'Comic Sans MS','Comic Neue',sans-serif;font-size:1rem;font-weight:700;
       background:rgba(245,166,35,0.15);border:2px solid rgba(245,166,35,0.5);color:#F5A623;
       padding:12px 0;border-radius:14px;cursor:pointer;
       user-select:none;-webkit-user-select:none;touch-action:none;
@@ -121,9 +121,9 @@
             padding:2.2rem 2rem;text-align:center;max-width:340px;width:100%;
             box-shadow:0 0 50px rgba(245,166,35,.4);}
     .ov-emoji{font-size:4.5rem;margin-bottom:.4rem;}
-    .ov-title{font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-size:2.2rem;color:#F5A623;margin-bottom:.3rem;}
+    .ov-title{font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;font-size:2.2rem;color:#F5A623;margin-bottom:.3rem;}
     .ov-sub{font-size:1rem;color:#aaa;margin-bottom:1.5rem;line-height:1.6;}
-    .btn-replay{font-family: 'Comic Sans MS', 'Comic Neue', cursive;font-size:1.2rem;
+    .btn-replay{font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;font-size:1.2rem;
                 background:linear-gradient(135deg,#F5A623,#E8960F);color:white;
                 border:none;padding:14px 36px;border-radius:999px;cursor:pointer;
                 box-shadow:0 4px 16px rgba(245,166,35,.4);transition:transform .15s;}
@@ -575,19 +575,19 @@ function draw(){
 
   // Score label & value
   ctx.textBaseline='middle';
-  ctx.font='11px "Comic Sans MS","Comic Neue",cursive';ctx.fillStyle='#6666aa';ctx.textAlign='left';
+  ctx.font='11px "Comic Sans MS","Comic Neue",sans-serif';ctx.fillStyle='#6666aa';ctx.textAlign='left';
   ctx.fillText('SCORE',14,16);
-  ctx.font='bold 28px "Comic Sans MS","Comic Neue",cursive';ctx.fillStyle='#F5A623';
+  ctx.font='bold 28px "Comic Sans MS","Comic Neue",sans-serif';ctx.fillStyle='#F5A623';
   ctx.shadowColor='#F5A623';ctx.shadowBlur=10;
   ctx.fillText(score,14,42);ctx.shadowBlur=0;
 
   // Title center
   ctx.textAlign='center';
-  ctx.font='bold 13px "Comic Sans MS","Comic Neue",cursive';ctx.fillStyle='rgba(255,255,255,0.25)';
+  ctx.font='bold 13px "Comic Sans MS","Comic Neue",sans-serif';ctx.fillStyle='rgba(255,255,255,0.25)';
   ctx.fillText('WORD PINBALL',CW/2,SCORE_H/2);
 
   // Ball indicators (right side)
-  ctx.font='11px "Comic Sans MS","Comic Neue",cursive';ctx.fillStyle='#6666aa';ctx.textAlign='right';
+  ctx.font='11px "Comic Sans MS","Comic Neue",sans-serif';ctx.fillStyle='#6666aa';ctx.textAlign='right';
   ctx.fillText('BALLS',CW-12,16);
   for(let i=0;i<3;i++){
     ctx.font='18px sans-serif';
@@ -623,7 +623,7 @@ function draw(){
   drawFlipper(FL_PIV,FL_TIP_REST,FL_TIP_ACT,flipL);
   drawFlipper(FR_PIV,FR_TIP_REST,FR_TIP_ACT,flipR);
   // Drain gap label
-  ctx.font='bold 10px "Comic Sans MS","Comic Neue",cursive';ctx.fillStyle='rgba(255,60,60,0.4)';
+  ctx.font='bold 10px "Comic Sans MS","Comic Neue",sans-serif';ctx.fillStyle='rgba(255,60,60,0.4)';
   ctx.textAlign='center';ctx.fillText('DRAIN',dcx,428);
 
   // === ANSWER BUMPERS ===
@@ -676,7 +676,7 @@ function draw(){
     ctx.shadowColor=isFlash?b.flashCol:'transparent';ctx.shadowBlur=isFlash?12:0;
     ctx.fillStyle='white';ctx.textAlign='center';ctx.textBaseline='middle';
     const w=b.word,fs=w.length<=1?30:w.length<=3?24:w.length<=5?19:w.length<=7?14:11;
-    ctx.font=`bold ${fs}px "Comic Sans MS","Comic Sans",cursive`;
+    ctx.font=`bold ${fs}px "Comic Sans MS","Comic Sans",sans-serif`;
     ctx.fillText(w,b.x,b.y+6);
     ctx.shadowBlur=0;
 
@@ -720,7 +720,7 @@ function draw(){
   // === FLASH MESSAGE ===
   if(flashMsg){
     ctx.globalAlpha=flashMsg.alpha;
-    ctx.font='bold 21px "Comic Sans MS","Comic Neue",cursive';ctx.fillStyle=flashMsg.color;
+    ctx.font='bold 21px "Comic Sans MS","Comic Neue",sans-serif';ctx.fillStyle=flashMsg.color;
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.shadowColor=flashMsg.color;ctx.shadowBlur=18;
     ctx.fillText(flashMsg.text,CW/2,FIELD_TOP+50);
@@ -729,12 +729,12 @@ function draw(){
 
   // === IDLE / SERVING PROMPT ===
   if(phase==='idle'||!catKey){
-    ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='bold 17px "Comic Sans MS","Comic Neue",cursive';
+    ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='bold 17px "Comic Sans MS","Comic Neue",sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText('👆 Choose a category above!',CW/2,CH/2);
   }
   if(phase==='serving'&&catKey){
-    ctx.fillStyle='rgba(180,180,255,0.55)';ctx.font='12px "Comic Sans MS","Comic Neue",cursive';
+    ctx.fillStyle='rgba(180,180,255,0.55)';ctx.font='12px "Comic Sans MS","Comic Neue",sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText('Tap left/right to use flippers · Z / X keys',CW/2,FIELD_TOP+18);
   }
