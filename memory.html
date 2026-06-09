@@ -114,11 +114,12 @@
 
 /* ── MOBILE height fixes ── */
 @media (max-height: 720px) {
-  /* Compact settings: buttons in a row instead of column */
-  .settings-bar { flex-direction: row !important; flex-wrap: wrap; justify-content: center;
-                  gap: .3rem; padding: .2rem .5rem; }
+  /* Keep all difficulty buttons on one scrollable row */
+  .settings-bar { overflow-x: auto !important; flex-wrap: nowrap !important; padding: .15rem .5rem; gap: .3rem; }
+  .settings-group { flex-wrap: nowrap !important; }
+  .mode-btns { flex-wrap: nowrap !important; }
   /* Make each button smaller */
-  .btn-mode { padding: 5px 14px !important; font-size: .82rem !important; }
+  .btn-mode { padding: 4px 10px !important; font-size: .75rem !important; white-space: nowrap !important; }
   /* Compact stats */
   .stats-bar { padding: .1rem .5rem; gap: .8rem; }
   .stat-label { font-size: .65rem; }
