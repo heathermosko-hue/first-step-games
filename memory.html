@@ -224,10 +224,11 @@ function loadVoices() {
   const all = window.speechSynthesis.getVoices();
   if (!all.length) return;
   const en=all.filter(v=>/^en/i.test(v.lang));
-  _voice=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))
-       ||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))
-       ||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))
-       ||en.find(v=>/natural|online|neural/i.test(v.name))
+    _voice=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))
+       ||en.find(v=>/\b(jenny|emma)\b/i.test(v.name)&&/natural/i.test(v.name))
+       ||en.find(v=>/female/i.test(v.name))
+       ||en.find(v=>/\b(samantha|karen|moira|serena|victoria|tessa|fiona|kate|zoe|allison|ava|zira|eva|hazel|susan)\b/i.test(v.name))
+       ||en.find(v=>/natural|neural|online/i.test(v.name))
        ||en.find(v=>/google.*english/i.test(v.name))
        ||en[0]||all[0];
 }

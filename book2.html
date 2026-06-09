@@ -220,7 +220,7 @@ const onlineBtn=document.getElementById('btn-online');
 let voices=[];
 function loadVoices(){voices=speechSynthesis.getVoices();if(!voices.length)speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};}
 loadVoices();
-function getBestVoice(){const en=voices.filter(v=>/^en/i.test(v.lang));return en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bjenny\b|\bemma\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\bsamantha\b|\bkaren\b|\bmoira\b|\bserena\b|\bvictoria\b/i.test(v.name))||en.find(v=>/natural|online|neural/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||voices[0];}
+function getBestVoice(){const en=voices.filter(v=>/^en/i.test(v.lang));return en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\b(jenny|emma)\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/female/i.test(v.name))||en.find(v=>/\b(samantha|karen|moira|serena|victoria|tessa|fiona|kate|zoe|allison|ava|zira|eva|hazel|susan)\b/i.test(v.name))||en.find(v=>/natural|neural|online/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||voices[0];}
 function speak(text,spanEl){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.trim());const v=getBestVoice();if(v)u.voice=v;u.lang='en-US';u.rate=0.9;u.pitch=1.0;u.volume=1;u.onstart=()=>{ring.classList.add('on');if(spanEl)spanEl.classList.add('speaking');};u.onend=()=>{ring.classList.remove('on');if(spanEl)spanEl.classList.remove('speaking');};speechSynthesis.speak(u);}
 ring.addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
 document.getElementById('btn-read').addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
