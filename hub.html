@@ -1120,71 +1120,10 @@
   </style>
 </head>
 <body>
-<script>
-/* Hero & school-login-banner are hidden by default (inline style="display:none").
-   Show them only on desktop (>600px). This way mobile NEVER sees them
-   regardless of CSS caching. */
-(function(){
-  if(window.innerWidth <= 600) return;
-  document.addEventListener('DOMContentLoaded', function(){
-    var hero = document.querySelector('.hero');
-    var banner = document.querySelector('.school-login-banner');
-    if(hero) hero.style.display = '';
-    if(banner) banner.style.display = '';
-  });
-})();
-</script>
-
 <!-- ACCESS BAR -->
 <div id="access-bar"></div>
 
-<!-- GATE OVERLAY (injected by JS when needed) -->
-
-<!-- HERO — hidden by default, shown on desktop by JS below -->
-<div class="hero" style="display:none">
-  <div class="hero-inner">
-    <span class="hero-pkg-badge">⭐ Member Package</span>
-    <h1 class="hero-title">
-      <span class="title-learn">Learn</span><span class="title-and">, </span><span class="title-read">Read</span><span class="title-and"> &amp; </span><span class="title-play">Play!</span>
-    </h1>
-    <p class="hero-online-sub">The Complete Online Phonics Program</p>
-    <div class="hero-panels">
-      <div class="hero-panel">
-        <div class="hero-panel-header">🎬 Video Lessons</div>
-        <div class="hero-panel-body">Step-by-step phonics videos kids love to watch and rewatch</div>
-      </div>
-      <div class="hero-panel">
-        <div class="hero-panel-header">🎮 Learning Games</div>
-        <div class="hero-panel-body">25+ interactive games that make reading feel like play</div>
-      </div>
-      <div class="hero-panel">
-        <div class="hero-panel-header">📚 Reading Books</div>
-        <div class="hero-panel-body">180+ decodable books to build real reading confidence</div>
-      </div>
-    </div>
-    <div class="hero-bottom-bar">
-      <span class="hero-bottom-item">✅ Ages 3–8</span>
-      <span class="hero-bottom-item">✅ Parent-friendly</span>
-      <span class="hero-bottom-item">✅ Trusted since 2010</span>
-      <a href="our-program.html" class="hero-cta" style="background:linear-gradient(135deg,#fff,#f0f0ff);color:#6B48FF;box-shadow:0 4px 16px rgba(0,0,0,0.2);">📚 Our Program</a>
-      <a href="https://www.firststepreading.com/shop/" target="_blank" class="hero-cta">Get Full Access →</a>
-    </div>
-  </div>
-</div>
-
 <main>
-
-  <!-- ══ SCHOOL LOGIN ══ — hidden by default, shown on desktop by JS below -->
-  <div class="school-login-banner" style="display:none">
-    <div>
-      <h2>⭐ Member Access</h2>
-      <p>Members get unlimited 24/7 access to all games, books &amp; videos!</p>
-    </div>
-    <div class="school-login-btns">
-      <a href="#" onclick="event.preventDefault();showMemberLoginOverlay();" class="school-btn member">⭐ Member Login</a>
-      <a href="auth/login-choice.html" class="school-btn teacher">🏫 Teacher / Student Login</a>
-    </div>
-  </div>
 
   <!-- ══ SCHOOL PACKAGE ══ -->
   <div class="school-pkg-banner">
