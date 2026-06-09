@@ -361,9 +361,7 @@ function startGame(){
   document.getElementById('qDisplay').classList.add('hidden');
   document.getElementById('gameOverlay').classList.add('hidden');
   document.getElementById('btnLaunch').classList.remove('hidden');
-  const _fb=document.getElementById('flipperBtns');
-  _fb.style.display='flex';
-  _fb.querySelectorAll('.btn-flip').forEach(b=>b.disabled=false);
+  document.getElementById('flipperBtns').style.display='none';
   if(!raf)raf=requestAnimationFrame(loop);
 }
 
@@ -457,7 +455,7 @@ function doGameOver(){
   _overFired=true;phase='over';
   document.getElementById('qDisplay').classList.add('hidden');
   document.getElementById('btnLaunch').classList.add('hidden');
-  document.getElementById('flipperBtns').querySelectorAll('.btn-flip').forEach(b=>b.disabled=true);
+  document.getElementById('flipperBtns').style.display='none';
   speak(`Game over! | You scored ${score} points!`);
   const emoji=score>=500?'🏆':score>=200?'⭐':'😅';
   document.getElementById('ovEmoji').textContent=emoji;
@@ -473,7 +471,7 @@ function doWin(){
   if(phase==='over')return;phase='over';
   document.getElementById('qDisplay').classList.add('hidden');
   document.getElementById('btnLaunch').classList.add('hidden');
-  document.getElementById('flipperBtns').querySelectorAll('.btn-flip').forEach(b=>b.disabled=true);
+  document.getElementById('flipperBtns').style.display='none';
   speak(`You win! | Amazing! | You scored ${score} points!`);
   launchConfetti();
   document.getElementById('ovEmoji').textContent='🏆';
@@ -521,17 +519,15 @@ function updatePhysics(){
         if(Math.abs(ball.vx)<1.5)ball.vx=(ball.vx>=0?1:-1)*2.5;
       }
     }else if(ball.x<=DRAIN_X1){
-      // Left flipper zone
-      const boost=flipL?1.55:0.55;
-      ball.vy=-Math.abs(ball.vy)*WALL_E*boost;
+      // Left flipper — always auto-active during playing phase
+      ball.vy=-Math.abs(ball.vy)*WALL_E*1.55;
       ball.y=374-BALL_R;
-      ball.vx=flipL?(Math.abs(ball.vx)*0.9+2):(Math.abs(ball.vx)*0.5+0.3);
+      ball.vx=Math.abs(ball.vx)*0.9+2;
     }else{
-      // Right flipper zone
-      const boost=flipR?1.55:0.55;
-      ball.vy=-Math.abs(ball.vy)*WALL_E*boost;
+      // Right flipper — always auto-active during playing phase
+      ball.vy=-Math.abs(ball.vy)*WALL_E*1.55;
       ball.y=374-BALL_R;
-      ball.vx=flipR?-(Math.abs(ball.vx)*0.9+2):-(Math.abs(ball.vx)*0.5+0.3);
+      ball.vx=-(Math.abs(ball.vx)*0.9+2);
     }
   }
 
@@ -741,7 +737,7 @@ function draw(){
   if(phase==='serving'&&catKey){
     ctx.fillStyle='rgba(180,180,255,0.55)';ctx.font='12px "Comic Sans MS","Chalkboard SE","Comic Neue"';
     ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('Tap left/right to use flippers · Z / X keys',CW/2,FIELD_TOP+18);
+    ctx.fillText('Tap the correct answer bumper!',CW/2,FIELD_TOP+18);
   }
 }
 
@@ -804,7 +800,6 @@ canvas.addEventListener('click',e=>{
   const rect=canvas.getBoundingClientRect();
   const scaleX=CW/rect.width, scaleY=CH/rect.height;
   const cx=(e.clientX-rect.left)*scaleX, cy=(e.clientY-rect.top)*scaleY;
-  // Direct bumper tap: check if click landed inside any bumper circle
   for(let i=0;i<bumpers.length;i++){
     const b=bumpers[i];
     if(!b.word)continue;
@@ -814,10 +809,6 @@ canvas.addEventListener('click',e=>{
       return;
     }
   }
-  // Otherwise activate flipper
-  const side=_canvasFlipSide(e.clientX,rect);
-  if(side==='L'){flipL=true;setTimeout(()=>flipL=false,200);}
-  else{flipR=true;setTimeout(()=>flipR=false,200);}
 });
 
 canvas.addEventListener('touchstart',e=>{
@@ -825,8 +816,6 @@ canvas.addEventListener('touchstart',e=>{
   if(phase==='serving'){launch();return;}
   const rect=canvas.getBoundingClientRect();
   const scaleX=CW/rect.width, scaleY=CH/rect.height;
-  // Check if any touch landed on a bumper
-  let bumperHit=false;
   Array.from(e.touches).forEach(t=>{
     const cx=(t.clientX-rect.left)*scaleX, cy=(t.clientY-rect.top)*scaleY;
     for(let i=0;i<bumpers.length;i++){
@@ -835,58 +824,19 @@ canvas.addEventListener('touchstart',e=>{
       if(Math.hypot(cx-b.x,cy-b.y)<BUMP_R&&b.cooldown===0){
         b.glow=1;b.cooldown=45;spawnBurst(b.x,b.y,b.color);
         hitBumper(i);
-        bumperHit=true;
         break;
       }
     }
   });
-  if(bumperHit)return;
-  Array.from(e.touches).forEach(t=>{
-    if(_canvasFlipSide(t.clientX,rect)==='L')flipL=true; else flipR=true;
-  });
 },{passive:false});
 
-canvas.addEventListener('touchend',e=>{
-  e.preventDefault();
-  flipL=false;flipR=false;
-  const rect=canvas.getBoundingClientRect();
-  Array.from(e.touches).forEach(t=>{
-    if(_canvasFlipSide(t.clientX,rect)==='L')flipL=true; else flipR=true;
-  });
-},{passive:false});
+canvas.addEventListener('touchend',e=>{e.preventDefault();},{passive:false});
+canvas.addEventListener('touchcancel',e=>{e.preventDefault();},{passive:false});
 
-canvas.addEventListener('touchcancel',e=>{e.preventDefault();flipL=false;flipR=false;},{passive:false});
-
-/* ── KEYBOARD → flippers ── */
+/* ── KEYBOARD → launch only ── */
 document.addEventListener('keydown',e=>{
-  if(e.key==='z'||e.key==='Z'||e.key==='ArrowLeft'){flipL=true;e.preventDefault();}
-  else if(e.key==='x'||e.key==='X'||e.key==='ArrowRight'){flipR=true;e.preventDefault();}
-  else if((e.key===' '||e.key==='ArrowUp')&&phase==='serving'){launch();e.preventDefault();}
+  if((e.key===' '||e.key==='ArrowUp')&&phase==='serving'){launch();e.preventDefault();}
 });
-document.addEventListener('keyup',e=>{
-  if(e.key==='z'||e.key==='Z'||e.key==='ArrowLeft')flipL=false;
-  else if(e.key==='x'||e.key==='X'||e.key==='ArrowRight')flipR=false;
-});
-
-/* ── FLIPPER BUTTONS ── */
-(function(){
-  const bl=document.getElementById('btnFlipL');
-  const br=document.getElementById('btnFlipR');
-  function setL(v){flipL=v;bl.classList.toggle('pressed',v);}
-  function setR(v){flipR=v;br.classList.toggle('pressed',v);}
-  bl.addEventListener('mousedown',()=>setL(true));
-  bl.addEventListener('mouseup',()=>setL(false));
-  bl.addEventListener('mouseleave',()=>setL(false));
-  br.addEventListener('mousedown',()=>setR(true));
-  br.addEventListener('mouseup',()=>setR(false));
-  br.addEventListener('mouseleave',()=>setR(false));
-  bl.addEventListener('touchstart',e=>{e.preventDefault();setL(true);},{passive:false});
-  bl.addEventListener('touchend',e=>{e.preventDefault();setL(false);},{passive:false});
-  bl.addEventListener('touchcancel',e=>{e.preventDefault();setL(false);},{passive:false});
-  br.addEventListener('touchstart',e=>{e.preventDefault();setR(true);},{passive:false});
-  br.addEventListener('touchend',e=>{e.preventDefault();setR(false);},{passive:false});
-  br.addEventListener('touchcancel',e=>{e.preventDefault();setR(false);},{passive:false});
-})();
 
 /* ── BUTTONS ── */
 document.getElementById('btnLaunch').addEventListener('click',launch);
