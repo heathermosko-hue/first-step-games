@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Voice Test</title>
+<style>
+  body { font-family: 'Comic Sans MS', sans-serif; background: #1a1a4e; color: #fff;
+         display: flex; flex-direction: column; align-items: center; padding: 40px; gap: 20px; }
+  h1 { color: #ffd700; }
+  .card { background: rgba(255,255,255,.1); border-radius: 16px; padding: 24px 32px;
+          text-align: center; width: 280px; }
+  .card h2 { margin: 0 0 6px; font-size: 1.2rem; }
+  .card p  { margin: 0 0 16px; font-size: .85rem; color: #ccc; }
+  button { background: #ff6b6b; border: none; border-radius: 999px; color: #fff;
+           font-family: inherit; font-size: 1rem; padding: 10px 28px; cursor: pointer; }
+  button:hover { background: #ff3b8a; }
+  button:disabled { background: #555; cursor: wait; }
+</style>
+</head>
+<body>
+<h1>🔊 Voice Samples</h1>
+<p style="color:#aaa">Click each button to hear the voice</p>
+
+<div class="card">
+  <h2>👩 Option 1 — Journey-F</h2>
+  <p>Warm, natural woman. Most human-like.</p>
+  <button onclick="play('en-US-Journey-F', this)">▶ Play</button>
+</div>
+
+<div class="card">
+  <h2>👦 Option 2 — Journey-D</h2>
+  <p>Warm, natural man. Friendly teacher feel.</p>
+  <button onclick="play('en-US-Journey-D', this)">▶ Play</button>
+</div>
+
+<div class="card">
+  <h2>👧 Option 3 — Studio-O</h2>
+  <p>Bright, crisp woman. Professional studio quality.</p>
+  <button onclick="play('en-US-Studio-O', this)">▶ Play</button>
+</div>
+
+<script>
+var API_KEY = 'AIzaSyDPCnZfgZmSYPonViX2S4rSfH8-FGFbhTo';
+var SAMPLE  = 'The cat sat on the mat. She can see the big red dog run fast!';
+
+function play(voice, btn) {
+  btn.disabled = true;
+  btn.textContent = '⏳ Loading...';
+  fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key=' + API_KEY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      input: { text: SAMPLE },
+      voice: { languageCode: 'en-US', name: voice },
+      audioConfig: { audioEncoding: 'MP3', speakingRate: 0.9 }
+    })
+  })
+  .then(r => r.json())
+  .then(d => {
+    var audio = new Audio('data:audio/mp3;base64,' + d.audioContent);
+    audio.onended = function() { btn.disabled = false; btn.textContent = '▶ Play'; };
+    audio.play();
+    btn.textContent = '🔊 Playing...';
+  })
+  .catch(e => { btn.disabled = false; btn.textContent = '▶ Play'; alert('Error: ' + e); });
+}
+</script>
+</body>
+</html>

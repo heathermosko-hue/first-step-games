@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TTS Debug</title>
+<script src="tts.js?v=8" defer></script>
+<style>
+  body { font-family: sans-serif; background:#111; color:#fff; padding:20px; font-size:14px; }
+  button { font-size:1.1rem; padding:14px 24px; margin:8px 4px; border-radius:10px;
+           border:none; background:#4caf50; color:#fff; cursor:pointer; display:block; width:100%; }
+  #log { background:#222; border-radius:8px; padding:12px; margin-top:12px;
+         font-family:monospace; font-size:12px; white-space:pre-wrap; min-height:200px; }
+  .ok  { color:#4caf50; }
+  .err { color:#f44336; }
+  .info{ color:#2196f3; }
+</style>
+</head>
+<body>
+<h2>🔊 TTS Debug</h2>
+<button onclick="testTTS()">Tap to Test Voice</button>
+<button onclick="checkStatus()">Check Status</button>
+<div id="log">Tap a button to begin...\n</div>
+<script>
+function log(msg, cls) {
+  var d = document.getElementById('log');
+  var span = document.createElement('span');
+  span.className = cls || '';
+  span.textContent = msg + '\n';
+  d.appendChild(span);
+  d.scrollTop = d.scrollHeight;
+}
+
+function checkStatus() {
+  log('--- Status Check ---', 'info');
+  log('tts.js loaded: ' + (window._ttsLoaded ? 'YES' : 'checking...'));
+  log('speechSynthesis.speak patched: ' + (window.speechSynthesis && window.speechSynthesis.speak.toString().includes('fetchAudio') ? 'YES ✓' : 'NO ✗'),
+      window.speechSynthesis && window.speechSynthesis.speak.toString().includes('fetchAudio') ? 'ok' : 'err');
+  log('AudioContext available: ' + (!!(window.AudioContext || window.webkitAudioContext) ? 'YES ✓' : 'NO ✗'));
+  log('fetch available: ' + (!!window.fetch ? 'YES ✓' : 'NO ✗'));
+  var u = navigator.userAgent;
+  log('Browser: ' + u.substring(0, 80), 'info');
+}
+
+function testTTS() {
+  log('--- TTS Test ---', 'info');
+  log('Tapping button...');
+
+  if (!window.speechSynthesis) { log('ERROR: no speechSynthesis', 'err'); return; }
+
+  var patched = window.speechSynthesis.speak.toString().includes('fetchAudio');
+  log('speak() patched by tts.js: ' + (patched ? 'YES ✓' : 'NO ✗ — tts.js not loaded!'), patched ? 'ok' : 'err');
+
+  if (!patched) {
+    log('Trying to reload tts.js...', 'info');
+    var s = document.createElement('script');
+    s.src = 'tts.js?v=8&reload=' + Date.now();
+    s.onload = function() { log('tts.js reloaded — try again', 'ok'); };
+    s.onerror = function() { log('tts.js FAILED to load!', 'err'); };
+    document.head.appendChild(s);
+    return;
+  }
+
+  // Intercept to see what path is taken
+  var orig = window.speechSynthesis.speak;
+  window.speechSynthesis.speak = function(utt) {
+    log('speak() called with: "' + (utt.text||'').substring(0,40) + '"', 'info');
+    // patch onstart/onend to log
+    var os = utt.onstart, oe = utt.onend;
+    utt.onstart = function(e) { log('▶ Audio started!', 'ok'); if(os) os(e); };
+    utt.onend   = function(e) { log('■ Audio ended.', 'info');  if(oe) oe(e); };
+    return orig.call(this, utt);
+  };
+
+  // Also test fetch directly
+  log('Testing Google TTS API fetch...', 'info');
+  fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key=AIzaSyDPCnZfgZmSYPonViX2S4rSfH8-FGFbhTo', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      input:{text:'Hello'},
+      voice:{languageCode:'en-US', name:'en-US-Journey-F'},
+      audioConfig:{audioEncoding:'MP3'}
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if (d.audioContent) {
+      log('Google TTS API: SUCCESS ✓ (got audio)', 'ok');
+      log('Playing via tts.js now...', 'info');
+      var utt = new SpeechSynthesisUtterance('Hello, this is the Journey F voice. Can you hear me?');
+      window.speechSynthesis.speak(utt);
+    } else {
+      log('Google TTS API: ERROR — ' + JSON.stringify(d).substring(0,100), 'err');
+    }
+  })
+  .catch(function(e){ log('Google TTS API: FETCH FAILED — ' + e, 'err'); });
+}
+</script>
+</body>
+</html>
