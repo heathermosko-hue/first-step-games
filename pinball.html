@@ -135,6 +135,7 @@
     footer{display:none;}
     footer a{color:#F5A623;text-decoration:none;}
   </style>
+<script src="tts.js?v=5" defer></script>
 </head>
 <body>
 
@@ -497,11 +498,9 @@ function updatePhysics(){
     return;
   }
 
-  // Natural drain — ball fell through gap while playing
+  // Safety net — should never trigger during normal play since drain gap is blocked,
+  // but handle gracefully just in case.
   if(phase==='playing'&&ball.y>CH+20){
-    ballsLeft--;
-    playBuzzer();
-    setFlash(`Ball lost! ${ballsLeft} left`,'#FF8800');
     phase='draining';drainCountdown=0;
     return;
   }
@@ -514,7 +513,13 @@ function updatePhysics(){
   // Bottom zone — flippers or drain
   if(ball.y+BALL_R>374){
     if(ball.x>DRAIN_X1&&ball.x<DRAIN_X2){
-      // drain gap — let ball fall through naturally
+      // Drain gap: only let ball through if a wrong answer triggered draining.
+      // During normal play, block the gap so the ball can't be lost accidentally.
+      if(phase!=='draining'){
+        ball.vy=-Math.abs(ball.vy)*WALL_E*0.9;
+        ball.y=374-BALL_R;
+        if(Math.abs(ball.vx)<1.5)ball.vx=(ball.vx>=0?1:-1)*2.5;
+      }
     }else if(ball.x<=DRAIN_X1){
       // Left flipper zone
       const boost=flipL?1.55:0.55;
@@ -878,7 +883,7 @@ if(_p&&URL_MAP[_p.toLowerCase()]){
 }
 </script>
 <script src="auth/student-bar.js"></script>
-  <script src="site-nav.js?v=4"></script>
+  <script src="site-nav.js?v=5"></script>
 </body>
 </html>
 
