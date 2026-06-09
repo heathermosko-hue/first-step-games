@@ -476,8 +476,8 @@ const WORDS = {
 };
 
 /* ─── BOARD DATA ─── */
-const SNAKES  = { 36:16, 33:13, 27:7, 19:2 };
-const LADDERS = { 3:22, 17:24, 5:15, 29:32 };
+const SNAKES  = { 27:7, 36:16, 33:13 };
+const LADDERS = { 5:15, 9:12, 3:24, 11:31, 19:38 };
 
 const PALETTE = ['#FF9AA2','#FFB7B2','#FFDAC1','#E2F0CB','#B5EAD7','#C7CEEA','#FFCBA4','#D4EDDA'];
 
@@ -607,7 +607,7 @@ function buildSnakesAndLadders() {
   drawLadder(20, 34);
 
   // Snakes on top
-  const snakeColors = { 38: '#E74C3C', 30: '#C0392B', 22: '#E67E22', 16: '#D35400' };
+  const snakeColors = { 27: '#E74C3C', 36: '#C0392B', 33: '#E67E22' };
   for (const [head, tail] of Object.entries(SNAKES)) {
     drawSnake(Number(head), tail, snakeColors[Number(head)]);
   }
