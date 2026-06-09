@@ -700,13 +700,11 @@
         display: block;
       }
 
-      /* ── HERO ── */
+      /* ── HERO + MARKETING BANNERS: hide entirely on mobile ── */
+      .hero { display: none !important; }
       .hero-panels { display: none !important; }
       .hero-bottom-bar { display: none !important; }
-      .hero-inner { padding: 0.4rem 0.75rem 0.6rem; }
-      .hero-cta { font-size: 0.85rem; padding: 8px 16px; white-space: normal; text-align: center; }
-      .hero-online-sub { font-size: 0.9rem; padding: 4px 14px; }
-      .hero-title { margin: 0.2rem 0 0.4rem; }
+      .school-login-banner { display: none !important; }
 
       /* ── ACCESS BAR ── */
       #access-bar { min-height: 44px; padding: 0 0.75rem; font-size: 0.82rem; }
@@ -1114,8 +1112,10 @@
   <!-- Enforce mobile banner hiding — duplicated late for specificity safety -->
   <style>
     @media (max-width: 600px) {
+      .hero { display: none !important; }
       .hero-panels { display: none !important; }
       .hero-bottom-bar { display: none !important; }
+      .school-login-banner { display: none !important; }
     }
   </style>
 </head>
