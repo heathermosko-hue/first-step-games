@@ -234,7 +234,7 @@ let muted = false;
 
 /* Speech */
 function loadVoices() { voices = speechSynthesis.getVoices(); }
-speechSynthesis.onvoiceschanged = loadVoices;
+speechSynthesis.addEventListener("voiceschanged", loadVoices);
 loadVoices();
 
 function getBestVoice(){const en=voices.filter(v=>/^en/i.test(v.lang));return en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\b(jenny|emma)\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/female/i.test(v.name))||en.find(v=>/\b(samantha|karen|moira|serena|victoria|tessa|fiona|kate|zoe|allison|ava|zira|eva|hazel|susan)\b/i.test(v.name))||en.find(v=>/natural|neural|online/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||voices[0];}

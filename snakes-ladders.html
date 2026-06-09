@@ -465,7 +465,7 @@ function _launch(msg){if(_muted)return;window.speechSynthesis.cancel();_queue=ms
 function _advance(){if(!_queue.length){_speaking=false;if(_pending){const t=_pending;_pending=null;_launch(t);}return;}_speaking=true;const utt=new SpeechSynthesisUtterance(_queue.shift());if(_voice)utt.voice=_voice;utt.rate=0.92;utt.pitch=1.0;utt.onend=()=>{_speaking=false;setTimeout(_advance,300);};window.speechSynthesis.speak(utt);}
 function speak(msg){if(_muted)return;if(_speaking){_pending=msg;}else{_launch(msg);}}
 function loadVoice(){const all=window.speechSynthesis.getVoices();if(!all.length){setTimeout(loadVoice,250);return;}const en=all.filter(v=>/^en/i.test(v.lang));_voice=en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\b(jenny|emma)\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/female/i.test(v.name))||en.find(v=>/\b(samantha|karen|moira|serena|victoria|tessa|fiona|kate|zoe|allison|ava|zira|eva|hazel|susan)\b/i.test(v.name))||en.find(v=>/natural|neural|online/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||all[0];}
-window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();
+window.speechSynthesis.addEventListener("voiceschanged", loadVoice);loadVoice();
 
 /* ─── WORD DATA ─── */
 const WORDS = {

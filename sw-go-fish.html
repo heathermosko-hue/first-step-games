@@ -1291,7 +1291,7 @@ function loadVoices() {
 }
 
 if (window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = loadVoices;
+  window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
   loadVoices();
 }
 
@@ -1313,6 +1313,7 @@ function speak(text) {
 }
 
 function _launch(text) {
+  window.speechSynthesis.cancel();
   // Split on | or sentence-end for paced speech
   _queue   = text.split(/\s*\|\s*|(?<=[.!?])\s+/).map(s => s.trim()).filter(Boolean);
   _pending = null;

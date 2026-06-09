@@ -306,7 +306,7 @@
        ||en.find(v=>/google.*english/i.test(v.name))
        ||en[0]||all[0];
   }
-  window.speechSynthesis.onvoiceschanged = loadVoices;
+  window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
   loadVoices();
 
   /* ── MUTE ── */

@@ -214,9 +214,9 @@ function speak(text, delay = 120) {
 function initVoices(callback) {
   voices = speechSynthesis.getVoices();
   if (voices.length) { callback(); return; }
-  speechSynthesis.onvoiceschanged = () => {
+  speechSynthesis.addEventListener("voiceschanged", )() => {
     voices = speechSynthesis.getVoices();
-    speechSynthesis.onvoiceschanged = null;
+    speechSynthesis.addEventListener("voiceschanged", null);
     callback();
   };
   setTimeout(() => { if (!voices.length) voices = speechSynthesis.getVoices(); callback(); }, 500);

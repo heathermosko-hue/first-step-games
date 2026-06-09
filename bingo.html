@@ -281,7 +281,7 @@
     _voices = [best];
   }
 
-  window.speechSynthesis.onvoiceschanged = loadVoices;
+  window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
   loadVoices();
 
   /* ── VOICE / MUTE UI ── */

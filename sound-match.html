@@ -180,7 +180,7 @@ function loadVoices() {
     ||en[0]||all[0];
   _voices = [best];
 }
-if (window.speechSynthesis) { window.speechSynthesis.onvoiceschanged=loadVoices; loadVoices(); }
+if (window.speechSynthesis) { window.speechSynthesis.addEventListener("voiceschanged", loadVoices); loadVoices(); }
 
 function speak(text) {
   if (!window.speechSynthesis||_muted) return;

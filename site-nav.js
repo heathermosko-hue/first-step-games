@@ -122,5 +122,18 @@
   var ab = document.getElementById('access-bar');
   if (ab) ab.style.top = (window.innerWidth <= 600 ? NAV_H_M : NAV_H) + 'px';
 
+  /* ── iOS TTS unlock: Safari requires a user gesture before any speech fires.
+     One silent cancel() on the very first tap unlocks the audio session for
+     the whole page — all subsequent speak() calls then work normally. ── */
+  (function() {
+    function _unlockTTS() {
+      if (window.speechSynthesis) { window.speechSynthesis.cancel(); }
+      document.removeEventListener('click',  _unlockTTS);
+      document.removeEventListener('touchend', _unlockTTS);
+    }
+    document.addEventListener('click',   _unlockTTS, { once: true, passive: true });
+    document.addEventListener('touchend', _unlockTTS, { once: true, passive: true });
+  })();
+
   } catch(e) { /* fail silently — nav is non-critical */ }
 })();
