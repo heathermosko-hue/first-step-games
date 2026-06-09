@@ -415,6 +415,8 @@ function showLetter(idx) {
   document.getElementById('bigLetters').textContent     = `${L} / ${L.toLowerCase()}`;
   document.getElementById('wordLine').textContent       = `${EMOJIS[L]} ${L} is for ${WORDS[L]}`;
   document.getElementById('letterProgress').textContent = `Letter ${idx + 1} of 26`;
+  document.getElementById('btnPrev').disabled = idx === 0;
+  document.getElementById('btnNext').disabled = idx === 25;
   if (upperDraw) upperDraw.clear();
   if (lowerDraw) lowerDraw.clear();
   renderGuides(L,               document.getElementById('upperSvg'), 'u');
@@ -432,11 +434,13 @@ document.getElementById('btnMute').addEventListener('click', () => {
 });
 
 document.getElementById('btnPrev').addEventListener('click', () => {
-  currentIdx = (currentIdx - 1 + 26) % 26;
+  if (currentIdx <= 0) return;
+  currentIdx--;
   showLetter(currentIdx);
 });
 document.getElementById('btnNext').addEventListener('click', () => {
-  currentIdx = (currentIdx + 1) % 26;
+  if (currentIdx >= 25) return;
+  currentIdx++;
   showLetter(currentIdx);
 });
 document.getElementById('btnClearUpper').addEventListener('click', () => { if (upperDraw) upperDraw.clear(); });
@@ -445,9 +449,9 @@ document.getElementById('btnClearLower').addEventListener('click', () => { if (l
 /* ── KEYBOARD NAVIGATION ── */
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-    currentIdx = (currentIdx + 1) % 26; showLetter(currentIdx);
+    if (currentIdx < 25) { currentIdx++; showLetter(currentIdx); }
   } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-    currentIdx = (currentIdx - 1 + 26) % 26; showLetter(currentIdx);
+    if (currentIdx > 0) { currentIdx--; showLetter(currentIdx); }
   }
 });
 

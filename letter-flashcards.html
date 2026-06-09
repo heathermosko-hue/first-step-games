@@ -212,7 +212,8 @@ header {
       <div class="tap-hint">Tap to see lowercase ↓</div>
     </div>
     <div class="card-face card-back">
-      <img id="letter-pic" src="icons/letter-a.png" alt="A is for Apple" style="width:88%;height:88%;object-fit:contain;border-radius:16px;">
+      <div id="lower-ltr" style="font-family:'Comic Sans MS','Comic Neue','Comic Sans';font-size:clamp(3rem,14vw,5.5rem);color:white;line-height:1;text-shadow:2px 4px 0 rgba(0,0,0,0.18);margin-bottom:4px;">a</div>
+      <img id="letter-pic" src="icons/letter-a.png" alt="A is for Apple" style="width:66%;height:66%;object-fit:contain;border-radius:12px;">
       <div class="tap-hint" style="color:rgba(255,255,255,0.75)">Tap to flip back ↑</div>
     </div>
   </div>
@@ -271,6 +272,7 @@ const LETTER_WORDS = {A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G
 function showLetter() {
   const L = LETTERS[cur];
   document.getElementById('upper-ltr').textContent = L;
+  document.getElementById('lower-ltr').textContent = L.toLowerCase();
   const pic = document.getElementById('letter-pic');
   pic.src = 'icons/letter-' + L.toLowerCase() + '.png';
   pic.alt = L + ' is for ' + LETTER_WORDS[L];
@@ -290,7 +292,7 @@ function flipCard() {
   flipped = !flipped;
   document.getElementById('card').classList.toggle('flipped', flipped);
   const L = LETTERS[cur];
-  speak(flipped ? L + ' is for ' + LETTER_WORDS[L] : 'Capital ' + L);
+  speak(flipped ? 'lowercase ' + L.toLowerCase() + ', ' + L + ' is for ' + LETTER_WORDS[L] : 'Capital ' + L);
   const tb = document.getElementById('case-toggle-btn');
   tb.textContent = flipped ? '🔠 Switch to Uppercase' : '🔡 Switch to Lowercase';
   tb.classList.toggle('is-lower', flipped);

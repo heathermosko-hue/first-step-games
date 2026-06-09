@@ -802,6 +802,19 @@ function _canvasFlipSide(clientX,rect){return(clientX-rect.left)/rect.width<0.5?
 canvas.addEventListener('click',e=>{
   if(phase==='serving'){launch();return;}
   const rect=canvas.getBoundingClientRect();
+  const scaleX=CW/rect.width, scaleY=CH/rect.height;
+  const cx=(e.clientX-rect.left)*scaleX, cy=(e.clientY-rect.top)*scaleY;
+  // Direct bumper tap: check if click landed inside any bumper circle
+  for(let i=0;i<bumpers.length;i++){
+    const b=bumpers[i];
+    if(!b.word)continue;
+    if(Math.hypot(cx-b.x,cy-b.y)<BUMP_R&&b.cooldown===0){
+      b.glow=1;b.cooldown=45;spawnBurst(b.x,b.y,b.color);
+      hitBumper(i);
+      return;
+    }
+  }
+  // Otherwise activate flipper
   const side=_canvasFlipSide(e.clientX,rect);
   if(side==='L'){flipL=true;setTimeout(()=>flipL=false,200);}
   else{flipR=true;setTimeout(()=>flipR=false,200);}
@@ -811,6 +824,23 @@ canvas.addEventListener('touchstart',e=>{
   e.preventDefault();
   if(phase==='serving'){launch();return;}
   const rect=canvas.getBoundingClientRect();
+  const scaleX=CW/rect.width, scaleY=CH/rect.height;
+  // Check if any touch landed on a bumper
+  let bumperHit=false;
+  Array.from(e.touches).forEach(t=>{
+    const cx=(t.clientX-rect.left)*scaleX, cy=(t.clientY-rect.top)*scaleY;
+    for(let i=0;i<bumpers.length;i++){
+      const b=bumpers[i];
+      if(!b.word)continue;
+      if(Math.hypot(cx-b.x,cy-b.y)<BUMP_R&&b.cooldown===0){
+        b.glow=1;b.cooldown=45;spawnBurst(b.x,b.y,b.color);
+        hitBumper(i);
+        bumperHit=true;
+        break;
+      }
+    }
+  });
+  if(bumperHit)return;
   Array.from(e.touches).forEach(t=>{
     if(_canvasFlipSide(t.clientX,rect)==='L')flipL=true; else flipR=true;
   });
