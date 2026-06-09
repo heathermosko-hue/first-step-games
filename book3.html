@@ -99,6 +99,7 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 }
 </style>
   <link href="fonts.css?v=3" rel="stylesheet">
+<script src="tts.js?v=7" defer></script>
 </head>
 <body>
 <h1>Book 3: Consonants &amp; Exceptions</h1>
@@ -383,9 +384,9 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')document.getElem
 pdfjsLib.getDocument({url:'book3.pdf',disableRange:false,disableStream:false,disableAutoFetch:true}).promise.then(doc=>{pdfDoc=doc;const startPg=Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('page'))||1,1),doc.numPages);renderPage(startPg,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
 function toggleChPanel(force){const p=document.getElementById('chPanel');const isOpen=p.classList.contains('open');if(force===false||isOpen){p.classList.remove('open');}else{p.classList.add('open');buildChList();}}
 function buildChList(){const list=document.getElementById('chList');list.innerHTML='';const pages=[...HEADER_PAGES].sort((a,b)=>a-b);pages.forEach(pg=>{const raw=PAGE_TEXT[pg]||'';let title=(raw.split(' Words:')[0]||'').replace(/Chapter \d+:\s*[^.]+\.\s*/g,'').replace(/\.$/, '').trim()||'Page '+pg;if(title.length>26)title=title.substring(0,26)+'…';const btn=document.createElement('button');btn.className='ch-btn'+(pg===currentPage?' active':'');btn.innerHTML='<span style="color:#60d0f0;font-size:.68rem">p.'+pg+'</span><br>'+title;btn.onclick=()=>{renderPage(pg,'fwd');toggleChPanel(false);};list.appendChild(btn);});}
-document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)){p.classList.remove('open');}const mm=document.getElementById('mobile-menu');const mb=document.getElementById('mob-menu-btn');if(mm&&mm.classList.contains('open')&&!mm.contains(e.target)&&e.target!==mb){mm.classList.remove('open');}});
+document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)&&!document.getElementById('mob-chaps-btn').contains(e.target)){p.classList.remove('open');}const mm=document.getElementById('mobile-menu');const mb=document.getElementById('mob-menu-btn');if(mm&&mm.classList.contains('open')&&!mm.contains(e.target)&&e.target!==mb){mm.classList.remove('open');}});
 function toggleMobileMenu(){const mm=document.getElementById('mobile-menu');mm.classList.toggle('open');}
 </script>
-  <script src="site-nav.js?v=4"></script>
+  <script src="site-nav.js?v=5"></script>
 </body>
 </html>
