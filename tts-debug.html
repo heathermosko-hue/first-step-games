@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TTS Debug</title>
-<script src="tts.js?v=8" defer></script>
+<script src="tts.js?v=9" defer></script>
 <style>
   body { font-family: sans-serif; background:#111; color:#fff; padding:20px; font-size:14px; }
   button { font-size:1.1rem; padding:14px 24px; margin:8px 4px; border-radius:10px;
@@ -54,7 +54,7 @@ function testTTS() {
   if (!patched) {
     log('Trying to reload tts.js...', 'info');
     var s = document.createElement('script');
-    s.src = 'tts.js?v=8&reload=' + Date.now();
+    s.src = 'tts.js?v=9&reload=' + Date.now();
     s.onload = function() { log('tts.js reloaded — try again', 'ok'); };
     s.onerror = function() { log('tts.js FAILED to load!', 'err'); };
     document.head.appendChild(s);
