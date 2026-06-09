@@ -114,33 +114,35 @@
       box-shadow:0 0 12px rgba(245,166,35,.4);}
     .btn-flip:disabled{opacity:0.28;cursor:default;}
 
-    /* ── ANSWER BUTTON PANEL (visible 2×2 grid inside machine, over drain zone) ── */
-    .ans-panel{
-      position:absolute; bottom:4px; left:6px; right:6px;
-      display:none; /* shown when playing */
-      grid-template-columns:1fr 1fr;
-      grid-template-rows:1fr 1fr;
-      gap:5px; z-index:8;
-      height:108px;
-    }
-    .ans-btn{
-      font-family:'Comic Sans MS','Comic Neue';font-size:clamp(1rem,3.5vw,1.3rem);font-weight:700;
-      border:3px solid; border-radius:14px; cursor:pointer;
-      background:rgba(10,0,30,0.88);
-      color:#fff; padding:0 6px;
+    /* ── BUMPER ANSWER BUTTONS (round, sit over canvas bumper circles) ── */
+    .bumper-btn{
+      position:absolute;
+      width:24.2%; /* ~92px / 380px canvas */
+      aspect-ratio:1/1;
+      border-radius:50%;
+      border:3px solid currentColor;
+      font-family:'Comic Sans MS','Comic Neue';
+      font-size:clamp(.7rem,2.8vw,1.05rem);
+      font-weight:700;
+      color:#fff;
+      cursor:pointer;
       touch-action:manipulation;
-      -webkit-tap-highlight-color:rgba(255,255,255,.2);
-      transition:filter .12s;
-      display:flex;align-items:center;justify-content:center;
-      text-align:center; line-height:1.15;
+      -webkit-tap-highlight-color:transparent;
+      display:none; /* shown via JS */
+      align-items:center;justify-content:center;
+      text-align:center;line-height:1.2;
+      padding:4px;
       user-select:none;-webkit-user-select:none;
+      transform:translate(-50%,-50%);
+      z-index:10;
+      transition:filter .12s,transform .08s;
     }
-    .ans-btn:active{filter:brightness(1.4);}
-    .ans-btn:disabled{opacity:.35;pointer-events:none;}
-    .ans-btn[data-col="0"]{border-color:#3A8EF6;box-shadow:0 0 8px rgba(58,142,246,.5);}
-    .ans-btn[data-col="1"]{border-color:#FF6B6B;box-shadow:0 0 8px rgba(255,107,107,.5);}
-    .ans-btn[data-col="2"]{border-color:#6BCB77;box-shadow:0 0 8px rgba(107,203,119,.5);}
-    .ans-btn[data-col="3"]{border-color:#B45CFF;box-shadow:0 0 8px rgba(180,92,255,.5);}
+    .bumper-btn:active{filter:brightness(1.5);transform:translate(-50%,-50%) scale(1.08);}
+    .bumper-btn:disabled{opacity:.35;pointer-events:none;}
+    #bov0{left:28.9%;top:38.6%;background:rgba(58,142,246,0.82);border-color:#3A8EF6;box-shadow:0 0 14px rgba(58,142,246,.7);}
+    #bov1{left:71.1%;top:38.6%;background:rgba(255,107,107,0.82);border-color:#FF6B6B;box-shadow:0 0 14px rgba(255,107,107,.7);}
+    #bov2{left:28.9%;top:65.5%;background:rgba(107,203,119,0.82);border-color:#6BCB77;box-shadow:0 0 14px rgba(107,203,119,.7);}
+    #bov3{left:71.1%;top:65.5%;background:rgba(180,92,255,0.82);border-color:#B45CFF;box-shadow:0 0 14px rgba(180,92,255,.7);}
 
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);
              display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem;}
@@ -191,13 +193,11 @@
     <div class="neon-left"></div>
     <div class="neon-right"></div>
     <canvas id="gc" width="380" height="440"></canvas>
-    <!-- Visible answer buttons — 2×2 grid at bottom of machine -->
-    <div class="ans-panel" id="ansPanel">
-      <button class="ans-btn" data-col="0" id="bov0"></button>
-      <button class="ans-btn" data-col="1" id="bov1"></button>
-      <button class="ans-btn" data-col="2" id="bov2"></button>
-      <button class="ans-btn" data-col="3" id="bov3"></button>
-    </div>
+    <!-- Round bumper answer buttons — sit over canvas bumper circles -->
+    <button class="bumper-btn" id="bov0"></button>
+    <button class="bumper-btn" id="bov1"></button>
+    <button class="bumper-btn" id="bov2"></button>
+    <button class="bumper-btn" id="bov3"></button>
   </div>
   <div class="flipper-btns" id="flipperBtns" style="display:none">
     <button class="btn-flip" id="btnFlipL" disabled>◀ LEFT FLIPPER</button>
@@ -476,13 +476,16 @@ function setFlash(text,color){flashMsg={text,color,alpha:1,timer:70};}
 
 /* ── ANSWER PANEL ── */
 function showAnswerPanel(){
-  const p=document.getElementById('ansPanel');
-  if(p){p.style.display='grid';}
-  for(let i=0;i<4;i++){const b=document.getElementById('bov'+i);if(b)b.disabled=false;}
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('bov'+i);
+    if(b){b.style.display='flex';b.disabled=false;}
+  }
 }
 function hideAnswerPanel(){
-  const p=document.getElementById('ansPanel');
-  if(p){p.style.display='none';}
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('bov'+i);
+    if(b){b.style.display='none';}
+  }
 }
 function setOverlayEnabled(on){
   if(on) showAnswerPanel(); else hideAnswerPanel();

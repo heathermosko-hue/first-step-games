@@ -548,8 +548,7 @@ function updateCompScore(){
   const tot=qAnswered.length;
   const el=document.getElementById('comp-score');
   if(!el)return;
-  el.textContent=n===tot?'&#127881; You got '+n+' / '+tot+'! Amazing!':'Score: '+n+' / '+tot;
-  if(n===tot)el.innerHTML='&#127881; You got '+n+' / '+tot+'! Amazing! &#11088;';
+  if(n===tot){el.innerHTML='&#127881; You got '+n+' / '+tot+'! Amazing! &#11088;';}else{el.textContent='Score: '+n+' / '+tot;}
 }
 
 // ── Sight Word Flashcard ───────────────────────────────

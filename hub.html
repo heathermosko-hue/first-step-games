@@ -2415,18 +2415,22 @@
   <div id="hubLB-inner">
     <div id="hubLB-title"></div>
     <button id="hubLB-close" onclick="closeHubLB()" aria-label="Close">&#x2715;</button>
-    <iframe id="hubLB-frame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <video id="hubLB-frame" controls playsinline style="width:100%;height:100%;background:#000;display:block;"></video>
   </div>
 </div>
 <script>
 function openHubLB(ytId,title){
-  document.getElementById('hubLB-frame').src='https://www.youtube.com/embed/'+ytId+'?autoplay=1&rel=0&modestbranding=1';
+  var v=document.getElementById('hubLB-frame');
+  v.src='videos/'+ytId+'.mp4';
+  v.play();
   document.getElementById('hubLB-title').textContent=title;
   document.getElementById('hubLB').classList.add('open');
   document.body.style.overflow='hidden';
 }
 function closeHubLB(){
-  document.getElementById('hubLB-frame').src='';
+  var v=document.getElementById('hubLB-frame');
+  v.pause();
+  v.src='';
   document.getElementById('hubLB').classList.remove('open');
   document.body.style.overflow='';
 }
