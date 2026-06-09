@@ -64,9 +64,15 @@ a.home-link{color:#c9a0f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 #flash-prev:disabled,#flash-next:disabled{opacity:.3;cursor:default}
 #flash-close{font-family:"Comic Sans MS",cursive;background:#c62828;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
 #flash-speak{font-family:"Comic Sans MS",cursive;background:#ff6b9d;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
+#top-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px;min-height:36px}
 #mobile-toolbar{display:none;align-items:center;justify-content:center;gap:8px;margin-top:6px;width:100%;max-width:98vw;padding:0 4px}
 #btn-hub-mobile{background:#2e7d32;color:#fff;border:none;border-radius:20px;padding:7px 16px;font-family:"Comic Sans MS",cursive;font-size:.85rem;font-weight:bold;text-decoration:none;cursor:pointer;transition:background .2s}
+#btn-menu-mobile{background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-family:"Comic Sans MS",cursive;font-size:.82rem;font-weight:bold;cursor:pointer;display:none}
+#mobile-menu{display:none;position:fixed;bottom:44px;left:0;right:0;background:#2a0a3e;border-top:2px solid #c9a0f5;padding:10px 12px;gap:8px;flex-wrap:wrap;justify-content:center;z-index:200;box-shadow:0 -4px 16px rgba(0,0,0,.4)}
+#mobile-menu.open{display:flex}
+#mobile-menu button{background:#6b3fa0;color:#fff;border:none;border-radius:20px;padding:9px 16px;font-family:"Comic Sans MS",cursive;font-size:.84rem;font-weight:bold;cursor:pointer}
 @media(max-width:600px){
+  #top-bar{display:none!important}
   h1{font-size:.95rem;margin-bottom:4px}
   .book-stage{width:calc(100vw - 88px);height:auto;perspective:none}
   #page-canvas{max-width:calc(100vw - 88px);max-height:calc(100dvh - 136px)}
@@ -79,6 +85,12 @@ a.home-link{color:#c9a0f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 </head>
 <body>
 <h1>Book 2: Long Vowels</h1>
+<div id="top-bar">
+  <button id="btn-flash">📚 Sight Words</button>
+  <button id="btn-words">📖 Word Families</button>
+  <button id="btn-hw">📝 Homework</button>
+  <button id="btn-online">💻 Online HW</button>
+</div>
 <div class="book-layout">
   <div class="side-nav">
     <button id="btn-back">&#8592;</button>
@@ -102,16 +114,18 @@ a.home-link{color:#c9a0f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
     <div id="speaker-ring" title="Read page">&#128266;</div>
     <span id="page-counter">1 / 68</span>
   </div>
-  <div class="ctrl-extra">
-    <button id="btn-flash">&#128218; Sight Words</button>
-    <button id="btn-words">&#128214; Word Families</button>
-    <button id="btn-hw">&#128221; Homework</button>
-    <button id="btn-online">&#128187; Online HW</button>
-  </div>
+  <div class="ctrl-extra"></div>
 </div>
 <a href="hub.html" class="home-link">&#8592; Back to Hub</a>
 <div id="mobile-toolbar">
   <a href="hub.html" id="btn-hub-mobile">🏠 Hub</a>
+  <button id="btn-menu-mobile" onclick="toggleMobileMenu()">☰ Menu</button>
+</div>
+<div id="mobile-menu">
+  <button id="mbtn-flash" onclick="flashBtn.click()">📚 Sight Words</button>
+  <button id="mbtn-words" onclick="wordsBtn.click()">📖 Word Families</button>
+  <button onclick="hwBtn.click()">📝 Homework</button>
+  <button onclick="onlineBtn.click()">💻 Online HW</button>
 </div>
 <button class="ch-tab" id="chTab" onclick="toggleChPanel()">📖 Chapters</button>
 <div class="ch-panel" id="chPanel">
@@ -250,6 +264,12 @@ async function renderPage(num,dir){
   wordsBtn.style.display=(isHdr&&WORD_FAMILIES[num])?'inline-block':'none';
   hwBtn.style.display=isHdr?'inline-block':'none';
   onlineBtn.style.display=isHdr?'inline-block':'none';
+  const menuMobileBtn=document.getElementById('btn-menu-mobile');
+  if(menuMobileBtn)menuMobileBtn.style.display=isHdr?'inline-block':'none';
+  const mbtnFlash=document.getElementById('mbtn-flash');
+  const mbtnWords=document.getElementById('mbtn-words');
+  if(mbtnFlash)mbtnFlash.style.display=(isHdr&&SIGHT_WORDS[num])?'':'none';
+  if(mbtnWords)mbtnWords.style.display=(isHdr&&WORD_FAMILIES[num])?'':'none';
   animating=false;
 }
 document.getElementById('btn-next').addEventListener('click',()=>{if(currentPage<TOTAL)renderPage(currentPage+1,'fwd');});
@@ -258,7 +278,8 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')document.getElem
 pdfjsLib.getDocument({url:'book2.pdf',disableRange:false,disableStream:false,disableAutoFetch:true}).promise.then(doc=>{pdfDoc=doc;const startPg=Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('page'))||1,1),doc.numPages);renderPage(startPg,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
 function toggleChPanel(force){const p=document.getElementById('chPanel');const isOpen=p.classList.contains('open');if(force===false||isOpen){p.classList.remove('open');}else{p.classList.add('open');buildChList();}}
 function buildChList(){const list=document.getElementById('chList');list.innerHTML='';const pages=[...HEADER_PAGES].sort((a,b)=>a-b);pages.forEach(pg=>{const raw=PAGE_TEXT[pg]||'';let title=(raw.split(' Words:')[0]||'').replace(/Chapter \d+:\s*[^.]+\.\s*/g,'').replace(/\.$/, '').trim()||'Page '+pg;if(title.length>26)title=title.substring(0,26)+'…';const btn=document.createElement('button');btn.className='ch-btn'+(pg===currentPage?' active':'');btn.innerHTML='<span style="color:#c9a0f5;font-size:.68rem">p.'+pg+'</span><br>'+title;btn.onclick=()=>{renderPage(pg,'fwd');toggleChPanel(false);};list.appendChild(btn);});}
-document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)){p.classList.remove('open');}});
+document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)){p.classList.remove('open');}const mm=document.getElementById('mobile-menu');const mb=document.getElementById('btn-menu-mobile');if(mm&&mm.classList.contains('open')&&!mm.contains(e.target)&&e.target!==mb){mm.classList.remove('open');}});
+function toggleMobileMenu(){const mm=document.getElementById('mobile-menu');mm.classList.toggle('open');}
 </script>
   <script src="site-nav.js?v=4"></script>
 </body>
