@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Teacher Register — First Step Reading</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;min-height:100vh;display:flex;align-items:center;justify-content:center}
+  body{font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';background:#f0f4ff;min-height:100vh;display:flex;align-items:center;justify-content:center}
   .card{background:white;border-radius:20px;padding:2.5rem;width:100%;max-width:420px;box-shadow:0 8px 30px rgba(0,0,0,.12)}
   .logo{text-align:center;margin-bottom:1.5rem}
   .logo h1{font-size:1.6rem;color:#2c3e50}

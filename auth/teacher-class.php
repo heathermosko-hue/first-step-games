@@ -92,7 +92,7 @@ $qrUrl = urlencode(baseUrl().'/auth/student-login.php?code='.$class['class_code'
 <title><?= htmlspecialchars($class['name']) ?> — First Step Reading</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;min-height:100vh}
+  body{font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';background:#f0f4ff;min-height:100vh}
   header{background:#2c3e50;color:white;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
   header h1{font-size:1.15rem}
   .back{color:#aee;text-decoration:none;font-size:.9rem}

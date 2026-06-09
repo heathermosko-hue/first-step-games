@@ -36,7 +36,7 @@ $classes = $st->get_result()->fetch_all(MYSQLI_ASSOC);
 <title>Teacher Dashboard — First Step Reading</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',sans-serif;background:#f0f4ff;min-height:100vh}
+  body{font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';background:#f0f4ff;min-height:100vh}
   header{background:#2c3e50;color:white;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between}
   header h1{font-size:1.3rem}
   header span{font-size:.9rem;opacity:.8}
