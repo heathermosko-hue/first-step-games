@@ -20,11 +20,9 @@
       font-family: 'Comic Sans MS', 'Comic Neue';
       background: url('icons/bg-default.png') center/cover no-repeat fixed, var(--bg);
       color: var(--text);
-      height: 100vh;
-      height: 100dvh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      min-height: 100dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     /* ── HEADER ── */
@@ -102,14 +100,11 @@
 
     /* ── MAIN ── */
     main {
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-      overflow-x: hidden;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: .3rem .8rem .4rem;
+      padding: .3rem .8rem 1.5rem;
     }
 
     .game-wrap {
