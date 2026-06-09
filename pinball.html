@@ -114,21 +114,33 @@
       box-shadow:0 0 12px rgba(245,166,35,.4);}
     .btn-flip:disabled{opacity:0.28;cursor:default;}
 
-    /* ── BUMPER OVERLAY BUTTONS (transparent circles over canvas bumpers) ── */
-    .bumper-overlay{
-      position:absolute;
-      width:27%; aspect-ratio:1;
-      border-radius:50%;
-      background:transparent;
-      border:none;
-      cursor:pointer;
-      transform:translate(-50%,-50%);
-      touch-action:manipulation;
-      -webkit-tap-highlight-color:transparent;
-      z-index:5;
-      /* Uncomment for debugging: background:rgba(255,0,0,0.25); */
+    /* ── ANSWER BUTTON PANEL (visible 2×2 grid inside machine, over drain zone) ── */
+    .ans-panel{
+      position:absolute; bottom:4px; left:6px; right:6px;
+      display:none; /* shown when playing */
+      grid-template-columns:1fr 1fr;
+      grid-template-rows:1fr 1fr;
+      gap:5px; z-index:8;
+      height:108px;
     }
-    .bumper-overlay:disabled{pointer-events:none;}
+    .ans-btn{
+      font-family:'Comic Sans MS','Comic Neue';font-size:clamp(1rem,3.5vw,1.3rem);font-weight:700;
+      border:3px solid; border-radius:14px; cursor:pointer;
+      background:rgba(10,0,30,0.88);
+      color:#fff; padding:0 6px;
+      touch-action:manipulation;
+      -webkit-tap-highlight-color:rgba(255,255,255,.2);
+      transition:filter .12s;
+      display:flex;align-items:center;justify-content:center;
+      text-align:center; line-height:1.15;
+      user-select:none;-webkit-user-select:none;
+    }
+    .ans-btn:active{filter:brightness(1.4);}
+    .ans-btn:disabled{opacity:.35;pointer-events:none;}
+    .ans-btn[data-col="0"]{border-color:#3A8EF6;box-shadow:0 0 8px rgba(58,142,246,.5);}
+    .ans-btn[data-col="1"]{border-color:#FF6B6B;box-shadow:0 0 8px rgba(255,107,107,.5);}
+    .ans-btn[data-col="2"]{border-color:#6BCB77;box-shadow:0 0 8px rgba(107,203,119,.5);}
+    .ans-btn[data-col="3"]{border-color:#B45CFF;box-shadow:0 0 8px rgba(180,92,255,.5);}
 
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);
              display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem;}
@@ -179,13 +191,13 @@
     <div class="neon-left"></div>
     <div class="neon-right"></div>
     <canvas id="gc" width="380" height="440"></canvas>
-    <!-- Transparent overlay buttons positioned over canvas bumpers -->
-    <!-- Bumper coords in 380×440 canvas: (110,170)(270,170)(110,288)(270,288) -->
-    <!-- As % of machine-outer (392×450 incl 6px padding): x≈29.6%/70.4%, y≈39.1%/65.3% -->
-    <button class="bumper-overlay" id="bov0" style="left:29.6%;top:39.1%"></button>
-    <button class="bumper-overlay" id="bov1" style="left:70.4%;top:39.1%"></button>
-    <button class="bumper-overlay" id="bov2" style="left:29.6%;top:65.3%"></button>
-    <button class="bumper-overlay" id="bov3" style="left:70.4%;top:65.3%"></button>
+    <!-- Visible answer buttons — 2×2 grid at bottom of machine -->
+    <div class="ans-panel" id="ansPanel">
+      <button class="ans-btn" data-col="0" id="bov0"></button>
+      <button class="ans-btn" data-col="1" id="bov1"></button>
+      <button class="ans-btn" data-col="2" id="bov2"></button>
+      <button class="ans-btn" data-col="3" id="bov3"></button>
+    </div>
   </div>
   <div class="flipper-btns" id="flipperBtns" style="display:none">
     <button class="btn-flip" id="btnFlipL" disabled>◀ LEFT FLIPPER</button>
@@ -406,7 +418,7 @@ function nextQuestion(){
   const all=CATS[catKey].items.map(i=>i.ans).filter(a=>a!==currentQ.ans);
   choices=shuffle([currentQ.ans,...shuffle(all).slice(0,3)]);
   bumpers.forEach((b,i)=>{b.word=choices[i];b.isCorrect=(choices[i]===currentQ.ans);b.flash=0;b.glow=0.3;});
-  // Re-enable overlay buttons for new question
+  updateAnswerBtnText();
   setOverlayEnabled(true);
 
   const isLetter=currentQ.type==='letter';
@@ -462,9 +474,24 @@ function hitBumper(idx){
 
 function setFlash(text,color){flashMsg={text,color,alpha:1,timer:70};}
 
-/* ── BUMPER OVERLAY TAP ── */
+/* ── ANSWER PANEL ── */
+function showAnswerPanel(){
+  const p=document.getElementById('ansPanel');
+  if(p){p.style.display='grid';}
+  for(let i=0;i<4;i++){const b=document.getElementById('bov'+i);if(b)b.disabled=false;}
+}
+function hideAnswerPanel(){
+  const p=document.getElementById('ansPanel');
+  if(p){p.style.display='none';}
+}
 function setOverlayEnabled(on){
-  for(let i=0;i<4;i++){const b=document.getElementById('bov'+i);if(b)b.disabled=!on;}
+  if(on) showAnswerPanel(); else hideAnswerPanel();
+}
+function updateAnswerBtnText(){
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('bov'+i);
+    if(b) b.textContent = choices[i]||'';
+  }
 }
 function tapAnswerBtn(idx){
   if(phase==='serving'){launch();return;}
@@ -808,47 +835,9 @@ function loop(){
   draw();
 }
 
-/* ── CANVAS INPUT → flippers ── */
-function _canvasFlipSide(clientX,rect){return(clientX-rect.left)/rect.width<0.5?'L':'R';}
-
-canvas.addEventListener('click',e=>{
-  if(phase==='serving'){launch();return;}
-  const rect=canvas.getBoundingClientRect();
-  const scaleX=CW/rect.width, scaleY=CH/rect.height;
-  const cx=(e.clientX-rect.left)*scaleX, cy=(e.clientY-rect.top)*scaleY;
-  for(let i=0;i<bumpers.length;i++){
-    const b=bumpers[i];
-    if(!b.word)continue;
-    if(Math.hypot(cx-b.x,cy-b.y)<BUMP_R){
-      b.glow=1;b.cooldown=45;spawnBurst(b.x,b.y,b.color);
-      hitBumper(i);
-      return;
-    }
-  }
-});
-
-canvas.addEventListener('touchstart',e=>{
-  e.preventDefault();
-  if(phase==='serving'){launch();return;}
-  const rect=canvas.getBoundingClientRect();
-  const scaleX=CW/rect.width, scaleY=CH/rect.height;
-  let handled=false;
-  Array.from(e.touches).forEach(t=>{
-    if(handled)return;
-    const cx=(t.clientX-rect.left)*scaleX, cy=(t.clientY-rect.top)*scaleY;
-    for(let i=0;i<bumpers.length;i++){
-      const b=bumpers[i];
-      if(!b.word)continue;
-      if(Math.hypot(cx-b.x,cy-b.y)<BUMP_R){
-        b.glow=1;b.cooldown=45;spawnBurst(b.x,b.y,b.color);
-        hitBumper(i);
-        handled=true;
-        break;
-      }
-    }
-  });
-},{passive:false});
-
+/* ── CANVAS INPUT — launch only (answers handled by HTML buttons below) ── */
+canvas.addEventListener('click',e=>{if(phase==='serving')launch();});
+canvas.addEventListener('touchstart',e=>{e.preventDefault();if(phase==='serving')launch();},{passive:false});
 canvas.addEventListener('touchend',e=>{e.preventDefault();},{passive:false});
 canvas.addEventListener('touchcancel',e=>{e.preventDefault();},{passive:false});
 

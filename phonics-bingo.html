@@ -496,7 +496,7 @@ function newGame(){
   const data = BINGO_DATA[state.cat];
   const s = shuffle(data);
 
-  const is4x4 = (state.cat === 'Vowel Teams');
+  const is4x4 = (state.cat === 'Vowel Teams' || state.cat === 'Irregular');
   state.is4x4 = is4x4;
   const wordCount = is4x4 ? 15 : 24;
   const freeIdx   = is4x4 ?  5 : 12;
