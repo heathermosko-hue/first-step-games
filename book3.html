@@ -102,7 +102,7 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 }
 </style>
   <link href="fonts.css?v=3" rel="stylesheet">
-<script src="tts.js?v=10" defer></script>
+<script src="tts.js?v=11" defer></script>
 </head>
 <body>
 <h1>Book 3: Consonants &amp; Exceptions</h1>
@@ -339,7 +339,7 @@ function openFlash(words,title){flashWords=words;flashIdx=0;document.getElementB
 function showCard(){const w=flashWords[flashIdx]||'';document.getElementById('flash-word').textContent=w.toLowerCase();document.getElementById('flash-counter').textContent=(flashIdx+1)+' / '+flashWords.length;document.getElementById('flash-prev').disabled=flashIdx===0;document.getElementById('flash-next').disabled=flashIdx>=flashWords.length-1;speak(w);}
 flashBtn.addEventListener('click',()=>openFlash(SIGHT_WORDS[currentPage]||[],'Sight Words'));
 wordsBtn.addEventListener('click',()=>openFlash(WORD_FAMILIES[currentPage]||[],'Word Families'));
-const HW_PDFS={2:'../wp-content/uploads/2016/04/book-3-2-9.pdf',5:'../wp-content/uploads/2016/04/book-3-2-9.pdf',10:'../wp-content/uploads/2016/04/book-3-10-13.pdf',14:'../wp-content/uploads/2016/04/book-3-14-21.pdf',19:'../wp-content/uploads/2016/04/book-3-19-21.pdf',22:'../wp-content/uploads/2016/04/book-3-22-26.pdf',27:'../wp-content/uploads/2016/04/book-3-27-32.pdf',33:'../wp-content/uploads/2016/04/book-3-33-39.pdf',36:'../wp-content/uploads/2016/04/book-3-33-39.pdf',40:'../wp-content/uploads/2016/04/book-3-40-45.pdf',43:'../wp-content/uploads/2016/04/book-3-40-45.pdf',46:'../wp-content/uploads/2016/04/book-3-46-53.pdf',50:'../wp-content/uploads/2016/04/book-3-46-53.pdf',54:'../wp-content/uploads/2016/04/book-3-54-64.pdf',58:'../wp-content/uploads/2016/04/book-3-54-64.pdf',62:'../wp-content/uploads/2016/04/book-3-54-64.pdf',65:'../wp-content/uploads/2016/04/book-3-65-74.pdf',70:'../wp-content/uploads/2016/04/book-3-65-74.pdf',75:'../wp-content/uploads/2016/04/book-3-75-78.pdf',80:'../wp-content/uploads/2016/04/book-3-79-83.pdf'};
+const HW_PDFS={2:'../wp-content/uploads/2016/04/book-3-2-9.pdf?v=2',5:'../wp-content/uploads/2016/04/book-3-2-9.pdf?v=2',10:'../wp-content/uploads/2016/04/book-3-10-13.pdf?v=2',14:'../wp-content/uploads/2016/04/book-3-14-21.pdf?v=2',19:'../wp-content/uploads/2016/04/book-3-19-21.pdf?v=2',22:'../wp-content/uploads/2016/04/book-3-22-26.pdf?v=2',27:'../wp-content/uploads/2016/04/book-3-27-32.pdf?v=2',33:'../wp-content/uploads/2016/04/book-3-33-39.pdf?v=2',36:'../wp-content/uploads/2016/04/book-3-33-39.pdf?v=2',40:'../wp-content/uploads/2016/04/book-3-40-45.pdf?v=2',43:'../wp-content/uploads/2016/04/book-3-40-45.pdf?v=2',46:'../wp-content/uploads/2016/04/book-3-46-53.pdf?v=2',50:'../wp-content/uploads/2016/04/book-3-46-53.pdf?v=2',54:'../wp-content/uploads/2016/04/book-3-54-64.pdf?v=2',58:'../wp-content/uploads/2016/04/book-3-54-64.pdf?v=2',62:'../wp-content/uploads/2016/04/book-3-54-64.pdf?v=2',65:'../wp-content/uploads/2016/04/book-3-65-74.pdf?v=2',70:'../wp-content/uploads/2016/04/book-3-65-74.pdf?v=2',75:'../wp-content/uploads/2016/04/book-3-75-78.pdf?v=2',80:'../wp-content/uploads/2016/04/book-3-79-83.pdf?v=2'};
 hwBtn.addEventListener('click',()=>{var u=HW_PDFS[currentPage];if(u)window.open(u,'_blank');});
 onlineBtn.addEventListener('click',()=>{window.location.href='online-hw.html?book=3&ch='+currentPage;});
 document.getElementById('flash-speak').addEventListener('click',()=>speak(flashWords[flashIdx]||''));
@@ -391,7 +391,7 @@ async function renderPage(num,dir){
 document.getElementById('btn-next').addEventListener('click',()=>{if(currentPage<TOTAL)renderPage(currentPage+1,'fwd');});
 document.getElementById('btn-back').addEventListener('click',()=>{if(currentPage>1)renderPage(currentPage-1,'back');});
 document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')document.getElementById('btn-next').click();if(e.key==='ArrowLeft')document.getElementById('btn-back').click();if(e.key==='Escape'){speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';}});
-pdfjsLib.getDocument({url:'book3.pdf',disableRange:false,disableStream:false,disableAutoFetch:true}).promise.then(doc=>{pdfDoc=doc;const startPg=Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('page'))||1,1),doc.numPages);return renderPage(startPg,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
+pdfjsLib.getDocument({url:'book3.pdf?v=2',disableRange:false,disableStream:false,disableAutoFetch:true}).promise.then(doc=>{pdfDoc=doc;const startPg=Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('page'))||1,1),doc.numPages);return renderPage(startPg,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
 document.getElementById('btn-games').addEventListener('click',function(){speechSynthesis.cancel();});
 var _mobHub=document.getElementById('mob-hub');if(_mobHub)_mobHub.addEventListener('click',function(){speechSynthesis.cancel();});
 window.addEventListener('pagehide',function(){speechSynthesis.cancel();});
