@@ -389,7 +389,7 @@ function checkAnswer(pat, btn) {
     document.getElementById('feedback').className = 'feedback ok';
     score++;
     document.getElementById('scoreVal').textContent = score;
-    speak(`${q.word}! | Great job! | ${q.word} uses the ${q.pattern} spelling!`);
+    speak(`${q.word}! | Great job!`);
     setTimeout(advance, 1700);
   } else {
     btn.classList.add('wrong');
