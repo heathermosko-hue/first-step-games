@@ -74,6 +74,33 @@
     .btn-back:disabled { opacity:.35; cursor:default; }
     /* svg size overridden in .caller-pic rule above */
 
+    /* ── MOBILE height fixes ── */
+    @media (max-height: 700px) {
+      header { padding: .2rem .6rem; }
+      header h1 { font-size: clamp(1rem,4vw,1.4rem); }
+      .cat-bar { padding: .08rem .4rem; }
+      .btn-cat { padding: 3px 10px; font-size: .72rem; }
+      .game-wrap { padding: .18rem .5rem .1rem; gap: .2rem; }
+      .caller-card { padding: .3rem .7rem .25rem; gap: .18rem; }
+      .caller-pic { font-size: clamp(2rem,7vw,3rem) !important; }
+      .caller-pic svg { width: clamp(2rem,7vw,3rem) !important; height: clamp(2rem,7vw,3rem) !important; }
+      .caller-hint { font-size: .75rem; padding: 2px 10px; }
+      .not-on-board { font-size: .75rem; min-height: .9rem; }
+      .btn-say { padding: 4px 12px; font-size: .82rem; }
+      .btn-next { padding: 6px 16px; font-size: .88rem; }
+      .btn-back { padding: 6px 12px; font-size: .82rem; }
+      .caller-prog { font-size: .75rem; }
+      .cell { min-height: clamp(36px,8vw,48px) !important; font-size: clamp(.5rem,2vw,.78rem) !important; }
+      .bl { font-size: clamp(.9rem,3.5vw,1.3rem); padding: .25rem 0; }
+    }
+    @media (max-height: 580px) {
+      .caller-pic { font-size: clamp(1.5rem,6vw,2.2rem) !important; }
+      .caller-pic svg { width: clamp(1.5rem,6vw,2.2rem) !important; height: clamp(1.5rem,6vw,2.2rem) !important; }
+      .not-on-board { display: none; }
+      .caller-prog { display: none; }
+      .cell { min-height: clamp(30px,7vw,40px) !important; }
+    }
+
     /* HINT TOGGLE */
     .btn-hint-toggle { background:#FFF8E0; color:#AA7700; border:2px solid #FFD93D; font-family: 'Comic Sans MS', 'Comic Neue', cursive; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:999px; cursor:pointer; transition:all .2s; white-space:nowrap; }
     .btn-hint-toggle.on { background:linear-gradient(135deg,#FFD93D,#FF8E53); color:white; border-color:transparent; }
