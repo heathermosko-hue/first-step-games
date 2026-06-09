@@ -66,20 +66,35 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 #flash-speak{font-family:"Comic Sans MS";background:#ff9d3a;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
 #btn-games{background:linear-gradient(135deg,#FF6B6B,#FF3B8A);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-family:"Comic Sans MS";font-size:.82rem;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
 #btn-games:hover{opacity:.88}
-#mobile-toolbar{display:none;align-items:center;justify-content:center;gap:8px;margin-top:6px;width:100%;max-width:98vw;padding:0 4px}
-#btn-hub-mobile{background:#2e7d32;color:#fff;border:none;border-radius:20px;padding:7px 16px;font-family:"Comic Sans MS";font-size:.85rem;font-weight:bold;text-decoration:none;cursor:pointer;transition:background .2s}
-#btn-menu-mobile{background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-family:"Comic Sans MS";font-size:.82rem;font-weight:bold;cursor:pointer}
-#mobile-menu{display:none;position:fixed;bottom:44px;left:0;right:0;background:#0a2a3e;border-top:2px solid #60d0f0;padding:10px 12px;gap:8px;flex-wrap:wrap;justify-content:center;z-index:200;box-shadow:0 -4px 16px rgba(0,0,0,.4)}
+#mobile-menu{display:none;position:fixed;bottom:0;left:0;right:0;background:#0a2a3e;border-top:2px solid #60d0f0;padding:10px 12px;gap:8px;flex-wrap:wrap;justify-content:center;z-index:200;box-shadow:0 -4px 16px rgba(0,0,0,.4)}
 #mobile-menu.open{display:flex}
 #mobile-menu button{background:#1a6b9a;color:#fff;border:none;border-radius:20px;padding:9px 16px;font-family:"Comic Sans MS";font-size:.84rem;font-weight:bold;cursor:pointer}
+/* ── MOBILE OVERLAY CONTROLS (hidden on desktop) ── */
+#mob-arrow-left,#mob-arrow-right,#mobile-top-bar{display:none}
+#mob-arrow-left,#mob-arrow-right{position:fixed;top:50%;transform:translateY(-50%);border:none;z-index:50;cursor:pointer;align-items:center;justify-content:center;height:80px;width:38px;font-size:2.6rem;font-family:sans-serif;line-height:1}
+#mob-arrow-left{left:0;background:rgba(26,107,154,.75);color:#fff;border-radius:0 14px 14px 0}
+#mob-arrow-right{right:0;background:rgba(96,208,240,.88);color:#0a1a2e;border-radius:14px 0 0 14px}
+#mobile-top-bar{position:fixed;top:0;left:0;right:0;height:44px;background:rgba(10,26,46,.96);border-bottom:2px solid #60d0f0;padding:0 6px;gap:5px;align-items:center;z-index:55}
+#mob-book-icon{font-size:1.3rem;flex-shrink:0}
+#mob-chaps-btn,#mob-menu-btn,#mob-read-btn{font-family:"Comic Sans MS";font-size:.74rem;font-weight:bold;border:none;border-radius:16px;padding:5px 9px;cursor:pointer;flex-shrink:0}
+#mob-chaps-btn{background:#1a6b9a;color:#fff}
+#mob-menu-btn{background:rgba(255,255,255,.18);color:#fff}
+#mob-read-btn{background:#ff9d3a;color:#fff}
+#mob-hub{background:#0a3a5a;color:#fff;text-decoration:none;font-family:"Comic Sans MS";font-size:.74rem;font-weight:bold;border-radius:16px;padding:5px 9px;flex-shrink:0}
+#mob-counter{margin-left:auto;color:#a0d5f5;font-size:.78rem;white-space:nowrap;flex-shrink:0}
 @media(max-width:600px){
   #btn-games{display:none!important}
-  h1{font-size:.95rem;margin-bottom:4px}
-  .book-stage{width:calc(100vw - 88px);height:auto;perspective:none}
-  #page-canvas{max-width:calc(100vw - 88px);max-height:calc(100dvh - 136px)}
-  .ctrl-extra{display:none!important}
+  h1{display:none!important}
+  body{justify-content:flex-start}
+  .book-layout{position:fixed;top:44px;left:0;right:0;bottom:0;margin:0;gap:0}
+  .side-nav{display:none!important}
+  .book-stage{width:100vw;height:calc(100dvh - 44px);perspective:none}
+  #page-wrapper{inset:0}
+  #page-canvas{max-width:100vw;max-height:calc(100dvh - 44px)}
+  .controls{display:none!important}
   a.home-link{display:none!important}
-  #mobile-toolbar{display:flex}
+  .ch-tab{top:0;height:44px;border-radius:0;padding:0 12px;font-size:.88rem;display:flex;align-items:center}
+  #mob-arrow-left,#mob-arrow-right,#mobile-top-bar{display:flex}
 }
 </style>
   <link href="fonts.css?v=3" rel="stylesheet">
@@ -117,15 +132,22 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
     <button id="btn-online">💻 Online HW</button>
   </div>
 </div>
-<div id="mobile-toolbar">
-  <a href="hub.html" id="btn-hub-mobile">🏠 Hub</a>
-  <button id="btn-menu-mobile" onclick="toggleMobileMenu()">☰ Menu</button>
-</div>
 <div id="mobile-menu">
   <button id="mbtn-flash" onclick="flashBtn.click()">📚 Sight Words</button>
   <button id="mbtn-words" onclick="wordsBtn.click()">📖 Word Families</button>
   <button id="mbtn-hw" onclick="hwBtn.click()">📝 Homework</button>
   <button id="mbtn-online" onclick="onlineBtn.click()">💻 Online HW</button>
+</div>
+<!-- MOBILE OVERLAY: arrows + top bar -->
+<button id="mob-arrow-left" onclick="document.getElementById('btn-back').click()">&#8249;</button>
+<button id="mob-arrow-right" onclick="document.getElementById('btn-next').click()">&#8250;</button>
+<div id="mobile-top-bar">
+  <span id="mob-book-icon">📘</span>
+  <button id="mob-chaps-btn" onclick="toggleChPanel()">📖 Chaps</button>
+  <a href="hub.html" id="mob-hub">🏠 Hub</a>
+  <button id="mob-menu-btn" onclick="toggleMobileMenu()">☰ Menu</button>
+  <button id="mob-read-btn">📢 Read</button>
+  <span id="mob-counter"></span>
 </div>
 <button class="ch-tab" id="chTab" onclick="toggleChPanel()">📖 Chapters</button>
 <div class="ch-panel" id="chPanel">
@@ -298,6 +320,7 @@ function getBestVoice(){const en=voices.filter(v=>/^en/i.test(v.lang));return en
 function speak(text,spanEl){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.trim());const v=getBestVoice();if(v)u.voice=v;u.lang='en-US';u.rate=0.9;u.pitch=1.0;u.volume=1;u.onstart=()=>{ring.classList.add('on');if(spanEl)spanEl.classList.add('speaking');};u.onend=()=>{ring.classList.remove('on');if(spanEl)spanEl.classList.remove('speaking');};speechSynthesis.speak(u);}
 ring.addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
 document.getElementById('btn-read').addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
+const mobRead=document.getElementById('mob-read-btn');if(mobRead)mobRead.addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
 let flashWords=[],flashIdx=0;
 function openFlash(words,title){flashWords=words;flashIdx=0;document.getElementById('flash-title').textContent=title;showCard();document.getElementById('flash-modal').style.display='flex';}
 function showCard(){const w=flashWords[flashIdx]||'';document.getElementById('flash-word').textContent=w.toLowerCase();document.getElementById('flash-counter').textContent=(flashIdx+1)+' / '+flashWords.length;document.getElementById('flash-prev').disabled=flashIdx===0;document.getElementById('flash-next').disabled=flashIdx>=flashWords.length-1;speak(w);}
@@ -316,8 +339,11 @@ async function renderPage(num,dir){
   canvasContainer.style.display='none';textLayerDiv.innerHTML='';loading.style.display='block';
   const page=await pdfDoc.getPage(num);
   const vp=page.getViewport({scale:1});
-  const maxW=Math.min(490,document.getElementById('page-wrapper').clientWidth-20);
-  const sc=maxW/vp.width;const sv=page.getViewport({scale:sc});
+  const pw=document.getElementById('page-wrapper');
+  const isMob=window.innerWidth<=600;
+  const maxW=isMob?pw.clientWidth:Math.min(490,pw.clientWidth-20);
+  const maxH=isMob?(window.innerHeight-44):560;
+  const sc=Math.min(maxW/vp.width,maxH/vp.height);const sv=page.getViewport({scale:sc});
   canvas.width=sv.width;canvas.height=sv.height;
   await page.render({canvasContext:ctx,viewport:sv}).promise;
   const tc=await page.getTextContent();
@@ -332,6 +358,7 @@ async function renderPage(num,dir){
   canvasContainer.classList.add(dir==='fwd'?'anim-enter-right':'anim-enter-left');
   await new Promise(r=>setTimeout(r,ANIM_MS));canvasContainer.classList.remove('anim-enter-right','anim-enter-left');
   currentPage=num;counter.textContent=num+' / '+TOTAL;
+  const mc=document.getElementById('mob-counter');if(mc)mc.textContent=num+' / '+TOTAL;
   document.getElementById('btn-back').disabled=num<=1;document.getElementById('btn-next').disabled=num>=TOTAL;
   const isHdr=HEADER_PAGES.has(num);
   flashBtn.style.display=(isHdr&&SIGHT_WORDS[num])?'inline-block':'none';
@@ -354,7 +381,7 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')document.getElem
 pdfjsLib.getDocument({url:'book3.pdf',disableRange:false,disableStream:false,disableAutoFetch:true}).promise.then(doc=>{pdfDoc=doc;const startPg=Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('page'))||1,1),doc.numPages);renderPage(startPg,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
 function toggleChPanel(force){const p=document.getElementById('chPanel');const isOpen=p.classList.contains('open');if(force===false||isOpen){p.classList.remove('open');}else{p.classList.add('open');buildChList();}}
 function buildChList(){const list=document.getElementById('chList');list.innerHTML='';const pages=[...HEADER_PAGES].sort((a,b)=>a-b);pages.forEach(pg=>{const raw=PAGE_TEXT[pg]||'';let title=(raw.split(' Words:')[0]||'').replace(/Chapter \d+:\s*[^.]+\.\s*/g,'').replace(/\.$/, '').trim()||'Page '+pg;if(title.length>26)title=title.substring(0,26)+'…';const btn=document.createElement('button');btn.className='ch-btn'+(pg===currentPage?' active':'');btn.innerHTML='<span style="color:#60d0f0;font-size:.68rem">p.'+pg+'</span><br>'+title;btn.onclick=()=>{renderPage(pg,'fwd');toggleChPanel(false);};list.appendChild(btn);});}
-document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)){p.classList.remove('open');}const mm=document.getElementById('mobile-menu');const mb=document.getElementById('btn-menu-mobile');if(mm&&mm.classList.contains('open')&&!mm.contains(e.target)&&e.target!==mb){mm.classList.remove('open');}});
+document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)){p.classList.remove('open');}const mm=document.getElementById('mobile-menu');const mb=document.getElementById('mob-menu-btn');if(mm&&mm.classList.contains('open')&&!mm.contains(e.target)&&e.target!==mb){mm.classList.remove('open');}});
 function toggleMobileMenu(){const mm=document.getElementById('mobile-menu');mm.classList.toggle('open');}
 </script>
   <script src="site-nav.js?v=4"></script>
