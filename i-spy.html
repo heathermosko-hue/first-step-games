@@ -7,8 +7,8 @@
   <style>
     :root { --purple:#8E44AD; --purplelight:#9B59B6; --bg:#FDF5FF; --text:#2C3E50; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    html { height:100%; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); min-height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch; display:flex; flex-direction:column; }
+    html, body { height:auto; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); min-height:100dvh; overflow-y:auto; -webkit-overflow-scrolling:touch; }
 
     /* ── HEADER ── */
     header { background:linear-gradient(135deg,#8E44AD 0%,#9B59B6 100%); padding:.4rem .8rem; display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
@@ -21,7 +21,7 @@
     .mute-btn.muted { background:rgba(255,80,80,.45); }
 
     /* ── MAIN ── */
-    main { flex:0 0 auto; width:100%; display:flex; flex-direction:column; align-items:center; padding:.3rem .8rem 1.5rem; gap:.35rem; }
+    main { width:100%; display:flex; flex-direction:column; align-items:center; padding:.3rem .8rem 1.5rem; gap:.35rem; }
 
     /* ── INSTRUCTION ── */
     .find-text { font-size:clamp(.95rem,2.8vw,1.25rem); font-weight:800; color:#666; text-align:center; }
