@@ -64,7 +64,8 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 #flash-prev:disabled,#flash-next:disabled{opacity:.3;cursor:default}
 #flash-close{font-family:"Comic Sans MS";background:#c62828;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
 #flash-speak{font-family:"Comic Sans MS";background:#ff9d3a;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:.9rem;cursor:pointer;font-weight:bold}
-#top-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px;min-height:36px}
+#btn-games{background:linear-gradient(135deg,#FF6B6B,#FF3B8A);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-family:"Comic Sans MS";font-size:.82rem;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
+#btn-games:hover{opacity:.88}
 #mobile-toolbar{display:none;align-items:center;justify-content:center;gap:8px;margin-top:6px;width:100%;max-width:98vw;padding:0 4px}
 #btn-hub-mobile{background:#2e7d32;color:#fff;border:none;border-radius:20px;padding:7px 16px;font-family:"Comic Sans MS";font-size:.85rem;font-weight:bold;text-decoration:none;cursor:pointer;transition:background .2s}
 #btn-menu-mobile{background:rgba(255,255,255,.18);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-family:"Comic Sans MS";font-size:.82rem;font-weight:bold;cursor:pointer}
@@ -72,7 +73,7 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 #mobile-menu.open{display:flex}
 #mobile-menu button{background:#1a6b9a;color:#fff;border:none;border-radius:20px;padding:9px 16px;font-family:"Comic Sans MS";font-size:.84rem;font-weight:bold;cursor:pointer}
 @media(max-width:600px){
-  #top-bar{display:none!important}
+  #btn-games{display:none!important}
   h1{font-size:.95rem;margin-bottom:4px}
   .book-stage{width:calc(100vw - 88px);height:auto;perspective:none}
   #page-canvas{max-width:calc(100vw - 88px);max-height:calc(100dvh - 136px)}
@@ -85,12 +86,6 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
 </head>
 <body>
 <h1>Book 3: Consonants &amp; Exceptions</h1>
-<div id="top-bar">
-  <button id="btn-flash">📚 Sight Words</button>
-  <button id="btn-words">📖 Word Families</button>
-  <button id="btn-hw">📝 Homework</button>
-  <button id="btn-online">💻 Online HW</button>
-</div>
 <div class="book-layout">
   <div class="side-nav">
     <button id="btn-back">&#8592;</button>
@@ -114,9 +109,14 @@ a.home-link{color:#a0d5f5;font-size:.8rem;text-decoration:none;margin-top:5px;op
     <div id="speaker-ring" title="Read page">&#128266;</div>
     <span id="page-counter">1 / 84</span>
   </div>
-  <div class="ctrl-extra"></div>
+  <div class="ctrl-extra">
+    <a href="hub.html" id="btn-games">🎮 Games</a>
+    <button id="btn-flash">📚 Sight Words</button>
+    <button id="btn-words">📖 Word Families</button>
+    <button id="btn-hw">📝 Homework</button>
+    <button id="btn-online">💻 Online HW</button>
+  </div>
 </div>
-<a href="hub.html" class="home-link">&#8592; Back to Hub</a>
 <div id="mobile-toolbar">
   <a href="hub.html" id="btn-hub-mobile">🏠 Hub</a>
   <button id="btn-menu-mobile" onclick="toggleMobileMenu()">☰ Menu</button>
