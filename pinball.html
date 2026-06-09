@@ -777,7 +777,7 @@ canvas.addEventListener('click',e=>{
   for(let i=0;i<bumpers.length;i++){
     const b=bumpers[i];
     if(!b.word)continue;
-    if(Math.hypot(cx-b.x,cy-b.y)<BUMP_R&&b.cooldown===0){
+    if(Math.hypot(cx-b.x,cy-b.y)<BUMP_R){
       b.glow=1;b.cooldown=45;spawnBurst(b.x,b.y,b.color);
       hitBumper(i);
       return;
@@ -790,14 +790,17 @@ canvas.addEventListener('touchstart',e=>{
   if(phase==='serving'){launch();return;}
   const rect=canvas.getBoundingClientRect();
   const scaleX=CW/rect.width, scaleY=CH/rect.height;
+  let handled=false;
   Array.from(e.touches).forEach(t=>{
+    if(handled)return;
     const cx=(t.clientX-rect.left)*scaleX, cy=(t.clientY-rect.top)*scaleY;
     for(let i=0;i<bumpers.length;i++){
       const b=bumpers[i];
       if(!b.word)continue;
-      if(Math.hypot(cx-b.x,cy-b.y)<BUMP_R&&b.cooldown===0){
+      if(Math.hypot(cx-b.x,cy-b.y)<BUMP_R){
         b.glow=1;b.cooldown=45;spawnBurst(b.x,b.y,b.color);
         hitBumper(i);
+        handled=true;
         break;
       }
     }
