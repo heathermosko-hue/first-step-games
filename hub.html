@@ -1111,6 +1111,13 @@
       .acc-title { font-size: 0.95rem; }
     }
   </style>
+  <!-- Enforce mobile banner hiding — duplicated late for specificity safety -->
+  <style>
+    @media (max-width: 600px) {
+      .hero-panels { display: none !important; }
+      .hero-bottom-bar { display: none !important; }
+    }
+  </style>
 </head>
 <body>
 

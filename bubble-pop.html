@@ -466,7 +466,7 @@ loadBestVoice();
 function _utt(text, rate, pitch){
   const u = new SpeechSynthesisUtterance(text);
   u.rate  = rate  || 0.88;
-  u.pitch = pitch || 1.08;
+  u.pitch = pitch || 1.0;
   u.lang  = 'en-US';
   if(bestVoice) u.voice = bestVoice;
   return u;
