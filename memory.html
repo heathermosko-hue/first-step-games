@@ -114,6 +114,12 @@
 
 /* ── MOBILE height fixes ── */
 @media (max-height: 720px) {
+  /* Single-row header: icon-only buttons */
+  html body > header { flex-wrap: nowrap !important; }
+  #btnVoice { font-size: 0 !important; padding: .1rem .28rem !important; }
+  #btnVoice::after { content: "👩"; font-size: .82rem; line-height: 1; }
+  #btnNew { font-size: 0 !important; padding: .1rem .28rem !important; }
+  #btnNew::after { content: "🔄"; font-size: .82rem; line-height: 1; }
   /* Keep all difficulty buttons on one scrollable row */
   .settings-bar { overflow-x: auto !important; flex-wrap: nowrap !important; padding: .15rem .5rem; gap: .3rem; }
   .settings-group { flex-wrap: nowrap !important; }

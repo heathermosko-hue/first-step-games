@@ -654,7 +654,17 @@
       .message-fish { font-size: 1.3rem; }
       .btn-ask, .btn-gofish { padding: 6px 14px; font-size: .85rem; }
       .btn-mute { width: 26px !important; height: 26px !important; font-size: .88rem !important; }
-      .header-btns { flex-wrap: wrap; justify-content: flex-end; }
+      /* ── Single-row header: icon-only buttons ── */
+      html body > header { flex-wrap: nowrap !important; }
+      html body > header .header-btns { flex-wrap: nowrap !important; gap: .18rem !important; }
+      #btnVoice0 { font-size: 0 !important; padding: .1rem .28rem !important; }
+      #btnVoice0::after { content: "👩"; font-size: .85rem; line-height: 1; }
+      #btnHow { font-size: 0 !important; padding: .1rem .28rem !important; }
+      #btnHow::after { content: "❓"; font-size: .85rem; line-height: 1; }
+      #btnNew { font-size: 0 !important; padding: .1rem .28rem !important; }
+      #btnNew::after { content: "🔄"; font-size: .85rem; line-height: 1; }
+      header .header-btns a.btn-header { font-size: 0 !important; padding: .1rem .28rem !important; }
+      header .header-btns a.btn-header::after { content: "←"; font-size: .85rem; line-height: 1; }
     }
 
     /* ── VOICE BUTTONS ── */

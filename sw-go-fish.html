@@ -637,7 +637,18 @@
       .btn-ask, .btn-gofish { padding: 6px 14px; font-size: .85rem; }
       .btn-mute { width: 26px !important; height: 26px !important; font-size: .88rem !important; }
       .settings-bar { padding: .1rem .5rem; }
-      .header-btns { flex-wrap: wrap; justify-content: flex-end; }
+      /* ── Single-row header: icon-only buttons ── */
+      html body > header { flex-wrap: nowrap !important; }
+      html body > header .header-btns { flex-wrap: nowrap !important; gap: .18rem !important; }
+      /* Back link is direct header child in sw-go-fish */
+      html body header > a.btn-header { font-size: 0 !important; padding: .1rem .28rem !important; }
+      html body header > a.btn-header::after { content: "←"; font-size: .85rem; line-height: 1; }
+      #btnVoice { font-size: 0 !important; padding: .1rem .28rem !important; }
+      #btnVoice::after { content: "👩"; font-size: .85rem; line-height: 1; }
+      #btnHow { font-size: 0 !important; padding: .1rem .28rem !important; }
+      #btnHow::after { content: "❓"; font-size: .85rem; line-height: 1; }
+      #btnNew { font-size: 0 !important; padding: .1rem .28rem !important; }
+      #btnNew::after { content: "🔄"; font-size: .85rem; line-height: 1; }
     }
 /* ── MOBILE: hide computer hand on small screens ── */
 @media (max-height: 680px) {
