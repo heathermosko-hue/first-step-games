@@ -30,7 +30,7 @@ h1{color:#7fe87a;font-size:1.3rem;text-align:center;margin-bottom:10px;text-shad
 .side-nav{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;flex-shrink:0}
 .controls{display:flex;align-items:center;margin-top:8px;gap:8px;flex-wrap:wrap;justify-content:center;max-width:98vw}
 .ctrl-mid{display:flex;gap:8px;align-items:center}
-.ctrl-extra{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-left:8px;border-left:2px solid rgba(255,255,255,0.25)}
+.ctrl-extra{display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:8px;align-items:center;padding-left:8px;border-left:2px solid rgba(255,255,255,0.25)}
 button{font-family:"Comic Sans MS";font-size:.85rem;padding:6px 13px;border:none;border-radius:24px;cursor:pointer;font-weight:bold;transition:transform .1s}
 button:active{transform:scale(.95)}
 button:disabled{opacity:.4;cursor:default}
@@ -44,6 +44,8 @@ button:disabled{opacity:.4;cursor:default}
 #page-counter{color:#a5d6a7;font-size:.9rem;min-width:80px;text-align:center}
 #speaker-ring{width:28px;height:28px;border-radius:50%;border:3px solid #a5d6a7;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;flex-shrink:0}
 #speaker-ring.on{border-color:#ff8f00;box-shadow:0 0 10px #ff8f00}
+#btn-read.reading,#mob-read-btn.reading{background:#c62828!important;box-shadow:0 0 8px #ff5252}
+.sound-btn{background:#388e3c;color:#fff;border:none;border-radius:20px;cursor:pointer;font-family:"Comic Sans MS","Comic Neue",cursive;font-size:.85rem;font-weight:bold;padding:8px 16px}
 a.home-link{color:#a5d6a7;font-size:.8rem;text-decoration:none;margin-top:5px;opacity:.7}
 /* ── GAMES BACK BUTTON (desktop only) ── */
 #btn-games{background:linear-gradient(135deg,#FF6B6B,#FF3B8A);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-family:"Comic Sans MS";font-size:.82rem;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
@@ -57,12 +59,13 @@ a.home-link{color:#a5d6a7;font-size:.8rem;text-decoration:none;margin-top:5px;op
 #mob-arrow-left,#mob-arrow-right{position:fixed;top:50%;transform:translateY(-50%);border:none;z-index:50;cursor:pointer;align-items:center;justify-content:center;height:80px;width:38px;font-size:2.6rem;font-family:sans-serif;line-height:1}
 #mob-arrow-left{left:0;background:rgba(46,125,50,.75);color:#fff;border-radius:0 14px 14px 0}
 #mob-arrow-right{right:0;background:rgba(127,232,122,.88);color:#0d2b1a;border-radius:14px 0 0 14px}
-#mobile-top-bar{position:fixed;top:0;left:0;right:0;height:44px;background:rgba(13,43,26,.96);border-bottom:2px solid #7fe87a;padding:0 6px;gap:5px;align-items:center;z-index:70}
+#mobile-top-bar{position:fixed;top:0;left:0;right:0;height:44px;background:rgba(13,43,26,.96);border-bottom:2px solid #7fe87a;padding:0 6px;gap:5px;align-items:center;z-index:70;overflow-x:auto;-webkit-overflow-scrolling:touch}
 #mob-book-icon{font-size:1.3rem;flex-shrink:0}
-#mob-chaps-btn,#mob-menu-btn,#mob-read-btn{font-family:"Comic Sans MS";font-size:.74rem;font-weight:bold;border:none;border-radius:16px;padding:5px 9px;cursor:pointer;flex-shrink:0}
+#mob-chaps-btn,#mob-menu-btn,#mob-read-btn,#mob-sound-btn{font-family:"Comic Sans MS";font-size:.74rem;font-weight:bold;border:none;border-radius:16px;padding:5px 9px;cursor:pointer;flex-shrink:0}
 #mob-chaps-btn{background:#2e7d32;color:#fff}
 #mob-menu-btn{background:rgba(255,255,255,.18);color:#fff}
 #mob-read-btn{background:#ff8f00;color:#fff}
+#mob-sound-btn{background:#388e3c;color:#fff}
 #mob-hub{background:#1a5c1a;color:#fff;text-decoration:none;font-family:"Comic Sans MS";font-size:.74rem;font-weight:bold;border-radius:16px;padding:5px 9px;flex-shrink:0}
 #mob-counter{margin-left:auto;color:#a5d6a7;font-size:.78rem;white-space:nowrap;flex-shrink:0}
 @media(max-width:600px){
@@ -135,6 +138,7 @@ a.home-link{color:#a5d6a7;font-size:.8rem;text-decoration:none;margin-top:5px;op
     <button id="btn-words">📖 Word Families</button>
     <button id="btn-hw">📝 Homework</button>
     <button id="btn-online">💻 Online HW</button>
+    <button class="sound-btn" onclick="toggleSound()">🔊 Sound</button>
   </div>
 </div>
 <div id="mobile-menu">
@@ -142,7 +146,8 @@ a.home-link{color:#a5d6a7;font-size:.8rem;text-decoration:none;margin-top:5px;op
   <button id="mbtn-words" onclick="wordsBtn.click()">📖 Word Families</button>
   <button id="mbtn-hw" onclick="hwBtn.click()">📝 Homework</button>
   <button id="mbtn-online" onclick="onlineBtn.click()">💻 Online HW</button>
-  <button id="mbtn-read" onclick="document.getElementById('btn-read').click();toggleMobileMenu()">📢 Read Page</button>
+  <button id="mbtn-read" onclick="toggleRead();toggleMobileMenu()">📢 Read Page</button>
+  <button class="sound-btn" onclick="toggleSound()">🔊 Sound</button>
 </div>
 <!-- MOBILE OVERLAY: arrows + top bar -->
 <button id="mob-arrow-left" onclick="document.getElementById('btn-back').click()">&#8249;</button>
@@ -153,6 +158,7 @@ a.home-link{color:#a5d6a7;font-size:.8rem;text-decoration:none;margin-top:5px;op
   <a href="hub.html" id="mob-hub">🏠 Hub</a>
   <button id="mob-menu-btn" onclick="toggleMobileMenu()">☰ Menu</button>
   <button id="mob-read-btn">📢 Read</button>
+  <button id="mob-sound-btn" class="sound-btn" onclick="toggleSound()">🔊 Sound</button>
   <span id="mob-counter"></span>
 </div>
 <button class="ch-tab" id="chTab" onclick="toggleChPanel()">📖 Chapters</button>
@@ -273,16 +279,20 @@ let voices=[];
 function loadVoices(){voices=speechSynthesis.getVoices();if(!voices.length)speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};}
 loadVoices();
 function getBestVoice(){const en=voices.filter(v=>/^en/i.test(v.lang));return en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\b(jenny|emma)\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/female/i.test(v.name))||en.find(v=>/\b(samantha|karen|moira|serena|victoria|tessa|fiona|kate|zoe|allison|ava|zira|eva|hazel|susan)\b/i.test(v.name))||en.find(v=>/natural|neural|online/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||voices[0];}
-function speak(text,spanEl){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.trim());const v=getBestVoice();if(v)u.voice=v;u.lang='en-US';u.rate=0.9;u.pitch=1.0;u.volume=1;u.onstart=()=>{ring.classList.add('on');if(spanEl)spanEl.classList.add('speaking');};u.onend=()=>{ring.classList.remove('on');if(spanEl)spanEl.classList.remove('speaking');};speechSynthesis.speak(u);}
-ring.addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
-document.getElementById('btn-read').addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
-const mobRead=document.getElementById('mob-read-btn');if(mobRead)mobRead.addEventListener('click',()=>speak(PAGE_TEXT[currentPage]||''));
+let soundOn=true;
+function speak(text,spanEl){if(!soundOn)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.trim());const v=getBestVoice();if(v)u.voice=v;u.lang='en-US';u.rate=0.9;u.pitch=1.0;u.volume=1;u.onstart=()=>{ring.classList.add('on');if(spanEl)spanEl.classList.add('speaking');document.getElementById('btn-read').classList.add('reading');var mr=document.getElementById('mob-read-btn');if(mr)mr.classList.add('reading');};u.onend=()=>{ring.classList.remove('on');if(spanEl)spanEl.classList.remove('speaking');document.getElementById('btn-read').classList.remove('reading');var mr=document.getElementById('mob-read-btn');if(mr)mr.classList.remove('reading');};speechSynthesis.speak(u);}
+function toggleRead(){if(speechSynthesis.speaking){speechSynthesis.cancel();ring.classList.remove('on');document.getElementById('btn-read').classList.remove('reading');var mr=document.getElementById('mob-read-btn');if(mr)mr.classList.remove('reading');}else{speak(PAGE_TEXT[currentPage]||'');}}
+function toggleSound(){soundOn=!soundOn;if(!soundOn){speechSynthesis.cancel();ring.classList.remove('on');document.getElementById('btn-read').classList.remove('reading');var mr=document.getElementById('mob-read-btn');if(mr)mr.classList.remove('reading');}document.querySelectorAll('.sound-btn').forEach(function(el){el.textContent=soundOn?'🔊 Sound':'🔇 Muted';});}
+ring.addEventListener('click',toggleRead);
+document.getElementById('btn-read').addEventListener('click',toggleRead);
+const mobRead=document.getElementById('mob-read-btn');if(mobRead)mobRead.addEventListener('click',toggleRead);
 let flashWords=[],flashIdx=0;
 function openFlash(words,title){flashWords=words;flashIdx=0;document.getElementById('flash-title').textContent=title;showCard();document.getElementById('flash-modal').style.display='flex';}
 function showCard(){const w=flashWords[flashIdx]||'';document.getElementById('flash-word').textContent=w.toLowerCase();document.getElementById('flash-counter').textContent=(flashIdx+1)+' / '+flashWords.length;document.getElementById('flash-prev').disabled=flashIdx===0;document.getElementById('flash-next').disabled=flashIdx>=flashWords.length-1;speak(w);}
 flashBtn.addEventListener('click',()=>openFlash(SIGHT_WORDS[currentPage]||[],'Sight Words'));
 wordsBtn.addEventListener('click',()=>openFlash(WORD_FAMILIES[currentPage]||[],'Word Families'));
-hwBtn.addEventListener('click',()=>{window.location.href='worksheets.html?book=1&ch='+currentPage;});
+const HW_PDFS={2:'../wp-content/uploads/2016/04/Book-1-2-27.pdf',8:'../wp-content/uploads/2016/04/Book-1-2-27.pdf',13:'../wp-content/uploads/2016/04/Book-1-2-27.pdf',18:'../wp-content/uploads/2016/04/Book-1-2-27.pdf',23:'../wp-content/uploads/2016/04/Book-1-2-27.pdf',28:'../wp-content/uploads/2016/04/Book-1-28-40.pdf',33:'../wp-content/uploads/2016/04/Book-1-28-40.pdf',35:'../wp-content/uploads/2016/04/Book-1-28-40.pdf',38:'../wp-content/uploads/2016/04/Book-1-28-40.pdf',41:'../wp-content/uploads/2016/04/Book-1-41-61.pdf',44:'../wp-content/uploads/2016/04/Book-1-41-61.pdf',48:'../wp-content/uploads/2016/04/Book-1-41-61.pdf',52:'../wp-content/uploads/2016/04/Book-1-41-61.pdf',55:'../wp-content/uploads/2016/04/Book-1-41-61.pdf',59:'../wp-content/uploads/2016/04/Book-1-41-61.pdf',62:'../wp-content/uploads/2016/04/Book-1-62-79.pdf',65:'../wp-content/uploads/2016/04/Book-1-62-79.pdf',68:'../wp-content/uploads/2016/04/Book-1-62-79.pdf',71:'../wp-content/uploads/2016/04/Book-1-62-79.pdf',74:'../wp-content/uploads/2016/04/Book-1-62-79.pdf',77:'../wp-content/uploads/2016/04/Book-1-62-79.pdf',80:'../wp-content/uploads/2016/04/Book-1-80-92.pdf',83:'../wp-content/uploads/2016/04/Book-1-80-92.pdf',86:'../wp-content/uploads/2016/04/Book-1-80-92.pdf',88:'../wp-content/uploads/2016/04/Book-1-80-92.pdf',91:'../wp-content/uploads/2016/04/Book-1-80-92.pdf'};
+hwBtn.addEventListener('click',()=>{var u=HW_PDFS[currentPage];if(u)window.open(u,'_blank');});
 onlineBtn.addEventListener('click',()=>{window.location.href='online-hw.html?book=1&ch='+currentPage;});
 document.getElementById('flash-speak').addEventListener('click',()=>speak(flashWords[flashIdx]||''));
 document.getElementById('flash-prev').addEventListener('click',()=>{if(flashIdx>0){flashIdx--;showCard();}});
@@ -303,8 +313,7 @@ async function renderPage(num,dir){
   canvas.width=sv.width;canvas.height=sv.height;
   await page.render({canvasContext:ctx,viewport:sv}).promise;
   const tc=await page.getTextContent();
-  const rt=pdfjsLib.renderTextLayer({textContent:tc,container:textLayerDiv,viewport:sv,textDivs:[]});
-  await rt.promise;
+  try{if(typeof pdfjsLib.renderTextLayer==='function'){const rt=pdfjsLib.renderTextLayer({textContent:tc,container:textLayerDiv,viewport:sv,textDivs:[]});if(rt&&rt.promise)await rt.promise;}}catch(e){}
   textLayerDiv.querySelectorAll('span').forEach(span=>{
     const raw=span.textContent.trim();
     if(!raw||/^\d+$/.test(raw)||/^[.,!?;:'"()\-]+$/.test(raw))return;
@@ -335,7 +344,11 @@ async function renderPage(num,dir){
 document.getElementById('btn-next').addEventListener('click',()=>{if(currentPage<TOTAL)renderPage(currentPage+1,'fwd');});
 document.getElementById('btn-back').addEventListener('click',()=>{if(currentPage>1)renderPage(currentPage-1,'back');});
 document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')document.getElementById('btn-next').click();if(e.key==='ArrowLeft')document.getElementById('btn-back').click();if(e.key==='Escape'){speechSynthesis.cancel();document.getElementById('flash-modal').style.display='none';}});
-pdfjsLib.getDocument({url:'book1.pdf',disableRange:false,disableStream:false,disableAutoFetch:true}).promise.then(doc=>{pdfDoc=doc;const startPg=Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('page'))||1,1),doc.numPages);renderPage(startPg,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
+pdfjsLib.getDocument({url:'book1.pdf',disableRange:false,disableStream:false,disableAutoFetch:true}).promise.then(doc=>{pdfDoc=doc;const startPg=Math.min(Math.max(parseInt(new URLSearchParams(location.search).get('page'))||1,1),doc.numPages);return renderPage(startPg,'fwd');}).catch(err=>{loading.textContent='Error: '+err.message;});
+document.getElementById('btn-games').addEventListener('click',function(){speechSynthesis.cancel();});
+var _mobHub=document.getElementById('mob-hub');if(_mobHub)_mobHub.addEventListener('click',function(){speechSynthesis.cancel();});
+window.addEventListener('pagehide',function(){speechSynthesis.cancel();});
+window.addEventListener('beforeunload',function(){speechSynthesis.cancel();});
 function toggleChPanel(force){const p=document.getElementById('chPanel');const isOpen=p.classList.contains('open');if(force===false||isOpen){p.classList.remove('open');}else{p.classList.add('open');buildChList();}}
 function buildChList(){const list=document.getElementById('chList');list.innerHTML='';const pages=[...HEADER_PAGES].sort((a,b)=>a-b);pages.forEach(pg=>{const raw=PAGE_TEXT[pg]||'';let title=(raw.split(' Words:')[0]||'').replace(/Chapter \d+:\s*[^.]+\.\s*/g,'').replace(/Short Vowel \w+\.\s*/g,'').replace(/\.$/, '').trim()||'Page '+pg;if(title.length>26)title=title.substring(0,26)+'…';const btn=document.createElement('button');btn.className='ch-btn'+(pg===currentPage?' active':'');btn.innerHTML='<span style="color:#7fe87a;font-size:.68rem">p.'+pg+'</span><br>'+title;btn.onclick=()=>{renderPage(pg,'fwd');toggleChPanel(false);};list.appendChild(btn);});}
 document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)&&!document.getElementById('mob-chaps-btn').contains(e.target)){p.classList.remove('open');}const mm=document.getElementById('mobile-menu');const mb=document.getElementById('mob-menu-btn');if(mm&&mm.classList.contains('open')&&!mm.contains(e.target)&&e.target!==mb){mm.classList.remove('open');}});
