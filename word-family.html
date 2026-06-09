@@ -339,7 +339,7 @@ function showQuestion() {
     btn.addEventListener('click', () => checkAnswer(letter, btn));
     choicesEl.appendChild(btn);
   });
-  speak(`What letter starts the word ${q.word}? | ${q.word}!`);
+  speak(`What letter starts the word? | ${q.word}!`);
 }
 
 function checkAnswer(letter, btn) {
@@ -352,11 +352,11 @@ function checkAnswer(letter, btn) {
     const blank = document.getElementById('wordBlank');
     blank.textContent = letter;
     blank.classList.add('filled');
-    document.getElementById('feedback').textContent = q.word.toUpperCase() + '! Great job! 🎉';
+    document.getElementById('feedback').textContent = q.word + '! Great job! 🎉';
     document.getElementById('feedback').className = 'feedback ok';
     score++;
     document.getElementById('scoreVal').textContent = score;
-    speak(`${q.word}! | Great job! | ${q.word} starts with the letter ${letter}!`);
+    speak('Great job!');
     setTimeout(advance, 1700);
   } else {
     btn.classList.add('wrong');
