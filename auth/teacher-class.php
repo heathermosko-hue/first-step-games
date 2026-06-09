@@ -92,51 +92,72 @@ $qrUrl = urlencode(baseUrl().'/auth/student-login.php?code='.$class['class_code'
 <title><?= htmlspecialchars($class['name']) ?> — First Step Reading</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';background:#f0f4ff;min-height:100vh}
-  header{background:#2c3e50;color:white;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
-  header h1{font-size:1.15rem}
-  .back{color:#aee;text-decoration:none;font-size:.9rem}
-  .container{max-width:1000px;margin:2rem auto;padding:0 1rem}
-  .msg{background:#efe;border:1px solid #9d9;color:#1a7a3a;border-radius:8px;padding:.7rem 1rem;margin-bottom:1rem}
-  .card{background:white;border-radius:16px;padding:1.5rem;box-shadow:0 4px 16px rgba(0,0,0,.08);margin-bottom:1.5rem}
-  h2{color:#2c3e50;margin-bottom:1rem;font-size:1.1rem}
-  .code-box{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
-  .code{font-family:monospace;font-size:2rem;font-weight:700;color:#8e44ad;background:#f3e8ff;border-radius:10px;padding:.5rem 1.2rem;letter-spacing:.15em}
-  .qr img{border:3px solid #e0e0e0;border-radius:10px}
-  label{display:block;font-weight:600;color:#2c3e50;margin-bottom:.35rem;font-size:.85rem}
-  input,select{border:2px solid #e0e0e0;border-radius:8px;padding:.6rem .9rem;font-size:.95rem}
-  input:focus,select:focus{outline:none;border-color:#3498db}
-  .btn{background:#27ae60;color:white;border:none;border-radius:8px;padding:.6rem 1.2rem;font-size:.9rem;font-weight:700;cursor:pointer}
-  .btn:hover{background:#219a52}
+  body{font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';background:#FFF8F0;min-height:100vh}
+  header{
+    background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:white;
+    padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;
+    box-shadow:0 4px 20px rgba(107,72,255,.35);
+  }
+  header h1{font-size:1.12rem;font-family:'Comic Sans MS','Chalkboard SE','Comic Neue'}
+  .back{
+    color:white;text-decoration:none;font-size:.85rem;font-weight:700;
+    background:rgba(255,255,255,.22);border-radius:20px;padding:.3rem .9rem;
+    border:2px solid rgba(255,255,255,.4);transition:background .18s;
+  }
+  .back:hover{background:rgba(255,255,255,.38)}
+  .container{max-width:1020px;margin:2rem auto;padding:0 1.2rem}
+  .msg{background:#f0fff4;border:2px solid #9de0a8;color:#1a7a3a;border-radius:14px;padding:.8rem 1rem;margin-bottom:1.2rem;font-weight:700}
+  .card{background:white;border-radius:22px;padding:1.6rem;box-shadow:0 6px 24px rgba(0,0,0,.09);margin-bottom:1.6rem;border:2px solid #f0eeff}
+  h2{color:#6B48FF;margin-bottom:1rem;font-size:1.12rem}
+  .code-box{display:flex;align-items:center;gap:1.6rem;flex-wrap:wrap}
+  .code{font-family:monospace;font-size:2.1rem;font-weight:700;color:#8e44ad;background:#f3e8ff;border-radius:14px;padding:.5rem 1.3rem;letter-spacing:.15em;border:2.5px solid #dbb8ff}
+  .qr img{border:3px solid #ddd6ff;border-radius:14px}
+  label{display:block;font-weight:700;color:#6B48FF;margin-bottom:.32rem;font-size:.86rem}
+  input,select{
+    border:2.5px solid #e0e0e0;border-radius:12px;padding:.6rem .9rem;font-size:.95rem;
+    font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';transition:border-color .2s;
+  }
+  input:focus,select:focus{outline:none;border-color:#6B48FF;box-shadow:0 0 0 3px rgba(107,72,255,.12)}
+  .btn{
+    background:linear-gradient(135deg,#6BCB77,#27AE60);color:white;border:none;
+    border-radius:12px;padding:.6rem 1.2rem;font-size:.92rem;font-weight:700;cursor:pointer;
+    font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';
+    box-shadow:0 3px 12px rgba(39,174,96,.28);transition:transform .15s,box-shadow .15s;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(39,174,96,.4)}
   .btn-sm{padding:.35rem .8rem;font-size:.8rem}
-  .btn-red{background:#e74c3c}.btn-red:hover{background:#c0392b}
-  .btn-purple{background:#8e44ad}.btn-purple:hover{background:#7d3c98}
-  .btn-blue{background:#3498db}.btn-blue:hover{background:#2980b9}
+  .btn-red{background:linear-gradient(135deg,#FF6B6B,#e74c3c)!important;box-shadow:0 3px 10px rgba(231,76,60,.28)!important}
+  .btn-red:hover{box-shadow:0 6px 16px rgba(231,76,60,.4)!important}
+  .btn-purple{background:linear-gradient(135deg,#C084FC,#8e44ad)!important;box-shadow:0 3px 10px rgba(142,68,173,.28)!important}
+  .btn-blue{background:linear-gradient(135deg,#3A8EF6,#6B48FF)!important;box-shadow:0 3px 10px rgba(58,142,246,.28)!important}
   table{width:100%;border-collapse:collapse;font-size:.9rem}
-  th{background:#f0f4ff;color:#2c3e50;padding:.7rem .8rem;text-align:left;border-bottom:2px solid #e0e0e0}
-  td{padding:.6rem .8rem;border-bottom:1px solid #f0f0f0;vertical-align:middle}
-  tr:hover td{background:#fafbff}
-  .animal{font-size:1.6rem}
-  .icon-picker{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem}
-  .icon-btn{font-size:1.4rem;background:none;border:2px solid transparent;border-radius:8px;cursor:pointer;padding:.2rem;transition:all .15s}
+  th{background:linear-gradient(135deg,#f0eeff,#e8f4ff);color:#6B48FF;padding:.75rem .85rem;text-align:left;border-bottom:2.5px solid #ddd6ff;font-weight:700}
+  td{padding:.62rem .85rem;border-bottom:1.5px solid #f5f0ff;vertical-align:middle}
+  tr:hover td{background:#faf7ff}
+  .animal{font-size:1.8rem}
+  .icon-picker{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.6rem}
+  .icon-btn{font-size:1.5rem;background:none;border:2.5px solid transparent;border-radius:10px;cursor:pointer;padding:.25rem;transition:all .15s}
   .icon-btn:hover{border-color:#8e44ad;background:#f3e8ff}
   .icon-btn.current{border-color:#8e44ad;background:#f3e8ff}
   .game-check{display:flex;align-items:center;gap:.5rem;margin:.4rem 0;font-size:.95rem}
-  .game-check input[type=checkbox]{width:18px;height:18px}
-  .score-cell{text-align:center;color:#7f8c8d;font-size:.85rem}
-  .score-cell.played{color:#27ae60;font-weight:600}
+  .game-check input[type=checkbox]{width:18px;height:18px;accent-color:#6B48FF}
+  .score-cell{text-align:center;color:#bbb;font-size:.85rem}
+  .score-cell.played{color:#27ae60;font-weight:700}
   .add-row{display:flex;gap:.7rem;align-items:flex-end}
   .access-row{display:flex;gap:1rem;align-items:center}
-  .badge{display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.78rem;font-weight:700}
-  .badge-full{background:#eaf6ff;color:#2980b9}
-  .badge-assigned{background:#fef9e7;color:#d68910}
-  @media(max-width:600px){.code{font-size:1.4rem}}
+  .badge{display:inline-block;border-radius:20px;padding:.22rem .75rem;font-size:.76rem;font-weight:700;margin-left:.4rem}
+  .badge-full{background:#e8f8ff;color:#2980b9;border:1.5px solid #b3deff}
+  .badge-assigned{background:#fffbe8;color:#d68910;border:1.5px solid #ffe599}
+  @media(max-width:600px){.code{font-size:1.4rem}.container{padding:0 .8rem}header{padding:.8rem 1rem}header h1{font-size:.95rem}}
 </style>
 </head>
 <body>
 <header>
   <h1>📚 <?= htmlspecialchars($class['name']) ?></h1>
-  <a class="back" href="teacher-dashboard.php">← Back to Dashboard</a>
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+    <a class="back" href="teacher-dashboard.php">← Dashboard</a>
+    <a class="back" href="../hub.html">🎮 Games</a>
+  </div>
 </header>
 <div class="container">
   <?php if ($msg): ?><div class="msg"><?= $msg ?></div><?php endif; ?>
