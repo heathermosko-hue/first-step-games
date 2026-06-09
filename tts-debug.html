@@ -3,98 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TTS Debug</title>
-<script src="tts.js?v=9" defer></script>
+<title>TTS Debug v9</title>
+<script src="tts.js?v=10" defer></script>
 <style>
-  body { font-family: sans-serif; background:#111; color:#fff; padding:20px; font-size:14px; }
-  button { font-size:1.1rem; padding:14px 24px; margin:8px 4px; border-radius:10px;
-           border:none; background:#4caf50; color:#fff; cursor:pointer; display:block; width:100%; }
-  #log { background:#222; border-radius:8px; padding:12px; margin-top:12px;
-         font-family:monospace; font-size:12px; white-space:pre-wrap; min-height:200px; }
-  .ok  { color:#4caf50; }
-  .err { color:#f44336; }
-  .info{ color:#2196f3; }
+  body { font-family: sans-serif; background:#111; color:#fff; padding:16px; font-size:14px; }
+  button { font-size:1rem; padding:12px 20px; margin:6px 4px; border-radius:10px;
+           border:none; cursor:pointer; display:block; width:100%; }
+  .btn-ctx  { background:#2196f3; color:#fff; }
+  .btn-api  { background:#ff9800; color:#fff; }
+  .btn-full { background:#4caf50; color:#fff; }
+  .btn-tts  { background:#9c27b0; color:#fff; }
+  #log { background:#1a1a1a; border-radius:8px; padding:12px; margin-top:10px;
+         font-family:monospace; font-size:11px; white-space:pre-wrap;
+         min-height:180px; max-height:55vh; overflow-y:auto; }
+  .ok   { color:#4caf50; }
+  .err  { color:#f44336; }
+  .info { color:#2196f3; }
+  .warn { color:#ff9800; }
 </style>
 </head>
 <body>
-<h2>🔊 TTS Debug</h2>
-<button onclick="testTTS()">Tap to Test Voice</button>
-<button onclick="checkStatus()">Check Status</button>
-<div id="log">Tap a button to begin...\n</div>
+<h2>🔊 TTS Debug v9</h2>
+<button class="btn-ctx"  onclick="testAudioCtx()">1. AudioContext beep test</button>
+<button class="btn-api"  onclick="testAPI()">2. Google TTS API test</button>
+<button class="btn-full" onclick="testFull()">3. Full tts.js test (tap first!)</button>
+<button class="btn-tts"  onclick="testBrowserTTS()">4. Browser TTS test</button>
+<div id="log">Tap a button...\n</div>
 <script>
+var API_KEY = 'AIzaSyDPCnZfgZmSYPonViX2S4rSfH8-FGFbhTo';
+
 function log(msg, cls) {
   var d = document.getElementById('log');
-  var span = document.createElement('span');
-  span.className = cls || '';
-  span.textContent = msg + '\n';
-  d.appendChild(span);
+  var t = new Date().toLocaleTimeString();
+  var s = document.createElement('span');
+  s.className = cls || '';
+  s.textContent = '[' + t + '] ' + msg + '\n';
+  d.appendChild(s);
   d.scrollTop = d.scrollHeight;
 }
 
-function checkStatus() {
-  log('--- Status Check ---', 'info');
-  log('tts.js loaded: ' + (window._ttsLoaded ? 'YES' : 'checking...'));
-  log('speechSynthesis.speak patched: ' + (window.speechSynthesis && window.speechSynthesis.speak.toString().includes('fetchAudio') ? 'YES ✓' : 'NO ✗'),
-      window.speechSynthesis && window.speechSynthesis.speak.toString().includes('fetchAudio') ? 'ok' : 'err');
-  log('AudioContext available: ' + (!!(window.AudioContext || window.webkitAudioContext) ? 'YES ✓' : 'NO ✗'));
-  log('fetch available: ' + (!!window.fetch ? 'YES ✓' : 'NO ✗'));
-  var u = navigator.userAgent;
-  log('Browser: ' + u.substring(0, 80), 'info');
+/* ── 1. AudioContext beep ─────────────────────────────── */
+function testAudioCtx() {
+  log('--- AudioContext beep test ---', 'info');
+  if (!window.AudioContext && !window.webkitAudioContext) {
+    log('FAIL: AudioContext not available', 'err'); return;
+  }
+  log('AudioContext available', 'ok');
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    log('Created, state=' + ctx.state, ctx.state === 'running' ? 'ok' : 'warn');
+    ctx.resume().then(function () {
+      log('Resumed, state=' + ctx.state, ctx.state === 'running' ? 'ok' : 'err');
+      var osc  = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 440;
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.3);
+      osc.onended = function () { log('Beep onended fired — DID YOU HEAR A BEEP?', 'ok'); };
+      log('Beep started...', 'info');
+    }).catch(function (e) { log('resume() failed: ' + e, 'err'); });
+  } catch (e) { log('new AudioContext() threw: ' + e, 'err'); }
 }
 
-function testTTS() {
-  log('--- TTS Test ---', 'info');
-  log('Tapping button...');
-
-  if (!window.speechSynthesis) { log('ERROR: no speechSynthesis', 'err'); return; }
-
-  var patched = window.speechSynthesis.speak.toString().includes('fetchAudio');
-  log('speak() patched by tts.js: ' + (patched ? 'YES ✓' : 'NO ✗ — tts.js not loaded!'), patched ? 'ok' : 'err');
-
-  if (!patched) {
-    log('Trying to reload tts.js...', 'info');
-    var s = document.createElement('script');
-    s.src = 'tts.js?v=9&reload=' + Date.now();
-    s.onload = function() { log('tts.js reloaded — try again', 'ok'); };
-    s.onerror = function() { log('tts.js FAILED to load!', 'err'); };
-    document.head.appendChild(s);
-    return;
-  }
-
-  // Intercept to see what path is taken
-  var orig = window.speechSynthesis.speak;
-  window.speechSynthesis.speak = function(utt) {
-    log('speak() called with: "' + (utt.text||'').substring(0,40) + '"', 'info');
-    // patch onstart/onend to log
-    var os = utt.onstart, oe = utt.onend;
-    utt.onstart = function(e) { log('▶ Audio started!', 'ok'); if(os) os(e); };
-    utt.onend   = function(e) { log('■ Audio ended.', 'info');  if(oe) oe(e); };
-    return orig.call(this, utt);
-  };
-
-  // Also test fetch directly
-  log('Testing Google TTS API fetch...', 'info');
-  fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key=AIzaSyDPCnZfgZmSYPonViX2S4rSfH8-FGFbhTo', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
+/* ── 2. Google TTS API + decodeAudioData ──────────────── */
+function testAPI() {
+  log('--- Google TTS API + AudioContext decode test ---', 'info');
+  log('Fetching Journey-F audio...', 'info');
+  fetch('https://texttospeech.googleapis.com/v1/text:synthesize?key=' + API_KEY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      input:{text:'Hello'},
-      voice:{languageCode:'en-US', name:'en-US-Journey-F'},
-      audioConfig:{audioEncoding:'MP3'}
+      input: { text: 'Hello, can you hear me?' },
+      voice: { languageCode: 'en-US', name: 'en-US-Journey-F' },
+      audioConfig: { audioEncoding: 'MP3', speakingRate: 0.9 }
     })
   })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    if (d.audioContent) {
-      log('Google TTS API: SUCCESS ✓ (got audio)', 'ok');
-      log('Playing via tts.js now...', 'info');
-      var utt = new SpeechSynthesisUtterance('Hello, this is the Journey F voice. Can you hear me?');
-      window.speechSynthesis.speak(utt);
-    } else {
-      log('Google TTS API: ERROR — ' + JSON.stringify(d).substring(0,100), 'err');
-    }
+  .then(function (r) { return r.json(); })
+  .then(function (d) {
+    if (!d.audioContent) { log('API error: ' + JSON.stringify(d).slice(0,200), 'err'); return; }
+    log('API OK — got ' + d.audioContent.length + ' chars base64', 'ok');
+    var bin = atob(d.audioContent);
+    var buf = new ArrayBuffer(bin.length);
+    var v   = new Uint8Array(buf);
+    for (var i = 0; i < bin.length; i++) v[i] = bin.charCodeAt(i);
+    log('ArrayBuffer built (' + bin.length + ' bytes), decoding...', 'info');
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      ctx.resume().then(function () {
+        log('AudioContext state: ' + ctx.state, ctx.state === 'running' ? 'ok' : 'warn');
+        ctx.decodeAudioData(buf,
+          function (ab) {
+            log('decodeAudioData OK, duration=' + ab.duration.toFixed(2) + 's', 'ok');
+            var src = ctx.createBufferSource();
+            src.buffer = ab;
+            src.connect(ctx.destination);
+            src.onended = function () { log('src.onended fired — audio finished', 'ok'); };
+            src.start(0);
+            log('src.start(0) called — YOU SHOULD HEAR JOURNEY-F', 'info');
+          },
+          function (e) { log('decodeAudioData FAILED: ' + e, 'err'); }
+        );
+      }).catch(function (e) { log('resume failed: ' + e, 'err'); });
+    } catch (e) { log('AudioContext threw: ' + e, 'err'); }
   })
-  .catch(function(e){ log('Google TTS API: FETCH FAILED — ' + e, 'err'); });
+  .catch(function (e) { log('Fetch failed: ' + e, 'err'); });
+}
+
+/* ── 3. Full tts.js speak() ──────────────────────────── */
+function testFull() {
+  log('--- Full tts.js speak() test ---', 'info');
+  var patched = window.speechSynthesis &&
+    window.speechSynthesis.speak.toString().indexOf('fetchAudio') !== -1;
+  log('tts.js patching speak(): ' + (patched ? 'YES' : 'NO'), patched ? 'ok' : 'err');
+  if (!patched) { log('tts.js did not load properly', 'err'); return; }
+
+  var utt = new SpeechSynthesisUtterance('Hello, this is Journey F. Can you hear me?');
+  utt.onstart = function () { log('onstart fired', 'ok'); };
+  utt.onend   = function () { log('onend fired — complete', 'ok'); };
+  utt.onerror = function (e) { log('onerror: ' + JSON.stringify(e), 'err'); };
+  log('Calling window.speechSynthesis.speak()...', 'info');
+  window.speechSynthesis.speak(utt);
+  log('speak() returned — waiting...', 'info');
+}
+
+/* ── 4. Raw browser TTS ──────────────────────────────── */
+function testBrowserTTS() {
+  log('--- Browser speechSynthesis test ---', 'info');
+  if (!window.speechSynthesis) { log('speechSynthesis not available', 'err'); return; }
+  var voices = window.speechSynthesis.getVoices();
+  log('Voices loaded: ' + voices.length, voices.length ? 'ok' : 'warn');
+  var utt = new SpeechSynthesisUtterance('Browser voice test');
+  utt.onend   = function () { log('Browser TTS onend fired', 'ok'); };
+  utt.onerror = function (e) { log('Browser TTS error: ' + JSON.stringify(e), 'err'); };
+  try {
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utt);
+    log('Browser speak() called', 'info');
+  } catch (e) { log('Threw: ' + e, 'err'); }
 }
 </script>
 </body>

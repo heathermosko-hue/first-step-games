@@ -118,10 +118,6 @@
 
   document.body.insertBefore(nav, document.body.firstChild);
 
-  /* ── Inject Google TTS (most human-like voice) ── */
-  var ttsScript = document.createElement('script');
-  ttsScript.src = 'tts.js?v=1';
-  document.head.appendChild(ttsScript);
 
   /* ── Shift hub's access-bar so it sticks BELOW our nav ── */
   var ab = document.getElementById('access-bar');
