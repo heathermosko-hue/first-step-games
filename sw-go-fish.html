@@ -619,36 +619,40 @@
       header h1 { font-size: 1.25rem; }
     }
     @media (max-height: 700px) {
-      :root { --card-w: 52px; --card-h: 66px; }
-      .scoreboard { padding: .05rem .6rem; }
-      .score-value { font-size: 1.2rem; }
-      .game-area { gap: 0.2rem; padding: .2rem .4rem; }
-      .computer-zone, .player-zone { padding: 0.25rem 0.5rem; }
-      .zone-header { margin-bottom: 0.3rem; }
-      .middle-row { padding: 0.3rem 0.5rem; }
-      .settings-bar { padding: .15rem .5rem; }
-      header h1 { font-size: 1.2rem; }
+      :root { --card-w: 46px; --card-h: 55px; }
+      .legend { display: none; }
+      .scoreboard { padding: .04rem .5rem; }
+      .score-value { font-size: 1rem; }
+      .score-label { font-size: .62rem; }
+      .score-divider { height: 24px; }
+      .game-area { gap: 0.15rem; padding: .15rem .4rem; }
+      .computer-zone, .player-zone { padding: 0.18rem 0.5rem; }
+      .zone-header { margin-bottom: 0.15rem; }
+      .computer-title, .player-title { font-size: .85rem; }
+      .pairs-row { margin-top: 0.15rem !important; }
+      .middle-row { padding: 0.18rem 0.4rem; gap: .4rem; }
+      .deck-label, .deck-hint { display: none; }
+      .message-text { font-size: .82rem; }
+      .message-fish { font-size: 1.3rem; }
+      .btn-ask, .btn-gofish { padding: 6px 14px; font-size: .85rem; }
+      .btn-mute { width: 26px !important; height: 26px !important; font-size: .88rem !important; }
+      .settings-bar { padding: .1rem .5rem; }
       .header-btns { flex-wrap: wrap; justify-content: flex-end; }
     }
-/* ── MOBILE: compact computer zone ── */
+/* ── MOBILE: hide computer hand on small screens ── */
 @media (max-height: 680px) {
   .computer-zone .hand { display: none !important; }
   .computer-zone .pairs-row { display: none !important; }
-  .computer-zone { padding: .12rem .5rem; border-radius: 10px; }
+  .computer-zone { padding: .1rem .5rem; border-radius: 10px; }
   .computer-zone .zone-header { margin-bottom: 0; }
-  .computer-title { font-size: .85rem; }
-  .game-area { gap: 0.18rem; }
+  .game-area { gap: 0.12rem; }
 }
 @media (max-height: 580px) {
-  :root { --card-w: 44px; --card-h: 62px; }
-  .settings-bar { padding: .08rem .4rem; }
-  .scoreboard { padding: .03rem .4rem; }
-  .score-value { font-size: 1rem; }
-  .game-area { gap: 0.1rem; padding: .08rem .3rem; }
-  .middle-row { padding: 0.12rem 0.35rem; }
-  .message-text { font-size: .82rem; }
-  header { padding: .22rem .6rem; }
-  header h1 { font-size: 1rem; }
+  :root { --card-w: 38px; --card-h: 46px; }
+  .game-area { gap: 0.08rem; padding: .08rem .3rem; }
+  .middle-row { padding: 0.1rem 0.3rem; }
+  .computer-zone, .player-zone { padding: 0.1rem 0.4rem; }
+  .score-value { font-size: .88rem; }
 }
   </style>
 <link href="fonts.css?v=3" rel="stylesheet"></head>
