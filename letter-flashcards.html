@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -10,11 +10,11 @@ body {
   font-family: 'Comic Sans MS','Comic Neue','Comic Sans';
   background: url('icons/bg-default.png') center/cover no-repeat fixed, linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100dvh;
-  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px 16px;
+  padding: 8px 16px 16px;
   user-select: none;
 }
 header {
@@ -23,7 +23,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   flex-shrink: 0;
 }
 .back-btn {
@@ -50,44 +50,70 @@ header {
 }
 .mute-btn.muted { opacity: 0.45; }
 
-/* Flip card */
-.card-scene {
+/* ── Mode tabs ── */
+.mode-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  width: 100%;
+  max-width: 380px;
+  flex-shrink: 0;
+}
+.mode-tab {
   flex: 1;
-  min-height: 0;
-  width: min(300px, 85vw);
-  max-height: min(360px, calc(100dvh - 200px));
-  perspective: 900px;
+  background: rgba(255,255,255,0.18);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.85);
+  padding: 8px 4px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: bold;
   cursor: pointer;
-  margin: 4px 0 10px;
+  font-family: inherit;
+  transition: all 0.2s;
+  line-height: 1.2;
+}
+.mode-tab.active {
+  background: white;
+  color: #764ba2;
+  border-color: white;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+}
+.mode-tab:hover:not(.active) { background: rgba(255,255,255,0.3); }
+
+/* ── Card ── */
+.card-scene {
+  width: min(300px, 85vw);
+  height: min(360px, calc(100dvh - 270px));
+  min-height: 180px;
+  cursor: pointer;
+  margin: 0 0 12px;
+  flex-shrink: 0;
 }
 .card {
   width: 100%; height: 100%;
   position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.55s ease;
-  border-radius: 28px;
-}
-.card.flipped { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); }
-.card-face {
-  position: absolute;
-  width: 100%; height: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   border-radius: 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  transition: background 0.35s, transform 0.12s;
 }
-.card-front { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
-.card-back  { background: linear-gradient(135deg, #4ECDC4, #44CF6C); transform: rotateY(180deg); -webkit-transform: rotateY(180deg); }
+.card:active { transform: scale(0.97); }
+.card.upper-mode { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+.card.lower-mode { background: linear-gradient(135deg, #667eea, #9b59b6); }
+.card.sound-mode { background: linear-gradient(135deg, #4ECDC4, #44CF6C); }
+
 .case-label {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: rgba(255,255,255,0.85);
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 6px;
+  text-align: center;
+  padding: 0 12px;
 }
 .letter-big {
   font-family: 'Comic Sans MS','Comic Neue','Comic Sans';
@@ -101,13 +127,18 @@ header {
   color: rgba(255,255,255,0.65);
   margin-top: 16px;
 }
+#letter-pic {
+  width: 88%; height: 88%;
+  object-fit: contain;
+  border-radius: 16px;
+}
 
 /* Nav */
 .nav-row {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   flex-shrink: 0;
 }
 .nav-btn {
@@ -134,7 +165,6 @@ header {
   justify-content: center;
   gap: 4px;
   max-width: 340px;
-  margin-top: 0;
   flex-shrink: 0;
 }
 .dot {
@@ -152,73 +182,21 @@ header {
 .dot.active { background: white; color: #764ba2; font-weight: bold; }
 .dot:hover  { background: rgba(255,255,255,0.4); }
 
-/* Case toggle button */
-.case-toggle {
-  background: white;
-  border: none;
-  color: #764ba2;
-  padding: 10px 28px;
-  border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  font-family: inherit;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  margin-bottom: 6px;
-  flex-shrink: 0;
-  transition: transform 0.15s, box-shadow 0.15s, background 0.2s, color 0.2s;
-  letter-spacing: 0.5px;
-}
-.case-toggle:hover { transform: scale(1.06); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-.case-toggle:active { transform: scale(0.97); }
-.case-toggle.is-lower { background: #44CF6C; color: white; }
-
-/* Sound card toggle */
-.sound-toggle-btn {
-  background: rgba(255,255,255,0.25);
-  border: none;
-  color: white;
-  padding: 9px 24px;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  font-family: inherit;
-  margin-top: 4px;
-  flex-shrink: 0;
-  transition: background 0.2s, transform 0.1s;
-  letter-spacing: 0.3px;
-}
-.sound-toggle-btn:hover { background: rgba(255,255,255,0.38); transform: scale(1.05); }
-.sound-toggle-btn.open { background: white; color: #764ba2; }
-.sound-card-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 6px;
-  flex-shrink: 0;
-}
-
-/* ── MOBILE: site-nav overrides body to height:auto which collapses flex:1 card ── */
 @media(max-width:600px) {
-  /* Card-scene: explicit height instead of flex:1 so it doesn't collapse */
   .card-scene {
-    flex: none !important;
-    height: min(260px, 42dvh);
+    height: min(240px, 38dvh);
     min-height: 160px;
     width: min(260px, 80vw);
-    margin: 2px 0 8px;
+    margin-bottom: 8px;
   }
-  /* Bigger letter — 22vw is too small on mobile */
-  .letter-big { font-size: clamp(5rem, 30vw, 7rem); }
-  /* Tighten spacing so everything fits on small screens */
-  .case-toggle { padding: 8px 20px; font-size: 0.95rem; margin-bottom: 4px; }
+  .letter-big { font-size: clamp(4.5rem, 28vw, 7rem); }
+  .mode-tab { padding: 6px 2px; font-size: 0.7rem; }
   .nav-row { gap: 10px; margin-bottom: 4px; }
   .dots-row { gap: 3px; max-width: 300px; }
   .dot { width: 22px; height: 22px; font-size: 0.62rem; }
 }
 </style>
-  <link href="fonts.css?v=3" rel="stylesheet">
+<link href="fonts.css?v=3" rel="stylesheet">
 <script src="tts.js?v=11"></script>
 </head>
 <body>
@@ -229,23 +207,24 @@ header {
   <button class="mute-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
 </header>
 
-<div class="card-scene" onclick="flipCard()">
-  <div class="card" id="card">
-    <div class="card-face card-front">
-      <div class="case-label">Uppercase</div>
-      <div class="letter-big" id="upper-ltr">A</div>
-      <div class="tap-hint">Tap to see lowercase ↓</div>
-    </div>
-    <div class="card-face card-back">
-      <div class="case-label">Lowercase</div>
-      <div class="letter-big" id="lower-ltr">a</div>
-      <div class="tap-hint">Tap to see uppercase ↑</div>
-    </div>
+<!-- Mode selector: 3 tabs -->
+<div class="mode-tabs">
+  <button class="mode-tab active" id="tab-upper" onclick="setMode('upper')">🔠 Uppercase</button>
+  <button class="mode-tab" id="tab-lower" onclick="setMode('lower')">🔡 Lowercase</button>
+  <button class="mode-tab" id="tab-sound" onclick="setMode('sound')">🔤 Letter/Sound</button>
+</div>
+
+<!-- Card (single-face, content changes per mode) -->
+<div class="card-scene" onclick="cardTap()">
+  <div class="card upper-mode" id="card">
+    <div class="case-label" id="card-label">Uppercase</div>
+    <div class="letter-big" id="card-letter">A</div>
+    <img id="letter-pic" src="icons/letter-a.png" alt="A is for Apple" style="display:none">
+    <div class="tap-hint">Tap to hear</div>
   </div>
 </div>
 
-<button class="case-toggle" id="case-toggle-btn" onclick="flipCard()">🔡 Switch to Lowercase</button>
-
+<!-- Navigation -->
 <div class="nav-row">
   <button class="nav-btn" id="prev-btn" onclick="go(-1)" disabled>◀</button>
   <div class="counter" id="counter">1 / 26</div>
@@ -254,120 +233,126 @@ header {
 
 <div class="dots-row" id="dots-row"></div>
 
-<button class="sound-toggle-btn" id="sound-toggle-btn" onclick="toggleSoundCard()">🔊 Letter/Sound Card</button>
-<div id="sound-card" class="sound-card-section" style="display:none">
-  <img id="letter-pic" src="icons/letter-a.png" alt="A is for Apple" style="width:min(220px,72vw);height:min(220px,72vw);object-fit:contain;border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,0.18);">
-  <div id="sound-word" style="font-family:'Comic Sans MS','Comic Neue','Comic Sans';font-size:1.15rem;color:white;font-weight:bold;margin-top:6px;text-shadow:1px 2px 0 rgba(0,0,0,0.25);">A is for Apple</div>
-</div>
-
 <script>
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-let cur = 0, flipped = false, muted = false;
+const LETTER_WORDS = {A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G:'Goat',H:'Hat',I:'Igloo',J:'Jar',K:'Kite',L:'Lamp',M:'Mug',N:'Nest',O:'Octopus',P:'Pig',Q:'Queen',R:'Rainbow',S:'Sun',T:'Tree',U:'Umbrella',V:'Violin',W:'Watch',X:'Xylophone',Y:'Yo-yo',Z:'Zebra'};
+
+let cur = 0, mode = 'upper', muted = false;
 let voices = [], userInteracted = false, pendingSpeech = null;
 
-/* Speech */
+/* ── Speech ── */
 function loadVoices() { voices = speechSynthesis.getVoices(); }
-speechSynthesis.addEventListener("voiceschanged", loadVoices);
+speechSynthesis.addEventListener('voiceschanged', loadVoices);
 loadVoices();
 
 function getBestVoice(){const en=voices.filter(v=>/^en/i.test(v.lang));return en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\b(jenny|emma)\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/female/i.test(v.name))||en.find(v=>/\b(samantha|karen|moira|serena|victoria|tessa|fiona|kate|zoe|allison|ava|zira|eva|hazel|susan)\b/i.test(v.name))||en.find(v=>/natural|neural|online/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||voices[0];}
-function speak(txt, delay = 130) {
+
+function speak(txt, delay) {
   if (!window.speechSynthesis || muted) return;
+  delay = delay || 130;
   if (!userInteracted) { pendingSpeech = txt; return; }
   speechSynthesis.cancel();
-  setTimeout(() => {
-    const u = new SpeechSynthesisUtterance(txt);
+  setTimeout(function() {
+    var u = new SpeechSynthesisUtterance(txt);
     u.rate = 0.85; u.pitch = 1.0; u.volume = 1.0;
-    const v = getBestVoice(); if (v) u.voice = v;
+    var v = getBestVoice(); if (v) u.voice = v;
     speechSynthesis.speak(u);
   }, delay);
 }
 function onInteract() {
   if (userInteracted) return;
   userInteracted = true;
-  if (pendingSpeech && !muted) { const t = pendingSpeech; pendingSpeech = null; speak(t); }
+  if (pendingSpeech && !muted) { var t = pendingSpeech; pendingSpeech = null; speak(t); }
 }
 function toggleMute() {
   muted = !muted;
-  const b = document.getElementById('mute-btn');
+  var b = document.getElementById('mute-btn');
   b.textContent = muted ? '🔇' : '🔊';
   b.classList.toggle('muted', muted);
   if (muted) { speechSynthesis.cancel(); return; }
   onInteract();
-  if (pendingSpeech) { const t = pendingSpeech; pendingSpeech = null; speak(t); }
+  if (pendingSpeech) { var t = pendingSpeech; pendingSpeech = null; speak(t); }
 }
 
-/* Card */
-const LETTER_WORDS = {A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G:'Goat',H:'Hat',I:'Igloo',J:'Jar',K:'Kite',L:'Lamp',M:'Mug',N:'Nest',O:'Octopus',P:'Pig',Q:'Queen',R:'Rainbow',S:'Sun',T:'Tree',U:'Umbrella',V:'Violin',W:'Watch',X:'Xylophone',Y:'Yo-yo',Z:'Zebra'};
+/* ── Card display ── */
+function showLetter() {
+  var L = LETTERS[cur];
+  var card     = document.getElementById('card');
+  var label    = document.getElementById('card-label');
+  var letterEl = document.getElementById('card-letter');
+  var picEl    = document.getElementById('letter-pic');
 
-let soundCardOpen = false;
+  letterEl.style.display = '';
+  picEl.style.display = 'none';
 
-function showLetter(resetFlip) {
-  const L = LETTERS[cur];
-  document.getElementById('upper-ltr').textContent = L;
-  document.getElementById('lower-ltr').textContent = L.toLowerCase();
-  const pic = document.getElementById('letter-pic');
-  pic.src = 'icons/letter-' + L.toLowerCase() + '.png';
-  pic.alt = L + ' is for ' + LETTER_WORDS[L];
-  document.getElementById('sound-word').textContent = L + ' is for ' + LETTER_WORDS[L];
+  if (mode === 'upper') {
+    card.className = 'card upper-mode';
+    label.textContent = 'Uppercase';
+    letterEl.textContent = L;
+    speak('Capital ' + L + '... lowercase ' + L.toLowerCase());
+  } else if (mode === 'lower') {
+    card.className = 'card lower-mode';
+    label.textContent = 'Lowercase';
+    letterEl.textContent = L.toLowerCase();
+    speak('Lowercase ' + L.toLowerCase());
+  } else {
+    card.className = 'card sound-mode';
+    label.textContent = L + ' is for ' + LETTER_WORDS[L];
+    letterEl.style.display = 'none';
+    picEl.src = 'icons/letter-' + L.toLowerCase() + '.png';
+    picEl.alt = L + ' is for ' + LETTER_WORDS[L];
+    picEl.style.display = '';
+    speak(L + ' is for ' + LETTER_WORDS[L]);
+  }
+
   document.getElementById('counter').textContent = (cur + 1) + ' / 26';
   document.getElementById('prev-btn').disabled = cur === 0;
   document.getElementById('next-btn').disabled = cur === 25;
-  if (resetFlip) {
-    document.getElementById('card').classList.remove('flipped');
-    flipped = false;
-    const tb = document.getElementById('case-toggle-btn');
-    tb.textContent = '🔡 Switch to Lowercase';
-    tb.classList.remove('is-lower');
-  }
   updateDots();
-  speak(flipped ? 'lowercase ' + L.toLowerCase() + ', ' + L + ' is for ' + LETTER_WORDS[L] : 'Capital ' + L);
 }
-function flipCard() {
+
+function cardTap() {
   onInteract();
-  flipped = !flipped;
-  document.getElementById('card').classList.toggle('flipped', flipped);
-  const L = LETTERS[cur];
-  speak(flipped ? 'lowercase ' + L.toLowerCase() + ', ' + L + ' is for ' + LETTER_WORDS[L] : 'Capital ' + L);
-  const tb = document.getElementById('case-toggle-btn');
-  tb.textContent = flipped ? '🔠 Switch to Uppercase' : '🔡 Switch to Lowercase';
-  tb.classList.toggle('is-lower', flipped);
+  var L = LETTERS[cur];
+  if (mode === 'upper') speak('Capital ' + L + '... lowercase ' + L.toLowerCase());
+  else if (mode === 'lower') speak('Lowercase ' + L.toLowerCase());
+  else speak(L + ' is for ' + LETTER_WORDS[L]);
 }
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-tab').forEach(function(btn) {
+    btn.classList.toggle('active', btn.id === 'tab-' + m);
+  });
+  showLetter();
+}
+
 function go(dir) {
   onInteract();
   cur = Math.max(0, Math.min(25, cur + dir));
-  showLetter(false);
-}
-function toggleSoundCard() {
-  onInteract();
-  soundCardOpen = !soundCardOpen;
-  document.getElementById('sound-card').style.display = soundCardOpen ? 'flex' : 'none';
-  const btn = document.getElementById('sound-toggle-btn');
-  btn.classList.toggle('open', soundCardOpen);
-  if (soundCardOpen) {
-    const L = LETTERS[cur];
-    speak(L + ' is for ' + LETTER_WORDS[L]);
-  }
+  showLetter();
 }
 
-/* Dots */
+/* ── Alphabet dots ── */
 function buildDots() {
-  const row = document.getElementById('dots-row');
-  LETTERS.forEach((L, i) => {
-    const d = document.createElement('div');
+  var row = document.getElementById('dots-row');
+  LETTERS.forEach(function(L, i) {
+    var d = document.createElement('div');
     d.className = 'dot' + (i === 0 ? ' active' : '');
     d.textContent = L;
-    d.onclick = (e) => { e.stopPropagation(); onInteract(); cur = i; showLetter(false); };
+    d.onclick = function(e) { e.stopPropagation(); onInteract(); cur = i; showLetter(); };
     row.appendChild(d);
   });
 }
 function updateDots() {
-  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  document.querySelectorAll('.dot').forEach(function(d, i) {
+    d.classList.toggle('active', i === cur);
+  });
 }
 
 buildDots();
-showLetter(true);
+showLetter();
 </script>
-  <script src="site-nav.js?v=5"></script>
+<script src="site-nav.js?v=5"></script>
 </body>
 </html>

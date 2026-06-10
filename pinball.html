@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -41,7 +41,7 @@
     /* ── MACHINE CABINET ── */
     /* Narrower than viewport so arcade bg always shows on sides */
     .machine-wrap{width:92%; max-width:400px; flex:1; min-height:0; display:flex; flex-direction:column;
-                  align-items:center; padding:0 0 .1rem; overflow:hidden; position:relative; z-index:1; justify-content:flex-start;}
+                  align-items:center; padding:0 0 .1rem; overflow-x:hidden; position:relative; z-index:1; justify-content:flex-start;}
     /* Scale down the entire machine cabinet on short screens */
     @media (max-height: 680px) {
       .machine-outer { transform: scale(0.88); transform-origin: top center; margin-top:.2rem; }
@@ -100,8 +100,9 @@
     @keyframes launch-bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
     .hidden{display:none !important;}
     .answer-btns{
-      display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.3rem;
-      width:100%;max-width:392px;
+      position:absolute;bottom:8px;left:8px;right:8px;
+      display:grid;grid-template-columns:1fr 1fr;gap:.4rem;
+      z-index:20;
     }
     .btn-ans{
       font-family:'Comic Sans MS','Comic Neue';font-size:1.1rem;font-weight:700;
@@ -164,12 +165,12 @@
     <div class="neon-left"></div>
     <div class="neon-right"></div>
     <canvas id="gc" width="380" height="440"></canvas>
-  </div>
-  <div class="answer-btns" id="answerBtns" style="display:none">
-    <button class="btn-ans" id="btnAns0" disabled>?</button>
-    <button class="btn-ans" id="btnAns1" disabled>?</button>
-    <button class="btn-ans" id="btnAns2" disabled>?</button>
-    <button class="btn-ans" id="btnAns3" disabled>?</button>
+    <div class="answer-btns" id="answerBtns" style="display:none">
+      <button class="btn-ans" id="btnAns0" disabled>?</button>
+      <button class="btn-ans" id="btnAns1" disabled>?</button>
+      <button class="btn-ans" id="btnAns2" disabled>?</button>
+      <button class="btn-ans" id="btnAns3" disabled>?</button>
+    </div>
   </div>
   <button class="btn-launch hidden" id="btnLaunch">🚀 Launch Ball!</button>
 </div>
