@@ -2205,48 +2205,36 @@
     overlay.id = 'gate-overlay';
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('aria-label', 'Access code required');
-    const now = new Date();
-    const d   = now.getDay();
-    const h   = now.getHours();
-    const isWeekend = d === 0 || d === 6;
-
-    let timeMsg;
-    if (isWeekend) {
-      timeMsg = `Free access runs <strong>Monday–Friday, 7:00 AM – 4:00 PM</strong>`;
-    } else if (h < HUB_FREE_START) {
-      timeMsg = `School hours start at <strong>7:00 AM</strong> today`;
-    } else {
-      timeMsg = `School hours are <strong>Mon–Fri, 7:00 AM – 4:00 PM</strong>`;
-    }
-
+    overlay.setAttribute('aria-label', 'Member login');
     overlay.innerHTML = `
-      <div class="gate-box">
-        <span class="gate-icon">🔒</span>
-        <h2>Code Required</h2>
-        <p>It's outside school hours.<br>Enter your class code or member code!</p>
-        <div class="gate-code-row">
-          <input id="gate-input" type="text" maxlength="12" placeholder="FSR- or MBR-XXXXXX"
-            autocomplete="off" autocorrect="off" spellcheck="false"
-            oninput="this.value=this.value.toUpperCase()"
-            onkeydown="if(event.key==='Enter')gateSubmit()"
-            autofocus>
-          <button id="gate-submit" onclick="gateSubmit()">→</button>
-        </div>
-        <div class="gate-error" id="gate-error">❌ Code not recognized. Ask your teacher!</div>
-        <label style="display:flex;align-items:center;gap:0.5rem;font-family:'Comic Sans MS','Comic Neue';font-size:0.82rem;color:#888;margin-bottom:0.7rem;cursor:pointer;">
-          <input type="checkbox" id="gate-remember" style="width:16px;height:16px;cursor:pointer;"> Remember my code today
-        </label>
-        <a href="students.html" style="display:block;margin-bottom:0.3rem;font-family: 'Comic Sans MS', 'Comic Neue';font-size:1rem;color:#6B48FF;">
-          📅 Student class code page →
+      <div style="background:#fff;border-radius:20px;padding:2rem 1.8rem;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.35);text-align:center;font-family:'Comic Sans MS','Comic Neue';">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">⭐</div>
+        <h2 style="font-size:1.5rem;color:#2C3E50;margin-bottom:0.3rem;">Star Member Login</h2>
+        <p style="color:#666;font-size:0.9rem;margin-bottom:1.3rem;">Enter your First Step Reading account email and password</p>
+        <input id="mbr-email" type="email" placeholder="Email address"
+          style="width:100%;padding:0.7rem 1rem;border:2px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:1rem;margin-bottom:0.7rem;outline:none;box-sizing:border-box;"
+          onkeydown="if(event.key==='Enter')memberLoginSubmit()"
+          onfocus="this.style.borderColor='#6B48FF'" onblur="this.style.borderColor='#e0e0e0'">
+        <input id="mbr-password" type="password" placeholder="Password"
+          style="width:100%;padding:0.7rem 1rem;border:2px solid #e0e0e0;border-radius:10px;font-family:inherit;font-size:1rem;margin-bottom:0.3rem;outline:none;box-sizing:border-box;"
+          onkeydown="if(event.key==='Enter')memberLoginSubmit()"
+          onfocus="this.style.borderColor='#6B48FF'" onblur="this.style.borderColor='#e0e0e0'">
+        <div id="mbr-error" style="color:#e74c3c;font-size:0.85rem;min-height:1.2rem;margin-bottom:0.7rem;"></div>
+        <button id="mbr-btn" onclick="memberLoginSubmit()"
+          style="width:100%;padding:0.8rem;background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:1.05rem;font-weight:800;cursor:pointer;margin-bottom:0.8rem;">
+          🔐 Sign In
+        </button>
+        <a href="https://www.firststepreading.com/my-account/lost-password/" target="_blank"
+          style="display:block;font-size:0.82rem;color:#888;margin-bottom:1rem;text-decoration:none;">
+          Forgot your password?
         </a>
-        <a href="#" onclick="event.preventDefault();document.getElementById('gate-overlay').remove();showMemberLoginOverlay();" style="display:block;margin-bottom:0.6rem;font-family: 'Comic Sans MS', 'Comic Neue';font-size:1rem;color:#C07000;">
-          ⭐ Member login (24/7 access) →
+        <a href="students.html"
+          style="display:block;padding:0.7rem;background:linear-gradient(135deg,#FF6B6B,#FF8E53);color:#fff;border-radius:12px;font-family:inherit;font-size:1rem;font-weight:800;text-decoration:none;">
+          📅 Student Class Code Page →
         </a>
-        <div class="gate-hours">💡 ${timeMsg} — free for everyone!</div>
       </div>`;
     document.body.appendChild(overlay);
-    document.getElementById('gate-input').focus();
+    document.getElementById('mbr-email').focus();
   }
 
   // ── MEMBER LOGIN OVERLAY (email + password) ──
@@ -2280,9 +2268,9 @@
           style="display:block;font-size:0.82rem;color:#888;margin-bottom:0.8rem;text-decoration:none;">
           Forgot your password?
         </a>
-        <button onclick="document.getElementById('member-login-overlay').remove();showGateOverlay();"
+        <button onclick="document.getElementById('member-login-overlay').remove();"
           style="background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer;font-family:inherit;">
-          ← Back to code entry
+          ✕ Close
         </button>
       </div>`;
     document.body.appendChild(overlay);
@@ -2311,7 +2299,8 @@
       if (data.success) {
         sessionStorage.setItem('fsr_access_type', 'member');
         sessionStorage.setItem('fsr_member_name', data.name || 'Member');
-        document.getElementById('member-login-overlay').remove();
+        const mbrOv = document.getElementById('member-login-overlay');
+        if (mbrOv) mbrOv.remove();
         const gate = document.getElementById('gate-overlay');
         if (gate) gate.remove();
         renderAccessBar();
