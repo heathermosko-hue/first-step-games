@@ -85,15 +85,24 @@ body{font-family:"Comic Sans MS","Comic Sans",cursive;background:#fff;color:#000
 .print-btn{font-family:"Comic Sans MS",cursive;font-size:13pt;font-weight:700;padding:11px 26px;border-radius:30px;background:#1a237e;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.24)}
 .print-btn:hover{background:#283593}
 
+/* ── Back button ── */
+.back-bar{position:fixed;top:16px;left:16px;z-index:100}
+.back-btn{font-family:"Comic Sans MS",cursive;font-size:12pt;font-weight:700;padding:9px 20px;border-radius:30px;background:#6B48FF;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.24);text-decoration:none;display:inline-block}
+.back-btn:hover{background:#5a3de0}
+
 @page{size:8.5in 11in;margin:0}
 @media print{
   .page{page-break-after:always}
   .print-bar{display:none}
+  .back-bar{display:none}
 }
 </style>
 </head>
 <body>
 <div id="hw-root"></div>
+<div class="back-bar">
+  <a class="back-btn" href="hub.html">&#8592; Back</a>
+</div>
 <div class="print-bar">
   <button class="print-btn" onclick="window.print()">&#128424; Print / Save as PDF</button>
 </div>
