@@ -7,7 +7,7 @@
   <style>
     :root { --bg:#F0FFF8; --text:#2C3E50; --green:#27AE60; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); min-height:100dvh;overflow-x:hidden; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
     header { background:linear-gradient(135deg,#27AE60 0%,#2ECC71 100%); padding:.5rem 1rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
@@ -20,7 +20,7 @@
     .btn-header.muted { background:rgba(255,80,80,.45); }
 
     /* ── MAIN ── */
-    main { flex:1; min-height:0; overflow:hidden; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:.4rem .8rem .5rem; gap:.55rem; }
+    main { flex:1; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:.4rem .8rem .5rem; gap:.55rem; }
 
     /* ── LETTER INFO ── */
     .letter-info-bar {
@@ -57,7 +57,7 @@
       width:min(190px,43vw);
       aspect-ratio:1;
       border-radius:18px;
-      overflow:hidden;
+      overflow-x:hidden;
       background:white;
       border:3px solid #B2F0D4;
       box-shadow:0 4px 18px rgba(39,174,96,.1);
@@ -110,32 +110,28 @@
     .btn-clear:hover { background:#B2F0D4; }
 
     /* ── NAVIGATION ── */
-    .nav-row { display:flex; align-items:center; gap:1.4rem; justify-content:center; margin-top:.2rem; }
+    .nav-row { display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; justify-content:center; }
 
     .btn-nav {
       background:linear-gradient(135deg,#27AE60,#2ECC71);
       color:white;
-      font-size:2rem;
-      width:64px;
-      height:64px;
+      font-family: 'Comic Sans MS', 'Comic Neue';
+      font-size:1.1rem;
+      padding:11px 28px;
       border:none;
-      border-radius:50%;
+      border-radius:999px;
       cursor:pointer;
-      box-shadow:0 5px 18px rgba(39,174,96,.38);
-      transition:transform .15s, box-shadow .15s;
-      display:flex; align-items:center; justify-content:center;
-      line-height:1;
-      flex-shrink:0;
+      box-shadow:0 4px 14px rgba(39,174,96,.32);
+      transition:transform .15s;
     }
-    .btn-nav:hover:not(:disabled) { transform:translateY(-3px); box-shadow:0 8px 22px rgba(39,174,96,.45); }
-    .btn-nav:active:not(:disabled) { transform:scale(.93); }
-    .btn-nav:disabled { opacity:0.22; cursor:default; box-shadow:none; }
+    .btn-nav:hover { transform:translateY(-2px); }
+    .btn-nav:active { transform:scale(.96); }
 
     .letter-progress {
       font-family: 'Comic Sans MS', 'Comic Neue';
       font-size:1rem;
       color:#aaa;
-      min-width:90px;
+      min-width:110px;
       text-align:center;
     }
 
@@ -198,9 +194,9 @@
   </div>
 
   <div class="nav-row">
-    <button class="btn-nav" id="btnPrev" disabled>&#8592;</button>
+    <button class="btn-nav" id="btnPrev">&#8592; Prev</button>
     <div class="letter-progress" id="letterProgress">Letter 1 of 26</div>
-    <button class="btn-nav" id="btnNext">&#8594;</button>
+    <button class="btn-nav" id="btnNext">Next &#8594;</button>
   </div>
 
   <div class="tip-text">Draw over the ghost letter with your finger or mouse!</div>
@@ -419,8 +415,6 @@ function showLetter(idx) {
   document.getElementById('bigLetters').textContent     = `${L} / ${L.toLowerCase()}`;
   document.getElementById('wordLine').textContent       = `${EMOJIS[L]} ${L} is for ${WORDS[L]}`;
   document.getElementById('letterProgress').textContent = `Letter ${idx + 1} of 26`;
-  document.getElementById('btnPrev').disabled = idx === 0;
-  document.getElementById('btnNext').disabled = idx === 25;
   if (upperDraw) upperDraw.clear();
   if (lowerDraw) lowerDraw.clear();
   renderGuides(L,               document.getElementById('upperSvg'), 'u');
@@ -438,13 +432,11 @@ document.getElementById('btnMute').addEventListener('click', () => {
 });
 
 document.getElementById('btnPrev').addEventListener('click', () => {
-  if (currentIdx <= 0) return;
-  currentIdx--;
+  currentIdx = (currentIdx - 1 + 26) % 26;
   showLetter(currentIdx);
 });
 document.getElementById('btnNext').addEventListener('click', () => {
-  if (currentIdx >= 25) return;
-  currentIdx++;
+  currentIdx = (currentIdx + 1) % 26;
   showLetter(currentIdx);
 });
 document.getElementById('btnClearUpper').addEventListener('click', () => { if (upperDraw) upperDraw.clear(); });
@@ -453,9 +445,9 @@ document.getElementById('btnClearLower').addEventListener('click', () => { if (l
 /* ── KEYBOARD NAVIGATION ── */
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-    if (currentIdx < 25) { currentIdx++; showLetter(currentIdx); }
+    currentIdx = (currentIdx + 1) % 26; showLetter(currentIdx);
   } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-    if (currentIdx > 0) { currentIdx--; showLetter(currentIdx); }
+    currentIdx = (currentIdx - 1 + 26) % 26; showLetter(currentIdx);
   }
 });
 
@@ -463,7 +455,6 @@ document.addEventListener('keydown', e => {
 window.addEventListener('load', () => {
   upperDraw = makeDrawable(document.getElementById('upperCanvas'), '#2ECC71');
   lowerDraw = makeDrawable(document.getElementById('lowerCanvas'), '#E67E22');
-  currentIdx = 0;
   showLetter(0);
 });
 </script>

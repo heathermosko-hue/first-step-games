@@ -1,109 +1,102 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Online Homework</title>
+<title>Homework</title>
+<link href="fonts.css?v=3" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"Comic Sans MS","Comic Sans";background:linear-gradient(160deg,#e8f5e9 0%,#e3f2fd 100%);min-height:100vh;color:#000}
-.nav{background:#1a237e;color:#fff;padding:8px 14px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;z-index:10}
-.nav-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.nav-bot{display:flex;align-items:center;gap:10px}
-.nav label{font-size:.85rem;font-weight:bold;white-space:nowrap}
-.nav select{font-family:"Comic Sans MS";font-size:.85rem;padding:4px 8px;border-radius:6px;border:none;cursor:pointer;flex:1;min-width:100px;max-width:230px}
-.nav-bot a{color:#aacfff;font-size:.85rem;margin-right:auto;text-decoration:none}
-#content{max-width:640px;margin:0 auto;padding:14px 12px 40px}
-/* Chapter header */
-.ch-header{background:#fff;border-radius:18px;padding:14px 18px;margin-bottom:16px;box-shadow:0 3px 14px #0001;display:flex;align-items:center;gap:14px;border:3px solid #90caf9}
-.ch-em{font-size:3rem;flex-shrink:0}
-.ch-sub{font-size:.7rem;color:#666;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.ch-title{font-size:1.3rem;font-weight:900}
-.ch-book{font-size:.75rem;color:#555;margin-top:2px}
-/* Cards */
-.card{background:#fff;border-radius:18px;padding:16px 18px;margin-bottom:16px;box-shadow:0 3px 14px #0001}
-.card-hdr{font-size:1rem;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:7px}
-/* Story */
-.story-card{border:2.5px solid #81c784}
-.story-card .card-hdr{color:#2e7d32}
-.story-text{font-size:1rem;line-height:1.75;margin-bottom:3px}
-/* Comprehension */
-.comp-card{border:2.5px solid #ffd54f}
-.comp-card .card-hdr{color:#e65100}
-.q-block{margin-bottom:12px;padding:10px 12px;border:1.5px solid #ffe082;border-radius:12px;background:#fffde7}
-.q-text{font-size:1rem;line-height:1.5;margin-bottom:9px}
-.blank{display:inline-block;min-width:65px;border-bottom:2.5px solid #000;vertical-align:bottom;height:18px}
-.choices{display:flex;gap:9px;flex-wrap:wrap}
-.cbtn{font-family:"Comic Sans MS";font-size:1.05rem;font-weight:900;padding:9px 22px;border:3px solid #444;border-radius:30px;cursor:pointer;background:#fff;transition:all .18s;min-width:76px}
-.cbtn:hover:not([disabled]){background:#f5f5f5;transform:scale(1.05)}
-.cbtn.correct{background:#c8e6c9!important;border-color:#2e7d32!important;color:#1b5e20}
-.cbtn.wrong{background:#ffcdd2!important;border-color:#c62828!important;color:#b71c1c}
-.cbtn[disabled]{cursor:default}
-.q-msg{font-size:.92rem;font-weight:900;margin-top:7px;min-height:22px}
-.comp-score{text-align:center;font-size:1.05rem;font-weight:900;margin-top:10px;padding:9px;border-radius:12px;background:#f1f8e9;border:2px solid #aed581}
-/* Flashcards */
-.sw-card{border:2.5px solid #ce93d8}
-.sw-card .card-hdr{color:#6a1b9a}
-.wf-card{border:2.5px solid #81d4fa}
-.wf-card .card-hdr{color:#01579b}
-.flash-word{font-size:3.8rem;font-weight:900;text-align:center;padding:20px 12px 14px;letter-spacing:.04em;min-height:90px;display:flex;align-items:center;justify-content:center}
-.flash-ctrl{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
-.farr{font-family:"Comic Sans MS";font-size:1.3rem;width:46px;height:46px;border-radius:50%;border:2.5px solid #000;background:#fff;cursor:pointer;font-weight:900;transition:transform .1s;display:flex;align-items:center;justify-content:center}
-.farr:active{transform:scale(.88)}
-.farr:disabled{opacity:.3;cursor:default}
-.fctr{font-size:.9rem;font-weight:bold;color:#666;min-width:60px;text-align:center}
-.fsay{font-family:"Comic Sans MS";font-size:.95rem;font-weight:900;padding:8px 22px;border:2.5px solid #000;border-radius:24px;cursor:pointer;display:block;margin:0 auto;transition:transform .1s}
-.fsay:active{transform:scale(.95)}
-.sw-card .fsay{background:#ede7f6}
-.wf-card .fsay{background:#e1f5fe}
-/* Find It */
-.find-card{border:2.5px solid #ffb74d}
-.find-card .card-hdr{color:#bf360c}
-.find-key{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:10px;font-size:.87rem;font-weight:bold}
-.key-bub{border:2.5px solid #000;border-radius:14px;padding:2px 10px;font-size:.87rem;font-weight:900;background:#fff8e1}
-.find-score{font-size:.92rem;font-weight:900;margin-bottom:10px;color:#bf360c}
-.find-grid{display:flex;flex-wrap:wrap;gap:8px}
-.fbub{min-width:70px;height:44px;padding:0 10px;border:2.5px solid #000;border-radius:25px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.92rem;cursor:pointer;user-select:none;transition:all .2s;background:#fff;font-family:"Comic Sans MS"}
-.fbub:hover:not(.found){background:#fff9c4;transform:scale(1.04)}
-.fbub.found{background:#c8e6c9;border-color:#2e7d32;color:#1b5e20;transform:scale(1.06)}
-.fbub.nope{animation:shake .32s}
-.find-done{text-align:center;font-size:1.1rem;font-weight:900;color:#2e7d32;margin-top:10px;min-height:28px}
-/* WF Find It */
-.find-wf-card{border:2.5px solid #a5d6a7}
-.find-wf-card .card-hdr{color:#1b5e20}
-.find-wf-score{font-size:.92rem;font-weight:900;margin-bottom:10px;color:#1b5e20}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}60%{transform:translateX(6px)}}
-/* Finish button */
-.finish-wrap{text-align:center;margin:4px 0 24px}
-.finish-btn{font-family:"Comic Sans MS";font-size:1.35rem;font-weight:900;padding:16px 0;border-radius:30px;border:3px solid #bbb;background:#e0e0e0;color:#aaa;cursor:default;transition:all .35s;width:100%;letter-spacing:.02em}
-.finish-btn.ready{background:#66bb6a;border-color:#2e7d32;color:#fff;cursor:pointer;animation:glow 1.4s ease-in-out infinite alternate}
-@keyframes glow{from{box-shadow:0 0 8px rgba(102,187,106,.5)}to{box-shadow:0 0 28px rgba(102,187,106,1),0 0 48px rgba(102,187,106,.35)}}
-.finish-msg{margin-top:14px;font-size:.97rem;font-weight:bold;min-height:24px}
-.finish-msg.todo{color:#c62828;text-align:left;line-height:1.8}
-.finish-msg.done{color:#2e7d32;font-size:1.25rem;text-align:center}
+body{font-family:"Comic Sans MS","Comic Sans",cursive;background:#fff;color:#000}
+
+/* ── Page shell ── */
+.page{
+  width:8.5in;
+  min-height:11in;
+  padding:.55in .72in;
+  position:relative;
+  page-break-after:always;
+}
+.page:last-child{page-break-after:auto}
+
+/* ── Page 1 header ── */
+.hw-hdr{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:10px;border-bottom:3px solid #90caf9}
+.hw-em{font-size:2.4rem;line-height:1;flex-shrink:0}
+.hw-title{font-size:16pt;font-weight:900;line-height:1.15}
+.hw-sub{font-size:9pt;color:#555;margin-top:3px}
+
+/* ── Name / Date ── */
+.name-row{display:flex;gap:40px;margin-bottom:14px}
+.name-box{flex:1}
+.name-box label{font-size:8pt;color:#777;display:block;margin-bottom:2px}
+.name-box .line{border-bottom:2px solid #444;height:18px}
+
+/* ── Story ── */
+.story-box{border:2.5px solid #81c784;border-radius:10px;padding:10px 14px;margin-bottom:13px;background:#f9fff9}
+.sec-title{font-size:10.5pt;font-weight:900;margin-bottom:7px}
+.story-box .sec-title{color:#2e7d32}
+.story-p{font-size:11pt;line-height:1.62;margin-bottom:2px}
+
+/* ── Comprehension ── */
+.comp-box{margin-bottom:12px}
+.comp-box .sec-title{color:#e65100}
+.q-wrap{margin-bottom:11px}
+.q-text{font-size:10.5pt;font-weight:700;line-height:1.5;margin-bottom:6px}
+.blank{display:inline-block;width:84px;border-bottom:2.5px solid #000;vertical-align:bottom}
+.choices{display:flex;gap:14px;padding-left:8px}
+.choice{border:2.5px solid #999;border-radius:28px;padding:4px 18px;font-size:11pt;font-weight:900;color:#1a1a2e;background:#fafafa;min-width:74px;text-align:center}
+
+/* ── Find It ── */
+.find-box{border:2.5px solid #ffb74d;border-radius:10px;padding:9px 14px;background:#fffde7}
+.find-box .sec-title{color:#bf360c;margin-bottom:6px}
+.find-key-row{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:8px;font-size:8.5pt;font-weight:700;color:#555}
+.fkw{border:2px solid #bf360c;border-radius:12px;padding:2px 8px;font-size:8.5pt;font-weight:900;background:#fff8e1;color:#bf360c}
+.word-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 auto}
+.wbub{border:2.5px solid #bbb;border-radius:22px;padding:4px 16px;font-size:10.5pt;font-weight:900;text-align:center;font-family:"Comic Sans MS",cursive;min-width:62px;background:#fff}
+
+/* ── WF Find It ── */
+.find-wf-box{border:2.5px solid #a5d6a7;border-radius:10px;padding:9px 14px;margin-top:10px;background:#f1fff4}
+.find-wf-box .sec-title{color:#1b5e20;margin-bottom:6px}
+.fkwf{border:2px solid #2e7d32;border-radius:12px;padding:2px 8px;font-size:8.5pt;font-weight:900;background:#e8f5e9;color:#2e7d32}
+
+/* ── Flashcard page ── */
+.fc-page-inner{max-width:7in;margin:0 auto}
+.fc-pg-hdr{text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid #ddd}
+.fc-pg-hdr h1{font-size:17pt;margin-bottom:4px}
+.fc-pg-hdr .fc-story{font-size:10pt;color:#555}
+.fc-pg-hdr .fc-tip{font-size:8.5pt;color:#aaa;margin-top:3px}
+.fc-sec-lbl{font-size:10.5pt;font-weight:800;margin:12px 0 5px 0;text-align:left}
+.sw-lbl{color:#1565c0}
+.wf-lbl{color:#2e7d32}
+.fc-table{width:100%;border-collapse:collapse;border:none;table-layout:fixed}
+.fc-table td{width:33.33%;padding:0;border:none;vertical-align:top}
+.fc-card{margin:4px;border:2.5px dashed;border-radius:10px;padding:14px 6px 10px;text-align:center;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.fc-type{font-size:6.5pt;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.fc-word{font-size:20pt;font-weight:900}
+.sw-fc{border-color:#1976d2;background:#f0f4ff}
+.sw-fc .fc-type{color:#1976d2}
+.wf-fc{border-color:#388e3c;background:#f0fff4}
+.wf-fc .fc-type{color:#388e3c}
+.cut-line{border-top:1.5px dashed #ccc;margin:0 4px;text-align:right}
+.cut-icon{font-size:9pt;color:#ccc;padding-right:6px}
+
+/* ── Print button ── */
+.print-bar{position:fixed;bottom:24px;right:24px;z-index:100}
+.print-btn{font-family:"Comic Sans MS",cursive;font-size:13pt;font-weight:700;padding:11px 26px;border-radius:30px;background:#1a237e;color:#fff;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.24)}
+.print-btn:hover{background:#283593}
+
+@page{size:8.5in 11in;margin:0}
+@media print{
+  .page{page-break-after:always}
+  .print-bar{display:none}
+}
 </style>
-  <link href="fonts.css?v=3" rel="stylesheet">
-<script src="tts.js?v=11"></script>
 </head>
 <body>
-<div class="nav">
-  <div class="nav-top">
-    <label>Book:</label>
-    <select id="sel-book" onchange="onBookChange()">
-      <option value="1">Book 1: ABCs &amp; Short Vowels</option>
-      <option value="2">Book 2: Long Vowels &amp; Blends</option>
-      <option value="3">Book 3: Consonants &amp; Exceptions</option>
-    </select>
-    <label>Chapter:</label>
-    <select id="sel-ch" onchange="onChChange()"></select>
-  </div>
-  <div class="nav-bot">
-    <a href="hub.html" id="back-link">&#8592; Back</a>
-    <button onclick="printHW()" style="font-family:'Comic Sans MS';font-size:.82rem;font-weight:700;padding:5px 14px;border-radius:999px;border:2px solid #fff;background:rgba(255,255,255,.22);color:#fff;cursor:pointer;white-space:nowrap;">🖨️ Print HW</button>
-  </div>
-  <script>(function(){var p=new URLSearchParams(location.search),b=p.get('book'),c=p.get('ch');if(b&&c){var el=document.getElementById('back-link');el.href='book'+b+'.html?page='+c;el.textContent='← Back to Book '+b;}})()</script>
+<div id="hw-root"></div>
+<div class="print-bar">
+  <button class="print-btn" onclick="window.print()">&#128424; Print / Save as PDF</button>
 </div>
-<div id="content"></div>
 <script>
 const CH={
 "1-2":{t:"Mat and Pat",bk:"Book 1: ABCs & Short Vowels",ch:"Short Vowel A",em:"&#x1F400;",
@@ -428,265 +421,180 @@ const CH={
   q:[["Pat sees a _____ bird.","girl","corn"],["Pat has corn or _____ for the bird.","seed","fur"],["Pat runs to the _____ and goes far.","car","far"]]}
 };
 
-// ── State ──────────────────────────────────────────────
-let swIdx=0,wfIdx=0,swWords=[],wfWords=[],qAnswered=[],findSWset=new Set(),findFound=new Set(),findWFset=new Set(),findWFFound=new Set();
-let swDone=false,wfDone=false;
-// ── Voices ─────────────────────────────────────────────
-let voices=[];
-function speak(w){if(window.speechSynthesis){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(w).trim());u.lang='en-US';u.rate=0.88;window.speechSynthesis.speak(u);}}
-// ── Shuffle ────────────────────────────────────────────
-function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
-// ── Navigation helpers ─────────────────────────────────
-function getBookChs(bk){return Object.keys(CH).filter(k=>k.startsWith(bk+'-')).sort((a,b)=>parseInt(a.split('-')[1])-parseInt(b.split('-')[1]));}
-function populateCh(bk){const sel=document.getElementById('sel-ch');const chs=getBookChs(bk);sel.innerHTML=chs.map(k=>`<option value="${k}">${CH[k].ch}: ${CH[k].t}</option>`).join('');return chs[0]||null;}
-function onBookChange(){const bk=document.getElementById('sel-book').value;const first=populateCh(bk);if(first)render(first);}
-function onChChange(){render(document.getElementById('sel-ch').value);}
+/* ── Shuffle ── */
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
 
-// ── Render ─────────────────────────────────────────────
-function render(key){
-  const d=CH[key];
-  if(!d){document.getElementById('content').innerHTML='<p style="padding:30px">Not found.</p>';return;}
-  swWords=[...d.sw];swIdx=0;
-  wfWords=[...d.w];wfIdx=0;
-  qAnswered=new Array(d.q.length).fill(false);
-  findSWset=new Set(d.sw);
-  findFound=new Set();
-  findWFset=new Set(d.w);
-  findWFFound=new Set();
-  swDone=swWords.length<=1;
-  wfDone=wfWords.length<=1;
+/* ── Flashcard table builder ── */
+function makeCards(words, cls, typeLbl) {
+  var padded = words.slice();
+  while (padded.length % 3 !== 0) padded.push('');
+  var rows = '';
+  for (var i = 0; i < padded.length; i += 3) {
+    if (i > 0) {
+      rows += '<tr><td colspan="3"><div class="cut-line"><span class="cut-icon">&#9986;</span></div></td></tr>';
+    }
+    var cells = '';
+    for (var j = 0; j < 3; j++) {
+      var w = padded[i + j];
+      cells += w
+        ? '<td><div class="fc-card ' + cls + '"><span class="fc-type">' + typeLbl + '</span><span class="fc-word">' + w + '</span></div></td>'
+        : '<td></td>';
+    }
+    rows += '<tr>' + cells + '</tr>';
+  }
+  return '<table class="fc-table">' + rows + '</table>';
+}
 
-  // Build comp questions (shuffle answer order)
-  const qBlocks=d.q.map(([q,a,b],i)=>{
-    const choices=shuffle([[a,true],[b,false]]);
-    const btns=choices.map(([word,cor])=>`<button class="cbtn" data-correct="${cor}" onclick="checkAns(this,${i})">${word}</button>`).join('');
-    return `<div class="q-block" id="qb${i}"><div class="q-text">${q.replace('_____','<span class="blank"></span>')}</div><div class="choices">${btns}</div><div class="q-msg" id="qm${i}"></div></div>`;
+/* ── Find-It grid builder ── */
+var DISTRACTORS = ['bat','cat','cup','dog','fun','hat','hot','log','map','nap',
+                   'pan','pet','rat','run','sit','top','wig','red','big','hop',
+                   'set','fox','mud','jog','rim','get','put','him','her','she'];
+
+function makeFindGrid(swWords) {
+  var dist = DISTRACTORS.filter(function(x){ return swWords.indexOf(x) < 0; });
+  var need = Math.max(0, 15 - swWords.length);
+  var pool = shuffle(swWords.concat(shuffle(dist).slice(0, need)));
+
+  var keyBubs = swWords.map(function(w){
+    return '<span class="fkw">' + w + '</span>';
   }).join('');
 
-  // Build SW Find It bubbles
-  const dist=['bat','cat','cup','dog','fun','hat','hot','log','map','nap','pan','pet','rat','run','sit','top','wig','red','big','hop','set','fox','mud','jog','rim'].filter(x=>!d.sw.includes(x));
-  const need=Math.max(0,15-d.sw.length);
-  const bubArr=shuffle([...d.sw,...shuffle(dist).slice(0,need)]);
-  const bubs=bubArr.map(w=>`<div class="fbub" onclick="clickBub(this,'${w}')">${w}</div>`).join('');
-  const keyBubs=d.sw.map(w=>`<span class="key-bub">${w}</span>`).join('');
-  // Build WF Find It bubbles
-  const wfDist=['make','came','game','hope','home','like','time','pine','note','cube','lake','fame','ride','pole','tube','rule','dune','fine','mine','mole'].filter(x=>!d.w.includes(x));
-  const wfNeed=Math.max(0,15-d.w.length);
-  const wfBubArr=shuffle([...d.w,...shuffle(wfDist).slice(0,wfNeed)]);
-  const wfBubs=wfBubArr.map(w=>`<div class="fbub" onclick="clickWFBub(this,'${w}')">${w}</div>`).join('');
-  const wfKeyBubs=d.w.map(w=>`<span class="key-bub">${w}</span>`).join('');
+  var bubbles = pool.map(function(w){
+    return '<div class="wbub">' + w + '</div>';
+  }).join('');
 
-  document.getElementById('content').innerHTML=`
-    <div class="ch-header">
-      <div class="ch-em">${d.em}</div>
-      <div><div class="ch-sub">${d.bk}</div><div class="ch-title">${d.t}</div><div class="ch-book">${d.ch}</div></div>
-    </div>
-
-    <div class="card story-card">
-      <div class="card-hdr">&#128218; Read the Story</div>
-      ${d.st.map(s=>`<p class="story-text">${s}</p>`).join('')}
-    </div>
-
-    <div class="card comp-card">
-      <div class="card-hdr">&#11088; Reading Comprehension</div>
-      ${qBlocks}
-      <div class="comp-score" id="comp-score">Score: 0 / ${d.q.length}</div>
-    </div>
-
-    <div class="card find-card">
-      <div class="card-hdr">&#128309; Circle the Sight Words &mdash; Tap every sight word</div>
-      <div class="find-key">&#128270; Sight words:&nbsp;${keyBubs}</div>
-      <div class="find-score" id="find-score">Found: 0 / ${d.sw.length}</div>
-      <div class="find-grid">${bubs}</div>
-      <div class="find-done" id="find-done"></div>
-    </div>
-
-    <div class="card find-wf-card">
-      <div class="card-hdr">&#128994; Circle the Word Family Words &mdash; Tap every word family word</div>
-      <div class="find-key">&#128270; Word family words:&nbsp;${wfKeyBubs}</div>
-      <div class="find-wf-score" id="find-wf-score">Found: 0 / ${d.w.length}</div>
-      <div class="find-grid">${wfBubs}</div>
-      <div class="find-done" id="find-wf-done"></div>
-    </div>
-
-    <div class="card sw-card">
-      <div class="card-hdr">&#128156; Sight Word Flashcards</div>
-      <div class="flash-word" id="sw-word"></div>
-      <div class="flash-ctrl">
-        <button class="farr" id="sw-prev" onclick="swPrev()">&#9664;</button>
-        <span class="fctr" id="sw-ctr">1 / ${d.sw.length}</span>
-        <button class="farr" id="sw-next" onclick="swNext()">&#9654;</button>
-      </div>
-      <button class="fsay" onclick="speak(swWords[swIdx])">&#128266; Say It</button>
-    </div>
-
-    <div class="card wf-card">
-      <div class="card-hdr">&#128218; Word Family Flashcards</div>
-      <div class="flash-word" id="wf-word"></div>
-      <div class="flash-ctrl">
-        <button class="farr" id="wf-prev" onclick="wfPrev()">&#9664;</button>
-        <span class="fctr" id="wf-ctr">1 / ${d.w.length}</span>
-        <button class="farr" id="wf-next" onclick="wfNext()">&#9654;</button>
-      </div>
-      <button class="fsay" onclick="speak(wfWords[wfIdx])">&#128266; Say It</button>
-    </div>
-
-    <div class="finish-wrap">
-      <button class="finish-btn" id="finish-btn" onclick="clickFinish()">&#9989; Finish Homework</button>
-      <div class="finish-msg" id="finish-msg"></div>
-    </div>`;
-
-  updateSW();updateWF();updateFinishBtn();
+  return '<div class="find-box">' +
+    '<div class="sec-title">&#128269; Find It! &mdash; Circle the Sight Words</div>' +
+    '<div class="find-key-row"><strong>Words to find:&nbsp;</strong>' + keyBubs + '</div>' +
+    '<div class="word-grid">' + bubbles + '</div>' +
+  '</div>';
 }
 
-// ── Comprehension ──────────────────────────────────────
-function checkAns(btn,idx){
-  const isOk=btn.dataset.correct==='true';
-  const block=document.getElementById('qb'+idx);
-  if(isOk){
-    btn.classList.add('correct');
-    block.querySelectorAll('.cbtn').forEach(b=>{b.disabled=true;});
-    document.getElementById('qm'+idx).textContent='⭐ Great job!';
-    qAnswered[idx]=true;
-    updateCompScore();
-    updateFinishBtn();
-    speak('Great job');
-  } else {
-    btn.classList.add('wrong');
-    block.querySelectorAll('.cbtn').forEach(b=>b.disabled=true);
-    document.getElementById('qm'+idx).textContent='❌ Try again!';
-    speak('Try again');
-    setTimeout(()=>{
-      btn.classList.remove('wrong');
-      block.querySelectorAll('.cbtn').forEach(b=>b.disabled=false);
-      document.getElementById('qm'+idx).textContent='';
-    },1100);
+/* ── WF Find-It grid builder ── */
+var WF_DISTRACTORS2 = ['bat','can','bed','big','dog','bug','ate','bee','boat','vote',
+  'mule','bay','ring','kite','fry','boo','food','moon','pool','crown',
+  'snake','bird','milk','golf','sick','help','back','dark','best','kind'];
+
+function makeFindGridWF(wfWords) {
+  var dist = WF_DISTRACTORS2.filter(function(x){ return wfWords.indexOf(x) < 0; });
+  var need = Math.max(0, 15 - wfWords.length);
+  var pool = shuffle(wfWords.concat(shuffle(dist).slice(0, need)));
+
+  var keyBubs = wfWords.map(function(w){
+    return '<span class="fkwf">' + w + '</span>';
+  }).join('');
+
+  var bubbles = pool.map(function(w){
+    return '<div class="wbub">' + w + '</div>';
+  }).join('');
+
+  return '<div class="find-wf-box">' +
+    '<div class="sec-title">&#x1F7E2; Circle the Word Family Words</div>' +
+    '<div class="find-key-row"><strong>Words to find:&nbsp;</strong>' + keyBubs + '</div>' +
+    '<div class="word-grid">' + bubbles + '</div>' +
+  '</div>';
+}
+
+/* ── Main render ── */
+function render() {
+  var p    = new URLSearchParams(location.search);
+  var book = p.get('book') || '1';
+  var ch   = p.get('ch')   || '2';
+  var key  = book + '-' + ch;
+  var d    = CH[key];
+
+    if (!d) {
+    var bkKeys = Object.keys(CH).filter(function(k){ return k.split('-')[0] === book; });
+    bkKeys.sort(function(a,b){ return parseInt(a.split('-')[1])-parseInt(b.split('-')[1]); });
+    if (bkKeys.length) { d = CH[bkKeys[0]]; ch = bkKeys[0].split('-')[1]; key = book+'-'+ch; }
+    if (!d) { return; }
   }
-}
-function updateCompScore(){
-  const n=qAnswered.filter(Boolean).length;
-  const tot=qAnswered.length;
-  const el=document.getElementById('comp-score');
-  if(!el)return;
-  if(n===tot){el.innerHTML='&#127881; You got '+n+' / '+tot+'! Amazing! &#11088;';}else{el.textContent='Score: '+n+' / '+tot;}
-}
 
-// ── Sight Word Flashcard ───────────────────────────────
-function updateSW(){
-  const w=document.getElementById('sw-word');if(!w)return;
-  w.textContent=swWords[swIdx]||'';
-  document.getElementById('sw-ctr').textContent=(swIdx+1)+' / '+swWords.length;
-  document.getElementById('sw-prev').disabled=swIdx===0;
-  document.getElementById('sw-next').disabled=swIdx>=swWords.length-1;
-}
-function swPrev(){if(swIdx>0){swIdx--;updateSW();speak(swWords[swIdx]);}}
-function swNext(){if(swIdx<swWords.length-1){swIdx++;updateSW();speak(swWords[swIdx]);if(swIdx>=swWords.length-1){swDone=true;updateFinishBtn();}}}
-
-// ── Word Family Flashcard ──────────────────────────────
-function updateWF(){
-  const w=document.getElementById('wf-word');if(!w)return;
-  w.textContent=wfWords[wfIdx]||'';
-  document.getElementById('wf-ctr').textContent=(wfIdx+1)+' / '+wfWords.length;
-  document.getElementById('wf-prev').disabled=wfIdx===0;
-  document.getElementById('wf-next').disabled=wfIdx>=wfWords.length-1;
-}
-function wfPrev(){if(wfIdx>0){wfIdx--;updateWF();speak(wfWords[wfIdx]);}}
-function wfNext(){if(wfIdx<wfWords.length-1){wfIdx++;updateWF();speak(wfWords[wfIdx]);if(wfIdx>=wfWords.length-1){wfDone=true;updateFinishBtn();}}}
-
-// ── Find It ────────────────────────────────────────────
-function clickBub(el,word){
-  if(el.classList.contains('found'))return;
-  if(findSWset.has(word)){
-    el.classList.add('found');
-    findFound.add(word);
-    speak(word);
-    const sc=document.getElementById('find-score');
-    if(sc)sc.textContent='Found: '+findFound.size+' / '+findSWset.size;
-    if(findFound.size>=findSWset.size){
-      const dn=document.getElementById('find-done');
-      if(dn)dn.innerHTML='&#127881; You found all the sight words! &#11088;';
-      speak('You found all the sight words, great job!');
-      updateFinishBtn();
-    }
-  } else {
-    el.classList.add('nope');
-    setTimeout(()=>el.classList.remove('nope'),340);
+  /* Comprehension questions */
+  var qHTML = '';
+  for (var i = 0; i < d.q.length; i++) {
+    var q = d.q[i][0], a = d.q[i][1], b = d.q[i][2];
+    var qText = q.replace('_____', '<span class="blank">&nbsp;</span>');
+    qHTML += '<div class="q-wrap">' +
+      '<div class="q-text">' + (i + 1) + '. ' + qText + '</div>' +
+      '<div class="choices">' +
+        '<div class="choice">' + a + '</div>' +
+        '<div class="choice">' + b + '</div>' +
+      '</div>' +
+    '</div>';
   }
+
+  /* Flashcard sections */
+  var swHTML = (d.sw && d.sw.length)
+    ? '<div class="fc-sec-lbl sw-lbl">&#128156; Sight Words</div>' + makeCards(d.sw, 'sw-fc', 'Sight Word')
+    : '';
+  var wfHTML = (d.w && d.w.length)
+    ? '<div class="fc-sec-lbl wf-lbl">&#128218; Word Family</div>' + makeCards(d.w, 'wf-fc', 'Word Family')
+    : '';
+
+  /* Find-It sections */
+  var findHTML   = (d.sw && d.sw.length) ? makeFindGrid(d.sw)   : '';
+  var findWFHTML = (d.w  && d.w.length)  ? makeFindGridWF(d.w)  : '';
+
+  document.getElementById('hw-root').innerHTML =
+
+    /* ── PAGE 1 ── */
+    '<div class="page">' +
+
+      /* Header */
+      '<div class="hw-hdr">' +
+        '<div class="hw-em">' + d.em + '</div>' +
+        '<div>' +
+          '<div class="hw-title">' + d.t + '</div>' +
+          '<div class="hw-sub">' + d.ch + ' &bull; ' + d.bk + '</div>' +
+        '</div>' +
+      '</div>' +
+
+      /* Name / Date */
+      '<div class="name-row">' +
+        '<div class="name-box"><label>Name</label><div class="line"></div></div>' +
+        '<div class="name-box"><label>Date</label><div class="line"></div></div>' +
+      '</div>' +
+
+      /* Story */
+      '<div class="story-box">' +
+        '<div class="sec-title">&#128218; Read the Story</div>' +
+        d.st.map(function(s){ return '<p class="story-p">' + s + '</p>'; }).join('') +
+      '</div>' +
+
+      /* Comprehension */
+      '<div class="comp-box">' +
+        '<div class="sec-title">&#11088; Circle the Correct Answer</div>' +
+        qHTML +
+      '</div>' +
+
+      /* Find It — sight words, then word family words */
+      findHTML +
+      findWFHTML +
+
+    '</div>' +
+
+    /* ── PAGE 2: Flashcards ── */
+    '<div class="page">' +
+      '<div class="fc-page-inner">' +
+        '<div class="fc-pg-hdr">' +
+          '<h1>&#9986;&#65039; Cut-Out Flashcards</h1>' +
+          '<p class="fc-story">' + d.t + ' &bull; ' + d.ch + '</p>' +
+          '<p class="fc-tip">Cut out each card along the dashed lines and practice reading every word!</p>' +
+        '</div>' +
+        swHTML + wfHTML +
+      '</div>' +
+    '</div>';
 }
 
-// ── WF Find It ─────────────────────────────────────────
-function clickWFBub(el,word){
-  if(el.classList.contains('found'))return;
-  if(findWFset.has(word)){
-    el.classList.add('found');
-    findWFFound.add(word);
-    speak(word);
-    const sc=document.getElementById('find-wf-score');
-    if(sc)sc.textContent='Found: '+findWFFound.size+' / '+findWFset.size;
-    if(findWFFound.size>=findWFset.size){
-      const dn=document.getElementById('find-wf-done');
-      if(dn)dn.innerHTML='&#127881; You found all the word family words! &#11088;';
-      speak('You found all the word family words, great job!');
-      updateFinishBtn();
-    }
-  } else {
-    el.classList.add('nope');
-    setTimeout(()=>el.classList.remove('nope'),340);
-  }
-}
-
-// ── Finish Button ──────────────────────────────────────
-function updateFinishBtn(){
-  const btn=document.getElementById('finish-btn');
-  if(!btn)return;
-  const allQ=qAnswered.length>0&&qAnswered.every(Boolean);
-  const allFind=findSWset.size>0&&findFound.size>=findSWset.size;
-  const allFindWF=findWFset.size>0&&findWFFound.size>=findWFset.size;
-  const allDone=allQ&&swDone&&allFind&&allFindWF&&wfDone;
-  btn.classList.toggle('ready',allDone);
-}
-function clickFinish(){
-  const allQ=qAnswered.length>0&&qAnswered.every(Boolean);
-  const allFind=findSWset.size>0&&findFound.size>=findSWset.size;
-  const allFindWF=findWFset.size>0&&findWFFound.size>=findWFset.size;
-  const allDone=allQ&&swDone&&allFind&&allFindWF&&wfDone;
-  const msg=document.getElementById('finish-msg');
-  if(!msg)return;
-  if(allDone){
-    msg.innerHTML='&#127881;&#127881; Great job! You finished your homework! &#11088;&#127881;&#127881;';
-    msg.className='finish-msg done';
-    document.getElementById('finish-btn').innerHTML='&#127881; Done!';
-    speak('Great job! You finished all your homework!');
-  } else {
-    const todo=[];
-    if(!allQ)todo.push('Answer all 3 reading questions &#11088;');
-    if(!swDone)todo.push('Click through ALL the sight word flashcards &#128156;');
-    if(!allFind)todo.push('Circle ALL the sight words &#128309;');
-    if(!allFindWF)todo.push('Circle ALL the word family words &#128994;');
-    if(!wfDone)todo.push('Click through ALL the word family flashcards &#128218;');
-    msg.innerHTML='You still need to finish:<br>&#8226; '+todo.join('<br>&#8226; ');
-    msg.className='finish-msg todo';
-    speak('You still need to finish: '+todo.map(t=>t.replace(/&#[^;]+;/g,'')).join(', '));
-  }
-}
-
-// ── Print / Download HW ───────────────────────────────
-function printHW(){
-  const key=document.getElementById('sel-ch').value;
-  const parts=key.split('-');
-  window.open('hw-pdf.html?book='+parts[0]+'&ch='+parts[1],'_blank');
-}
-
-
-// ── Init ───────────────────────────────────────────────
-const p=new URLSearchParams(location.search);
-const initBk=p.get('book')||'1';
-const initCh=p.get('ch');
-document.getElementById('sel-book').value=initBk;
-const firstKey=populateCh(initBk);
-const key=initCh?(initBk+'-'+initCh):firstKey;
-if(initCh){document.getElementById('sel-ch').value=key;}
-render(document.getElementById('sel-ch').value||firstKey);
+render();
 </script>
 </body>
 </html>

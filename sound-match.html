@@ -15,10 +15,10 @@
       --text:   #2C3E50;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); height:100vh;height:100dvh;overflow:hidden; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); min-height:100dvh;overflow-x:hidden; display:flex; flex-direction:column; }
 
     header { background:linear-gradient(135deg,#27AE60 0%,#6BCB77 100%); padding:.4rem .8rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:nowrap; gap:.5rem; }
-    header h1 { font-family: 'Comic Sans MS', 'Comic Neue'; font-size:1.6rem; color:white; text-shadow:0 2px 6px rgba(0,0,0,.2); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    header h1 { font-family: 'Comic Sans MS', 'Comic Neue'; font-size:1.6rem; color:white; text-shadow:0 2px 6px rgba(0,0,0,.2); flex:1; min-width:0; overflow-x:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .header-btns { display:flex; gap:.5rem; align-items:center; flex-wrap:nowrap; flex-shrink:0; }
     .btn-header { background:rgba(255,255,255,.2); color:white; border:none; font-family: 'Comic Sans MS', 'Comic Neue'; font-weight:700; font-size:.85rem; padding:6px 16px; border-radius:999px; cursor:pointer; transition:background .2s; text-decoration:none; display:inline-block; }
     .btn-header:hover { background:rgba(255,255,255,.35); }
@@ -31,12 +31,12 @@
 
     /* progress */
     .progress-wrap { background:white; padding:.25rem .8rem; border-bottom:2px solid #C8F0D4; }
-    .progress-outer { background:#D4F0DC; border-radius:999px; height:12px; overflow:hidden; max-width:600px; margin:0 auto; }
+    .progress-outer { background:#D4F0DC; border-radius:999px; height:12px; overflow-x:hidden; max-width:600px; margin:0 auto; }
     .progress-inner { background:linear-gradient(90deg,#27AE60,#6BCB77); height:100%; border-radius:999px; transition:width .5s ease; }
     .progress-text { text-align:center; font-size:.8rem; font-weight:800; color:#888; margin-top:4px; }
 
     /* main */
-    main { flex:1; min-height:0; overflow:hidden; max-width:660px; margin:0 auto; width:100%; padding:.3rem 1rem; display:flex; flex-direction:column; align-items:center; gap:.5rem; }
+    main { flex:1; overflow-x:hidden; max-width:660px; margin:0 auto; width:100%; padding:.3rem 1rem; display:flex; flex-direction:column; align-items:center; gap:.5rem; }
 
     .score-chip { background:white; border-radius:12px; padding:.4rem 1.2rem; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:1.05rem; color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
     .score-chip span { color:#27AE60; }

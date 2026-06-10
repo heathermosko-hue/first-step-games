@@ -1,0 +1,41 @@
+# Disable LiteSpeed server-side cache for this directory
+<IfModule LiteSpeed>
+  CacheLookup off
+</IfModule>
+
+# HTML — never cache
+<FilesMatch "\.(html|htm)$">
+  Header always set Cache-Control "no-cache, no-store, must-revalidate"
+  Header always set Pragma "no-cache"
+  Header always set Expires "0"
+</FilesMatch>
+
+# JS/CSS — cache 1 year (versioned with ?v=N)
+<FilesMatch "\.(js|css)$">
+  Header always set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+
+# Images — cache 30 days
+<FilesMatch "\.(png|jpg|jpeg|gif|svg|webp|ico)$">
+  Header always set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+
+# Force HTTPS (Cloudflare sets X-Forwarded-Proto)
+RewriteEngine On
+RewriteCond %{HTTP:X-Forwarded-Proto} ^http$
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php73” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php73 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
+
+# MP4 video — correct MIME type + allow cross-origin playback
+<FilesMatch "\.mp4$">
+  Header always set Content-Type "video/mp4"
+  Header always set Accept-Ranges "bytes"
+  Header always set Access-Control-Allow-Origin "*"
+  Header always set Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+</FilesMatch>

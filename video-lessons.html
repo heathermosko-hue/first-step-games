@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Lessons | First Step Reading</title>
+  <link href="fonts.css?v=3" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      background: #f5f7ff;
+      color: #333;
+      min-height: 100%;
+    }
+
+    /* ── NAV SPACER (site-nav.js injects 48px nav) ── */
+    #page-wrap { padding-top: 52px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: linear-gradient(135deg, #1a237e 0%, #3A8EF6 100%);
+      padding: 1.4rem 1.2rem 1.6rem;
+      text-align: center;
+      color: white;
+    }
+    .page-header h1 {
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      margin-bottom: .35rem;
+    }
+    .page-header p {
+      font-size: .92rem;
+      opacity: .88;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: .8rem;
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      font-size: .85rem;
+    }
+    .back-link:hover { color: #fff; }
+
+    /* ── SECTIONS ── */
+    .vid-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 .75rem 1.5rem;
+    }
+
+    .sec-header {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: 1.1rem 0 .6rem;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 3px solid currentColor;
+      margin-bottom: .9rem;
+    }
+    .sec-title {
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      font-size: clamp(1.1rem, 3vw, 1.45rem);
+    }
+    .sec-count {
+      font-size: .78rem;
+      font-weight: 700;
+      background: rgba(0,0,0,.08);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .sec-arrow { margin-left: auto; font-size: .9rem; transition: transform .2s; }
+    .sec-header.collapsed .sec-arrow { transform: rotate(-90deg); }
+
+    .sec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: .9rem;
+      overflow: hidden;
+    }
+    .sec-grid.collapsed { display: none; }
+
+    /* ── VIDEO CARD ── */
+    .vid-card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,.09);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .vid-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.14); }
+    .vid-thumb {
+      position: relative;
+      padding-bottom: 56.25%;
+      background: #111;
+    }
+    .vid-thumb video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+    .vid-label {
+      padding: .5rem .75rem .6rem;
+      font-size: .82rem;
+      font-weight: 700;
+      color: #444;
+      line-height: 1.3;
+    }
+
+    /* ── SECTION COLOUR THEMES ── */
+    .sec-letters   { color: #3A8EF6; }
+    .sec-sight     { color: #e53935; }
+    .sec-blending  { color: #27AE60; }
+    .sec-long      { color: #00897B; }
+    .sec-irregular { color: #E65100; }
+    .sec-blends    { color: #6A1B9A; }
+    .sec-r         { color: #1565C0; }
+
+    /* ── MOBILE ── */
+    @media(max-width:480px){
+      .sec-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .6rem; }
+      .page-header { padding: 1rem .9rem 1.2rem; }
+    }
+  
+/* === Large play-button overlay for self-hosted videos === */
+.vid-item, .vid-thumb, .sample-video-wrapper { position: relative !important; }
+.play-overlay {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 72px; height: 72px;
+  background: rgba(0,0,0,0.52);
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.95);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  transition: background 0.2s, transform 0.15s;
+  pointer-events: auto;
+  outline: none;
+  box-sizing: border-box;
+}
+.play-overlay:hover {
+  background: rgba(107,72,255,0.82);
+  transform: translate(-50%, -50%) scale(1.12);
+}
+.play-overlay::after {
+  content: '';
+  border-style: solid;
+  border-width: 14px 0 14px 24px;
+  border-color: transparent transparent transparent #fff;
+  margin-left: 6px;
+  display: block;
+}
+</style>
+</head>
+<body>
+<script src="site-nav.js?v=5"></script>
+<div id="page-wrap">
+
+  <div class="page-header">
+    <a href="hub.html" class="back-link">&#8592; Learning Hub</a>
+    <h1>&#127916; Video Lessons</h1>
+    <p>56 step-by-step phonics videos &#8212; commercial free, no ads</p>
+  </div>
+
+  <div class="vid-section">
+
+    <!-- ══ LETTERS & SOUNDS ══ -->
+    <div class="sec-header sec-letters" onclick="toggleSec(this)">
+      <span class="sec-title">&#128292; Letters &amp; Sounds</span>
+      <span class="sec-count">11 videos</span>
+      <span class="sec-arrow">&#9660;</span>
+    </div>
+    <div class="sec-grid">
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/YMYj7l6lw8I.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Uppercase Letters: Traditional Alphabet Song</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/OtvbkSQJBMc.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Uppercase Non-Traditional Alphabet Song</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/2OidJdrAyXk.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Lowercase Traditional Alphabet Song</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/pG6TO06mV7Y.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Lowercase Non-Traditional Alphabet Song</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/JToqVzV_oSM.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Letter Sound Video: Uppercase Letters</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/Vg5E8QT5TOs.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Letter Sound Video: Lowercase Letters</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/Oi8j10kgE78.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Letter Sound Song A-E</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/8ouEIUTP9iU.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Letter Sound Song F-J</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/6rfPtU_uwjE.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Letter Sound Song K-O</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/zuYbFw9WD3Q.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Letter Sound Song P-T</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/gt9zp3eW3LE.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Letter Sound Song U-Z</div>
+      </div>
+    </div>
+
+    <!-- ══ SIGHT WORDS ══ -->
+    <div class="sec-header sec-sight" onclick="toggleSec(this)">
+      <span class="sec-title">&#128065; Sight Words</span>
+      <span class="sec-count">6 videos</span>
+      <span class="sec-arrow">&#9660;</span>
+    </div>
+    <div class="sec-grid">
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/kjByrM15RFk.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Sight Words Video 1</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/Wu5P2QmQI30.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Sight Words Video 2</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/g85e8Wghvpk.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Sight Words Video 3</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/QynRMzth7-s.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Sight Words Video 4</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/XDdUVVlGutc.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Sight Words Video 5</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/RPZsSDZDTfw.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Sight Words Video 6</div>
+      </div>
+    </div>
+
+    <!-- ══ SHORT VOWEL BLENDING ══ -->
+    <div class="sec-header sec-blending" onclick="toggleSec(this)">
+      <span class="sec-title">&#128266; Short Vowel Blending</span>
+      <span class="sec-count">11 videos</span>
+      <span class="sec-arrow">&#9660;</span>
+    </div>
+    <div class="sec-grid">
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/EU_9C3MEpvs.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Vowels Song</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/uUVbOnBL9hg.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">2-Letter Blending: Short Vowel A</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/haqU1C3Qk6o.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">2-Letter Blending: Short Vowel E</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/Li8vDsxvnuM.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">2-Letter Blending: Short Vowel I</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/LZKBENVycRI.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">2-Letter Blending: Short Vowel O</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/zpwpfqm5ALw.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">2-Letter Blending: Short Vowel U</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/dx_9Ih5f5E0.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">3-Letter Blending: Short Vowel A</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/winH4C00njE.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">3-Letter Blending: Short Vowel E</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/ZcKHsLrRK10.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">3-Letter Blending: Short Vowel I</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/Gfvc_D-RFrc.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">3-Letter Blending: Short Vowel O</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/uQ7oNtKx1IU.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">3-Letter Blending: Short Vowel U</div>
+      </div>
+    </div>
+
+    <!-- ══ LONG VOWELS ══ -->
+    <div class="sec-header sec-long" onclick="toggleSec(this)">
+      <span class="sec-title">&#128308; Long Vowels</span>
+      <span class="sec-count">9 videos</span>
+      <span class="sec-arrow">&#9660;</span>
+    </div>
+    <div class="sec-grid">
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/56r3KRNwXfU.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Long Vowel A: Vowel-Consonant-Vowel</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/Hc8suaLcUsA.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Long Vowel A: Vowel-Vowel</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/JC8vzRvEhzM.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Long Vowel E: Vowel-Vowel</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/CcI-eUsJDGM.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Long Vowel I: Vowel-Consonant-Vowel</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/Kt5Oydf2a7Q.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Long Vowel I: Vowel-Vowel</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/QsEF-Ck1jK4.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Long Vowel O: Vowel-Vowel</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/TNN7C-1Lnec.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Long Vowel O: Vowel-Consonant-Vowel</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/jhZx7VsCKE8.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Long Vowel U: Vowel-Consonant-Vowel</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/zu3zs8Xzqug.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Long Vowel U: Vowel-Vowel</div>
+      </div>
+    </div>
+
+    <!-- ══ IRREGULAR SOUNDS ══ -->
+    <div class="sec-header sec-irregular" onclick="toggleSec(this)">
+      <span class="sec-title">&#9889; Irregular Sounds</span>
+      <span class="sec-count">10 videos</span>
+      <span class="sec-arrow">&#9660;</span>
+    </div>
+    <div class="sec-grid">
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/fOeQf-RSU-c.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular A: Ay / Ank</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/9wDeICSFxOo.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular E: Ing</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/qKSJA5b-c6c.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular I: Ight</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/RGcmZcH16S8.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular O: Ow / Out</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/CNA__ktupos.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular Y: Y as a Vowel</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/C6UGnmmTrwY.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular Y: Y as E Sound</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/gVFF5nAOtbU.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular Y: Y as I Sound</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/DC6NJRUzNmw.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular OO / EW / Who / Shoe</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/GXo6F_TkmpE.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular OOD and OON</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/sumg2Ml2kio.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Irregular OOL and OOK</div>
+      </div>
+    </div>
+
+    <!-- ══ CONSONANT BLENDS ══ -->
+    <div class="sec-header sec-blends" onclick="toggleSec(this)">
+      <span class="sec-title">&#128288; Consonant Blends &amp; Digraphs</span>
+      <span class="sec-count">8 videos</span>
+      <span class="sec-arrow">&#9660;</span>
+    </div>
+    <div class="sec-grid">
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/9wDeICSFxOo.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Common Blends</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/AOeL66ODSnk.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Beginning Consonant Blends Part 1</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/oDZFN_mYfo8.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Beginning Consonant Blends Part 2</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/lYftivoBob4.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Beginning Consonant Blends Part 3</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/7qfExTlJtow.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Ending Consonant Blends Part 1</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/qee22GuYVxg.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Ending Consonant Blends Part 2</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/uqaTI6pbRxw.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Silent Blends</div>
+      </div>
+    </div>
+
+    <!-- ══ CONTROLLED R ══ -->
+    <div class="sec-header sec-r" onclick="toggleSec(this)">
+      <span class="sec-title">&#128308; Controlled R Sounds</span>
+      <span class="sec-count">1 video</span>
+      <span class="sec-arrow">&#9660;</span>
+    </div>
+    <div class="sec-grid">
+      <div class="vid-card">
+        <div class="vid-thumb"><video src="videos/TJVeXVyoipA.mp4" controls preload="none" playsinline></video></div>
+        <div class="vid-label">Controlled R Sounds</div>
+      </div>
+    </div>
+
+  </div><!-- /vid-section -->
+</div><!-- /page-wrap -->
+
+<script>
+function toggleSec(header) {
+  header.classList.toggle('collapsed');
+  var grid = header.nextElementSibling;
+  grid.classList.toggle('collapsed');
+}
+</script>
+<script>
+/* Large play-button overlay — added by add_play_buttons.py */
+(function(){
+  function addOverlays(){
+    document.querySelectorAll('video').forEach(function(vid){
+      if(vid.id==='vid-modal-frame') return;
+      if(vid.dataset.ovSet) return;
+      vid.dataset.ovSet='1';
+      var par=vid.parentElement;
+      if(getComputedStyle(par).position==='static') par.style.position='relative';
+      var btn=document.createElement('button');
+      btn.className='play-overlay';
+      btn.setAttribute('aria-label','Play video');
+      par.appendChild(btn);
+      function doPlay(e){
+        e.preventDefault();
+        var p=vid.play();if(p)p.catch(function(){});
+      }
+      btn.addEventListener('click',doPlay);
+      btn.addEventListener('touchend',doPlay);
+      vid.addEventListener('play',  function(){ btn.style.display='none'; });
+      vid.addEventListener('pause', function(){ btn.style.display='flex'; });
+      vid.addEventListener('ended', function(){ btn.style.display='flex'; });
+    });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', addOverlays);
+  } else {
+    addOverlays();
+  }
+})();
+</script>
+</body>
+</html>

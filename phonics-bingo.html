@@ -8,7 +8,7 @@
   <style>
     :root { --gold:#F5A623; --gold2:#E8960F; --bg:#FFFBF0; --text:#2C3E50; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); min-height:100dvh;overflow-y:auto; display:flex; flex-direction:column; }
+    body { font-family: 'Comic Sans MS', 'Comic Neue'; background:url('icons/bg-default.png') center/cover no-repeat fixed,var(--bg); color:var(--text); min-height:100dvh;overflow-x:hidden; display:flex; flex-direction:column; }
 
     /* HEADER */
     header { background:linear-gradient(135deg,#F5A623 0%,#E8960F 100%); padding:.4rem .8rem; display:flex; align-items:center; gap:.5rem; flex-wrap:nowrap; }
@@ -25,7 +25,7 @@
     .btn-cat.active { background:#F5A623; border-color:#F5A623; color:white; }
 
     /* LAYOUT */
-    .game-wrap { flex:1; display:flex; flex-direction:column; align-items:center; padding:.3rem .6rem 1rem; gap:.35rem; max-width:680px; margin:0 auto; width:100%; }
+    .game-wrap { flex:1; overflow-x:hidden; display:flex; flex-direction:column; align-items:center; padding:.3rem .6rem .2rem; gap:.35rem; max-width:680px; margin:0 auto; width:100%; }
 
     /* START SCREEN */
     .start-screen { display:flex; flex-direction:column; align-items:center; gap:1rem; padding:2rem 1rem; text-align:center; }
@@ -34,7 +34,7 @@
 
     /* CALLER CARD */
     .caller-card { background:white; border-radius:16px; padding:.5rem 1rem .4rem; box-shadow:0 4px 22px rgba(245,166,35,.15); border:3px solid #FDE8B0; display:flex; flex-direction:column; align-items:center; gap:.3rem; width:100%; }
-    .caller-pic { font-size:clamp(3rem,10vw,4.5rem); line-height:1; min-height:0; display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 3px 6px rgba(0,0,0,.1)); }
+    .caller-pic { font-size:clamp(3rem,10vw,4.5rem); line-height:1; display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 3px 6px rgba(0,0,0,.1)); }
     .caller-pic svg { width:clamp(3rem,10vw,4.5rem) !important; height:clamp(3rem,10vw,4.5rem) !important; }
     .caller-hint { background:#FDE8B0; color:#E8960F; font-family: 'Comic Sans MS', 'Comic Neue'; font-size:.85rem; padding:3px 14px; border-radius:999px; }
     .not-on-board { color:#ccc; font-size:.85rem; font-weight:700; min-height:1.2rem; }
@@ -423,16 +423,14 @@ const BINGO_DATA = {
   {word:'dream',emoji:'💭'},{word:'seal',emoji:'🦭'},{word:'boat',emoji:'⛵'},
   {word:'coat',emoji:'🧥'},{word:'goat',emoji:'🐐'},{word:'toad',emoji:'🐸'},
   {word:'toast',emoji:'🍞'},{word:'foam',emoji:'🫧'},{word:'road',emoji:'🛣️'},
-  {word:'pail',emoji:'🪣'},{word:'tail',emoji:'tail'},{word:'paid',emoji:'💰'},
-  {word:'blue',emoji:'💙'},{word:'glue',emoji:'glue'},{word:'clue',emoji:'🔍'},
+  {word:'pail',emoji:'🪣'},{word:'tail',emoji:'🦊'},{word:'paid',emoji:'💰'},
+  {word:'blue',emoji:'💙'},{word:'glue',emoji:'🧴'},{word:'clue',emoji:'🔍'},
 ],
 
 };
 
 /* ── CUSTOM SVG PICTURES (override emoji for specific words) ── */
 const CUSTOM_PICS = {
-  'tail': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M22,88 C24,68 42,58 58,38 C68,24 80,14 88,18" fill="none" stroke="#9E6030" stroke-width="18" stroke-linecap="round"/><path d="M22,88 C24,68 42,58 58,38 C68,24 80,14 88,18" fill="none" stroke="#D4904A" stroke-width="11" stroke-linecap="round"/><path d="M22,88 C24,68 42,58 58,38 C68,24 80,14 88,18" fill="none" stroke="#F0C070" stroke-width="5" stroke-linecap="round"/><ellipse cx="88" cy="16" rx="9" ry="7" fill="#F0C070" transform="rotate(-40 88 16)"/></svg>`,
-  'glue': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="32" y="36" width="36" height="50" rx="10" fill="#FFFDE7" stroke="#F9A825" stroke-width="2.5"/><path d="M32,48 Q32,36 38,33 L62,33 Q68,36 68,48" fill="#FFF8DC" stroke="#F9A825" stroke-width="2"/><rect x="40" y="20" width="20" height="15" rx="5" fill="#FFFDE7" stroke="#F9A825" stroke-width="2"/><path d="M45,20 L45,12 Q50,9 55,12 L55,20" fill="#BDBDBD" stroke="#9E9E9E" stroke-width="1.5"/><circle cx="50" cy="9" r="4" fill="#E0E0E0" stroke="#9E9E9E" stroke-width="1.5"/><rect x="35" y="52" width="30" height="20" rx="5" fill="white" stroke="#F9A825" stroke-width="1.5"/><text x="50" y="62" text-anchor="middle" font-size="9" fill="#D32F2F" font-family="Arial,sans-serif" font-weight="bold">GLUE</text><path d="M46,86 Q50,94 54,86" fill="none" stroke="#FFF8DC" stroke-width="3" stroke-linecap="round"/></svg>`,
   'tape': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#c8dff0" stroke="#8bb0cc" stroke-width="3"/><circle cx="50" cy="50" r="38" fill="none" stroke="#a8c8e0" stroke-width="2" opacity="0.5"/><circle cx="50" cy="50" r="32" fill="none" stroke="#a8c8e0" stroke-width="1.5" opacity="0.35"/><path d="M50 6 A44 44 0 0 1 88 67 L76 60 A32 32 0 0 0 50 18 Z" fill="rgba(190,230,255,0.55)" stroke="#78b8d8" stroke-width="1.5"/><circle cx="50" cy="50" r="17" fill="#f0f4f8" stroke="#b0c8dc" stroke-width="2.5"/><circle cx="37" cy="28" r="6" fill="white" opacity="0.35"/></svg>`,
   'gate': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect x="0" y="68" width="80" height="12" fill="#6BB030"/><rect x="3" y="10" width="11" height="60" rx="2" fill="#8B6020"/><rect x="66" y="10" width="11" height="60" rx="2" fill="#8B6020"/><ellipse cx="8.5" cy="10" rx="5.5" ry="3" fill="#A07828"/><ellipse cx="71.5" cy="10" rx="5.5" ry="3" fill="#A07828"/><rect x="16" y="20" width="9" height="48" rx="2" fill="#D4B87A"/><polygon points="16,20 20.5,12 25,20" fill="#D4B87A"/><rect x="29" y="20" width="9" height="48" rx="2" fill="#D4B87A"/><polygon points="29,20 33.5,12 38,20" fill="#D4B87A"/><rect x="42" y="20" width="9" height="48" rx="2" fill="#D4B87A"/><polygon points="42,20 46.5,12 51,20" fill="#D4B87A"/><rect x="55" y="20" width="9" height="48" rx="2" fill="#D4B87A"/><polygon points="55,20 59.5,12 64,20" fill="#D4B87A"/><rect x="14" y="28" width="52" height="6" rx="2" fill="#B89050"/><rect x="14" y="52" width="52" height="6" rx="2" fill="#B89050"/><line x1="15" y1="34" x2="65" y2="58" stroke="#A07840" stroke-width="3" stroke-linecap="round"/><circle cx="15" cy="32" r="3" fill="#888"/><circle cx="15" cy="55" r="3" fill="#888"/></svg>`,
   'smoke': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="50" cy="90" rx="30" ry="7" fill="#5a3a1a" opacity="0.5"/><rect x="24" y="82" width="52" height="9" fill="#7B4A1E" rx="3"/><line x1="30" y1="86" x2="70" y2="78" stroke="#6a3a10" stroke-width="7" stroke-linecap="round"/><line x1="30" y1="78" x2="70" y2="86" stroke="#6a3a10" stroke-width="7" stroke-linecap="round"/><path d="M36 82 Q32 64 44 50 Q40 40 50 28 Q57 40 62 36 Q66 52 60 65 Q70 52 66 70 Q74 56 68 74 Q60 62 66 82 Z" fill="#FF6A00"/><path d="M40 82 Q39 68 48 58 Q44 50 50 38 Q55 50 57 46 Q60 58 56 68 Q64 56 61 71 Q55 62 58 80 Z" fill="#FFC200"/><path d="M44 82 Q44 72 50 65 Q48 58 50 48 Q52 58 53 55 Q56 64 52 73 Q55 65 54 78 Z" fill="#FFE840"/><path d="M46 26 Q40 15 46 6 Q52 0 48 -3" fill="none" stroke="#9a9a9a" stroke-width="5" stroke-linecap="round" opacity="0.75"/><path d="M52 24 Q58 13 52 5 Q47 0 53 -3" fill="none" stroke="#aaa" stroke-width="4" stroke-linecap="round" opacity="0.65"/><path d="M58 26 Q64 15 58 8 Q53 2 58 -2" fill="none" stroke="#bbb" stroke-width="3.5" stroke-linecap="round" opacity="0.55"/></svg>`,
@@ -496,23 +494,18 @@ function newGame(){
   const data = BINGO_DATA[state.cat];
   const s = shuffle(data);
 
-  const is4x4 = (state.cat === 'Vowel Teams' || state.cat === 'Irregular');
-  state.is4x4 = is4x4;
-  const wordCount = is4x4 ? 15 : 24;
-  const freeIdx   = is4x4 ?  5 : 12;
+  // Pick 24 words for board
+  const boardWords = s.slice(0, Math.min(24, s.length));
+  while(boardWords.length < 24) boardWords.push({word:'?',emoji:'❓'});
 
-  // Pick words for board
-  const boardWords = s.slice(0, Math.min(wordCount, s.length));
-  while(boardWords.length < wordCount) boardWords.push({word:'?',emoji:'❓'});
-
-  // Board array: insert FREE at center
+  // Board array: 24 words → insert FREE at center (idx 12)
   state.board = [...boardWords];
-  state.board.splice(freeIdx, 0, {word:'FREE', emoji:'⭐', free:true});
+  state.board.splice(12, 0, {word:'FREE', emoji:'⭐', free:true});
 
   // Call sequence: all words shuffled
   state.callSeq = shuffle(data);
   state.callIdx = 0;
-  state.marked = new Set([freeIdx]);
+  state.marked = new Set([12]);
   state.bingo = false;
   document.getElementById('btnBack').disabled=true;
   document.getElementById('btnNext').disabled=false;
@@ -529,19 +522,6 @@ function newGame(){
 function renderBoard(){
   const boardEl=document.getElementById('board');
   boardEl.innerHTML='';
-  // Set grid size
-  const cols = state.is4x4 ? 4 : 5;
-  boardEl.style.gridTemplateColumns = `repeat(${cols},1fr)`;
-  // Update board-letters header
-  const blEl = document.querySelector('.board-letters');
-  if(blEl){
-    blEl.style.gridTemplateColumns = `repeat(${cols},1fr)`;
-    if(state.is4x4){
-      blEl.innerHTML='<div class="bl">V</div><div class="bl">T</div><div class="bl">E</div><div class="bl">A</div>';
-    } else {
-      blEl.innerHTML='<div class="bl">B</div><div class="bl">I</div><div class="bl">N</div><div class="bl">G</div><div class="bl">O</div>';
-    }
-  }
   state.board.forEach((item,idx)=>{
     const cell=document.createElement('div');
     let cls='cell';
@@ -557,8 +537,7 @@ function renderBoard(){
       cell.style.fontSize = 'clamp(1.5rem,5.5vw,2.2rem)';
       cell.style.fontFamily = "'Comic Sans MS','Comic Neue','Comic Sans'";
     } else {
-        cell.textContent = item.word;
-      if(state.is4x4) cell.style.fontSize = 'clamp(.85rem,3.5vw,1.2rem)';
+      cell.textContent = item.word;
     }
     cell.dataset.idx=idx;
     if(!item.free) cell.addEventListener('click',()=>handleCellClick(idx));
@@ -672,14 +651,8 @@ const LINES=[
   [0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],  // cols
   [0,6,12,18,24],[4,8,12,16,20]                                                  // diagonals
 ];
-const LINES_4x4=[
-  [0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15],              // rows
-  [0,4,8,12],[1,5,9,13],[2,6,10,14],[3,7,11,15],              // cols
-  [0,5,10,15],[3,6,9,12]                                       // diagonals
-];
 function checkBingo(){
-  const lines = state.is4x4 ? LINES_4x4 : LINES;
-  for(const line of lines){ if(line.every(i=>state.marked.has(i))) return line; }
+  for(const line of LINES){ if(line.every(i=>state.marked.has(i))) return line; }
   return null;
 }
 
@@ -690,10 +663,8 @@ function highlightLine(line){
 
 /* ── WIN ── */
 function celebrate(){
-  const inRow = state.is4x4 ? 'four' : 'five';
-  const inRowN = state.is4x4 ? 4 : 5;
-  speak(`BINGO! | Amazing! | You got ${inRow} in a row!`);
-  document.getElementById('winMsg').textContent=`Amazing! You got ${inRowN} in a row! 🎊`;
+  speak('BINGO! | Amazing! | You got five in a row!');
+  document.getElementById('winMsg').textContent='Amazing! You got 5 in a row! 🎊';
   document.getElementById('winOverlay').classList.add('show');
 }
 
