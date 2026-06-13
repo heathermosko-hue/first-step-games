@@ -873,16 +873,9 @@
     }
 
     if (pass === TEACHER_PASSWORD) {
-      if (isTeacherHours()) {
-        errEl.classList.remove('show');
-        localStorage.setItem('fsr_teacher_logged_in', '1');
-        showDashboard();
-      } else {
-        errEl.innerHTML = '🕐 Teacher login is only available<br><strong>Monday–Friday, 9:00 AM – 4:00 PM</strong>.';
-        errEl.classList.add('show');
-        document.getElementById('password').classList.add('error');
-        setTimeout(() => document.getElementById('password').classList.remove('error'), 1500);
-      }
+      errEl.classList.remove('show');
+      localStorage.setItem('fsr_teacher_logged_in', '1');
+      showDashboard();
       return;
     }
 
@@ -949,12 +942,7 @@
       showDashboard();
       return;
     }
-    // Not logged in: gate outside Mon–Fri 9AM–4PM
-    if (isTeacherHours()) {
-      document.getElementById('signin-section').style.display = 'grid';
-    } else {
-      document.getElementById('teacher-gate').style.display = 'flex';
-    }
+    document.getElementById('signin-section').style.display = 'grid';
   })();
 </script>
   <script src="site-nav.js?v=5"></script>
