@@ -927,11 +927,7 @@
     localStorage.removeItem('fsr_teacher_logged_in');
     localStorage.removeItem('fsr_is_admin');
     document.getElementById('teacher-dashboard').style.display = 'none';
-    if (isTeacherHours()) {
-      document.getElementById('signin-section').style.display = 'grid';
-    } else {
-      document.getElementById('teacher-gate').style.display = 'flex';
-    }
+    document.getElementById('signin-section').style.display = 'grid';
     document.getElementById('login-form').reset();
   }
 
