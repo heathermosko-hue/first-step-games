@@ -8,9 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter your email address.';
     } else {
         $db = getDB();
-        // Ensure reset columns exist
-        $db->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS reset_token VARCHAR(64) DEFAULT NULL");
-        $db->query("ALTER TABLE teachers ADD COLUMN IF NOT EXISTS reset_expires INT DEFAULT NULL");
+        // Add reset columns if they don't exist (suppress errors if already there)
+        @$db->query("ALTER TABLE teachers ADD COLUMN reset_token VARCHAR(64) DEFAULT NULL");
+        @$db->query("ALTER TABLE teachers ADD COLUMN reset_expires INT DEFAULT NULL");
 
         $st = $db->prepare('SELECT id, name FROM teachers WHERE email=?');
         $st->bind_param('s', $email); $st->execute();
