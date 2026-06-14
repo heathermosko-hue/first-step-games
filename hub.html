@@ -2001,6 +2001,12 @@
     const bar   = document.getElementById('access-bar');
     const label = hubAccessLabel();
 
+    const isMember = sessionStorage.getItem('fsr_access_type') === 'member';
+    if (isMember) {
+      document.getElementById('teacher-banner').style.display = 'block';
+      document.getElementById('school-pkg-banner').style.display = 'none';
+    }
+
     if (label === 'free') {
       bar.className = 'school-hours';
       bar.innerHTML = `
