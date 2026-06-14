@@ -8,12 +8,20 @@ define('DB_PASS',       'YOUR_DB_PASSWORD');
 define('DB_NAME',       'YOUR_DB_NAME');
 define('COOKIE_SECRET', 'change-me-to-any-long-random-string-32chars');
 
-// ─── ANIMAL ICONS (40 choices) ────────────────────────────
+// ─── ANIMAL ICONS (40 choices — each student's unique login icon) ─────────────
 define('ANIMALS', [
     '🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯',
     '🦁','🐮','🐷','🐸','🐵','🐔','🐧','🦆','🦉','🦋',
     '🐢','🐙','🦈','🐬','🦓','🦒','🐘','🦏','🐊','🦘',
     '🦔','🐿️','🦜','🐝','🦩','🐞','🦀','🐠','🦙','🐺'
+]);
+
+// ─── ICON COMBO CHOICES (12 icons — used for 4-icon class code) ───────────────
+// Visually distinct from ANIMALS so students don't confuse class-code with login
+define('ICON_CHOICES', [
+    '🍎','🍋','🍇','🍓',
+    '⭐','🌈','🎈','🚀',
+    '🎵','💎','🌺','🌙'
 ]);
 
 // ─── GAMES ────────────────────────────────────────────────
@@ -55,6 +63,22 @@ function generateClassCode($db) {
         $code .= '-';
         for ($i = 0; $i < 3; $i++) $code .= $chars[random_int(0, strlen($chars)-1)];
         $st = $db->prepare('SELECT id FROM classes WHERE class_code=?');
+        $st->bind_param('s', $code); $st->execute();
+        $exists = $st->get_result()->num_rows > 0;
+    } while ($exists);
+    return $code;
+}
+
+// ─── ICON COMBO CODE (4 icons from ICON_CHOICES, stored as comma-separated) ──
+function generateIconCode($db) {
+    $icons = ICON_CHOICES;
+    do {
+        $picks = [];
+        for ($i = 0; $i < 4; $i++) {
+            $picks[] = $icons[random_int(0, count($icons)-1)];
+        }
+        $code = implode(',', $picks);
+        $st = $db->prepare('SELECT id FROM classes WHERE icon_code=?');
         $st->bind_param('s', $code); $st->execute();
         $exists = $st->get_result()->num_rows > 0;
     } while ($exists);

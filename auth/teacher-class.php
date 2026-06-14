@@ -167,9 +167,13 @@ $qrUrl = urlencode(baseUrl().'/auth/student-login.php?code='.$class['class_code'
     <h2>🔑 Class Login</h2>
     <div class="code-box">
       <div>
-        <div style="font-size:.85rem;color:#7f8c8d;margin-bottom:.4rem">Share this code with students:</div>
+        <div style="font-size:.85rem;color:#7f8c8d;margin-bottom:.4rem">Students tap these 4 icons in order:</div>
+        <?php if ($class['icon_code']): ?>
+        <div style="font-size:2.6rem;letter-spacing:.2em;background:#f3e8ff;border-radius:14px;padding:.5rem 1rem;border:2.5px solid #dbb8ff;display:inline-block;line-height:1.3"><?= implode(' ', explode(',', $class['icon_code'])) ?></div>
+        <?php else: ?>
         <div class="code"><?= htmlspecialchars($class['class_code']) ?></div>
-        <div style="margin-top:.8rem;font-size:.85rem;color:#7f8c8d">Or scan the QR code →</div>
+        <?php endif; ?>
+        <div style="margin-top:.8rem;font-size:.85rem;color:#7f8c8d">Or scan the QR code to go straight to icon login →</div>
       </div>
       <div class="qr">
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=<?= $qrUrl ?>" alt="QR Code" width="140" height="140">

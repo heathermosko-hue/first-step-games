@@ -15,8 +15,8 @@
       --blue:    #3A8EF6;
       --bg:      #F0FFFB;
       --text:    #2C3E50;
-      --card-w:  72px;
-      --card-h:  90px;
+      --card-w: 96px;
+      --card-h: 118px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -394,13 +394,15 @@
 
     .card-word-text {
       font-family: 'Comic Sans MS', 'Comic Neue', 'Comic Sans';
-      font-size: clamp(0.72rem, 2.4vw, 1.1rem);
+      font-size: calc(var(--card-w) * 0.185);
       font-weight: bold;
       color: white;
       text-align: center;
       padding: 2px 4px;
       white-space: nowrap;
       line-height: 1.2;
+      max-width: 100%;
+      overflow: hidden;
     }
 
     .card-back {
@@ -614,12 +616,11 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 480px) {
-      :root { --card-w: 58px; --card-h: 74px; }
-      .card-word-text { font-size: clamp(0.78rem, 2.8vw, 1.1rem); }
+      :root { --card-w: 82px; --card-h: 100px; }
       header h1 { font-size: 1.25rem; }
     }
     @media (max-height: 700px) {
-      :root { --card-w: 46px; --card-h: 55px; }
+      :root { --card-w: 80px; --card-h: 98px; }
       .legend { display: none; }
       .scoreboard { padding: .04rem .5rem; }
       .score-value { font-size: 1rem; }
@@ -659,7 +660,7 @@
   .game-area { gap: 0.12rem; }
 }
 @media (max-height: 580px) {
-  :root { --card-w: 38px; --card-h: 46px; }
+  :root { --card-w: 62px; --card-h: 76px; }
   .game-area { gap: 0.08rem; padding: .08rem .3rem; }
   .middle-row { padding: 0.1rem 0.3rem; }
   .computer-zone, .player-zone { padding: 0.1rem 0.4rem; }

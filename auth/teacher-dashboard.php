@@ -10,9 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
     $cname = trim($_POST['class_name'] ?? '');
     $atype = $_POST['access_type'] === 'assigned' ? 'assigned' : 'full';
     if ($cname) {
-        $code = generateClassCode($db);
-        $st   = $db->prepare('INSERT INTO classes (teacher_id,name,class_code,access_type) VALUES (?,?,?,?)');
-        $st->bind_param('isss', $tid, $cname, $code, $atype);
+        $code     = generateClassCode($db);
+        $iconCode = generateIconCode($db);
+        $st   = $db->prepare('INSERT INTO classes (teacher_id,name,class_code,icon_code,access_type) VALUES (?,?,?,?,?)');
+        $st->bind_param('issss', $tid, $cname, $code, $iconCode, $atype);
         $st->execute();
         $msg = '✅ Class created!';
     }
@@ -139,7 +140,11 @@ $classes = $st->get_result()->fetch_all(MYSQLI_ASSOC);
         <h3><?= htmlspecialchars($c['name']) ?>
           <span class="badge <?= $c['access_type']==='full'?'badge-full':'badge-assigned' ?>"><?= $c['access_type'] === 'full' ? '🔓 Full' : '📋 Assigned' ?></span>
         </h3>
+        <?php if ($c['icon_code']): ?>
+        <div style="font-size:1.95rem;letter-spacing:.12em;margin-bottom:.45rem;line-height:1"><?= implode(' ', explode(',', $c['icon_code'])) ?></div>
+        <?php else: ?>
         <div class="code"><?= htmlspecialchars($c['class_code']) ?></div>
+        <?php endif; ?>
         <div class="meta">👧 <?= $c['student_count'] ?> student<?= $c['student_count'] != 1 ? 's' : '' ?></div>
         <div class="actions">
           <a class="btn btn-blue" href="teacher-class.php?id=<?= $c['id'] ?>" style="text-decoration:none;font-size:.85rem;padding:.5rem 1rem">Manage →</a>

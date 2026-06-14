@@ -19,6 +19,7 @@ $tables = [
     teacher_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     class_code VARCHAR(20) NOT NULL UNIQUE,
+    icon_code VARCHAR(60) DEFAULT NULL,
     access_type ENUM('full','assigned') NOT NULL DEFAULT 'full',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE CASCADE
@@ -65,6 +66,9 @@ foreach ($tables as $sql) {
         $ok = false;
     }
 }
+// Migration: add icon_code to existing classes table if missing
+$db->query("ALTER TABLE classes ADD COLUMN IF NOT EXISTS icon_code VARCHAR(60) DEFAULT NULL");
+
 echo $ok
     ? '<br><b style="color:green">Setup complete! Delete this file from your server now.</b>'
     : '<br><b style="color:red">Some errors occurred — check your DB credentials in db.php</b>';
