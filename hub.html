@@ -1198,9 +1198,6 @@
 
 <main>
 
-  <!-- ══ SCHOOL PACKAGE (injected by JS for non-members only) ══ -->
-  <div id="school-pkg-banner"></div>
-
   <!-- ══ ALL VIDEO LESSONS BAR ══ -->
   <a href="lessons.html" class="all-videos-bar">
     <span class="all-videos-icon">🎬</span>
@@ -1995,14 +1992,6 @@
     const bar   = document.getElementById('access-bar');
     const label = hubAccessLabel();
 
-    const isMember = sessionStorage.getItem('fsr_access_type') === 'member' || localStorage.getItem('fsr_access_type') === 'member';
-    document.getElementById('teacher-banner').style.display = isMember ? 'block' : 'none';
-    document.getElementById('school-pkg-banner').innerHTML = isMember ? '' : `
-      <div class="school-pkg-banner" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;background:linear-gradient(135deg,#1a7a4a,#27ae60);border-radius:22px;padding:1.4rem 2rem;margin-bottom:.5rem">
-        <div><h2 style="font-family:'Comic Sans MS','Comic Neue';color:white;font-size:1.25rem;margin-bottom:.2rem">🏫 Using This in a Classroom or School?</h2>
-        <p style="color:rgba(255,255,255,.88);font-size:.88rem;font-weight:600">We have a special package for teachers, schools, and districts with class management tools built in.</p></div>
-        <a href="https://www.firststepreading.com/product/school-district-package/" target="_blank" class="school-pkg-btn">🏫 See School Package →</a>
-      </div>`;
 
     if (label === 'free') {
       bar.className = 'school-hours';
@@ -2020,8 +2009,6 @@
         <a href="auth/teacher-dashboard.php" class="access-bar-link" style="background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:white;border-radius:20px;padding:.2rem .8rem;text-decoration:none;font-weight:700;">🏫 My Classroom</a>
         <button class="access-bar-link" onclick="hubLogout()" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">🚪 Log Out</button>
         <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
-      document.getElementById('teacher-banner').style.display = 'block';
-      document.getElementById('school-pkg-banner').style.display = 'none';
     } else if (label === 'class') {
       bar.className = 'code-granted';
       bar.innerHTML = `
