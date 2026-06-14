@@ -464,7 +464,9 @@
       var data = await res.json();
       if (data.success) {
         sessionStorage.setItem('fsr_access_type', 'member');
+        localStorage.setItem('fsr_access_type', 'member');
         sessionStorage.setItem('fsr_member_name', data.name || 'Member');
+        localStorage.setItem('fsr_member_name', data.name || 'Member');
         window.location.href = '../hub.html';
       } else {
         errEl.innerHTML = data.error || 'Incorrect email or password.';

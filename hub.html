@@ -1995,7 +1995,7 @@
     const bar   = document.getElementById('access-bar');
     const label = hubAccessLabel();
 
-    const isMember = sessionStorage.getItem('fsr_access_type') === 'member';
+    const isMember = sessionStorage.getItem('fsr_access_type') === 'member' || localStorage.getItem('fsr_access_type') === 'member';
     document.getElementById('teacher-banner').style.display = isMember ? 'block' : 'none';
     document.getElementById('school-pkg-banner').innerHTML = isMember ? '' : `
       <div class="school-pkg-banner" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;background:linear-gradient(135deg,#1a7a4a,#27ae60);border-radius:22px;padding:1.4rem 2rem;margin-bottom:.5rem">
@@ -2310,7 +2310,9 @@
 
       if (data.success) {
         sessionStorage.setItem('fsr_access_type', 'member');
+        localStorage.setItem('fsr_access_type', 'member');
         sessionStorage.setItem('fsr_member_name', data.name || 'Member');
+        localStorage.setItem('fsr_member_name', data.name || 'Member');
         const mbrOv = document.getElementById('member-login-overlay');
         if (mbrOv) mbrOv.remove();
         const gate = document.getElementById('gate-overlay');
