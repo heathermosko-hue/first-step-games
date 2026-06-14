@@ -94,6 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button class="btn" type="submit">🍎 Sign In →</button>
   </form>
   <div class="footer">
+    <a href="forgot-password.php">Forgot your password?</a>
+  </div>
+  <div class="footer" style="margin-top:.6rem">
     New teacher? <a href="teacher-register.php">Create a free account! 🎉</a>
   </div>
 </div>
