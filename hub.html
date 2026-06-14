@@ -1199,7 +1199,7 @@
 <main>
 
   <!-- ══ SCHOOL PACKAGE ══ -->
-  <div class="school-pkg-banner" id="school-pkg-banner">
+  <div class="school-pkg-banner" id="school-pkg-banner" style="display:none">
     <div>
       <h2>🏫 Using This in a Classroom or School?</h2>
       <p>We have a special package for teachers, schools, and districts with class management tools built in.</p>
@@ -2002,10 +2002,8 @@
     const label = hubAccessLabel();
 
     const isMember = sessionStorage.getItem('fsr_access_type') === 'member';
-    if (isMember) {
-      document.getElementById('teacher-banner').style.display = 'block';
-      document.getElementById('school-pkg-banner').style.display = 'none';
-    }
+    document.getElementById('teacher-banner').style.display = isMember ? 'block' : 'none';
+    document.getElementById('school-pkg-banner').style.display = isMember ? 'none' : 'block';
 
     if (label === 'free') {
       bar.className = 'school-hours';
