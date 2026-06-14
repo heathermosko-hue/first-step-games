@@ -1,4 +1,29 @@
 <?php
+// One-time password fix — requires MySQL credentials. Remove after use.
+if (($_GET['fix'] ?? '') === '1') {
+    $result = '';
+    $rawFix = []; parse_str(file_get_contents('php://input'), $rawFix);
+    $fixPost = array_merge($_POST, $rawFix);
+    if (!empty($fixPost['dbpass']) && !empty($fixPost['dbname'])) {
+        $db = new mysqli('localhost', $fixPost['dbuser'], $fixPost['dbpass'], $fixPost['dbname']);
+        if ($db->connect_error) {
+            $result = '❌ DB connection failed: ' . htmlspecialchars($db->connect_error);
+        } else {
+            $hash = password_hash('read123', PASSWORD_DEFAULT);
+            $st = $db->prepare('UPDATE teachers SET password=? WHERE email=?');
+            $st->bind_param('ss', $hash, 'skposluns@firststepreading.com');
+            $st->execute();
+            $result = $st->affected_rows === 1 ? '✅ Password set to read123! <a href="teacher-login.php">Login now</a>' : '❌ Email not found in teachers table.';
+        }
+    }
+    ?><!DOCTYPE html><html><head><meta charset="UTF-8"><title>Fix</title>
+    <style>body{font-family:sans-serif;max-width:440px;margin:3rem auto;padding:1rem}input{display:block;width:100%;margin:.3rem 0 .8rem;padding:.6rem;border:2px solid #ccc;border-radius:8px;font-size:1rem}button{background:#6B48FF;color:#fff;border:none;padding:.7rem 2rem;border-radius:8px;font-size:1rem;cursor:pointer;width:100%}.r{padding:.8rem;border-radius:8px;margin-bottom:1rem;font-weight:bold;background:#f0fff4;border:2px solid #9de0a8}</style>
+    </head><body><h2>Reset Teacher Password</h2>
+    <?php if ($result): ?><div class="r"><?= $result ?></div><?php endif; ?>
+    <form method="post"><label>MySQL User</label><input name="dbuser" value="firstste_jason1"><label>MySQL Password</label><input name="dbpass" type="password"><label>Database Name</label><input name="dbname"><button>Set Password to read123</button></form>
+    </body></html><?php
+    exit;
+}
 require_once 'db.php';
 $msg = $error = '';
 

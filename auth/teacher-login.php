@@ -3,10 +3,15 @@ require_once 'db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 if (!empty($_SESSION['teacher_id'])) { header('Location: teacher-dashboard.php'); exit; }
 
+// Server rewrites REQUEST_METHOD to GET — read raw input instead
+$rawInput = [];
+parse_str(file_get_contents('php://input'), $rawInput);
+$isPost = !empty($rawInput['email']) || !empty($_POST['email']);
+
 $error = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $pass  = $_POST['password'] ?? '';
+if ($isPost) {
+    $email = trim($rawInput['email'] ?? $_POST['email'] ?? '');
+    $pass  = $rawInput['password'] ?? $_POST['password'] ?? '';
     $db    = getDB();
     $st    = $db->prepare('SELECT id, name, password FROM teachers WHERE email=?');
     $st->bind_param('s', $email); $st->execute();
@@ -88,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php endif; ?>
   <form method="post">
     <label>📧 Email address</label>
-    <input type="email" name="email" required autofocus value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+    <input type="email" name="email" required autofocus value="<?= htmlspecialchars($rawInput['email'] ?? $_POST['email'] ?? '') ?>">
     <label>🔑 Password</label>
     <input type="password" name="password" required>
     <button class="btn" type="submit">🍎 Sign In →</button>

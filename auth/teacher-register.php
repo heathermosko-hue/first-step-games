@@ -3,12 +3,16 @@ require_once 'db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 if (!empty($_SESSION['teacher_id'])) { header('Location: teacher-dashboard.php'); exit; }
 
+$rawInput = [];
+parse_str(file_get_contents('php://input'), $rawInput);
+$isPost = !empty($rawInput['name']) || !empty($_POST['name']);
+
 $error = $success = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name  = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $pass  = $_POST['password'] ?? '';
-    $pass2 = $_POST['password2'] ?? '';
+if ($isPost) {
+    $name  = trim($rawInput['name'] ?? $_POST['name'] ?? '');
+    $email = trim($rawInput['email'] ?? $_POST['email'] ?? '');
+    $pass  = $rawInput['password'] ?? $_POST['password'] ?? '';
+    $pass2 = $rawInput['password2'] ?? $_POST['password2'] ?? '';
     if (!$name || !$email || !$pass) {
         $error = 'Please fill in all fields.';
     } elseif ($pass !== $pass2) {
