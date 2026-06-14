@@ -1199,7 +1199,7 @@
 <main>
 
   <!-- ══ SCHOOL PACKAGE ══ -->
-  <div class="school-pkg-banner">
+  <div class="school-pkg-banner" id="school-pkg-banner">
     <div>
       <h2>🏫 Using This in a Classroom or School?</h2>
       <p>We have a special package for teachers, schools, and districts with class management tools built in.</p>
@@ -2018,6 +2018,7 @@
         <button class="access-bar-link" onclick="hubLogout()" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">🚪 Log Out</button>
         <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
       document.getElementById('teacher-banner').style.display = 'block';
+      document.getElementById('school-pkg-banner').style.display = 'none';
     } else if (label === 'class') {
       bar.className = 'code-granted';
       bar.innerHTML = `
