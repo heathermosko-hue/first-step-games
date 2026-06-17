@@ -1,8 +1,8 @@
 <?php
 require_once 'db.php';
-requireTeacher();
+$teacher = requireTeacher();
 $db  = getDB();
-$tid = $_SESSION['teacher_id'];
+$tid = $teacher['teacher_id'];
 
 // ── Handle create class ──────────────────────────────────
 $msg = '';
@@ -98,7 +98,7 @@ $classes = $st->get_result()->fetch_all(MYSQLI_ASSOC);
 <header>
   <h1>🍎 First Step Reading — Teacher Dashboard</h1>
   <div class="hdr-right">
-    <span>👋 <?= htmlspecialchars($_SESSION['teacher_name']) ?></span>
+    <span>👋 <?= htmlspecialchars($teacher['teacher_name']) ?></span>
     <a class="logout" href="../hub.html">🎮 Games</a>
     <a class="logout" href="logout.php?teacher=1">🚪 Sign out</a>
   </div>

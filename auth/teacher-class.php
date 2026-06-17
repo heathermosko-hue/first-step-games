@@ -1,8 +1,8 @@
 <?php
 require_once 'db.php';
-requireTeacher();
+$teacher = requireTeacher();
 $db  = getDB();
-$tid = $_SESSION['teacher_id'];
+$tid = $teacher['teacher_id'];
 $cid = (int)($_GET['id'] ?? 0);
 
 // Verify class belongs to teacher

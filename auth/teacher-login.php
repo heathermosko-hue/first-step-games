@@ -1,27 +1,29 @@
 <?php
 require_once 'db.php';
-if (session_status() === PHP_SESSION_NONE) session_start();
-if (!empty($_SESSION['teacher_id'])) { header('Location: teacher-dashboard.php'); exit; }
 
-// Server rewrites REQUEST_METHOD to GET — read raw input instead
-$rawInput = [];
-parse_str(file_get_contents('php://input'), $rawInput);
-$isPost = !empty($rawInput['email']) || !empty($_POST['email']);
-
-$error = '';
-if ($isPost) {
-    $email = trim($rawInput['email'] ?? $_POST['email'] ?? '');
-    $pass  = $rawInput['password'] ?? $_POST['password'] ?? '';
-    $db    = getDB();
-    $st    = $db->prepare('SELECT id, name, password FROM teachers WHERE email=?');
+// JSON endpoint — called via fetch from the login form
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+    header('Content-Type: application/json');
+    $raw = [];
+    parse_str(file_get_contents('php://input'), $raw);
+    $email = trim($raw['email'] ?? '');
+    $pass  = $raw['password'] ?? '';
+    if (!$email || !$pass) { echo json_encode(['ok'=>false,'error'=>'Missing fields.']); exit; }
+    $db = getDB();
+    $st = $db->prepare('SELECT id, name, password FROM teachers WHERE email=?');
     $st->bind_param('s', $email); $st->execute();
     $row = $st->get_result()->fetch_assoc();
     if ($row && password_verify($pass, $row['password'])) {
-        $_SESSION['teacher_id']   = $row['id'];
-        $_SESSION['teacher_name'] = $row['name'];
-        header('Location: teacher-dashboard.php'); exit;
+        echo json_encode(['ok'=>true,'cookie'=>teacherCookieValue($row['id'], $row['name'])]);
+    } else {
+        echo json_encode(['ok'=>false,'error'=>'Incorrect email or password.']);
     }
-    $error = 'Incorrect email or password.';
+    exit;
+}
+
+// Already logged in?
+if (getTeacherFromCookie()) {
+    echo '<script>window.location.href="teacher-dashboard.php";</script>'; exit;
 }
 ?><!DOCTYPE html>
 <html lang="en">
@@ -60,6 +62,10 @@ if ($isPost) {
     transition:border-color .2s,box-shadow .2s;margin-bottom:1rem;
   }
   input:focus{outline:none;border-color:#6B48FF;box-shadow:0 0 0 3px rgba(107,72,255,.15)}
+  .pw-wrap{position:relative;margin-bottom:1rem}
+  .pw-wrap input{margin-bottom:0;padding-right:3rem}
+  .pw-eye{position:absolute;right:.85rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;padding:.2rem;color:#aaa;line-height:1}
+  .pw-eye:hover{color:#6B48FF}
   .btn{
     width:100%;background:linear-gradient(135deg,#6BCB77,#27AE60);color:white;
     border:none;border-radius:14px;padding:.9rem;font-size:1.1rem;font-weight:700;
@@ -67,6 +73,7 @@ if ($isPost) {
     box-shadow:0 4px 18px rgba(39,174,96,.35);transition:transform .18s,box-shadow .18s;
   }
   .btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(39,174,96,.45)}
+  .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
   .error{
     background:#fff0f0;border:2px solid #ffb3b3;color:#c0392b;
     border-radius:12px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.9rem;font-weight:600;
@@ -88,15 +95,16 @@ if ($isPost) {
     <h1>Teacher Login</h1>
     <p>First Step Reading Games</p>
   </div>
-  <?php if ($error): ?>
-    <div class="error">⚠️ <?= htmlspecialchars($error) ?></div>
-  <?php endif; ?>
-  <form method="post">
+  <div id="error-box" style="display:none" class="error"></div>
+  <form id="login-form">
     <label>📧 Email address</label>
-    <input type="email" name="email" required autofocus value="<?= htmlspecialchars($rawInput['email'] ?? $_POST['email'] ?? '') ?>">
+    <input type="email" id="email" required autofocus>
     <label>🔑 Password</label>
-    <input type="password" name="password" required>
-    <button class="btn" type="submit">🍎 Sign In →</button>
+    <div class="pw-wrap">
+      <input type="password" id="pw" required>
+      <button type="button" class="pw-eye" onclick="var i=document.getElementById('pw');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁️':'🙈'">👁️</button>
+    </div>
+    <button class="btn" id="submit-btn" type="submit">🍎 Sign In →</button>
   </form>
   <div class="footer">
     <a href="forgot-password.php">Forgot your password?</a>
@@ -106,5 +114,40 @@ if ($isPost) {
   </div>
 </div>
 <a href="../hub.html" class="back-link">← Back to Games</a>
+<script>
+document.getElementById('login-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var btn = document.getElementById('submit-btn');
+  var errBox = document.getElementById('error-box');
+  btn.disabled = true;
+  btn.textContent = 'Signing in...';
+  errBox.style.display = 'none';
+  var body = 'email=' + encodeURIComponent(document.getElementById('email').value)
+           + '&password=' + encodeURIComponent(document.getElementById('pw').value);
+  fetch('teacher-login.php', {
+    method: 'POST',
+    headers: {'Content-Type':'application/x-www-form-urlencoded','X-Requested-With':'XMLHttpRequest'},
+    body: body
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    if (data.ok) {
+      document.cookie = 'fsr_teacher=' + data.cookie + '; max-age=2592000; path=/; SameSite=Lax';
+      window.location.href = 'teacher-dashboard.php?t=' + Date.now();
+    } else {
+      errBox.textContent = '⚠️ ' + data.error;
+      errBox.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '🍎 Sign In →';
+    }
+  })
+  .catch(function() {
+    errBox.textContent = '⚠️ Connection error. Please try again.';
+    errBox.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = '🍎 Sign In →';
+  });
+});
+</script>
 </body>
 </html>

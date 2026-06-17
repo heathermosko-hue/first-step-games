@@ -1,7 +1,7 @@
 <?php
 require_once 'db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
-if (!empty($_SESSION['teacher_id'])) { header('Location: teacher-dashboard.php'); exit; }
+if (getTeacherFromCookie()) { header('Location: teacher-dashboard.php'); exit; }
 
 $rawInput = [];
 parse_str(file_get_contents('php://input'), $rawInput);

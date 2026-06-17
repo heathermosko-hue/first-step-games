@@ -2,11 +2,13 @@
 // ═══════════════════════════════════════════════════════════
 //  CONFIGURATION  ← husband fills these in before uploading
 // ═══════════════════════════════════════════════════════════
-define('DB_HOST',       'localhost');
-define('DB_USER',       'YOUR_DB_USERNAME');
-define('DB_PASS',       'YOUR_DB_PASSWORD');
-define('DB_NAME',       'YOUR_DB_NAME');
-define('COOKIE_SECRET', 'change-me-to-any-long-random-string-32chars');
+// Use WordPress constants if available (WordPress defines DB_HOST, DB_USER, DB_PASSWORD, DB_NAME)
+if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
+if (!defined('DB_USER')) define('DB_USER', 'YOUR_DB_USERNAME');
+// WordPress uses DB_PASSWORD; map it to DB_PASS if we don't have DB_PASS yet
+if (!defined('DB_PASS')) define('DB_PASS', defined('DB_PASSWORD') ? DB_PASSWORD : 'YOUR_DB_PASSWORD');
+if (!defined('DB_NAME')) define('DB_NAME', 'YOUR_DB_NAME');
+if (!defined('COOKIE_SECRET')) define('COOKIE_SECRET', 'fsr-cookie-secret-2024-xK9mP3');
 
 // ─── ANIMAL ICONS (40 choices — each student's unique login icon) ─────────────
 define('ANIMALS', [
@@ -119,10 +121,32 @@ function clearStudentCookie() {
     setcookie('fsr_student', '', time()-3600, '/', '', false, false);
 }
 
-// ─── TEACHER SESSION ──────────────────────────────────────
+// ─── TEACHER COOKIE AUTH ──────────────────────────────────
+function teacherCookieValue($id, $name) {
+    $data = $id . '|' . $name;
+    $sig  = hash_hmac('sha256', $data, COOKIE_SECRET);
+    return base64_encode($data) . '.' . $sig;
+}
+function setTeacherCookie($id, $name) {
+    // kept for compatibility — JS approach used in login page directly
+    $val = teacherCookieValue($id, $name);
+    echo '<script>document.cookie="fsr_teacher='.addslashes($val).'; max-age=2592000; path=/; SameSite=Lax";</script>';
+}
+function getTeacherFromCookie() {
+    if (empty($_COOKIE['fsr_teacher'])) return null;
+    $parts = explode('.', $_COOKIE['fsr_teacher'], 2);
+    if (count($parts) !== 2) return null;
+    $data = base64_decode($parts[0]);
+    if (!hash_equals(hash_hmac('sha256', $data, COOKIE_SECRET), $parts[1])) return null;
+    $f = explode('|', $data, 2);
+    if (count($f) !== 2) return null;
+    return ['teacher_id' => (int)$f[0], 'teacher_name' => $f[1]];
+}
+function clearTeacherCookie() {
+    echo '<script>document.cookie="fsr_teacher=; max-age=0; path=/; SameSite=Lax";</script>';
+}
 function requireTeacher() {
-    if (session_status() === PHP_SESSION_NONE) session_start();
-    if (empty($_SESSION['teacher_id'])) {
-        header('Location: teacher-login.php'); exit;
-    }
+    $t = getTeacherFromCookie();
+    if (!$t) { header('Location: teacher-login.php'); exit; }
+    return $t;
 }
