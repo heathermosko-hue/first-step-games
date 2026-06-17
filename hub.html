@@ -2028,7 +2028,8 @@
       bar.innerHTML = `
         <span class="access-dot"></span>
         <span>🎁 <strong>Free Trial</strong> — ${days} day${days !== 1 ? 's' : ''} left! Enjoying the games?</span>
-        <a href="https://www.firststepreading.com" class="access-bar-link" style="background:linear-gradient(135deg,#FFD93D,#FF8E53);color:white;border-radius:999px;padding:4px 14px;">⭐ Upgrade</a>`;
+        <a href="https://www.firststepreading.com" class="access-bar-link" style="background:linear-gradient(135deg,#FFD93D,#FF8E53);color:white;border-radius:999px;padding:4px 14px;">⭐ Upgrade</a>
+        <button class="access-bar-link" onclick="hubLogout()" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">🚪 Log Out</button>`;
     } else {
       bar.className = 'needs-code';
       bar.innerHTML = `
