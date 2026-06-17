@@ -15,8 +15,8 @@
       --blue:    #3A8EF6;
       --bg:      #F0FFFB;
       --text:    #2C3E50;
-      --card-w: 96px;
-      --card-h: 118px;
+      --card-w: 150px;
+      --card-h: 185px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -667,7 +667,7 @@
   .score-value { font-size: .88rem; }
 }
   </style>
-<link href="fonts.css?v=3" rel="stylesheet"><script src="tts.js?v=13"></script>
+<link href="fonts.css?v=3" rel="stylesheet"><script src="tts.js?v=14"></script>
 </head>
 <body>
 
@@ -1358,9 +1358,12 @@ function _waitForSpeech(callback, pauseAfter) {
     setTimeout(callback, pauseAfter);
     return;
   }
+  const deadline = Date.now() + 4000;
   const poll = setInterval(() => {
-    if (!_speaking && !_queue.length && !_pending) {
+    const idle = !_speaking && !_queue.length && !_pending;
+    if (idle || Date.now() > deadline) {
       clearInterval(poll);
+      if (!idle) { _speaking = false; _queue = []; _pending = null; }
       setTimeout(callback, pauseAfter);
     }
   }, 120);

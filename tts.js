@@ -1,11 +1,11 @@
 /**
- * tts.js v13 — Google Cloud TTS via server proxy
+ * tts.js v14 — Google Cloud TTS via server proxy
  *
- * Key changes from v12:
- * - PROXY uses absolute URL on main server (games subdomain is GitHub Pages —
- *   no PHP execution there; proxy must live on the Apache server)
- * - tts.php now sends CORS headers for games.firststepreading.com
- * - Voice: en-US-Journey-F throughout
+ * Key changes from v13:
+ * - Fix pre-gesture race: if onGesture() fires while the fetch is still
+ *   in-flight, _preGesture is nulled before the callback runs, causing
+ *   utterance.onend to never fire and the game speech engine to hang.
+ *   Now: play the audio if playWhenReady, else fire onend immediately.
  */
 (function () {
   var PROXY = 'https://www.firststepreading.com/reading-games/tts.php';
@@ -140,8 +140,9 @@
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (!d.audioContent) { cb('no audio'); return; }
-        memCache[key] = d.audioContent;
-        try { sessionStorage.setItem('gtts:' + key, d.audioContent); } catch(e) {}
+        var ck = text.trim().toLowerCase();
+        memCache[ck] = d.audioContent;
+        try { sessionStorage.setItem('gtts:' + ck, d.audioContent); } catch(e) {}
         cb(null, d.audioContent);
       })
       .catch(function (e) { cb(e); });
@@ -184,7 +185,17 @@
       var pg = { utt: utterance, b64: null, pending: true, playWhenReady: false };
       _preGesture = pg;
       fetchAudio(text, function (err, b64) {
-        if (_preGesture !== pg) return;
+        if (_preGesture !== pg) {
+          /* onGesture() fired while fetch was in-flight and nulled _preGesture.
+             Play the audio if the gesture already queued it, otherwise fire
+             onend immediately so the calling speech engine doesn't hang. */
+          if (!err && b64 && pg.playWhenReady) {
+            _playJourney(utterance, b64);
+          } else if (utterance.onend) {
+            try { utterance.onend({ type: 'end' }); } catch(e) {}
+          }
+          return;
+        }
         if (err || !b64) {
           pg.pending = false;
           if (utterance.onend) { try { utterance.onend({ type: 'end' }); } catch(e) {} }
