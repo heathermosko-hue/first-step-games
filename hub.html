@@ -1992,12 +1992,6 @@
     const bar   = document.getElementById('access-bar');
     const label = hubAccessLabel();
 
-    const isMember = sessionStorage.getItem('fsr_access_type') === 'member'
-      || localStorage.getItem('fsr_access_type') === 'member'
-      || document.cookie.split(';').some(c => c.trim() === 'fsr_access=member')
-      || document.cookie.split(';').some(c => c.trim().startsWith('fsr_member='));
-    const btn = document.getElementById('teacher-banner-btn');
-    if (btn) btn.href = isMember ? 'auth/teacher-login.php' : 'https://www.firststepreading.com/product/school-district-package/';
 
     if (label === 'free') {
       bar.className = 'school-hours';
@@ -2013,14 +2007,14 @@
         <span class="access-dot"></span>
         <span>⭐ <strong>Member Access</strong> — Welcome! Enjoy the games anytime!</span>
         <a href="auth/teacher-dashboard.php" class="access-bar-link" style="background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:white;border-radius:20px;padding:.2rem .8rem;text-decoration:none;font-weight:700;">🏫 My Classroom</a>
-        <button class="access-bar-link" onclick="hubLogout()" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">🚪 Log Out</button>
+        <button onclick="hubLogout()" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.6);border-radius:20px;padding:.2rem .9rem;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">🚪 Sign Out</button>
         <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
     } else if (label === 'class') {
       bar.className = 'code-granted';
       bar.innerHTML = `
         <span class="access-dot"></span>
         <span>✅ <strong>Class Code Accepted</strong> — Enjoy the games!</span>
-        <button class="access-bar-link" onclick="hubLogout()" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">🚪 Log Out</button>
+        <button onclick="hubLogout()" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.6);border-radius:20px;padding:.2rem .9rem;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">🚪 Sign Out</button>
         <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
     } else if (label === 'trial') {
       const days = trialDaysLeft();
@@ -2029,7 +2023,7 @@
         <span class="access-dot"></span>
         <span>🎁 <strong>Free Trial</strong> — ${days} day${days !== 1 ? 's' : ''} left! Enjoying the games?</span>
         <a href="https://www.firststepreading.com" class="access-bar-link" style="background:linear-gradient(135deg,#FFD93D,#FF8E53);color:white;border-radius:999px;padding:4px 14px;">⭐ Upgrade</a>
-        <button class="access-bar-link" onclick="hubLogout()" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">🚪 Log Out</button>`;
+        <button onclick="hubLogout()" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.6);border-radius:20px;padding:.2rem .9rem;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">🚪 Sign Out</button>`;
     } else {
       bar.className = 'needs-code';
       bar.innerHTML = `
