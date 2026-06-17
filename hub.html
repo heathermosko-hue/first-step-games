@@ -1992,6 +1992,8 @@
     const bar   = document.getElementById('access-bar');
     const label = hubAccessLabel();
 
+    const hasSession = sessionStorage.getItem('fsr_access_type') || localStorage.getItem('fsr_access_type') || localStorage.getItem('fsr_trial_expires');
+    const signOutBtn = hasSession ? `<button onclick="hubLogout()" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.6);border-radius:20px;padding:.2rem .9rem;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">🚪 Sign Out</button>` : '';
 
     if (label === 'free') {
       bar.className = 'school-hours';
@@ -1999,6 +2001,7 @@
         <span class="access-dot"></span>
         <span>🟢 <strong>School Hours</strong> — All games are free! (Mon–Fri 7AM–4PM)</span>
         <span class="access-countdown" id="hub-countdown"></span>
+        ${signOutBtn}
         <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
       updateCountdown();
     } else if (label === 'member') {
