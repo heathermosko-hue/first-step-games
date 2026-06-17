@@ -1992,7 +1992,10 @@
     const bar   = document.getElementById('access-bar');
     const label = hubAccessLabel();
 
-    const isMember = sessionStorage.getItem('fsr_access_type') === 'member' || localStorage.getItem('fsr_access_type') === 'member';
+    const isMember = sessionStorage.getItem('fsr_access_type') === 'member'
+      || localStorage.getItem('fsr_access_type') === 'member'
+      || document.cookie.split(';').some(c => c.trim() === 'fsr_access=member')
+      || document.cookie.split(';').some(c => c.trim().startsWith('fsr_member='));
     const btn = document.getElementById('teacher-banner-btn');
     if (btn) btn.href = isMember ? 'auth/teacher-register.php' : 'https://www.firststepreading.com/product/school-district-package/';
 
