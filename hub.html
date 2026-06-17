@@ -1997,7 +1997,7 @@
       || document.cookie.split(';').some(c => c.trim() === 'fsr_access=member')
       || document.cookie.split(';').some(c => c.trim().startsWith('fsr_member='));
     const btn = document.getElementById('teacher-banner-btn');
-    if (btn) btn.href = isMember ? 'auth/teacher-register.php' : 'https://www.firststepreading.com/product/school-district-package/';
+    if (btn) btn.href = isMember ? 'auth/teacher-login.php' : 'https://www.firststepreading.com/product/school-district-package/';
 
     if (label === 'free') {
       bar.className = 'school-hours';
