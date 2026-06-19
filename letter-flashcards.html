@@ -243,14 +243,10 @@ const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const LETTER_WORDS = {A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G:'Goat',H:'Hat',I:'Igloo',J:'Jar',K:'Kite',L:'Lamp',M:'Mug',N:'Nest',O:'Octopus',P:'Pig',Q:'Queen',R:'Rainbow',S:'Sun',T:'Tree',U:'Umbrella',V:'Violin',W:'Watch',X:'Xylophone',Y:'Yo-yo',Z:'Zebra'};
 
 let cur = 0, mode = 'upper', muted = false;
-let voices = [], userInteracted = false, pendingSpeech = null;
+let userInteracted = false, pendingSpeech = null;
 
 /* ── Speech ── */
-function loadVoices() { voices = speechSynthesis.getVoices(); }
-speechSynthesis.addEventListener('voiceschanged', loadVoices);
-loadVoices();
 
-function getBestVoice(){const en=voices.filter(v=>/^en/i.test(v.lang));return en.find(v=>/aria/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/\b(jenny|emma)\b/i.test(v.name)&&/natural/i.test(v.name))||en.find(v=>/female/i.test(v.name))||en.find(v=>/\b(samantha|karen|moira|serena|victoria|tessa|fiona|kate|zoe|allison|ava|zira|eva|hazel|susan)\b/i.test(v.name))||en.find(v=>/natural|neural|online/i.test(v.name))||en.find(v=>/google.*english/i.test(v.name))||en[0]||voices[0];}
 
 function speak(txt, delay) {
   if (!window.speechSynthesis || muted) return;
@@ -260,7 +256,6 @@ function speak(txt, delay) {
   setTimeout(function() {
     var u = new SpeechSynthesisUtterance(txt);
     u.rate = 0.85; u.pitch = 1.0; u.volume = 1.0;
-    var v = getBestVoice(); if (v) u.voice = v;
     speechSynthesis.speak(u);
   }, delay);
 }
