@@ -1199,7 +1199,7 @@
 <main>
 
   <!-- ══ ALL VIDEO LESSONS BAR ══ -->
-  <a href="lessons.html" class="all-videos-bar">
+  <a href="lessons.html" class="all-videos-bar" id="all-videos-bar" style="display:none">
     <span class="all-videos-icon">🎬</span>
     <span class="all-videos-text">All Video Lessons<span class="all-videos-sub">40 step-by-step phonics videos — Letters through Controlled R</span></span>
     <span class="all-videos-arrow">→</span>
@@ -1994,6 +1994,9 @@
 
     const hasSession = sessionStorage.getItem('fsr_access_type') || localStorage.getItem('fsr_access_type') || localStorage.getItem('fsr_trial_expires');
     const signOutBtn = hasSession ? `<button onclick="hubLogout()" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.6);border-radius:20px;padding:.2rem .9rem;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">🚪 Sign Out</button>` : '';
+
+    const videosBar = document.getElementById('all-videos-bar');
+    if (videosBar) videosBar.style.display = hubAccessGranted() ? '' : 'none';
 
     if (label === 'free') {
       bar.className = 'school-hours';
