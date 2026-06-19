@@ -1,0 +1,10 @@
+/* shared.css v1 — universal reset and base typography */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+}
