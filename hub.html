@@ -2318,11 +2318,17 @@
     btn.classList.toggle('open', !isOpen);
     btn.setAttribute('aria-expanded', !isOpen);
     if (!isOpen) {
+      body.classList.add('open');
       body.style.maxHeight = body.scrollHeight + 'px';
+      body.addEventListener('transitionend', function clear() {
+        body.removeEventListener('transitionend', clear);
+        body.style.maxHeight = '';
+      });
     } else {
-      body.style.maxHeight = '0';
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(function() { body.style.maxHeight = '0'; });
+      body.classList.remove('open');
     }
-    body.classList.toggle('open', !isOpen);
     // Save open state
     try {
       var cat = btn.closest('.cat-section').dataset.cat;
