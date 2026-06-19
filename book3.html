@@ -401,6 +401,6 @@ function buildChList(){const list=document.getElementById('chList');list.innerHT
 document.addEventListener('click',e=>{const p=document.getElementById('chPanel');if(p.classList.contains('open')&&!p.contains(e.target)&&!document.getElementById('chTab').contains(e.target)&&!document.getElementById('mob-chaps-btn').contains(e.target)){p.classList.remove('open');}const mm=document.getElementById('mobile-menu');const mb=document.getElementById('mob-menu-btn');if(mm&&mm.classList.contains('open')&&!mm.contains(e.target)&&e.target!==mb){mm.classList.remove('open');}});
 function toggleMobileMenu(){const mm=document.getElementById('mobile-menu');mm.classList.toggle('open');}
 </script>
-  <script src="site-nav.js?v=5"></script>
+  <script src="site-nav.js?v=5" defer></script>
 </body>
 </html>

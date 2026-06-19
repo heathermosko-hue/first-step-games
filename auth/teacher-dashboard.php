@@ -1,29 +1,39 @@
 <?php
 require_once 'db.php';
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Pragma: no-cache');
 $teacher = requireTeacher();
 $db  = getDB();
 $tid = $teacher['teacher_id'];
 
-// ── Handle create class ──────────────────────────────────
-$msg = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'create_class') {
-    $cname = trim($_POST['class_name'] ?? '');
-    $atype = $_POST['access_type'] === 'assigned' ? 'assigned' : 'full';
-    if ($cname) {
+// ── AJAX actions — WordPress clears $_GET so parse REQUEST_URI ──
+parse_str(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_QUERY) ?? '', $_QS);
+if (!empty($_QS['fsr_ajax'])) {
+    header('Content-Type: application/json');
+    $action = base64_decode($_QS['action'] ?? '');
+    $data   = json_decode(base64_decode($_QS['data'] ?? ''), true) ?? [];
+    if ($action === 'create_class') {
+        $cname = trim($data['class_name'] ?? '');
+        $atype = ($data['access_type'] ?? '') === 'assigned' ? 'assigned' : 'full';
+        if (!$cname) { echo json_encode(['ok'=>false,'error'=>'Class name required.']); exit; }
         $code     = generateClassCode($db);
         $iconCode = generateIconCode($db);
-        $st   = $db->prepare('INSERT INTO classes (teacher_id,name,class_code,icon_code,access_type) VALUES (?,?,?,?,?)');
+        $st = $db->prepare('INSERT INTO classes (teacher_id,name,class_code,icon_code,access_type) VALUES (?,?,?,?,?)');
         $st->bind_param('issss', $tid, $cname, $code, $iconCode, $atype);
         $st->execute();
-        $msg = '✅ Class created!';
+        echo json_encode(['ok'=>true]);
+    } elseif ($action === 'delete_class') {
+        $cid = (int)($data['class_id'] ?? 0);
+        $st  = $db->prepare('DELETE FROM classes WHERE id=? AND teacher_id=?');
+        $st->bind_param('ii', $cid, $tid); $st->execute();
+        echo json_encode(['ok'=>true]);
+    } else {
+        echo json_encode(['ok'=>false,'error'=>'Unknown action.']);
     }
+    exit;
 }
-// ── Delete class ─────────────────────────────────────────
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete_class') {
-    $cid = (int)$_POST['class_id'];
-    $st  = $db->prepare('DELETE FROM classes WHERE id=? AND teacher_id=?');
-    $st->bind_param('ii', $cid, $tid); $st->execute();
-}
+
+$msg = '';
 
 // ── Load classes ─────────────────────────────────────────
 $st = $db->prepare('SELECT c.*, (SELECT COUNT(*) FROM students WHERE class_id=c.id) AS student_count FROM classes c WHERE c.teacher_id=? ORDER BY c.created_at DESC');
@@ -109,23 +119,21 @@ $classes = $st->get_result()->fetch_all(MYSQLI_ASSOC);
   <!-- Create Class -->
   <div class="card">
     <h2>➕ Create a New Class</h2>
-    <form method="post">
-      <input type="hidden" name="action" value="create_class">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Class name</label>
-          <input type="text" name="class_name" placeholder="e.g. Mrs. Smith — Grade 1" required>
-        </div>
-        <div class="form-group" style="max-width:200px">
-          <label>Game access</label>
-          <select name="access_type">
-            <option value="full">Full access (all games)</option>
-            <option value="assigned">Assigned games only</option>
-          </select>
-        </div>
-        <button class="btn" type="submit">Create Class</button>
+    <div id="create-msg"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Class name</label>
+        <input type="text" id="class_name" placeholder="e.g. Mrs. Smith — Grade 1">
       </div>
-    </form>
+      <div class="form-group" style="max-width:200px">
+        <label>Game access</label>
+        <select id="access_type">
+          <option value="full">Full access (all games)</option>
+          <option value="assigned">Assigned games only</option>
+        </select>
+      </div>
+      <button class="btn" onclick="createClass()">Create Class</button>
+    </div>
   </div>
 
   <!-- Classes -->
@@ -147,12 +155,8 @@ $classes = $st->get_result()->fetch_all(MYSQLI_ASSOC);
         <?php endif; ?>
         <div class="meta">👧 <?= $c['student_count'] ?> student<?= $c['student_count'] != 1 ? 's' : '' ?></div>
         <div class="actions">
-          <a class="btn btn-blue" href="teacher-class.php?id=<?= $c['id'] ?>" style="text-decoration:none;font-size:.85rem;padding:.5rem 1rem">Manage →</a>
-          <form method="post" onsubmit="return confirm('Delete this class and all student data?')">
-            <input type="hidden" name="action" value="delete_class">
-            <input type="hidden" name="class_id" value="<?= $c['id'] ?>">
-            <button class="btn btn-red" style="font-size:.85rem;padding:.5rem 1rem">Delete</button>
-          </form>
+          <a class="btn btn-blue" href="teacher-class.php?id=<?= $c['id'] ?>&t=<?= time() ?>" style="text-decoration:none;font-size:.85rem;padding:.5rem 1rem">Manage →</a>
+          <button class="btn btn-red" style="font-size:.85rem;padding:.5rem 1rem" onclick="deleteClass(<?= $c['id'] ?>)">Delete</button>
         </div>
       </div>
       <?php endforeach; ?>
@@ -160,5 +164,39 @@ $classes = $st->get_result()->fetch_all(MYSQLI_ASSOC);
     <?php endif; ?>
   </div>
 </div>
+<script>
+function fsrAction(action, data) {
+  var url = 'teacher-dashboard.php?fsr_ajax=1&action=' + encodeURIComponent(btoa(action))
+          + '&data=' + encodeURIComponent(btoa(JSON.stringify(data)));
+  return fetch(url).then(function(r) {
+    return r.text().then(function(txt) {
+      console.log('RAW RESPONSE:', txt);
+      try { return JSON.parse(txt); } catch(e) { throw new Error('Not JSON: ' + txt.substring(0,200)); }
+    });
+  });
+}
+var _creating = false;
+function createClass() {
+  if (_creating) return;
+  var name = document.getElementById('class_name').value.trim();
+  var access = document.getElementById('access_type').value;
+  var msg = document.getElementById('create-msg');
+  if (!name) { msg.innerHTML = '<p style="color:#c0392b">Please enter a class name.</p>'; return; }
+  _creating = true;
+  msg.innerHTML = '<p>Creating...</p>';
+  fsrAction('create_class', {class_name: name, access_type: access})
+    .then(function(d) {
+      _creating = false;
+      if (d.ok) { location.reload(); } else { msg.innerHTML = '<p style="color:#c0392b">'+d.error+'</p>'; }
+    })
+    .catch(function(e) { _creating = false; msg.innerHTML = '<p style="color:#c0392b">Error: '+e+'</p>'; });
+}
+function deleteClass(id) {
+  if (!confirm('Delete this class and all student data?')) return;
+  fsrAction('delete_class', {class_id: id}).then(function(d) {
+    if (d.ok) { location.reload(); }
+  });
+}
+</script>
 </body>
 </html>

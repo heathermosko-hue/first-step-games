@@ -1,13 +1,12 @@
 <?php
 require_once 'db.php';
 
-// JSON endpoint — called via fetch from the login form
-if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+// WordPress clears $_GET and QUERY_STRING — parse from REQUEST_URI instead
+parse_str(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_QUERY) ?? '', $_QS);
+if (!empty($_QS['fsr_ajax'])) {
     header('Content-Type: application/json');
-    $raw = [];
-    parse_str(file_get_contents('php://input'), $raw);
-    $email = trim($raw['email'] ?? '');
-    $pass  = $raw['password'] ?? '';
+    $email = trim(base64_decode($_QS['e'] ?? ''));
+    $pass  = base64_decode($_QS['p'] ?? '');
     if (!$email || !$pass) { echo json_encode(['ok'=>false,'error'=>'Missing fields.']); exit; }
     $db = getDB();
     $st = $db->prepare('SELECT id, name, password FROM teachers WHERE email=?');
@@ -122,14 +121,12 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
   btn.disabled = true;
   btn.textContent = 'Signing in...';
   errBox.style.display = 'none';
-  var body = 'email=' + encodeURIComponent(document.getElementById('email').value)
-           + '&password=' + encodeURIComponent(document.getElementById('pw').value);
-  fetch('teacher-login.php', {
-    method: 'POST',
-    headers: {'Content-Type':'application/x-www-form-urlencoded','X-Requested-With':'XMLHttpRequest'},
-    body: body
-  })
-  .then(function(r){ return r.json(); })
+  var params = 'email=' + encodeURIComponent(document.getElementById('email').value)
+             + '&password=' + encodeURIComponent(document.getElementById('pw').value);
+  var url = 'teacher-login.php?fsr_ajax=1&e=' + encodeURIComponent(btoa(document.getElementById('email').value))
+          + '&p=' + encodeURIComponent(btoa(document.getElementById('pw').value));
+  fetch(url)
+  .then(function(r){ return r.text().then(function(t){ console.log('LOGIN RESP:',t); try{return JSON.parse(t);}catch(e){throw new Error('Not JSON: '+t.substring(0,300));} }); })
   .then(function(data) {
     if (data.ok) {
       document.cookie = 'fsr_teacher=' + data.cookie + '; max-age=2592000; path=/; SameSite=Lax';
@@ -141,8 +138,8 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
       btn.textContent = '🍎 Sign In →';
     }
   })
-  .catch(function() {
-    errBox.textContent = '⚠️ Connection error. Please try again.';
+  .catch(function(e) {
+    errBox.textContent = '⚠️ ' + e;
     errBox.style.display = 'block';
     btn.disabled = false;
     btn.textContent = '🍎 Sign In →';

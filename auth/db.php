@@ -87,15 +87,15 @@ function generateIconCode($db) {
     return $code;
 }
 
-// ─── AUTO-ASSIGN ANIMAL ───────────────────────────────────
-function getNextAnimal($classId, $db) {
+// ─── AUTO-ASSIGN ICON (from ICON_CHOICES so it matches student login grid) ────
+function getNextIcon($classId, $db) {
     $st = $db->prepare('SELECT icon FROM students WHERE class_id=?');
     $st->bind_param('i', $classId); $st->execute();
     $res = $st->get_result();
     $used = [];
     while ($row = $res->fetch_assoc()) $used[] = $row['icon'];
-    foreach (ANIMALS as $a) { if (!in_array($a, $used)) return $a; }
-    return ANIMALS[0];
+    foreach (ICON_CHOICES as $a) { if (!in_array($a, $used)) return $a; }
+    return ICON_CHOICES[0];
 }
 
 // ─── STUDENT COOKIE ───────────────────────────────────────
