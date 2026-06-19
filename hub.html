@@ -649,6 +649,20 @@
     /* ── NO HORIZONTAL SCROLL ON ANY SCREEN ── */
     html, body { overflow-x: hidden; max-width: 100%; }
 
+    /* ── TABLET LAYOUT (601px – 900px) ── */
+    @media (min-width: 601px) and (max-width: 900px) {
+      main { padding: 1.6rem 1.2rem; }
+      .games-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+      .card { padding: 1.4rem 1rem 1.2rem; }
+      .card-icon { width: 72px; height: 72px; font-size: 2.2rem; border-radius: 16px; }
+      .card.wide { padding: 1.6rem 1.8rem; }
+      .card.wide .card-icon { width: 80px; height: 80px; font-size: 2.4rem; }
+      .hero-inner { padding: 0.4rem 1.5rem 1rem; }
+      .hero-title { font-size: clamp(2.2rem, 7vw, 3.5rem); }
+      .hero-panels { max-width: 680px; }
+      .all-videos-bar { padding: 1.2rem 1.6rem; }
+    }
+
     /* ── MOBILE LAYOUT (phones up to 600px) ── */
     @media (max-width: 600px) {
       /* Page padding */
