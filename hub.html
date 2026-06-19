@@ -2022,15 +2022,13 @@
         <span class="access-dot"></span>
         <span>⭐ <strong>Member Access</strong> — Welcome! Enjoy the games anytime!</span>
         <a href="auth/teacher-dashboard.php" class="access-bar-link" style="background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:white;border-radius:20px;padding:.2rem .8rem;text-decoration:none;font-weight:700;">🏫 My Classroom</a>
-        <button onclick="hubLogout()" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.6);border-radius:20px;padding:.2rem .9rem;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">🚪 Sign Out</button>
-        <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
+        <button onclick="hubLogout()" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.6);border-radius:20px;padding:.2rem .9rem;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">🚪 Sign Out</button>`;
     } else if (label === 'class') {
       bar.className = 'code-granted';
       bar.innerHTML = `
         <span class="access-dot"></span>
         <span>✅ <strong>Class Code Accepted</strong> — Enjoy the games!</span>
-        <button onclick="hubLogout()" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.6);border-radius:20px;padding:.2rem .9rem;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">🚪 Sign Out</button>
-        <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
+        <button onclick="hubLogout()" style="background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.6);border-radius:20px;padding:.2rem .9rem;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:700;color:white;flex-shrink:0;">🚪 Sign Out</button>`;
     } else if (label === 'trial') {
       const days = trialDaysLeft();
       bar.className = 'code-granted';
