@@ -1,8 +1,8 @@
 <?php
 require_once 'db.php';
 
-$preCode  = trim($_GET['code'] ?? '');   // legacy text code from old QR
-$preRoom  = trim($_GET['room'] ?? '');   // class_code from new QR
+$preCode  = trim($_GET['code'] ?? '');
+$preRoom  = trim($_GET['room'] ?? '');
 $error    = '';
 $class    = null;
 $students = [];
@@ -31,11 +31,11 @@ if ($preCode || $preRoom) {
     if ($class) $students = loadStudents($class['id'], $db);
 }
 
-// Icon combo submission
-$step = 'icon-entry'; // icon-entry | pick-student
+$step = 'class-code'; // class-code | student-code
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = getDB();
     $action = $_POST['action'] ?? '';
+
     if ($action === 'icon_code') {
         $submitted = implode(',', array_slice($_POST['icons'] ?? [], 0, 4));
         $class = loadClassByIconCode($submitted, $db);
@@ -43,11 +43,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'That code was not right! Try again.';
         } else {
             $students = loadStudents($class['id'], $db);
-            $step = 'pick-student';
+            $step = 'student-code';
+        }
+    } elseif ($action === 'student_icon') {
+        $classId = (int)($_POST['class_id'] ?? 0);
+        $icon    = trim($_POST['icon'] ?? '');
+        if ($classId && $icon) {
+            $stC = $db->prepare('SELECT * FROM classes WHERE id=?');
+            $stC->bind_param('i', $classId); $stC->execute();
+            $class = $stC->get_result()->fetch_assoc();
+            if ($class) {
+                $stS = $db->prepare('SELECT * FROM students WHERE class_id=? AND icon=? LIMIT 1');
+                $stS->bind_param('is', $classId, $icon); $stS->execute();
+                $student = $stS->get_result()->fetch_assoc();
+                if ($student) {
+                    header('Location: student-games.php?student='.$student['id'].'&class='.$classId);
+                    exit;
+                } else {
+                    $error = "That icon wasn't found! Ask your teacher for help.";
+                    $step  = 'student-code';
+                    $students = loadStudents($classId, $db);
+                }
+            }
         }
     }
 }
-if ($class && !empty($students) && $step !== 'icon-entry') $step = 'pick-student';
+
+if ($class && $step !== 'class-code') $step = 'student-code';
 
 $icons = ICON_CHOICES;
 ?><!DOCTYPE html>
@@ -65,111 +87,169 @@ $icons = ICON_CHOICES;
     min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem;
   }
   .card{
-    background:white;border-radius:28px;padding:2rem 1.8rem;
-    width:100%;max-width:420px;
+    background:white;border-radius:28px;padding:1.6rem 1.5rem 1.4rem;
+    width:100%;max-width:460px;
     box-shadow:0 20px 60px rgba(0,0,0,.3);
   }
-  .logo{text-align:center;margin-bottom:1.6rem}
-  .logo h1{font-size:1.7rem;color:#2c3e50;font-weight:800}
-  .logo p{color:#7f8c8d;margin-top:.3rem;font-size:.95rem}
-  .stars{font-size:2.2rem;margin-bottom:.4rem}
+  .logo{text-align:center;margin-bottom:1.1rem}
+  .logo h1{font-size:1.6rem;color:#2c3e50;font-weight:800}
+  .logo p{color:#7f8c8d;margin-top:.25rem;font-size:.9rem}
+  .stars{font-size:2rem;margin-bottom:.3rem}
 
-  /* ── Icon grid for combo entry ── */
-  .prompt{text-align:center;font-size:1.05rem;font-weight:700;color:#6B48FF;margin-bottom:1rem}
-  .icon-grid{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;margin-bottom:1.4rem;
+  .prompt{
+    text-align:center;font-size:1rem;font-weight:700;color:#6B48FF;
+    margin-bottom:.8rem;
   }
-  .ic-btn{
-    font-size:2.2rem;line-height:1;background:#f3e8ff;border:3px solid transparent;
-    border-radius:16px;padding:.55rem .2rem;cursor:pointer;
-    transition:all .12s;user-select:none;-webkit-user-select:none;
-    touch-action:manipulation;
+  .step-badge{
+    display:inline-block;background:#6B48FF;color:white;
+    border-radius:999px;padding:.15rem .7rem;font-size:.78rem;
+    margin-bottom:.3rem;
   }
-  .ic-btn:hover{border-color:#8e44ad;background:#ece0ff;transform:scale(1.08)}
-  .ic-btn:active{transform:scale(.96)}
 
   /* ── Entered sequence display ── */
-  .seq-row{display:flex;justify-content:center;gap:.55rem;margin-bottom:1.2rem;min-height:58px;align-items:center}
+  .seq-row{
+    display:flex;justify-content:center;gap:.5rem;
+    margin-bottom:.9rem;min-height:54px;align-items:center;
+  }
   .seq-slot{
-    font-size:2rem;width:56px;height:56px;border-radius:14px;
+    font-size:1.8rem;width:52px;height:52px;border-radius:14px;
     border:3px solid #ddd6ff;background:#faf7ff;
     display:flex;align-items:center;justify-content:center;
-    transition:all .15s;
+    transition:all .15s;flex-shrink:0;
   }
+  .seq-slot.single{width:62px;height:62px;font-size:2.2rem;}
   .seq-slot.filled{border-color:#8e44ad;background:#f3e8ff;}
   .seq-slot.shake{animation:shake .4s}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
-  .btn-row{display:flex;gap:.7rem;margin-bottom:.8rem}
+  /* ── 24-icon grid (6 cols × 4 rows) ── */
+  .icon-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:.38rem;
+    margin-bottom:1rem;
+  }
+  .ic-btn{
+    font-size:1.75rem;line-height:1;background:#f3e8ff;border:3px solid transparent;
+    border-radius:12px;padding:.42rem .1rem;cursor:pointer;
+    transition:all .12s;user-select:none;-webkit-user-select:none;
+    touch-action:manipulation;
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  }
+  .ic-btn:hover{border-color:#8e44ad;background:#ece0ff;transform:scale(1.1)}
+  .ic-btn:active{transform:scale(.94)}
+  .ic-btn.selected{border-color:#6B48FF;background:#ddd0ff;transform:scale(1.08)}
+
+  .btn-row{display:flex;gap:.6rem;margin-bottom:.6rem}
   .btn{
     flex:1;background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:white;border:none;
-    border-radius:14px;padding:.85rem;font-size:1rem;font-weight:800;cursor:pointer;
+    border-radius:14px;padding:.8rem;font-size:1rem;font-weight:800;cursor:pointer;
     font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';
     transition:opacity .15s;touch-action:manipulation;
   }
-  .btn:hover{opacity:.9}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn:not(:disabled):hover{opacity:.9}
   .btn-clear{
-    flex:0 0 auto;width:52px;background:#f0f0f0;color:#888;border:none;
-    border-radius:14px;padding:.85rem .5rem;font-size:1.1rem;cursor:pointer;
+    flex:0 0 auto;width:50px;background:#f0f0f0;color:#888;border:none;
+    border-radius:14px;padding:.8rem .4rem;font-size:1.1rem;cursor:pointer;
     transition:background .15s;touch-action:manipulation;
   }
   .btn-clear:hover{background:#e0e0e0}
-  .error{background:#fee;border:2px solid #f99;color:#c0392b;border-radius:12px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.95rem;text-align:center;font-weight:700}
-
-  /* ── Student icon grid ── */
-  .pick-section h2{font-size:1.3rem;color:#2c3e50;text-align:center;margin-bottom:.3rem;font-weight:800}
-  .pick-section p{text-align:center;color:#7f8c8d;margin-bottom:1.2rem;font-size:.95rem}
-  .student-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem}
-  .student-card{
-    display:flex;flex-direction:column;align-items:center;
-    background:#f8f0ff;border:3px solid transparent;border-radius:16px;
-    padding:.75rem .35rem;cursor:pointer;transition:all .15s;
-    text-decoration:none;touch-action:manipulation;
+  .error{
+    background:#fee;border:2px solid #f99;color:#c0392b;
+    border-radius:12px;padding:.7rem 1rem;margin-bottom:.9rem;
+    font-size:.9rem;text-align:center;font-weight:700;
   }
-  .student-card:hover{border-color:#764ba2;background:#f0e6ff;transform:scale(1.06)}
-  .student-card .s-icon{font-size:2.4rem;line-height:1}
-  .student-card .s-name{font-size:.7rem;font-weight:700;color:#5a3e7a;margin-top:.3rem;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70px}
-
-  .back-link{display:block;text-align:center;margin-top:1rem;color:#764ba2;font-size:.9rem;cursor:pointer;font-weight:600}
-  .teacher-link{text-align:center;margin-top:1.4rem;font-size:.82rem;color:#bdc3c7}
+  .back-link{
+    display:block;text-align:center;margin-top:.9rem;
+    color:#764ba2;font-size:.88rem;cursor:pointer;font-weight:600;
+  }
+  .teacher-link{text-align:center;margin-top:1rem;font-size:.8rem;color:#bdc3c7}
   .teacher-link a{color:#6B48FF;text-decoration:none;font-weight:600}
+
+  @media(max-width:380px){
+    .icon-grid{grid-template-columns:repeat(4,1fr);gap:.35rem;}
+    .ic-btn{font-size:1.9rem;padding:.5rem .1rem;}
+  }
 </style>
 </head>
 <body>
 <div class="card">
 
-<?php if ($step === 'pick-student' && $class): ?>
-  <!-- Step 2: Pick your icon -->
-  <div class="pick-section">
-    <h2>Who are you? 👋</h2>
-    <p>Tap your animal!</p>
-    <?php if (!$students): ?>
-      <div class="error">No students yet — ask your teacher to add you!</div>
-    <?php else: ?>
-    <div class="student-grid">
-      <?php foreach ($students as $s): ?>
-      <a class="student-card" href="student-games.php?student=<?= $s['id'] ?>&class=<?= $class['id'] ?>">
-        <span class="s-icon"><?= $s['icon'] ?></span>
-        <span class="s-name"><?= htmlspecialchars($s['name']) ?></span>
-      </a>
-      <?php endforeach; ?>
-    </div>
-    <?php endif; ?>
-    <span class="back-link" onclick="location.reload()">← Wrong class? Go back</span>
+<?php if ($step === 'student-code' && $class): ?>
+  <!-- ══ STEP 2: Tap YOUR icon (1 icon = student code) ══ -->
+  <div class="logo">
+    <div class="stars">⭐📚⭐</div>
+    <h1>Who are you?</h1>
+    <p>Tap YOUR icon!</p>
   </div>
 
+  <div class="prompt">
+    <span class="step-badge">Step 2 of 2</span><br>
+    Tap your icon:
+  </div>
+
+  <?php if ($error): ?><div class="error">😕 <?= htmlspecialchars($error) ?></div><?php endif; ?>
+
+  <div class="seq-row">
+    <div class="seq-slot single" id="ss0"></div>
+  </div>
+
+  <div class="icon-grid" id="studentIconGrid">
+    <?php foreach ($icons as $ic): ?>
+    <button type="button" class="ic-btn" data-icon="<?= htmlspecialchars($ic, ENT_QUOTES) ?>"
+      onclick="pickStudentIcon(this)"><?= $ic ?></button>
+    <?php endforeach; ?>
+  </div>
+
+  <form method="post" id="studentForm">
+    <input type="hidden" name="action"   value="student_icon">
+    <input type="hidden" name="class_id" value="<?= (int)$class['id'] ?>">
+    <input type="hidden" name="icon"     id="studentIconVal" value="">
+    <div class="btn-row">
+      <button type="submit" class="btn" id="studentGoBtn" disabled>Go! →</button>
+      <button type="button" class="btn-clear" onclick="clearStudentIcon()" title="Delete">⌫</button>
+    </div>
+  </form>
+
+  <span class="back-link" onclick="location.href='student-login.php'">← Wrong class? Go back</span>
+
+  <script>
+  function pickStudentIcon(btn) {
+    document.querySelectorAll('.ic-btn').forEach(function(b){ b.classList.remove('selected'); });
+    btn.classList.add('selected');
+    var ic = btn.dataset.icon;
+    var slot = document.getElementById('ss0');
+    slot.textContent = ic;
+    slot.classList.add('filled');
+    document.getElementById('studentIconVal').value = ic;
+    document.getElementById('studentGoBtn').disabled = false;
+  }
+  function clearStudentIcon() {
+    document.querySelectorAll('.ic-btn').forEach(function(b){ b.classList.remove('selected'); });
+    var slot = document.getElementById('ss0');
+    slot.textContent = '';
+    slot.classList.remove('filled');
+    document.getElementById('studentIconVal').value = '';
+    document.getElementById('studentGoBtn').disabled = true;
+  }
+  </script>
+
 <?php else: ?>
-  <!-- Step 1: Tap 4-icon class code -->
+  <!-- ══ STEP 1: Tap class code (4 icons) ══ -->
   <div class="logo">
     <div class="stars">⭐📚⭐</div>
     <h1>Class Login</h1>
     <p>First Step Reading</p>
   </div>
+
+  <div class="prompt">
+    <span class="step-badge">Step 1 of 2</span><br>
+    Tap your class code (4 icons):
+  </div>
+
   <?php if ($error): ?><div class="error">😕 <?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-  <div class="prompt">Tap your class code (4 icons):</div>
-
-  <!-- Entered sequence -->
   <div class="seq-row" id="seqRow">
     <div class="seq-slot" id="s0"></div>
     <div class="seq-slot" id="s1"></div>
@@ -177,14 +257,13 @@ $icons = ICON_CHOICES;
     <div class="seq-slot" id="s3"></div>
   </div>
 
-  <!-- Icon picker grid -->
   <div class="icon-grid">
     <?php foreach ($icons as $ic): ?>
-    <button type="button" class="ic-btn" onclick="addIcon('<?= $ic ?>')"><?= $ic ?></button>
+    <button type="button" class="ic-btn" data-icon="<?= htmlspecialchars($ic, ENT_QUOTES) ?>"
+      onclick="addIcon(this)"><?= $ic ?></button>
     <?php endforeach; ?>
   </div>
 
-  <!-- Submit + Clear -->
   <form method="post" id="iconForm">
     <input type="hidden" name="action" value="icon_code">
     <input type="hidden" name="icons[]" id="i0" value="">
@@ -201,9 +280,9 @@ $icons = ICON_CHOICES;
 
   <script>
   var seq = [];
-  function addIcon(ic) {
+  function addIcon(btn) {
     if (seq.length >= 4) return;
-    seq.push(ic);
+    seq.push(btn.dataset.icon);
     render();
   }
   function clearLast() {
@@ -224,7 +303,7 @@ $icons = ICON_CHOICES;
         inp.value = '';
       }
     }
-    document.getElementById('goBtn').disabled = seq.length < 4;
+    document.getElementById('goBtn').disabled = (seq.length < 4);
   }
   </script>
 <?php endif; ?>

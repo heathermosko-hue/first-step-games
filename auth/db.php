@@ -18,12 +18,12 @@ define('ANIMALS', [
     '🦔','🐿️','🦜','🐝','🦩','🐞','🦀','🐠','🦙','🐺'
 ]);
 
-// ─── ICON COMBO CHOICES (12 icons — used for 4-icon class code) ───────────────
-// Visually distinct from ANIMALS so students don't confuse class-code with login
+// ─── ICON COMBO CHOICES (24 icons — used for 4-icon class code AND 1-icon student code) ──
 define('ICON_CHOICES', [
-    '🍎','🍋','🍇','🍓',
-    '⭐','🌈','🎈','🚀',
-    '🎵','💎','🌺','🌙'
+    '🐶','🐱','🐸','🐧','🦁','🦊',
+    '🍎','🍋','🍇','🍓','🍕','🍦',
+    '⭐','🌈','🌞','🌸','🌙','🌊',
+    '🎈','🚀','🎵','🎀','🏆','💎'
 ]);
 
 // ─── GAMES ────────────────────────────────────────────────
