@@ -1184,7 +1184,7 @@
       .school-login-banner { display: none !important; }
     }
   </style>
-<script src="tts.js?v=14"></script>
+<script src="tts.js?v=15"></script>
 </head>
 <body>
 <!-- ACCESS BAR -->
@@ -2033,16 +2033,8 @@
     } else {
       bar.className = 'needs-code';
       bar.innerHTML = `
-        <span>🔒 <strong>Enter your code to play:</strong></span>
-        <div id="hub-code-form">
-          <input id="hub-code-input" type="text" maxlength="12" placeholder="FSR- or MBR-XXXXXX"
-            autocomplete="off" autocorrect="off" spellcheck="false"
-            oninput="this.value=this.value.toUpperCase()"
-            onkeydown="if(event.key==='Enter')hubSubmitCode()">
-          <button id="hub-code-btn" onclick="hubSubmitCode()">→ Play!</button>
-        </div>
-        <a href="students.html" class="access-bar-link">Student Page</a>
-        <a href="auth/login-choice.html" class="access-bar-link">Login</a>`;
+        <span>🔒 <strong>Login to access the games</strong></span>
+        <a href="auth/login-choice.html" style="background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:white;border-radius:20px;padding:.2rem 1rem;text-decoration:none;font-weight:700;font-size:0.9rem;flex-shrink:0;">Login →</a>`;
       if (!skipGate) showGateOverlay();
     }
   }

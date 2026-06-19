@@ -1,11 +1,10 @@
 /**
- * tts.js v14 — Google Cloud TTS via server proxy
+ * tts.js v15 — Google Cloud TTS via server proxy
  *
- * Key changes from v13:
- * - Fix pre-gesture race: if onGesture() fires while the fetch is still
- *   in-flight, _preGesture is nulled before the callback runs, causing
- *   utterance.onend to never fire and the game speech engine to hang.
- *   Now: play the audio if playWhenReady, else fire onend immediately.
+ * Key changes from v14:
+ * - Remove premature onend fire in pre-gesture race handler.
+ *   When onGesture() plays audio via pg.b64 path, do NOT call onend —
+ *   the audio is already playing and onend will fire naturally.
  */
 (function () {
   var PROXY = 'https://www.firststepreading.com/reading-games/tts.php';
@@ -187,12 +186,11 @@
       fetchAudio(text, function (err, b64) {
         if (_preGesture !== pg) {
           /* onGesture() fired while fetch was in-flight and nulled _preGesture.
-             Play the audio if the gesture already queued it, otherwise fire
-             onend immediately so the calling speech engine doesn't hang. */
+             Only play if the gesture already queued it via playWhenReady —
+             if onGesture() already called _playJourney() via pg.b64, audio is
+             already playing so do nothing (don't fire onend prematurely). */
           if (!err && b64 && pg.playWhenReady) {
             _playJourney(utterance, b64);
-          } else if (utterance.onend) {
-            try { utterance.onend({ type: 'end' }); } catch(e) {}
           }
           return;
         }
