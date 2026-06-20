@@ -138,3 +138,20 @@
 
   } catch(e) { /* fail silently — nav is non-critical */ }
 })();
+
+/**
+ * fsrSaveScore(gameSlug, score)
+ * Call this from any game when a student finishes a round.
+ * Only works when a student is logged in (fsr_student cookie present).
+ * Example: fsrSaveScore('bubble-pop', 850);
+ */
+window.fsrSaveScore = function(gameSlug, score) {
+  try {
+    if (!document.cookie.includes('fsr_student=')) return;
+    var base = window.location.pathname.replace(/\/[^/]*$/, '/');
+    var g = btoa(unescape(encodeURIComponent(gameSlug)));
+    var s = btoa(String(Math.round(score || 0)));
+    var url = base + 'auth/progress.php?game=' + encodeURIComponent(g) + '&score=' + encodeURIComponent(s);
+    fetch(url).catch(function(){});
+  } catch(e) {}
+};

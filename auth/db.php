@@ -2,12 +2,18 @@
 // ═══════════════════════════════════════════════════════════
 //  CONFIGURATION  ← husband fills these in before uploading
 // ═══════════════════════════════════════════════════════════
-// Use WordPress constants if available (WordPress defines DB_HOST, DB_USER, DB_PASSWORD, DB_NAME)
-if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
-if (!defined('DB_USER')) define('DB_USER', 'YOUR_DB_USERNAME');
-// WordPress uses DB_PASSWORD; map it to DB_PASS if we don't have DB_PASS yet
-if (!defined('DB_PASS')) define('DB_PASS', defined('DB_PASSWORD') ? DB_PASSWORD : 'YOUR_DB_PASSWORD');
-if (!defined('DB_NAME')) define('DB_NAME', 'YOUR_DB_NAME');
+// Load WordPress DB constants from wp-config.php if not already defined
+if (!defined('DB_USER')) {
+    $wpConfig = __DIR__ . '/../../wp-config.php';
+    if (file_exists($wpConfig) && !defined('ABSPATH')) {
+        define('ABSPATH', dirname($wpConfig) . '/');
+        require_once $wpConfig;
+    }
+}
+if (!defined('DB_HOST'))     define('DB_HOST', 'localhost');
+if (!defined('DB_USER'))     define('DB_USER', 'YOUR_DB_USERNAME');
+if (!defined('DB_PASS'))     define('DB_PASS', defined('DB_PASSWORD') ? DB_PASSWORD : 'YOUR_DB_PASSWORD');
+if (!defined('DB_NAME'))     define('DB_NAME', 'YOUR_DB_NAME');
 if (!defined('COOKIE_SECRET')) define('COOKIE_SECRET', 'fsr-cookie-secret-2024-xK9mP3');
 
 // ─── ANIMAL ICONS (40 choices — each student's unique login icon) ─────────────

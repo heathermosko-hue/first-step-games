@@ -35,6 +35,13 @@ if (!empty($_QS['fsr_ajax'])) {
 
 $msg = '';
 
+// ── Load premium status ───────────────────────────────────
+$st = $db->prepare('SELECT email, premium_until FROM teachers WHERE id=?');
+$st->bind_param('i', $tid); $st->execute();
+$trow = $st->get_result()->fetch_assoc();
+$isPremium = !empty($trow['premium_until']) && strtotime($trow['premium_until']) > time();
+$isAdmin   = strtolower($trow['email'] ?? '') === 'heather.admin@firststepreading.com';
+
 // ── Load classes ─────────────────────────────────────────
 $st = $db->prepare('SELECT c.*, (SELECT COUNT(*) FROM students WHERE class_id=c.id) AS student_count FROM classes c WHERE c.teacher_id=? ORDER BY c.created_at DESC');
 $st->bind_param('i', $tid); $st->execute();
@@ -101,6 +108,10 @@ $classes = $st->get_result()->fetch_all(MYSQLI_ASSOC);
   .badge{display:inline-block;border-radius:20px;padding:.22rem .75rem;font-size:.76rem;font-weight:700;margin-left:.4rem}
   .badge-full{background:#e8f8ff;color:#2980b9;border:1.5px solid #b3deff}
   .badge-assigned{background:#fffbe8;color:#d68910;border:1.5px solid #ffe599}
+  .badge-premium{background:linear-gradient(135deg,#FEF3C7,#FEE2E2);color:#D97706;border:1.5px solid #FCD34D;font-size:.8rem;padding:.25rem .8rem}
+  .banner-free{background:linear-gradient(135deg,#FFF7ED,#FFF0F0);border:2px solid #FCD34D;border-radius:16px;padding:.9rem 1.2rem;margin-bottom:1.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
+  .banner-free p{color:#92400E;font-size:.88rem;font-weight:600}
+  .btn-activate{background:linear-gradient(135deg,#F59E0B,#EF4444);color:white;border:none;border-radius:10px;padding:.45rem 1.1rem;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';text-decoration:none;white-space:nowrap}
   @media(max-width:600px){header{padding:.8rem 1rem}header h1{font-size:1rem}.container{padding:0 .8rem}}
 </style>
 </head>
@@ -108,13 +119,26 @@ $classes = $st->get_result()->fetch_all(MYSQLI_ASSOC);
 <header>
   <h1>🍎 First Step Reading — Teacher Dashboard</h1>
   <div class="hdr-right">
-    <span>👋 <?= htmlspecialchars($teacher['teacher_name']) ?></span>
+    <span>👋 <?= htmlspecialchars($teacher['teacher_name']) ?>
+      <?php if ($isPremium): ?>
+        <span class="badge badge-premium">⭐ Premium — expires <?= date('M j, Y', strtotime($trow['premium_until'])) ?></span>
+      <?php elseif ($isAdmin): ?>
+        <span class="badge badge-premium">⭐ Admin</span>
+      <?php endif; ?>
+    </span>
+    <?php if ($isAdmin): ?><a class="logout" href="admin-codes.php">🔑 Codes</a><?php endif; ?>
     <a class="logout" href="../hub.html">🎮 Games</a>
     <a class="logout" href="logout.php?teacher=1">🚪 Sign out</a>
   </div>
 </header>
 <div class="container">
   <?php if ($msg): ?><div class="msg"><?= $msg ?></div><?php endif; ?>
+  <?php if (!$isPremium && !$isAdmin): ?>
+  <div class="banner-free">
+    <p>🟢 Free account — access Mon–Fri, 9 am–4 pm only</p>
+    <a class="btn-activate" href="activate.php">⭐ Activate Premium →</a>
+  </div>
+  <?php endif; ?>
 
   <!-- Create Class -->
   <div class="card">

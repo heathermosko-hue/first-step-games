@@ -93,7 +93,7 @@ $assigned = array_column($assignedRaw, 'game_slug');
 $progress = [];
 if ($students) {
     $ids = implode(',', array_column($students, 'id'));
-    $res = $db->query("SELECT student_id,game_slug,score,plays FROM progress WHERE student_id IN ($ids)");
+    $res = $db->query("SELECT student_id,game_slug,best_score,plays,last_played FROM progress WHERE student_id IN ($ids)");
     while ($row = $res->fetch_assoc()) {
         $progress[$row['student_id']][$row['game_slug']] = $row;
     }
@@ -163,7 +163,20 @@ $gameKeys = array_keys(GAMES);
   .add-row{display:flex;gap:.7rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:1.2rem}
   .access-row{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
   details summary{cursor:pointer;font-size:.85rem;color:#8e44ad;user-select:none}
-  @media(max-width:600px){.container{padding:0 .8rem}header{padding:.8rem 1rem}header h1{font-size:.95rem}}
+  /* Progress section */
+  .prog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:.8rem}
+  .prog-card{background:linear-gradient(145deg,#f8f4ff,#eef6ff);border:2px solid #ddd6ff;border-radius:18px;padding:1.1rem 1.2rem}
+  .prog-card h4{color:#2C3E50;font-size:1rem;margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem}
+  .prog-row{display:flex;align-items:center;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid #ede9f7;font-size:.88rem}
+  .prog-row:last-child{border-bottom:none}
+  .prog-game{display:flex;align-items:center;gap:.4rem;color:#444}
+  .prog-stats{display:flex;gap:.7rem;align-items:center}
+  .prog-plays{color:#6B48FF;font-weight:700;background:#ede9f7;border-radius:20px;padding:.15rem .55rem;font-size:.8rem}
+  .prog-score{color:#27ae60;font-weight:700;font-size:.8rem}
+  .prog-date{color:#aaa;font-size:.75rem}
+  .prog-empty{color:#aaa;font-size:.9rem;text-align:center;padding:.8rem}
+  .prog-none{color:#bbb;font-size:.85rem;font-style:italic}
+  @media(max-width:600px){.container{padding:0 .8rem}header{padding:.8rem 1rem}header h1{font-size:.95rem}.prog-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -276,6 +289,51 @@ $gameKeys = array_keys(GAMES);
     </table>
     </div>
   </div>
+
+  <!-- Progress -->
+  <div class="card">
+    <h2>📊 Class Progress</h2>
+    <?php if (!$students): ?>
+      <div class="prog-empty">No students yet.</div>
+    <?php else: ?>
+    <div class="prog-grid">
+      <?php foreach ($students as $s):
+        $sp = $progress[$s['id']] ?? [];
+        // Sort by last_played desc
+        uasort($sp, function($a,$b){ return strtotime($b['last_played']) - strtotime($a['last_played']); });
+      ?>
+      <div class="prog-card">
+        <h4><?= $s['icon'] ?> <?= htmlspecialchars($s['name']) ?></h4>
+        <?php if (!$sp): ?>
+          <div class="prog-none">No games played yet</div>
+        <?php else: ?>
+          <?php foreach ($sp as $slug => $p):
+            $g = GAMES[$slug] ?? ['emoji'=>'🎮','name'=>$slug];
+            $ago = '';
+            $ts = strtotime($p['last_played']);
+            $diff = time() - $ts;
+            if ($diff < 86400) $ago = 'today';
+            elseif ($diff < 172800) $ago = 'yesterday';
+            else $ago = date('M j', $ts);
+          ?>
+          <div class="prog-row">
+            <div class="prog-game"><?= $g['emoji'] ?> <?= $g['name'] ?></div>
+            <div class="prog-stats">
+              <?php if ($p['best_score'] > 0): ?>
+              <span class="prog-score">⭐ <?= $p['best_score'] ?></span>
+              <?php endif; ?>
+              <span class="prog-plays"><?= $p['plays'] ?> play<?= $p['plays']!=1?'s':'' ?></span>
+              <span class="prog-date"><?= $ago ?></span>
+            </div>
+          </div>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+  </div>
+
 </div>
 
 <script>

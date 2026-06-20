@@ -9,10 +9,22 @@ if (!empty($_QS['fsr_ajax'])) {
     $pass  = base64_decode($_QS['p'] ?? '');
     if (!$email || !$pass) { echo json_encode(['ok'=>false,'error'=>'Missing fields.']); exit; }
     $db = getDB();
-    $st = $db->prepare('SELECT id, name, password FROM teachers WHERE email=?');
+    $st = $db->prepare('SELECT id, name, password, premium_until FROM teachers WHERE email=?');
     $st->bind_param('s', $email); $st->execute();
     $row = $st->get_result()->fetch_assoc();
     if ($row && password_verify($pass, $row['password'])) {
+        $isAdmin   = (strtolower($email) === 'heather.admin@firststepreading.com');
+        $isPremium = !empty($row['premium_until']) && strtotime($row['premium_until']) > time();
+        if (!$isAdmin && !$isPremium) {
+            // Free accounts: Mon–Fri 9 am–4 pm Eastern only
+            date_default_timezone_set('America/Toronto');
+            $dow  = (int)date('N'); // 1=Mon … 7=Sun
+            $hour = (int)date('G'); // 0–23
+            if ($dow > 5 || $hour < 9 || $hour >= 16) {
+                echo json_encode(['ok'=>false,'error'=>'Sorry, you have a free account. Access is available Monday–Friday, 9 am–4 pm. Upgrade for unlimited access!']);
+                exit;
+            }
+        }
         echo json_encode(['ok'=>true,'cookie'=>teacherCookieValue($row['id'], $row['name'])]);
     } else {
         echo json_encode(['ok'=>false,'error'=>'Incorrect email or password.']);
@@ -80,6 +92,17 @@ if (getTeacherFromCookie()) {
   .footer{text-align:center;margin-top:1.3rem;font-size:.92rem;color:#888}
   .footer a{color:#6B48FF;text-decoration:none;font-weight:700}
   .footer a:hover{text-decoration:underline}
+  .divider{display:flex;align-items:center;gap:.6rem;margin:.3rem 0;color:#ccc;font-size:.8rem}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee}
+  .btn-purchase{
+    display:block;width:100%;text-align:center;text-decoration:none;
+    background:linear-gradient(135deg,#F59E0B,#EF4444);color:white;
+    border-radius:14px;padding:.8rem;font-size:.98rem;font-weight:700;
+    font-family:'Comic Sans MS','Chalkboard SE','Comic Neue';
+    box-shadow:0 4px 16px rgba(239,68,68,.3);transition:transform .18s,box-shadow .18s;
+    margin-top:.5rem;
+  }
+  .btn-purchase:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(239,68,68,.4)}
   .back-link{
     margin-top:1.4rem;color:rgba(255,255,255,.9);text-decoration:none;
     font-size:.92rem;font-weight:700;position:relative;z-index:1;
@@ -111,6 +134,8 @@ if (getTeacherFromCookie()) {
   <div class="footer" style="margin-top:.6rem">
     New teacher? <a href="teacher-register.php">Create a free account! 🎉</a>
   </div>
+  <div class="divider">or</div>
+  <a class="btn-purchase" href="https://www.firststepreading.com/checkout/?add-to-cart=28201">⭐ Purchase Teacher License — $99 →</a>
 </div>
 <a href="../hub.html" class="back-link">← Back to Games</a>
 <script>
