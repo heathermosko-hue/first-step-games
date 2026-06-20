@@ -14,7 +14,7 @@
 
   /* ── FONT — injected here so it works even if fonts.css is slow/blocked ── */
   var fontCss = document.createElement('style');
-  fontCss.textContent = "* { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue' !important; }";
+  fontCss.textContent = "* { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important; }";
   document.head.appendChild(fontCss);
 
   /* ── STYLES ─────────────────────────────────────────────── */
