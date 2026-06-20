@@ -31,4 +31,4 @@
 }
 
 /* Comic Sans MS = Windows/Android  |  Chalkboard SE = iOS/macOS (built-in)  |  Comic Neue = everything else (embedded above) */
-* { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive !important; }
+* { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important; }
