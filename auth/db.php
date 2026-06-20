@@ -151,6 +151,12 @@ function getTeacherFromCookie() {
 function clearTeacherCookie() {
     echo '<script>document.cookie="fsr_teacher=; max-age=0; path=/; SameSite=Lax";</script>';
 }
+function withinFreeHours() {
+    date_default_timezone_set('America/Toronto');
+    $dow  = (int)date('N'); // 1=Mon … 7=Sun
+    $hour = (int)date('G'); // 0–23
+    return ($dow <= 5 && $hour >= 9 && $hour < 16);
+}
 function requireTeacher() {
     $t = getTeacherFromCookie();
     if (!$t) { header('Location: teacher-login.php'); exit; }

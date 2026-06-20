@@ -42,6 +42,24 @@ $trow = $st->get_result()->fetch_assoc();
 $isPremium = !empty($trow['premium_until']) && strtotime($trow['premium_until']) > time();
 $isAdmin   = strtolower($trow['email'] ?? '') === 'heather.admin@firststepreading.com';
 
+// Free accounts are only active Mon–Fri 9 am–4 pm Eastern
+if (!$isAdmin && !$isPremium && !withinFreeHours()) {
+    ?><!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Access Hours — First Step Reading</title>
+    <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Comic Sans MS','Chalkboard SE','Comic Neue',sans-serif;background:#FFF8F0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}.card{background:#fff;border-radius:24px;padding:2.5rem 2rem;max-width:480px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.1)}h1{font-size:1.6rem;color:#1A3A6B;margin-bottom:.6rem}p{color:#555;font-size:.95rem;line-height:1.6;margin:.5rem 0}.hours{background:#FFF7ED;border:2px solid #FCD34D;border-radius:12px;padding:.8rem 1.2rem;margin:1.2rem 0;color:#92400E;font-weight:700}.btn{display:inline-block;margin-top:1.2rem;padding:.8rem 2rem;border-radius:50px;font-size:1rem;text-decoration:none;font-weight:700;background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:#fff;box-shadow:0 4px 14px rgba(107,72,255,.35)}</style>
+    </head><body><div class="card">
+    <div style="font-size:3rem;margin-bottom:.8rem">🕐</div>
+    <h1>Outside School Hours</h1>
+    <p>Free teacher accounts are active:</p>
+    <div class="hours">Monday – Friday, 9:00 am – 4:00 pm Eastern</div>
+    <p>Upgrade to a Teacher License for unlimited 24/7 access.</p>
+    <a class="btn" href="https://www.firststepreading.com/checkout/?add-to-cart=28201">🛒 Upgrade — $99/year</a>
+    <br><a href="teacher-login.php" style="display:inline-block;margin-top:1rem;color:#6B48FF;font-size:.9rem">← Back to Login</a>
+    </div></body></html><?php
+    exit;
+}
+
 // ── Load classes ─────────────────────────────────────────
 $st = $db->prepare('SELECT c.*, (SELECT COUNT(*) FROM students WHERE class_id=c.id) AS student_count FROM classes c WHERE c.teacher_id=? ORDER BY c.created_at DESC');
 $st->bind_param('i', $tid); $st->execute();
@@ -222,5 +240,32 @@ function deleteClass(id) {
   });
 }
 </script>
+<?php if (!$isPremium && !$isAdmin): ?>
+<div id="fsr-lockout" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.7);align-items:center;justify-content:center;padding:1rem">
+  <div style="background:#fff;border-radius:24px;padding:2.5rem 2rem;max-width:440px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.3)">
+    <div style="font-size:3rem;margin-bottom:.8rem">🕐</div>
+    <h2 style="color:#1A3A6B;margin-bottom:.5rem">School Hours Have Ended</h2>
+    <p style="color:#555;font-size:.9rem;line-height:1.6;margin-bottom:1.2rem">Free accounts are active Monday–Friday, 9:00 am–4:00 pm Eastern. Your session has ended.</p>
+    <a href="https://www.firststepreading.com/checkout/?add-to-cart=28201" style="display:inline-block;background:linear-gradient(135deg,#6B48FF,#3A8EF6);color:#fff;border-radius:50px;padding:.8rem 2rem;text-decoration:none;font-weight:700;font-size:1rem;box-shadow:0 4px 14px rgba(107,72,255,.35)">🛒 Upgrade — $99/year</a>
+    <br><a href="teacher-login.php" style="display:inline-block;margin-top:1rem;color:#6B48FF;font-size:.9rem">← Back to Login</a>
+  </div>
+</div>
+<script>
+(function() {
+  function checkHours() {
+    var now = new Date(new Date().toLocaleString('en-US', {timeZone:'America/Toronto'}));
+    var day = now.getDay(); // 0=Sun, 6=Sat
+    var h   = now.getHours();
+    var active = (day >= 1 && day <= 5 && h >= 9 && h < 16);
+    if (!active) {
+      var el = document.getElementById('fsr-lockout');
+      if (el) { el.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    }
+  }
+  checkHours();
+  setInterval(checkHours, 60000); // re-check every minute
+})();
+</script>
+<?php endif; ?>
 </body>
 </html>

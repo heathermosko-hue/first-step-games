@@ -11,6 +11,16 @@ $db  = getDB();
 $tid = $teacher['teacher_id'];
 $cid = (int)($_QS['id'] ?? 0);
 
+// Check free-account hour restriction
+$_st = $db->prepare('SELECT email, premium_until FROM teachers WHERE id=?');
+$_st->bind_param('i', $tid); $_st->execute();
+$_trow = $_st->get_result()->fetch_assoc();
+$_isPremium = !empty($_trow['premium_until']) && strtotime($_trow['premium_until']) > time();
+$_isAdmin   = strtolower($_trow['email'] ?? '') === 'heather.admin@firststepreading.com';
+if (!$_isAdmin && !$_isPremium && !withinFreeHours()) {
+    header('Location: teacher-dashboard.php'); exit;
+}
+
 // ── AJAX handler ──────────────────────────────────────────
 if (!empty($_QS['fsr_ajax'])) {
     header('Content-Type: application/json');
