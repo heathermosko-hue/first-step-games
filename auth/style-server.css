@@ -1,0 +1,464 @@
+/*
+ Theme Name:     First Step Reading Child Theme
+ Theme URI:      http://www.firststepreading.com
+ Description:    First Step Reading Child Theme — Reading Eggs inspired, kid-friendly
+ Author:         Jason
+ Template:       Divi
+ Version:        4.0.1
+*/
+
+@import url("../Divi/style.css");
+/* Google Fonts now loaded via <link> in wp_head for better mobile reliability */
+
+/* ═══════════════════════════════════════════════════════════
+   FSR CHILD THEME v4 — Reading Eggs vibe, FSR colours
+   Fonts: Comic Sans MS / Chalkboard SE / Comic Neue everywhere
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --green:      #1e8449;
+  --green2:     #27ae60;
+  --green-lt:   #a8e6bf;
+  --blue:       #3A8EF6;
+  --blue2:      #1565C0;
+  --indigo:     #6B48FF;
+  --coral:      #FF6B6B;
+  --orange:     #FF8C42;
+  --yellow:     #FFD93D;
+  --purple:     #8B5CF6;
+  --teal:       #0DBFBF;
+  --sky:        #5BB8F5;
+  --sky2:       #B8E4F9;
+  --pink:       #F472B6;
+  --bg:         #FFFBF0;
+  --text:       #2C3E50;
+  --r:          24px;   /* card border-radius */
+}
+
+/* ── GLOBAL ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 17px !important;
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  line-height: 1.65 !important;
+}
+
+/* ALL headings */
+h1, h2, h3, h4, h5, h6,
+.et_pb_text h1, .et_pb_text h2, .et_pb_text h3,
+.woocommerce h1, .woocommerce h2, .woocommerce h3,
+.entry-title, .page-title, .product_title {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* ALL body copy */
+p, li, td, th, label, span, a,
+input, select, textarea,
+.et_pb_text, .et_pb_blurb_description {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+}
+
+/* ── HEADER / NAV ───────────────────────────────────────── */
+#main-header, #header-container, #main-header-wrap {
+  background: #fff !important;
+  border-bottom: 4px solid var(--green) !important;
+  box-shadow: 0 3px 16px rgba(30,132,73,.12) !important;
+}
+#main-header #logo img { max-height: 56px !important; width: auto !important; }
+
+#top-menu li a, #et-top-navigation li a {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  color: #1A3A6B !important;
+  transition: color .15s !important;
+}
+#top-menu li a:hover { color: var(--green) !important; }
+
+/* Member Login nav pill */
+#top-menu li a[href*="my-account"],
+#top-menu .menu-item:last-child > a {
+  background: linear-gradient(135deg,var(--green),var(--green2)) !important;
+  color: #fff !important;
+  border-radius: 50px !important;
+  padding: .35rem 1.1rem !important;
+  font-weight: 800 !important;
+}
+
+/* ── DIVI SECTION STRIPPING ─────────────────────────────── */
+/* Remove Divi's grey background so our colours show */
+#main-content, #page-container,
+.et_pb_section, .et-l, .et_builder_outer_content {
+  background-color: transparent !important;
+}
+
+/* ── DIVI SECTIONS — VIVID ALTERNATING BKGS ────────────── */
+.et_pb_section:nth-of-type(odd) {
+  background: #fff !important;
+}
+.et_pb_section:nth-of-type(even) {
+  background: #f0fdf4 !important;
+}
+.et_pb_section:nth-of-type(3n) {
+  background: #fef9c3 !important; /* warm yellow */
+}
+.et_pb_section:nth-of-type(4n) {
+  background: #eef2ff !important; /* soft indigo */
+}
+
+/* ── DIVI TEXT ──────────────────────────────────────────── */
+.et_pb_text_inner h2 {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 2rem !important;
+  color: var(--green) !important;
+}
+.et_pb_text_inner h3 {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1.5rem !important;
+  color: #1A3A6B !important;
+}
+.et_pb_text_inner p, .et_pb_text_inner li {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1rem !important;
+  line-height: 1.7 !important;
+}
+.et_pb_text_inner a { color: var(--blue) !important; font-weight: 700 !important; }
+.et_pb_text_inner strong { color: var(--green) !important; }
+.et_pb_text_inner ul li {
+  position: relative;
+  padding-left: .5rem;
+  margin-bottom: .3rem;
+}
+
+/* ── DIVI TOGGLE (video lesson pages) ──────────────────── */
+.et_pb_toggle {
+  background: #fff !important;
+  border-radius: 18px !important;
+  border: 3px solid #e8f5e9 !important;
+  margin-bottom: .8rem !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,.07) !important;
+  overflow: hidden !important;
+  transition: box-shadow .2s, transform .2s !important;
+}
+.et_pb_toggle:hover {
+  box-shadow: 0 8px 28px rgba(30,132,73,.15) !important;
+  transform: translateY(-2px) !important;
+}
+.et_pb_toggle:nth-child(4n+1) { border-color: #bbf7d0 !important; }
+.et_pb_toggle:nth-child(4n+2) { border-color: #bfdbfe !important; }
+.et_pb_toggle:nth-child(4n+3) { border-color: #e9d5ff !important; }
+.et_pb_toggle:nth-child(4n+4) { border-color: #fecaca !important; }
+
+.et_pb_toggle_title {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1.15rem !important;
+  color: #1A3A6B !important;
+  padding: .95rem 1.3rem !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+.et_pb_toggle_open .et_pb_toggle_title {
+  color: var(--green) !important;
+  background: linear-gradient(135deg,#f0fdf4,#dcfce7) !important;
+}
+.et_pb_toggle_content {
+  padding: .8rem 1.4rem 1.3rem !important;
+}
+.et_pb_toggle_content ul { list-style: none !important; padding: 0 !important; }
+.et_pb_toggle_content ul li {
+  padding: .4rem 0 !important;
+  border-bottom: 1px solid #f0fdf4 !important;
+  font-size: .95rem !important;
+}
+.et_pb_toggle_content ul li a {
+  color: var(--blue) !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: .5rem !important;
+}
+.et_pb_toggle_content ul li a::before { content: '▶'; font-size: .65rem; color: var(--green); }
+.et_pb_toggle_content ul li a:hover { color: var(--green) !important; }
+
+/* ── DIVI BLURB (feature tiles) ─────────────────────────── */
+.et_pb_blurb {
+  background: #fff !important;
+  border-radius: 22px !important;
+  box-shadow: 0 6px 28px rgba(0,0,0,.08) !important;
+  padding: 1.8rem !important;
+  transition: transform .2s, box-shadow .2s !important;
+  border-top: 5px solid var(--green) !important;
+}
+.et_pb_blurb:hover {
+  transform: translateY(-7px) !important;
+  box-shadow: 0 16px 40px rgba(30,132,73,.15) !important;
+}
+.et_pb_blurb:nth-child(2) { border-top-color: var(--blue) !important; }
+.et_pb_blurb:nth-child(3) { border-top-color: var(--purple) !important; }
+.et_pb_blurb:nth-child(4) { border-top-color: var(--orange) !important; }
+.et_pb_blurb_container .et_pb_module_header {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1.3rem !important;
+  color: var(--green) !important;
+}
+.et_pb_blurb_description {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: .97rem !important;
+}
+
+/* ── ALL BUTTONS ────────────────────────────────────────── */
+.et_pb_button, a.et_pb_button,
+.woocommerce a.button, .woocommerce button.button,
+.woocommerce input.button, .woocommerce #respond input#submit {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1.15rem !important;
+  letter-spacing: .5px !important;
+  background: linear-gradient(135deg,var(--green),var(--green2)) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 50px !important;
+  padding: .8rem 2rem !important;
+  box-shadow: 0 5px 18px rgba(30,132,73,.3) !important;
+  transition: transform .15s, box-shadow .15s !important;
+}
+.et_pb_button:hover, a.et_pb_button:hover,
+.woocommerce a.button:hover, .woocommerce button.button:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 10px 28px rgba(30,132,73,.4) !important;
+  background: linear-gradient(135deg,#166638,var(--green)) !important;
+  color: #fff !important;
+}
+
+/* ── DIVI IMAGE / VIDEO ──────────────────────────────────── */
+.et_pb_image img {
+  border-radius: 22px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.13) !important;
+}
+.et_pb_video .et_pb_video_box {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,.15) !important;
+}
+
+/* ── WOOCOMMERCE SHOP PAGE ───────────────────────────────── */
+.woocommerce-page h1.page-title {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 2.4rem !important;
+  color: var(--green) !important;
+  text-align: center !important;
+  padding: 2.5rem 0 .5rem !important;
+}
+.woocommerce ul.products li.product {
+  background: #fff !important;
+  border-radius: 22px !important;
+  box-shadow: 0 6px 28px rgba(0,0,0,.09) !important;
+  overflow: hidden !important;
+  border: 3px solid transparent !important;
+  transition: transform .2s, box-shadow .2s, border-color .2s !important;
+  padding-bottom: 1.2rem !important;
+}
+.woocommerce ul.products li.product:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 20px 48px rgba(30,132,73,.18) !important;
+  border-color: var(--green) !important;
+}
+.woocommerce ul.products li.product .woocommerce-loop-product__title {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1.25rem !important;
+  color: #1A3A6B !important;
+  padding: .7rem 1rem .2rem !important;
+}
+.woocommerce ul.products li.product .price {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1.6rem !important;
+  color: var(--green) !important;
+  padding: 0 1rem .8rem !important;
+}
+.woocommerce ul.products li.product .button {
+  margin: 0 1rem !important;
+  display: block !important;
+  text-align: center !important;
+}
+
+/* ── SINGLE PRODUCT ─────────────────────────────────────── */
+.woocommerce div.product .product_title {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 2.2rem !important;
+  color: #1a2e1a !important;
+}
+.woocommerce div.product p.price,
+.woocommerce div.product span.price {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 2.6rem !important;
+  color: var(--green) !important;
+}
+.woocommerce div.product form.cart .single_add_to_cart_button {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1.4rem !important;
+  background: linear-gradient(135deg,var(--green),var(--green2)) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 50px !important;
+  padding: 1rem 2.8rem !important;
+  box-shadow: 0 6px 22px rgba(30,132,73,.35) !important;
+  letter-spacing: .5px !important;
+}
+.woocommerce div.product div.images img {
+  border-radius: 24px !important;
+  box-shadow: 0 10px 36px rgba(0,0,0,.14) !important;
+}
+.woocommerce div.product .woocommerce-tabs ul.tabs li {
+  border-radius: 10px 10px 0 0 !important;
+  background: #f5f5f5 !important;
+}
+.woocommerce div.product .woocommerce-tabs ul.tabs li.active {
+  background: #fff !important;
+}
+.woocommerce div.product .woocommerce-tabs ul.tabs li a {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-weight: 700 !important;
+}
+.woocommerce div.product .woocommerce-tabs ul.tabs li.active a {
+  color: var(--green) !important;
+}
+.woocommerce div.product form.cart .qty {
+  border: 3px solid #86efac !important;
+  border-radius: 12px !important;
+  font-size: 1.2rem !important;
+  font-weight: 800 !important;
+  color: var(--green) !important;
+}
+
+/* ── MY ACCOUNT ──────────────────────────────────────────── */
+.woocommerce-MyAccount-navigation {
+  background: #fff !important;
+  border-radius: 22px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,.07) !important;
+  overflow: hidden !important;
+}
+/* Remove default <ul> bullets + padding so they don't get clipped by overflow:hidden */
+.woocommerce-MyAccount-navigation ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.woocommerce-MyAccount-navigation ul li a {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-weight: 700 !important;
+  padding: .8rem 1.3rem !important;
+  display: block !important;
+  border-left: 5px solid transparent !important;
+  color: var(--text) !important;
+  transition: all .15s !important;
+}
+.woocommerce-MyAccount-navigation ul li.is-active a,
+.woocommerce-MyAccount-navigation ul li a:hover {
+  color: var(--green) !important;
+  background: #f0fdf4 !important;
+  border-left-color: var(--green) !important;
+}
+.woocommerce-MyAccount-content h2 {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  color: var(--green) !important;
+  font-size: 1.8rem !important;
+}
+
+/* ── CART & CHECKOUT ─────────────────────────────────────── */
+.woocommerce table.shop_table th {
+  background: linear-gradient(135deg,var(--green),var(--green2)) !important;
+  color: #fff !important;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1rem !important;
+}
+.woocommerce-checkout h3 {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  color: var(--green) !important;
+  font-size: 1.5rem !important;
+}
+input[type="text"], input[type="email"], input[type="tel"],
+input[type="password"], input[type="number"], textarea, select {
+  border: 3px solid #d1fae5 !important;
+  border-radius: 12px !important;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1rem !important;
+  transition: border-color .2s !important;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--green) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(30,132,73,.12) !important;
+}
+.woocommerce-message {
+  background: #f0fdf4 !important;
+  border-top-color: var(--green) !important;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+}
+
+/* ── SCHOOL PORTAL SECTION ───────────────────────────────── */
+#school-portal-login h4 {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: 1.2rem !important;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+#footer-widgets {
+  background: #1a2e1a !important;
+  color: #c8e6c9 !important;
+}
+#footer-widgets h4, #footer-widgets h3 {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  color: #fff !important;
+  font-size: 1.2rem !important;
+}
+#footer-widgets p, #footer-widgets li {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: .92rem !important;
+  color: #a5d6a7 !important;
+}
+#footer-widgets a { color: #a5d6a7 !important; text-decoration: none !important; }
+#footer-widgets a:hover { color: #fff !important; }
+#main-footer {
+  background: #111e11 !important;
+  color: #6a9e6a !important;
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
+  font-size: .85rem !important;
+}
+
+/* ── MEMBERS GATE PAGE ───────────────────────────────────── */
+body.page-id-1170 .et_pb_section {
+  background: linear-gradient(135deg,#e8f5e9,#e3f2fd) !important;
+  padding: 0 !important;
+  min-height: 80vh !important;
+}
+
+/* ── FOCUS + SCROLLBAR ───────────────────────────────────── */
+a:focus, button:focus, input:focus {
+  outline: 3px solid var(--green);
+  outline-offset: 2px;
+}
+* { scrollbar-width: thin; scrollbar-color: #6BCB77 transparent; }
+*::-webkit-scrollbar { width: 6px; }
+*::-webkit-scrollbar-thumb { background: #6BCB77; border-radius: 3px; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  body { font-size: 16px !important; }
+  .et_pb_section { padding: 2.5rem 0 !important; }
+  #main-header #logo img { max-height: 44px !important; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE COMIC SANS — permanent rule, DO NOT REMOVE
+   Also in functions.php wp_footer hook for double protection.
+   ═══════════════════════════════════════════════════════════════ */
+/* Comic Sans — all screens */
+html, html * { font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", sans-serif !important; }
