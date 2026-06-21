@@ -2394,6 +2394,15 @@
     sessionStorage.setItem('fsr_access_type', 'member');
   }
 
+  // ── RESTORE MEMBER SESSION FROM localStorage (survives tab close / reload) ──
+  // localStorage is set on successful login; copy it into sessionStorage so
+  // hubAccessLabel() (which reads sessionStorage) sees the member status.
+  if (!sessionStorage.getItem('fsr_access_type') && localStorage.getItem('fsr_access_type') === 'member') {
+    sessionStorage.setItem('fsr_access_type', 'member');
+    const savedName = localStorage.getItem('fsr_member_name');
+    if (savedName) sessionStorage.setItem('fsr_member_name', savedName);
+  }
+
   // ── HANDLE ?sso=member IN URL ──
   const _ssoParam = new URLSearchParams(location.search).get('sso');
   if (_ssoParam === 'member') {
