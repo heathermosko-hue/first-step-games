@@ -1443,6 +1443,7 @@ function _launch(text) {
   // Split into individual sentences so there's a pause at . ! ?
   _queue   = text.replace(/([.!?])\s+/g, '$1\n').split('\n').map(s => s.trim()).filter(Boolean);
   _pending = null;
+  if(window.fsrPrefetch)_queue.forEach(window.fsrPrefetch);
   _advance();
 }
 

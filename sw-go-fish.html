@@ -1324,6 +1324,7 @@ function _launch(text) {
   // Split on | or sentence-end for paced speech
   _queue   = text.split(/\s*\|\s*|(?<=[.!?])\s+/).map(s => s.trim()).filter(Boolean);
   _pending = null;
+  if(window.fsrPrefetch)_queue.forEach(window.fsrPrefetch);
   _advance();
 }
 

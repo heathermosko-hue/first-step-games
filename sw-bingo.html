@@ -279,6 +279,7 @@
     if (_muted) return;
     window.speechSynthesis.cancel();
     _queue    = msg.split(' | ');
+    if(window.fsrPrefetch)_queue.forEach(window.fsrPrefetch);
     _speaking = false;
     _advance();
   }

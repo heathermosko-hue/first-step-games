@@ -1,10 +1,9 @@
 /**
- * tts.js v15 — Google Cloud TTS via server proxy
+ * tts.js v16 — Google Cloud TTS via server proxy
  *
- * Key changes from v14:
- * - Remove premature onend fire in pre-gesture race handler.
- *   When onGesture() plays audio via pg.b64 path, do NOT call onend —
- *   the audio is already playing and onend will fire naturally.
+ * Key changes from v15:
+ * - Force cache-bust: all games now reference tts.js?v=16
+ * - Voice button no longer announces browser voice name (always Journey-F)
  */
 (function () {
   var PROXY = 'https://www.firststepreading.com/reading-games/tts.php';
@@ -151,7 +150,27 @@
   var origSpeak  = window.speechSynthesis.speak.bind(window.speechSynthesis);
   var origCancel = window.speechSynthesis.cancel.bind(window.speechSynthesis);
 
+  /* Pick and cache a consistent fallback voice (female English, natural/neural preferred) */
+  var _fallbackVoice = null;
+  function _pickFallbackVoice() {
+    var all = window.speechSynthesis.getVoices();
+    if (!all.length) return;
+    var en = all.filter(function(v) { return /^en/i.test(v.lang); });
+    _fallbackVoice =
+      en.find(function(v){ return /aria/i.test(v.name) && /natural/i.test(v.name); }) ||
+      en.find(function(v){ return /jenny/i.test(v.name) && /natural/i.test(v.name); }) ||
+      en.find(function(v){ return /samantha/i.test(v.name); }) ||
+      en.find(function(v){ return /karen/i.test(v.name); }) ||
+      en.find(function(v){ return /natural|neural|online/i.test(v.name); }) ||
+      en[0] || all[0];
+  }
+  window.speechSynthesis.addEventListener('voiceschanged', _pickFallbackVoice);
+  _pickFallbackVoice();
+
   function safeOrigSpeak(utterance) {
+    /* Always use the same consistent fallback voice, not whatever the game set */
+    if (_fallbackVoice) { try { utterance.voice = _fallbackVoice; } catch(e) {} }
+    utterance.rate  = 0.9;
     var origEnd = utterance.onend, fired = false, started = false;
     function fireEnd() {
       if (fired) return; fired = true;
@@ -219,6 +238,12 @@
   window.speechSynthesis.cancel = function () {
     _clearWatchdog(); _stopSource(); _currentUtterance = null; _preGesture = null;
     origCancel();
+  };
+
+  /* Exposed so game _launch() can pre-warm the cache for all queued sentences */
+  window.fsrPrefetch = function (text) {
+    if (!text || !text.trim()) return;
+    fetchAudio(text.trim(), function () {});
   };
 
 })();

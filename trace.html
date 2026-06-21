@@ -235,7 +235,7 @@ let upperDraw = null, lowerDraw = null;
 function _launch(msg) {
   if (_muted) return;
   window.speechSynthesis.cancel();
-  _queue = msg.split(' | '); _speaking = false; _advance();
+  _queue = msg.split(' | '); if(window.fsrPrefetch)_queue.forEach(window.fsrPrefetch); _speaking = false; _advance();
 }
 function _advance() {
   if (!_queue.length) {

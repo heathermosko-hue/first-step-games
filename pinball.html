@@ -220,7 +220,7 @@ function _adv(){if(!_q.length){_spk=false;if(_pend){const t=_pend;_pend=null;_go
   _spk=true;const u=new SpeechSynthesisUtterance(_q.shift());
   if(_voice)u.voice=_voice;u.rate=0.92;u.onend=()=>{_spk=false;setTimeout(_adv,300);};
   window.speechSynthesis.speak(u);}
-function _go(t){_q=t.split(' | ').filter(Boolean);_spk=false;_adv();}
+function _go(t){_q=t.split(' | ').filter(Boolean);if(window.fsrPrefetch)_q.forEach(window.fsrPrefetch);_spk=false;_adv();}
 function speak(t){if(_muted||!window.speechSynthesis)return;if(_spk){_pend=t;}else{_go(t);}}
 
 /* â”€â”€ AUDIO â”€â”€ */

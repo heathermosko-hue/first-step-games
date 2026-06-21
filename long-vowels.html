@@ -157,7 +157,7 @@ let _muted = false, _speaking = false, _pending = null, _queue = [], _voice = nu
 function _launch(msg) {
   if (_muted) return;
   window.speechSynthesis.cancel();
-  _queue = msg.split(' | '); _speaking = false; _advance();
+  _queue = msg.split(' | '); if(window.fsrPrefetch)_queue.forEach(window.fsrPrefetch); _speaking = false; _advance();
 }
 function _advance() {
   if (!_queue.length) { _speaking=false; if(_pending){const t=_pending;_pending=null;_launch(t);} return; }
