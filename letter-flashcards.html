@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -55,7 +55,7 @@ header {
 }
 .mute-btn.muted { opacity: 0.45; }
 
-/* ── Mode tabs ── */
+/* â”€â”€ Mode tabs â”€â”€ */
 .mode-tabs {
   display: flex;
   gap: 6px;
@@ -86,7 +86,7 @@ header {
 }
 .mode-tab:hover:not(.active) { background: rgba(255,255,255,0.3); }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .card-scene {
   width: min(300px, 85vw);
   height: min(360px, calc(100dvh - 270px));
@@ -202,21 +202,21 @@ header {
 }
 </style>
 <link rel="preload" href="shared.css?v=1" as="style"><link href="shared.css?v=1" rel="stylesheet"><link rel="preload" href="fonts.css?v=3" as="style"><link href="fonts.css?v=3" rel="stylesheet">
-<script src="tts.js?v=15" defer></script>
+<script src="tts.js?v=16" defer></script>
 </head>
 <body>
 
 <header>
-  <a href="hub.html" class="back-btn">← Back</a>
+  <a href="hub.html" class="back-btn">â† Back</a>
   <div class="title">Letter Flashcards</div>
-  <button class="mute-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+  <button class="mute-btn" id="mute-btn" onclick="toggleMute()">ðŸ”Š</button>
 </header>
 
 <!-- Mode selector: 3 tabs -->
 <div class="mode-tabs">
-  <button class="mode-tab active" id="tab-upper" onclick="setMode('upper')">🔠 Uppercase</button>
-  <button class="mode-tab" id="tab-lower" onclick="setMode('lower')">🔡 Lowercase</button>
-  <button class="mode-tab" id="tab-sound" onclick="setMode('sound')">🔤 Letter/Sound</button>
+  <button class="mode-tab active" id="tab-upper" onclick="setMode('upper')">ðŸ”  Uppercase</button>
+  <button class="mode-tab" id="tab-lower" onclick="setMode('lower')">ðŸ”¡ Lowercase</button>
+  <button class="mode-tab" id="tab-sound" onclick="setMode('sound')">ðŸ”¤ Letter/Sound</button>
 </div>
 
 <!-- Card (single-face, content changes per mode) -->
@@ -231,9 +231,9 @@ header {
 
 <!-- Navigation -->
 <div class="nav-row">
-  <button class="nav-btn" id="prev-btn" onclick="go(-1)" disabled>◀</button>
+  <button class="nav-btn" id="prev-btn" onclick="go(-1)" disabled>â—€</button>
   <div class="counter" id="counter">1 / 26</div>
-  <button class="nav-btn" id="next-btn" onclick="go(1)">▶</button>
+  <button class="nav-btn" id="next-btn" onclick="go(1)">â–¶</button>
 </div>
 
 <div class="dots-row" id="dots-row"></div>
@@ -245,7 +245,7 @@ const LETTER_WORDS = {A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G
 let cur = 0, mode = 'upper', muted = false;
 let userInteracted = false, pendingSpeech = null;
 
-/* ── Speech ── */
+/* â”€â”€ Speech â”€â”€ */
 
 
 function speak(txt, delay) {
@@ -267,14 +267,14 @@ function onInteract() {
 function toggleMute() {
   muted = !muted;
   var b = document.getElementById('mute-btn');
-  b.textContent = muted ? '🔇' : '🔊';
+  b.textContent = muted ? 'ðŸ”‡' : 'ðŸ”Š';
   b.classList.toggle('muted', muted);
   if (muted) { speechSynthesis.cancel(); return; }
   onInteract();
   if (pendingSpeech) { var t = pendingSpeech; pendingSpeech = null; speak(t); }
 }
 
-/* ── Card display ── */
+/* â”€â”€ Card display â”€â”€ */
 function showLetter() {
   var L = LETTERS[cur];
   var card     = document.getElementById('card');
@@ -333,7 +333,7 @@ function go(dir) {
   showLetter();
 }
 
-/* ── Alphabet dots ── */
+/* â”€â”€ Alphabet dots â”€â”€ */
 function buildDots() {
   var row = document.getElementById('dots-row');
   LETTERS.forEach(function(L, i) {
