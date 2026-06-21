@@ -123,26 +123,6 @@
   var ab = document.getElementById('access-bar');
   if (ab) ab.style.top = (window.innerWidth <= 600 ? NAV_H_M : NAV_H) + 'px';
 
-  /* ── Fixed Teacher Login button — bottom of every page ── */
-  var teacherBtn = document.createElement('a');
-  teacherBtn.id  = 'fsr-teacher-btn';
-  var base = window.location.pathname.replace(/\/[^/]*$/, '/');
-  teacherBtn.href = base + 'auth/teacher-login.php';
-  teacherBtn.textContent = '🍎 Teacher Login';
-  teacherBtn.style.cssText = [
-    'position:fixed', 'bottom:14px', 'left:50%', 'transform:translateX(-50%)',
-    'z-index:9999',
-    'background:linear-gradient(135deg,#FF6B6B,#FF3B8A)',
-    'color:#fff', 'font-family:\'Comic Sans MS\',\'Comic Neue\'',
-    'font-size:.82rem', 'font-weight:700',
-    'padding:7px 20px', 'border-radius:999px',
-    'box-shadow:0 3px 14px rgba(255,59,138,.45)',
-    'text-decoration:none', 'white-space:nowrap',
-    'transition:opacity .2s,transform .2s',
-  ].join(';');
-  teacherBtn.addEventListener('mouseenter', function(){ this.style.opacity='.85'; });
-  teacherBtn.addEventListener('mouseleave', function(){ this.style.opacity='1'; });
-  document.body.appendChild(teacherBtn);
 
   /* ── iOS TTS unlock: Safari requires a user gesture before any speech fires.
      One silent cancel() on the very first tap unlocks the audio session for
